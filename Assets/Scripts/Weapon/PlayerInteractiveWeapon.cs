@@ -10,7 +10,7 @@ namespace Musashi
         [SerializeField] Transform equipPosition;
         [SerializeField] float distance = 10f;
 
-        public PlayerWeaponController currentHaveWeapon;
+        public PlayerWeaponController CurrentHaveWeapon { get;private set; }
         PlayerWeaponController wp;
 
 
@@ -18,15 +18,15 @@ namespace Musashi
         {
             if (CheakWeapons() && PlayerInputManager.PickUp())
             {
-                if (currentHaveWeapon)
+                if (CurrentHaveWeapon)
                     Drop();
                 PickUp();
             }
 
-            if (PlayerInputManager.Drop())
+            if (PlayerInputManager.Drop() && CurrentHaveWeapon)
                 Drop();
 
-            if (!currentHaveWeapon) return;
+            if (!CurrentHaveWeapon) return;
             UseWeapon();
         }
 
@@ -45,32 +45,32 @@ namespace Musashi
 
         private void UseWeapon()
         {
-            if (PlayerInputManager.Shot() && currentHaveWeapon)
+            if (PlayerInputManager.Shot() && CurrentHaveWeapon)
             {
-                currentHaveWeapon.TryShot();
+                CurrentHaveWeapon.TryShot();
             }
 
-            if (PlayerInputManager.CoolDownWeapon() && currentHaveWeapon)
+            if (PlayerInputManager.CoolDownWeapon() && CurrentHaveWeapon)
             {
-                currentHaveWeapon.IsCoolTime = true;
+                CurrentHaveWeapon.IsCoolTime = true;
             }
-            currentHaveWeapon.UpdateAmmo();
+            CurrentHaveWeapon.UpdateAmmo();
         }
 
         public void PickUp()
         {
-            currentHaveWeapon = wp;
-            currentHaveWeapon.transform.position = equipPosition.position;
-            currentHaveWeapon.transform.parent = equipPosition;
-            currentHaveWeapon.transform.localEulerAngles = new Vector3(0f, 0, 0);
-            currentHaveWeapon.GetComponent<Rigidbody>().isKinematic = true;
+            CurrentHaveWeapon = wp;
+            CurrentHaveWeapon.transform.position = equipPosition.position;
+            CurrentHaveWeapon.transform.parent = equipPosition;
+            CurrentHaveWeapon.transform.localEulerAngles = new Vector3(0f, 0, 0);
+            CurrentHaveWeapon.GetComponent<Rigidbody>().isKinematic = true;
         }
 
         public void Drop()
         {
-            currentHaveWeapon.transform.parent = null;
-            currentHaveWeapon.GetComponent<Rigidbody>().isKinematic = false;
-            currentHaveWeapon = null;
+            CurrentHaveWeapon.transform.parent = null;
+            CurrentHaveWeapon.GetComponent<Rigidbody>().isKinematic = false;
+            CurrentHaveWeapon = null;
         }
     }
 }

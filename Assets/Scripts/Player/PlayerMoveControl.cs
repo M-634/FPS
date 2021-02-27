@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using TMPro;
 
 namespace Musashi
 {
@@ -7,6 +8,7 @@ namespace Musashi
     {
         [Header("Move")]
         [SerializeField] float maxSpeedOnGround = 1f;
+        [SerializeField] float sprintSpeedModifier = 2f;
         [SerializeField] float movementSharpnessOnGround = 15f;
 
         [SerializeField] float gravity = 9.81f;
@@ -35,10 +37,15 @@ namespace Musashi
         [SerializeField] AudioClip footstepSFX;
         [SerializeField] AudioClip jumpSFX;
         [SerializeField] AudioClip landSFX;
-        [SerializeField] AudioClip grapplingWindSFX; 
+        [SerializeField] AudioClip grapplingWindSFX;
         AudioSource audioSource;
 
+
+        [Header("Debug")]
+        [SerializeField] TextMeshProUGUI[] texts;
+
         PlayerInputManager inputManager;
+        PlayerAnimationController animationController;
         CharacterController characterController;
         Vector3 characterVelocity;
         Vector3 groundNormal;
@@ -47,6 +54,7 @@ namespace Musashi
         {
             inputManager = GetComponent<PlayerInputManager>();
             characterController = GetComponent<CharacterController>();
+            animationController = GetComponent<PlayerAnimationController>();
             audioSource = GetComponent<AudioSource>();
 
             if (cameraControl)
@@ -108,8 +116,13 @@ namespace Musashi
 
                 var dir = transform.forward * z + transform.right * x;
 
-                var targetVelocity = dir.normalized * maxSpeedOnGround;
+                var isSprinting = PlayerInputManager.Dash();
+                var speedModifier = isSprinting ? sprintSpeedModifier : 1f;
 
+                Debug.Log(isSprinting);
+                var targetVelocity = dir.normalized * maxSpeedOnGround * speedModifier;
+
+              
                 targetVelocity = GetDirectionOnSlope(targetVelocity, groundNormal) * targetVelocity.magnitude;//grouundNormal = 0 => 0;
                 characterVelocity = Vector3.Lerp(characterVelocity, targetVelocity, movementSharpnessOnGround * Time.deltaTime);
 
@@ -117,10 +130,11 @@ namespace Musashi
                 if (footstepDistanceCounter > 1f / footstepSFXFrequency)
                 {
                     footstepDistanceCounter = 0;
-                    audioSource.PlayRandomPitch(footstepSFX, 1f,0.5f);
+                    audioSource.PlayRandomPitch(footstepSFX, 1f, 0.5f);
                 }
                 footstepDistanceCounter += characterVelocity.magnitude * Time.deltaTime;
 
+                //Move
                 characterController.Move(characterVelocity * Time.deltaTime);
             }
 
@@ -159,7 +173,7 @@ namespace Musashi
                     grapplingGun.IsGrappling = false;
 
                     //Stop audio
-                    audioSource.StopWithFadeOut(0.1f); 
+                    audioSource.StopWithFadeOut(0.1f);
 
                     //Stop effect
                     grapplingEffect.Stop();
@@ -188,6 +202,11 @@ namespace Musashi
             }
 
             if (grapplingGun.IsGrappling) state = State.Grappling;
+
+            //Set animation
+            texts[0].text = characterVelocity.magnitude.ToString("F2");
+            if (animationController)
+                animationController.MoveAnimation(characterVelocity.magnitude);
         }
 
         void GroundCheck()

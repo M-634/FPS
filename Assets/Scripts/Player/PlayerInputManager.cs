@@ -26,12 +26,22 @@ namespace Musashi
 
         public static bool HasPutGrapplingGunButton()
         {
-            return Input.GetMouseButtonDown(1);
+            return Input.GetMouseButtonDown(1);//別のに変える
         }
 
         public static bool Shot()
         {
             return Input.GetMouseButton(0);
+        }
+
+        public static bool Aiming()
+        {
+            return Input.GetMouseButton(1); 
+        }
+
+        public static bool AimCancel()
+        {
+            return Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(0);
         }
 
         public static bool CoolDownWeapon()
@@ -47,6 +57,11 @@ namespace Musashi
         public static bool Drop()
         {
             return Input.GetKeyDown(KeyCode.Q);
+        }
+
+        public static bool Dash()
+        {
+            return Input.GetKeyDown(KeyCode.LeftShift);
         }
 
         bool CanProcessInput()
