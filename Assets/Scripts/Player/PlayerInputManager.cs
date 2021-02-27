@@ -39,6 +39,16 @@ namespace Musashi
             return Input.GetMouseButtonUp(0);
         }
 
+        public static bool PickUp()
+        {
+            return Input.GetKeyDown(KeyCode.E);
+        }
+
+        public static bool Drop()
+        {
+            return Input.GetKeyDown(KeyCode.Q);
+        }
+
         bool CanProcessInput()
         {
             return Cursor.lockState == CursorLockMode.Locked;
