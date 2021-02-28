@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DG.Tweening;
 
 namespace Musashi
 {
@@ -6,11 +7,25 @@ namespace Musashi
     {
         [SerializeField] Camera playerCamera;
         [SerializeField] float sensitivity = 50f;
-        [SerializeField] float fovSpeed = 4f;
+        [SerializeField] float fovGrapplingSpeed = 4f;
+        [SerializeField] float fovAimingSpeed = 1f;
+
+        [Header("Field Of View")]
+        [SerializeField] float NOMAL_FOV = 60f;
+        [SerializeField] float GRAPPLING_FOV = 90f;
+        [SerializeField] float AIMING_FOV = 30f;
 
         float targetFov;
         float fov;
+        float fovSpeed;
         private float xRotation;
+
+        private void Start()
+        {
+            playerCamera.fieldOfView = NOMAL_FOV;
+            targetFov = playerCamera.fieldOfView;
+            fov = targetFov;
+        }
 
         private void Update()
         {
@@ -20,16 +35,25 @@ namespace Musashi
             playerCamera.fieldOfView = fov;
         }
 
-        public void SetCameraFov(float targetFov)
+        public void SetNormalFov(bool isAimCancel = false)
         {
-            this.targetFov = targetFov;
+            this.targetFov = NOMAL_FOV;
+            if (isAimCancel)
+                fovSpeed = fovAimingSpeed;
+            else
+                fovSpeed = fovGrapplingSpeed;
         }
 
-        public void InitFov(float nomalFov)
+        public void SetGrapplingFov()
         {
-            playerCamera.fieldOfView = nomalFov;
-            targetFov = playerCamera.fieldOfView;
-            fov = targetFov;
+            this.targetFov = GRAPPLING_FOV;
+            fovSpeed = fovGrapplingSpeed;
+        }
+
+        public void SetAimingFov()
+        {
+            this.targetFov = AIMING_FOV;
+            fovSpeed = fovAimingSpeed;
         }
 
         private void Look()

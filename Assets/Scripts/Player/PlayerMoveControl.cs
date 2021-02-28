@@ -27,8 +27,8 @@ namespace Musashi
 
         [Header("Camera")]
         [SerializeField] PlayerCamaraControl cameraControl;
-        [SerializeField] float NOMAL_FOV = 60f;
-        [SerializeField] float GRAPPLING_FOV = 90f;
+        //[SerializeField] float NOMAL_FOV = 60f;
+        //[SerializeField] float GRAPPLING_FOV = 90f;
 
         [Header("Audio")]
         [SerializeField] float footstepSFXFrequency = 0.3f;
@@ -57,11 +57,7 @@ namespace Musashi
             animationController = GetComponent<PlayerAnimationController>();
             audioSource = GetComponent<AudioSource>();
 
-            if (cameraControl)
-                cameraControl.InitFov(NOMAL_FOV);
-
             grapplingEffect.Stop();
-
             GameManager.Instance.LockCusor();
         }
 
@@ -119,7 +115,6 @@ namespace Musashi
                 var isSprinting = PlayerInputManager.Dash();
                 var speedModifier = isSprinting ? sprintSpeedModifier : 1f;
 
-                Debug.Log(isSprinting);
                 var targetVelocity = dir.normalized * maxSpeedOnGround * speedModifier;
 
               
@@ -143,7 +138,7 @@ namespace Musashi
             {
                 //set camera
                 if (cameraControl)
-                    cameraControl.SetCameraFov(GRAPPLING_FOV);
+                    cameraControl.SetGrapplingFov();
 
                 //play effect
                 if (grapplingEffect.isStopped)
@@ -179,7 +174,7 @@ namespace Musashi
                     grapplingEffect.Stop();
 
                     if (cameraControl)
-                        cameraControl.SetCameraFov(NOMAL_FOV);
+                        cameraControl.SetNormalFov();
                 }
 
                 //Cancel Grappling move
@@ -197,7 +192,7 @@ namespace Musashi
                     grapplingEffect.Stop();
 
                     if (cameraControl)
-                        cameraControl.SetCameraFov(NOMAL_FOV);
+                        cameraControl.SetNormalFov();
                 }
             }
 

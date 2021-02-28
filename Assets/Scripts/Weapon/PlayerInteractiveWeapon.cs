@@ -26,8 +26,8 @@ namespace Musashi
             if (PlayerInputManager.Drop() && CurrentHaveWeapon)
                 Drop();
 
-            if (!CurrentHaveWeapon) return;
-            UseWeapon();
+            if (CurrentHaveWeapon)
+                 UseWeapon();
         }
 
         private bool CheakWeapons()
@@ -45,12 +45,12 @@ namespace Musashi
 
         private void UseWeapon()
         {
-            if (PlayerInputManager.Shot() && CurrentHaveWeapon)
+            if (PlayerInputManager.Shot())
             {
                 CurrentHaveWeapon.TryShot();
             }
 
-            if (PlayerInputManager.CoolDownWeapon() && CurrentHaveWeapon)
+            if (PlayerInputManager.CoolDownWeapon())
             {
                 CurrentHaveWeapon.IsCoolTime = true;
             }

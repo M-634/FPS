@@ -11,10 +11,12 @@ namespace Musashi
     {
         [SerializeField] Animator animator;
         PlayerInteractiveWeapon interactiveWeapon;
+        PlayerCamaraControl camaraControl;
         bool isAiming;
 
         private void Start()
         {
+            camaraControl = GetComponent<PlayerCamaraControl>();
             interactiveWeapon = GetComponent<PlayerInteractiveWeapon>();
         }
 
@@ -32,11 +34,13 @@ namespace Musashi
                 if (PlayerInputManager.Aiming())
                 {
                     animator.Play("Aiming");
+                    camaraControl.SetAimingFov();
                     isAiming = true;
                 }
 
                 if (PlayerInputManager.AimCancel())
                 {
+                    camaraControl.SetNormalFov(true);
                     isAiming = false;
                 }
 
