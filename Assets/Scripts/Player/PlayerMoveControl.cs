@@ -117,7 +117,7 @@ namespace Musashi
 
                 var targetVelocity = dir.normalized * maxSpeedOnGround * speedModifier;
 
-              
+
                 targetVelocity = GetDirectionOnSlope(targetVelocity, groundNormal) * targetVelocity.magnitude;//grouundNormal = 0 => 0;
                 characterVelocity = Vector3.Lerp(characterVelocity, targetVelocity, movementSharpnessOnGround * Time.deltaTime);
 
@@ -201,7 +201,7 @@ namespace Musashi
             //Set animation
             texts[0].text = characterVelocity.magnitude.ToString("F2");
             if (animationController)
-                animationController.MoveAnimation(characterVelocity.magnitude);
+                animationController.MoveAnimation(characterVelocity.magnitude,state);
         }
 
         void GroundCheck()

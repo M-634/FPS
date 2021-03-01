@@ -54,10 +54,6 @@ namespace Musashi
             if (canDrawRope) DrawRope();
         }
 
-        /// <summary>
-        /// VR:左右それぞれの銃口からRayを飛ばし、任意の方でグラップルできる
-        /// FPS：Crosshairから飛ばして、左右順番にグラップルする
-        /// </summary>
         private void HandleHookshotStart()
         {
             if (IsGrappling) return;

@@ -23,7 +23,7 @@ namespace Musashi
             if (healthBarFillImage)
                 healthBarFillImage.fillAmount = currentHp / maxHp;
 
-            if (currentHp < 0) OnDie();
+            if (currentHp <= 0) OnDie();
         }
 
         protected abstract void OnDie();

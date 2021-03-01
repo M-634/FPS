@@ -20,33 +20,45 @@ namespace Musashi
             interactiveWeapon = GetComponent<PlayerInteractiveWeapon>();
         }
 
-        public void MoveAnimation(float velocity)
+        public void ShotingAnimation()
         {
- 
+            if (!interactiveWeapon.CurrentHaveWeapon) return;
+
+            if (PlayerInputManager.Shot())
+            {
+                animator.Play("Fire");
+                isAiming = true;
+            }
+
+            if (PlayerInputManager.Aiming())
+            {
+                animator.Play("Aiming");
+                camaraControl.SetAimingFov();
+                isAiming = true;
+            }
+
+            if (PlayerInputManager.AimCancel())
+            {
+                camaraControl.SetNormalFov(true);
+                isAiming = false;
+            }
+        }
+
+        public void MoveAnimation(float velocity, PlayerMoveControl.State state)
+        {
+            ShotingAnimation();
+            if (isAiming) return;
+
+            if (state != PlayerMoveControl.State.Normal)
+            {
+                animator.Play("Idle");
+                return;
+            }
+
             if (interactiveWeapon.CurrentHaveWeapon)
             {
-                if (PlayerInputManager.Shot())
-                {
-                    animator.Play("Fire");
-                    isAiming = true;
-                }
 
-                if (PlayerInputManager.Aiming())
-                {
-                    animator.Play("Aiming");
-                    camaraControl.SetAimingFov();
-                    isAiming = true;
-                }
-
-                if (PlayerInputManager.AimCancel())
-                {
-                    camaraControl.SetNormalFov(true);
-                    isAiming = false;
-                }
-
-                if (isAiming) return;
-
-                if (velocity > 5f)
+                if (velocity > 5)
                     animator.Play("RunWtihGun");
                 else
                     animator.Play("IdleWithGun");
@@ -59,6 +71,5 @@ namespace Musashi
                     animator.Play("Idle");
             }
         }
-
     }
 }
