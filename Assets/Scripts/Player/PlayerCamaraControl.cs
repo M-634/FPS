@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using DG.Tweening;
+using UnityEditor;
 
 namespace Musashi
 {
@@ -21,7 +22,9 @@ namespace Musashi
         [SerializeField] PostProcessProfile standard;
         [SerializeField] PostProcessProfile nightVision;
         [SerializeField] GameObject nightVisionOverlay;
+        [SerializeField] GameObject flashLight;
 
+       
         float targetFov;
         float fov;
         float fovSpeed;
@@ -102,7 +105,7 @@ namespace Musashi
 
         public void ChangePostProcess()
         {
-            if(Input.GetKeyDown(KeyCode.N))//test
+            if (Input.GetKeyDown(KeyCode.N))//test
             {
                 if (volume.profile == standard)
                     SwitchNightVision();
@@ -113,14 +116,27 @@ namespace Musashi
 
         public void InitPlayerPostProcessSettings()
         {
+            volume.enabled = true;
+            RenderSettings.fog = true;
             volume.profile = standard;
             nightVisionOverlay.SetActive(false);
+            flashLight.SetActive(false);
         }
 
         public void SwitchNightVision()
         {
             volume.profile = nightVision;
             nightVisionOverlay.SetActive(true);
+            flashLight.SetActive(true);
+        }
+
+        public void EditeScene()
+        {
+            volume.enabled = !volume.enabled;
+            RenderSettings.fog = !RenderSettings.fog;
         }
     }
 }
+
+
+
