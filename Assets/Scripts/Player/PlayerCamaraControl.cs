@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using DG.Tweening;
 
 namespace Musashi
@@ -15,6 +16,12 @@ namespace Musashi
         [SerializeField] float GRAPPLING_FOV = 90f;
         [SerializeField] float AIMING_FOV = 30f;
 
+        [Header("PostProcess")]
+        [SerializeField] PostProcessVolume volume;
+        [SerializeField] PostProcessProfile standard;
+        [SerializeField] PostProcessProfile nightVision;
+        [SerializeField] GameObject nightVisionOverlay;
+
         float targetFov;
         float fov;
         float fovSpeed;
@@ -25,11 +32,14 @@ namespace Musashi
             playerCamera.fieldOfView = NOMAL_FOV;
             targetFov = playerCamera.fieldOfView;
             fov = targetFov;
+
+            InitPlayerPostProcessSettings();
         }
 
         private void Update()
         {
             Look();
+            ChangePostProcess();
 
             fov = Mathf.Lerp(fov, targetFov, Time.deltaTime * fovSpeed);
             playerCamera.fieldOfView = fov;
@@ -88,6 +98,29 @@ namespace Musashi
             var eulerRotation = playerCamera.transform.eulerAngles;
             eulerRotation.x = value;
             playerCamera.transform.eulerAngles = eulerRotation;
+        }
+
+        public void ChangePostProcess()
+        {
+            if(Input.GetKeyDown(KeyCode.N))//test
+            {
+                if (volume.profile == standard)
+                    SwitchNightVision();
+                else
+                    InitPlayerPostProcessSettings();
+            }
+        }
+
+        public void InitPlayerPostProcessSettings()
+        {
+            volume.profile = standard;
+            nightVisionOverlay.SetActive(false);
+        }
+
+        public void SwitchNightVision()
+        {
+            volume.profile = nightVision;
+            nightVisionOverlay.SetActive(true);
         }
     }
 }
