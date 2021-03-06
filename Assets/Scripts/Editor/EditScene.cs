@@ -2,15 +2,22 @@
 using UnityEditor;
 namespace Musashi
 {
-    [InitializeOnLoad]
-    public static class EditScene
+    [InitializeOnLoad, CustomEditor(typeof(PlayerCamaraControl))]
+    public class EditScene : Editor
     {
-        static EditScene()
+        PlayerCamaraControl camaraControl = null;
+
+        private void OnEnable()
+        {
+            camaraControl = (PlayerCamaraControl)target;
+        }
+
+        EditScene()
         {
             SceneView.duringSceneGui += OnGui;
         }
 
-        private static void OnGui(SceneView sceneView)
+        private void OnGui(SceneView sceneView)
         {
             Handles.BeginGUI();
             ShowButtons(sceneView.position.size);
@@ -21,11 +28,8 @@ namespace Musashi
         /// <summary>
         /// ボタンの描画関数
         /// </summary>
-        private static void ShowButtons(Vector2 sceneSize)
+        private void ShowButtons(Vector2 sceneSize)
         {
-            //var buttonSize = 40;
-
-            // 画面下部、水平、中央寄せをコントロールする Rect
             var rect = new Rect(
               sceneSize.x * 5 / 6,
               sceneSize.y / 7,
@@ -34,7 +38,7 @@ namespace Musashi
 
             if (GUI.Button(rect, "Switch PostProcess"))
             {
-                RenderSettings.fog = !RenderSettings.fog;
+                camaraControl.EditeScene();
             }
         }
     }
