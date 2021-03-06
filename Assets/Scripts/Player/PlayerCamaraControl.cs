@@ -124,7 +124,8 @@ namespace Musashi
         {
             volume.profile = nightVision;
             nightVisionOverlay.SetActive(true);
-            flashLight.SetActive(true);
+            if(nightVisionOverlay.activeSelf)
+                 flashLight.SetActive(true);
         }
     }
 }
