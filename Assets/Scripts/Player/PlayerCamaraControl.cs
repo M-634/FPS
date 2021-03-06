@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-using DG.Tweening;
-using UnityEditor;
 
 namespace Musashi
 {
@@ -24,7 +22,6 @@ namespace Musashi
         [SerializeField] GameObject nightVisionOverlay;
         [SerializeField] GameObject flashLight;
 
-       
         float targetFov;
         float fov;
         float fovSpeed;
@@ -128,12 +125,6 @@ namespace Musashi
             volume.profile = nightVision;
             nightVisionOverlay.SetActive(true);
             flashLight.SetActive(true);
-        }
-
-        public void EditeScene()
-        {
-            volume.enabled = !volume.enabled;
-            RenderSettings.fog = !RenderSettings.fog;
         }
     }
 }

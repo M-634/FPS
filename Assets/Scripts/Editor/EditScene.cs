@@ -1,45 +1,43 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEngine.Rendering.PostProcessing;
+
 namespace Musashi
 {
-    [InitializeOnLoad, CustomEditor(typeof(PlayerCamaraControl))]
-    public class EditScene : Editor
+    /// <summary>
+    /// シーン編集用のウィンドウを作成する
+    /// </summary>
+    public class EditScene : EditorWindow
     {
-        PlayerCamaraControl camaraControl = null;
-
-        private void OnEnable()
+        private bool onPostProcess;
+        public bool OnPostProcess
         {
-            camaraControl = (PlayerCamaraControl)target;
-        }
-
-        EditScene()
-        {
-            SceneView.duringSceneGui += OnGui;
-        }
-
-        private void OnGui(SceneView sceneView)
-        {
-            Handles.BeginGUI();
-            ShowButtons(sceneView.position.size);
-            Handles.EndGUI();
-        }
-
-
-        /// <summary>
-        /// ボタンの描画関数
-        /// </summary>
-        private void ShowButtons(Vector2 sceneSize)
-        {
-            var rect = new Rect(
-              sceneSize.x * 5 / 6,
-              sceneSize.y / 7,
-              160,
-              30);
-
-            if (GUI.Button(rect, "Switch PostProcess"))
+            get => onPostProcess;
+            set
             {
-                camaraControl.EditeScene();
+                if (onPostProcess != value)
+                {
+                    onPostProcess = value;
+                    var postProcessVolume = Camera.main.GetComponent<PostProcessVolume>();
+                    postProcessVolume.enabled = value;
+                    RenderSettings.fog = value;
+                }
             }
+        }
+
+
+        [MenuItem("Window/EditScene")]
+        static void Open()
+        {
+            var window = GetWindow<EditScene>();
+            window.titleContent = new GUIContent("EditScene");
+        }
+
+        private void OnGUI()
+        {
+            GUILayout.Label("Base Settings", EditorStyles.boldLabel);
+            GUILayout.Space(1);
+            OnPostProcess = EditorGUILayout.Toggle("OnPostProcess", OnPostProcess);
         }
     }
 }
