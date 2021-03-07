@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     public void LockCusor()
     {
+        if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title) return;
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
