@@ -14,6 +14,7 @@ namespace Musashi
 
         public PlayerWeaponController CurrentHaveWeapon { get;private set; }
         PlayerWeaponController wp;
+        RaycastHit hit;
 
 
         private void Update()
@@ -23,6 +24,10 @@ namespace Musashi
                 //if (CurrentHaveWeapon)
                 //    Drop();
                 //PickUp();
+                if (hit.collider.TryGetComponent(out IPickUpObjectable pickUpObjectable))
+                {
+                    pickUpObjectable.OnPicked();
+                }
             }
 
             //if (PlayerInputManager.Drop() && CurrentHaveWeapon)
@@ -34,13 +39,14 @@ namespace Musashi
 
         private bool CheakPickUpObj()
         {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit, distance,pickUpLayer))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance,pickUpLayer))
             {
                 //if (hit.collider.TryGetComponent(out PlayerWeaponController playerWeapon))
                 //{
                 //    wp = playerWeapon;
                 //    return true;
                 //}
+            
                 interactiveMessage.SetActive(true);
                 return true;
             }

@@ -17,5 +17,10 @@ namespace Musashi
             isDead = true;
             GameManager.Instance.GameOver();
         }
+
+        public void Heal(float healPoint,float healtime)
+        {
+
+        }
     }
 }
