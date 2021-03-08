@@ -8,7 +8,6 @@ namespace Musashi
     {
         [SerializeField] protected KindOfItem item;
 
-
         public virtual void OnPicked()
         {
             Destroy(gameObject);
