@@ -10,14 +10,14 @@ namespace Musashi
     public class PlayerAnimationController : MonoBehaviour
     {
         [SerializeField] Animator animator;
-        PlayerInteractiveWeapon interactiveWeapon;
+        PlayerInteractive interactiveWeapon;
         PlayerCamaraControl camaraControl;
         bool isAiming;
 
         private void Start()
         {
             camaraControl = GetComponent<PlayerCamaraControl>();
-            interactiveWeapon = GetComponent<PlayerInteractiveWeapon>();
+            interactiveWeapon = GetComponent<PlayerInteractive>();
         }
 
         public void ShotingAnimation()
