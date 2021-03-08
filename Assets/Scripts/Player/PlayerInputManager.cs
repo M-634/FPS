@@ -5,12 +5,14 @@ namespace Musashi
 {
     public class PlayerInputManager : MonoBehaviour
     {
+        [SerializeField] GameObject inventoryPanel;
+
         //mouse and controler
         public float Input_X { get; private set; }
         public float Input_Z { get; private set; }
         public bool HasPutJumpButton { get; private set; }
 
-       
+
         private void Update()
         {
             Input_X = Input.GetAxis("Horizontal");
@@ -21,6 +23,21 @@ namespace Musashi
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 GameManager.Instance.ShowConfigure();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+                if (inventoryPanel.activeSelf)
+                {
+                    GameManager.Instance.UnlockCusor();
+                    Time.timeScale = 0f;
+                }
+                else
+                {
+                    GameManager.Instance.LockCusor();
+                    Time.timeScale = 1f;
+                }
             }
         }
 
@@ -36,7 +53,7 @@ namespace Musashi
 
         public static bool Aiming()
         {
-            return Input.GetMouseButton(1); 
+            return Input.GetMouseButton(1);
         }
 
         public static bool AimCancel()
@@ -68,7 +85,7 @@ namespace Musashi
         {
             return Cursor.lockState == CursorLockMode.Locked;
         }
-        
+
         public Vector3 GetMoveInput()
         {
             if (CanProcessInput())
