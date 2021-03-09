@@ -6,11 +6,14 @@ namespace Musashi
 {
     public abstract class BaseItem : MonoBehaviour, IPickUpObjectable
     {
-        [SerializeField] protected KindOfItem item;
+        public KindOfItem kindOfitem;
+        public bool canPickUp = true;
 
         public virtual void OnPicked()
         {
-            Destroy(gameObject);
+            canPickUp = Inventory.Instance.CanGetItem(this);
+            if (canPickUp)
+                Destroy(gameObject);
         }
 
         public virtual void UseItem() { }
@@ -28,11 +31,13 @@ namespace Musashi
 
     public enum KindOfItem
     {
+        //defult
+        None = 0,
         //health
         HealthKit, Apple,
         //weapon
-        ShotGun, HandGun,AssaultRifle,Grenade,Axe,CrossBow,
+        ShotGun, HandGun, AssaultRifle, Grenade, Axe, CrossBow,
         //other
-        Battery,Key,
+        Battery, Key,
     }
 }

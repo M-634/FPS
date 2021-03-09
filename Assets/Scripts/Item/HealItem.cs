@@ -16,7 +16,10 @@ namespace Musashi
 
         public override void UseItem()
         {
-            
+            //Playerの体力が満タンなら使用しない
+            EventManeger.Instance.Excute(healtime, healPoint);
+            Debug.Log("回復アイテムを使った");
+            Destroy(gameObject);
         }
     }
 }

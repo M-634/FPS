@@ -11,7 +11,8 @@ namespace Musashi
     public class EventManeger : IDisposable
     {
         public Dictionary<EventType, Action> eventTable;
-
+        public Action<float,float> healAction;
+   
         private static EventManeger instance;
         public static EventManeger Instance
         {
@@ -21,7 +22,7 @@ namespace Musashi
                 {
                     instance = new EventManeger
                     {
-                        eventTable = new Dictionary<EventType, Action>()
+                        eventTable = new Dictionary<EventType, Action>(),
                     };
                 }
                 return instance;
@@ -43,10 +44,21 @@ namespace Musashi
             Debug.Log($"{eventType}イベントに{action.Method.Name}が追加された");
         }
 
+        public void Subscribe(Action<float, float> action)
+        {
+            healAction += action;
+        }
+
+   
         public void UnSubscribe(EventType eventType, Action action)
         {
             Debug.Log($"{eventType}イベントの{action.Method.Name}が解除されたよ");
             eventTable[eventType] -= action;
+        }
+
+        public void UnSubscribe(Action<float, float> action)
+        {
+            healAction -= action;
         }
 
         public void Excute(EventType eventType)
@@ -54,6 +66,13 @@ namespace Musashi
             eventTable[eventType]?.Invoke();
             Debug.Log($"{eventType}イベントが実行された");
         }
+
+        public void Excute(float healPoint,float healTime)
+        {
+            healAction?.Invoke(healPoint,healTime);
+        }
+
+ 
 
         public void Dispose()
         {

@@ -4,6 +4,7 @@ namespace Musashi
 {
     public class PlayerHealthControl : BaseHealthControl
     {
+        public  bool IsMaxHP { get => currentHp == maxHp; }
         public override void OnDamage(float damage)
         {
             if (isDead) return;
@@ -20,7 +21,17 @@ namespace Musashi
 
         public void Heal(float healPoint,float healtime)
         {
+            Debug.Log($"{healPoint}を{healtime}かけて回復した");
+        }
 
+        private void OnEnable()
+        {
+            EventManeger.Instance.Subscribe(Heal);
+        }
+
+        private void OnDisable()
+        {
+            EventManeger.Instance.UnSubscribe(Heal);
         }
     }
 }

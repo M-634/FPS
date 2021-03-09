@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MenuButton : MonoBehaviour, IPointerClickHandler
+namespace Musashi
 {
-    [SerializeField] SceneInBuildIndex buildIndex;
-    public void OnPointerClick(PointerEventData eventData)
+    public class MenuButton : MonoBehaviour, IPointerClickHandler
     {
-        GameManager.Instance.SceneLoder.LoadScene(buildIndex);
+        [SerializeField] SceneInBuildIndex buildIndex;
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            GameManager.Instance.SceneLoder.LoadScene(buildIndex);
+        }
     }
 }
