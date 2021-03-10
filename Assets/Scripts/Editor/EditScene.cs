@@ -9,6 +9,18 @@ namespace Musashi
     /// </summary>
     public class EditScene : EditorWindow
     {
+        private PlayerHealthControl playerHealth;
+        public PlayerHealthControl PlayerHealth
+        {
+            get
+            {
+                if (!playerHealth)
+                {
+                    playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
+                }
+                return playerHealth;
+            }
+        }
         private bool onPostProcess;
         public bool OnPostProcess
         {
@@ -26,6 +38,7 @@ namespace Musashi
         }
 
 
+
         [MenuItem("Window/EditScene")]
         static void Open()
         {
@@ -38,6 +51,13 @@ namespace Musashi
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
             GUILayout.Space(1);
             OnPostProcess = EditorGUILayout.Toggle("OnPostProcess", OnPostProcess);
+
+            GUILayout.Space(1);
+            GUILayout.Label("Test RunTime", EditorStyles.boldLabel);
+            if(GUILayout.Button("Damage Player"))
+            {
+                PlayerHealth.OnDamage(30f);
+            }
         }
     }
 }

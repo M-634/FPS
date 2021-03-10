@@ -12,12 +12,12 @@ namespace Musashi
 
         private ItemData currentItemData;
         public Image Icon { get => icon; set => icon = value; }
-        public ItemData CurrentItemData { get =>currentItemData;}
+        public ItemData CurrentItemData { get => currentItemData; }
 
         public bool IsEmpty { get; set; } = true;
         public bool IsFilled { get; set; } = false;
 
-       
+
         public void SetInfo(ItemData getItemData)
         {
             icon.sprite = getItemData.Icon;
@@ -33,7 +33,7 @@ namespace Musashi
 
             if (stackNumber == currentItemData.MaxStackNumber)
                 IsFilled = true;
-               
+
             stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
         }
 
@@ -42,17 +42,20 @@ namespace Musashi
             if (IsEmpty) return;
 
             var item = Instantiate(CurrentItemData.ItemPrefab);
-            item.UseItem();
 
-            IsFilled = false;
-            stackNumber--;
-            stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
+            //アイテムが使用できたならスタック数を減らす
+            if (item.CanUseItem())
+            {
+                IsFilled = false;
+                stackNumber--;
+                stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
 
-            if (stackNumber == 0) 
-                ResetInfo();
+                if (stackNumber == 0)
+                    ResetInfo();
+            }
         }
 
-        
+
         public void ResetInfo()
         {
             icon.sprite = null;

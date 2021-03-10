@@ -7,7 +7,8 @@ namespace Musashi
     public abstract class BaseItem : MonoBehaviour, IPickUpObjectable
     {
         public KindOfItem kindOfitem;
-        public bool canPickUp = true;
+        protected bool canPickUp = true;
+        protected bool canUseItem = true;
 
         public virtual void OnPicked()
         {
@@ -16,7 +17,10 @@ namespace Musashi
                 Destroy(gameObject);
         }
 
-        public virtual void UseItem() { }
+        public virtual bool CanUseItem()
+        {
+            return canUseItem;
+        }
     }
 
 
@@ -25,8 +29,15 @@ namespace Musashi
     /// </summary>
     public interface IPickUpObjectable
     {
+        /// <summary>
+        /// アイテムを拾った時に呼ばれる関数
+        /// </summary>
         void OnPicked();
-        void UseItem();
+        /// <summary>
+        /// アイテムを使用できたかどうか判定する関数
+        /// </summary>
+        /// <returns></returns>
+        bool CanUseItem();
     }
 
     public enum KindOfItem

@@ -9,10 +9,15 @@ public class InteractiveMessage : MonoBehaviour
 {
     static TextMeshProUGUI textMeshProUGUI;
 
+    //Interactive message
     public const string InteractiveText = "Press E to Pickup";
+
+    //warning message
     public const string FullStackItem = "This Item is Full";
     public const string FullSlotItem = "Full Slot Inventory";
     public const string NoBatteryText = "No Battery !!";
+    public const string HPISFull = "HP is Full !";
+
 
     static bool isDisplayInteractiveMessage = false;
     private void Start()

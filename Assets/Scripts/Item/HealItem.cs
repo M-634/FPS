@@ -14,12 +14,21 @@ namespace Musashi
             base.OnPicked();
         }
 
-        public override void UseItem()
+        public override bool CanUseItem()
         {
-            //Playerの体力が満タンなら使用しない
-            EventManeger.Instance.Excute(healtime, healPoint);
-            Debug.Log("回復アイテムを使った");
-            Destroy(gameObject);
+            var playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
+            if (playerHealth.IsMaxHP)
+            {
+                InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
+                canUseItem = false;
+            }
+            else
+            {
+                canUseItem = true;
+                EventManeger.Instance.Excute(healtime, healPoint);
+            }
+            Destroy(gameObject, 0.1f);
+            return canUseItem;
         }
     }
 }

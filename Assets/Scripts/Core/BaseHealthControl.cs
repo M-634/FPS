@@ -9,21 +9,29 @@ namespace Musashi
         [SerializeField] protected Image healthBarFillImage = default;
 
         protected float currentHp;
+        protected float CurrentHp { get => currentHp;
+            set
+            {
+                currentHp = value;
+                if (healthBarFillImage)
+                    healthBarFillImage.fillAmount = currentHp / maxHp;
+            } 
+        }
         protected bool isDead;
 
         protected virtual void Start()
         {
-            currentHp = maxHp;
+            CurrentHp = maxHp;
         }
 
         public virtual void OnDamage(float damage)
         {
-            currentHp -= damage;
+            CurrentHp -= damage;
 
-            if (healthBarFillImage)
-                healthBarFillImage.fillAmount = currentHp / maxHp;
+            //if (healthBarFillImage)
+            //    healthBarFillImage.fillAmount = CurrentHp / maxHp;
 
-            if (currentHp <= 0) OnDie();
+            if (CurrentHp <= 0) OnDie();
         }
 
         protected abstract void OnDie();
