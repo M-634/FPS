@@ -33,13 +33,15 @@ namespace Musashi
             targetFov = playerCamera.fieldOfView;
             fov = targetFov;
 
+            RenderSettings.fog = true;
             InitPlayerPostProcessSettings();
         }
 
         private void Update()
         {
             Look();
-            ChangePostProcess();
+            if (Input.GetKeyDown(KeyCode.N))//test
+                ChangePostProcess();
 
             fov = Mathf.Lerp(fov, targetFov, Time.deltaTime * fovSpeed);
             playerCamera.fieldOfView = fov;
@@ -102,19 +104,15 @@ namespace Musashi
 
         public void ChangePostProcess()
         {
-            if (Input.GetKeyDown(KeyCode.N))//test
-            {
-                if (volume.profile == standard)
-                    SwitchNightVision();
-                else
-                    InitPlayerPostProcessSettings();
-            }
+            if (volume.profile == standard)
+                SwitchNightVision();
+            else
+                InitPlayerPostProcessSettings();
         }
 
         public void InitPlayerPostProcessSettings()
         {
             volume.enabled = true;
-            RenderSettings.fog = true;
             volume.profile = standard;
             nightVisionOverlay.SetActive(false);
             flashLight.SetActive(false);
@@ -124,8 +122,19 @@ namespace Musashi
         {
             volume.profile = nightVision;
             nightVisionOverlay.SetActive(true);
-            if(nightVisionOverlay.activeSelf)
-                 flashLight.SetActive(true);
+            if (nightVisionOverlay.activeSelf)//バッテリーの充電がないならライトも消える
+                flashLight.SetActive(true);
+        }
+
+
+        public void OnEnable()
+        {
+            EventManeger.Instance.Subscribe(EventType.ChangePostProcess, ChangePostProcess);
+        }
+
+        public void OnDisable()
+        {
+            EventManeger.Instance.UnSubscribe(EventType.ChangePostProcess, ChangePostProcess);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Musashi
                 //}
 
                 //interactiveMessage.SetActive(true);
-                InteractiveMessage.ShowMessage(InteractiveMessage.InteractiveText);
+                InteractiveMessage.ShowInteractiveMessage(InteractiveMessage.InteractiveText);
                 return true;
             }
             //interactiveMessage.SetActive(false);

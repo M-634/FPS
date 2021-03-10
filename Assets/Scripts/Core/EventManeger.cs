@@ -88,6 +88,7 @@ namespace Musashi
     {
         Null,
         EnemyDie,
+        ChangePostProcess,
     }
 }
 
