@@ -13,8 +13,11 @@ namespace Musashi
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] SoundManager soundManager;
         [SerializeField] SceneLoder sceneLoder;
         [SerializeField] Configure configure;
+
+        public SoundManager SoundManager { get => soundManager;}
         public SceneLoder SceneLoder { get => sceneLoder; }
         public bool IsGameClear { get; private set; }
 

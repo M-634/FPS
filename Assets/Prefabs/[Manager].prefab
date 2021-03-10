@@ -288,6 +288,7 @@ GameObject:
   - component: {fileID: 7197702161134707757}
   - component: {fileID: 7197702161134707758}
   - component: {fileID: 7197702161134707759}
+  - component: {fileID: 7564890306227457614}
   m_Layer: 0
   m_Name: '[Manager]'
   m_TagString: GameManager
@@ -324,6 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e1d27405d81224ab7667e54a1e489f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundManager: {fileID: 7564890306227457614}
   sceneLoder: {fileID: 7197702161593008378}
   configure: {fileID: 7197702161597715197}
 --- !u!114 &7197702161134707759
@@ -339,6 +341,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fpsText: {fileID: 7197702161479146471}
+--- !u!114 &7564890306227457614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7197702161134707756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 779f8a6f458d23342ae1fbe41ceed755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seAudioClipsList:
+  - {fileID: 8300000, guid: 95c77b7e87908d34881032f1b0bda03f, type: 3}
+  audioMixer: {fileID: 24100000, guid: ef0daa2f1ed37e7418abd3d8d5559837, type: 2}
+  seAMG: {fileID: -5610975541670450029, guid: ef0daa2f1ed37e7418abd3d8d5559837, type: 2}
 --- !u!1 &7197702161479146469
 GameObject:
   m_ObjectHideFlags: 0

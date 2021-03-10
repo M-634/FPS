@@ -14,7 +14,10 @@ namespace Musashi
         {
             canPickUp = Inventory.Instance.CanGetItem(this);
             if (canPickUp)
+            {
+                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
                 Destroy(gameObject);
+            }
         }
 
         public virtual bool CanUseItem()
