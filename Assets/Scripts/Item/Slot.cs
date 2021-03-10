@@ -7,20 +7,36 @@ namespace Musashi
     public class Slot : MonoBehaviour
     {
         [SerializeField] Image icon;
+        [SerializeField] Image Outline;
+        [SerializeField] TextMeshProUGUI keyCode;
+        [SerializeField] Color highLightColor;
         [SerializeField] TextMeshProUGUI stack;
         int stackNumber = 0;
 
+        public bool isSelected
+        {
+            get { return Outline.color == highLightColor; }
+            set
+            {
+                if (value == true)
+                    Outline.color = highLightColor;
+                else
+                    Outline.color = Color.black;
+            }
+        }
+
         private ItemData currentItemData;
         public Image Icon { get => icon; set => icon = value; }
+        public string KeyCode { set => keyCode.text = value; }
         public ItemData CurrentItemData { get => currentItemData; }
 
         public bool IsEmpty { get => stackNumber == 0; }
-        public bool IsFilled 
+        public bool IsFilled
         {
-            get 
+            get
             {
                 if (!currentItemData) return false;
-                return stackNumber == currentItemData.MaxStackNumber; 
+                return stackNumber == currentItemData.MaxStackNumber;
             }
         }
 

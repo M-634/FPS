@@ -4,23 +4,47 @@ using UnityEngine;
 
 namespace Musashi
 {
+    /// <summary>
+    /// fortniteのスロットを参考にする
+    /// </summary>
     public class Inventory : SingletonMonoBehaviour<Inventory>
     {
         [SerializeField] ItemDataBase itemDataBase;
-        [SerializeField] Slot[] slots = new Slot[5];
+        [SerializeField] Slot[] slots;
         public Slot[] Slots { get => slots; }
 
         int slotNumber = -1;
+        int beforeNumber = -1;
+
+        private void Start()
+        {
+            SetKeyCode();
+        }
         private void Update()
         {
             slotNumber = PlayerInputManager.SlotAction();
 
-            if (slotNumber != -1)
+            if (slotNumber == -1) return;
+
+            if (beforeNumber != -1)
             {
-                //ここ使うではなくハイライトにする
-                slots[slotNumber].UseItemInSlot();
-                slotNumber = -1;
-            } 
+                slots[beforeNumber].isSelected = false;
+            }
+
+            slots[slotNumber].isSelected = true;
+            beforeNumber = slotNumber;
+            slotNumber = -1;
+        }
+
+        public void SetKeyCode()
+        {
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if (i == 0)
+                    slots[i].KeyCode = "Q";
+                else
+                    slots[i].KeyCode = i.ToString();
+            }
         }
 
         /// <summary>
