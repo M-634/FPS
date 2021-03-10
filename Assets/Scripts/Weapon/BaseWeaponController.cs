@@ -5,13 +5,11 @@ using UnityEngine;
 namespace Musashi
 {
     /// <summary>
-    /// 銃の共通する武器報情報をまとめたクラス
+    ///武器報情報をまとめたクラス
     /// </summary>
     [System.Serializable]
     public class WeaponGeneralData
     {
-        public int weaponId;
-
         public Transform[] muzzles;
         public BulletControl bullet;
 
