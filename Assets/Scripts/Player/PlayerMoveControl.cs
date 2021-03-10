@@ -40,10 +40,6 @@ namespace Musashi
         [SerializeField] AudioClip grapplingWindSFX;
         AudioSource audioSource;
 
-
-        [Header("Debug")]
-        [SerializeField] TextMeshProUGUI[] texts;
-
         PlayerInputManager inputManager;
         PlayerAnimationController animationController;
         CharacterController characterController;
@@ -199,7 +195,6 @@ namespace Musashi
             if (grapplingGun.IsGrappling) state = State.Grappling;
 
             //Set animation
-            //texts[0].text = characterVelocity.magnitude.ToString("F2");
             if (animationController)
                 animationController.MoveAnimation(characterVelocity.magnitude,state);
         }
