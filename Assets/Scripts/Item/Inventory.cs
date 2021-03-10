@@ -17,6 +17,7 @@ namespace Musashi
 
             if (slotNumber != -1)
             {
+                //ここ使うではなくハイライトにする
                 slots[slotNumber].UseItemInSlot();
                 slotNumber = -1;
             } 

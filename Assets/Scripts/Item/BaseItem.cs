@@ -37,7 +37,7 @@ namespace Musashi
         /// </summary>
         void OnPicked();
         /// <summary>
-        /// アイテムを使用できたかどうか判定する関数
+        /// アイテムを使用できたかどうか判定する関数。
         /// </summary>
         /// <returns></returns>
         bool CanUseItem();

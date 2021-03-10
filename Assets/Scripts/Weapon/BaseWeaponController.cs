@@ -10,6 +10,7 @@ namespace Musashi
     [System.Serializable]
     public class WeaponGeneralData
     {
+        public KindOfItem KindOfItem;
         public Transform[] muzzles;
         public BulletControl bullet;
 

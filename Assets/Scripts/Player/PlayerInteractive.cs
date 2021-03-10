@@ -8,11 +8,13 @@ namespace Musashi
     public class PlayerInteractive : MonoBehaviour
     {
         [SerializeField] Transform equipPosition;
+        [SerializeField] BaseWeaponController[] equipWeapons;
         [SerializeField] LayerMask pickUpLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
 
-        public PlayerWeaponController CurrentHaveWeapon { get;private set; }
+        public BaseWeaponController CurrentHaveWeapon { get; private set; }
+        int currentWeaponIndex = -1;
         PlayerWeaponController wp;
         RaycastHit hit;
 
@@ -39,7 +41,7 @@ namespace Musashi
 
         private bool CheakPickUpObj()
         {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance,pickUpLayer))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance, pickUpLayer))
             {
                 //if (hit.collider.TryGetComponent(out PlayerWeaponController playerWeapon))
                 //{
@@ -84,6 +86,26 @@ namespace Musashi
             CurrentHaveWeapon.transform.parent = null;
             CurrentHaveWeapon.GetComponent<Rigidbody>().isKinematic = false;
             CurrentHaveWeapon = null;
+        }
+
+        public void EquipmentWeapon(KindOfItem kindOfItem)
+        {
+            //現在装備していれば装備を外す
+            if (currentWeaponIndex != -1)
+            {
+                equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
+            }
+
+
+            for (int i = 0; i < equipWeapons.Length; i++)
+            {
+                if (equipWeapons[i].data.KindOfItem == kindOfItem)
+                {
+                    equipWeapons[i].gameObject.SetActive(true);
+                    CurrentHaveWeapon = equipWeapons[i];
+                    currentWeaponIndex = i;
+                }
+            }
         }
     }
 }

@@ -14,14 +14,20 @@ namespace Musashi
         public Image Icon { get => icon; set => icon = value; }
         public ItemData CurrentItemData { get => currentItemData; }
 
-        public bool IsEmpty { get; set; } = true;
-        public bool IsFilled { get; set; } = false;
+        public bool IsEmpty { get => stackNumber == 0; }
+        public bool IsFilled 
+        {
+            get 
+            {
+                if (!currentItemData) return false;
+                return stackNumber == currentItemData.MaxStackNumber; 
+            }
+        }
 
 
         public void SetInfo(ItemData getItemData)
         {
             icon.sprite = getItemData.Icon;
-            IsEmpty = false;
             stackNumber++;
             stack.text = stackNumber.ToString() + " / " + getItemData.MaxStackNumber.ToString();
             currentItemData = getItemData;
@@ -29,11 +35,8 @@ namespace Musashi
 
         public void AddItemInSlot()
         {
+            if (IsFilled) return;
             stackNumber++;
-
-            if (stackNumber == currentItemData.MaxStackNumber)
-                IsFilled = true;
-
             stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
         }
 
@@ -46,7 +49,6 @@ namespace Musashi
             //アイテムが使用できたならスタック数を減らす
             if (item.CanUseItem())
             {
-                IsFilled = false;
                 stackNumber--;
                 stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
 
@@ -55,12 +57,9 @@ namespace Musashi
             }
         }
 
-
         public void ResetInfo()
         {
             icon.sprite = null;
-            IsEmpty = true;
-            IsFilled = false;
             stackNumber = 0;
             stack.text = "";
             currentItemData = null;
