@@ -4,7 +4,7 @@ namespace Musashi
 {
     public class EnemyGunAttack : MonoBehaviour, IEnemyAttack
     {
-        [SerializeField] BaseWeaponController currentHaveWeapon;
+        [SerializeField] BaseWeapon currentHaveWeapon;
 
         public void Excute(EnemyAI owner)
         {
@@ -14,14 +14,14 @@ namespace Musashi
                 return;
             }
 
-            if (currentHaveWeapon.IsCoolTime)
-            {
-                currentHaveWeapon.UpdateAmmo();
-            }
-            else
-            {
-                currentHaveWeapon.TryShot();
-            }
+            //if (currentHaveWeapon.IsCoolTime)
+            //{
+            //    currentHaveWeapon.UpdateAmmo();
+            //}
+            //else
+            //{
+            //    currentHaveWeapon.TryShot();
+            //}
         }
     }
 }

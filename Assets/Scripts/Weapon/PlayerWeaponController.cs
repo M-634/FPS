@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace Musashi
 {
-    public class PlayerWeaponController : BaseWeaponController
+    public class PlayerWeaponController : BaseWeapon
     {
         //[SerializeField] AmmoCounter ammoCounter;
 
@@ -24,5 +24,9 @@ namespace Musashi
         //    if(ammoCounter)
         //        ammoCounter.Init(data.maxAmmo);
         //}
+        public override void Attack()
+        {
+        
+        }
     }
 }

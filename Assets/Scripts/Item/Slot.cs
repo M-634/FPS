@@ -83,7 +83,7 @@ namespace Musashi
             //スロットないのアイテムが武器かどうかを判定する
             if (CurrentItemData.IsWeapon)
             {
-                playerInteractive.UseWeapon();
+                playerInteractive.CurrentHaveWeapon.Attack();
                 return;
             }
 

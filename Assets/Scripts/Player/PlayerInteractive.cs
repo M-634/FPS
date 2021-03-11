@@ -8,12 +8,12 @@ namespace Musashi
     public class PlayerInteractive : MonoBehaviour
     {
         [SerializeField] Transform equipPosition;
-        [SerializeField] BaseWeaponController[] equipWeapons;
+        [SerializeField] BaseWeapon[] equipWeapons;
         [SerializeField] LayerMask pickUpLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
 
-        public BaseWeaponController CurrentHaveWeapon { get; private set; }
+        public BaseWeapon CurrentHaveWeapon { get; private set; }
         int currentWeaponIndex = -1;
         RaycastHit hit;
 
@@ -43,31 +43,18 @@ namespace Musashi
         {
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance, pickUpLayer))
             {
-                //if (hit.collider.TryGetComponent(out PlayerWeaponController playerWeapon))
-                //{
-                //    wp = playerWeapon;
-                //    return true;
-                //}
-
-                //interactiveMessage.SetActive(true);
                 InteractiveMessage.ShowInteractiveMessage(InteractiveMessage.InteractiveText);
                 return true;
             }
-            //interactiveMessage.SetActive(false);
             InteractiveMessage.CloseMessage();
             return false;
-        }
-
-        public void UseWeapon()
-        {
-            CurrentHaveWeapon.TryShot();
         }
 
         public void EquipmentWeapon(KindOfItem kindOfItem)
         {
             for (int i = 0; i < equipWeapons.Length; i++)
             {
-                if (equipWeapons[i].data.KindOfItem == kindOfItem)
+                if (equipWeapons[i].KindOfItem == kindOfItem)
                 {
                     equipWeapons[i].gameObject.SetActive(true);
                     CurrentHaveWeapon = equipWeapons[i];
