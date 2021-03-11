@@ -28,6 +28,9 @@ namespace Musashi
         public AudioClip shotClip;
     }
 
+    /// <summary>
+    /// 武器はプレイヤーに持たせた状態ででアクティブを切る
+    /// </summary>
     public class BaseWeaponController : MonoBehaviour
     {
         public WeaponGeneralData data;
@@ -46,6 +49,7 @@ namespace Musashi
             audioSource = GetComponent<AudioSource>();
             //PoolingAmmo();
             ReLoad();
+            gameObject.SetActive(false);
         }
 
         public void ReLoad()

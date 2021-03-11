@@ -24,15 +24,15 @@ namespace Musashi
         {
             if (!interactiveWeapon.CurrentHaveWeapon) return;
 
-            if (PlayerInputManager.Use())
-            {
-                animator.Play("Fire");
-                isAiming = true;
-            }
+            //if (PlayerInputManager.Use())
+            //{
+            //    animator.Play("Fire");
+            //    isAiming = true;
+            //}
 
             if (PlayerInputManager.Aiming())
             {
-                animator.Play("Aiming");
+                //animator.Play("Aiming");
                 camaraControl.SetAimingFov();
                 isAiming = true;
             }
@@ -47,29 +47,29 @@ namespace Musashi
         public void MoveAnimation(float velocity, PlayerMoveControl.State state)
         {
             ShotingAnimation();
-            if (isAiming) return;
+            //if (isAiming) return;
 
-            if (state != PlayerMoveControl.State.Normal)
-            {
-                animator.Play("Idle");
-                return;
-            }
+            //if (state != PlayerMoveControl.State.Normal)
+            //{
+            //    animator.Play("Idle");
+            //    return;
+            //}
 
-            if (interactiveWeapon.CurrentHaveWeapon)
-            {
+            //if (interactiveWeapon.CurrentHaveWeapon)
+            //{
 
-                if (velocity > 5)
-                    animator.Play("RunWtihGun");
-                else
-                    animator.Play("IdleWithGun");
-            }
-            else
-            {
-                if (velocity > 5f)
-                    animator.Play("Run");
-                else
-                    animator.Play("Idle");
-            }
+            //    if (velocity > 5)
+            //        animator.Play("RunWtihGun");
+            //    else
+            //        animator.Play("IdleWithGun");
+            //}
+            //else
+            //{
+            //    if (velocity > 5f)
+            //        animator.Play("Run");
+            //    else
+            //        animator.Play("Idle");
+            //}
         }
     }
 }

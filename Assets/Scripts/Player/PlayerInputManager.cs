@@ -58,7 +58,7 @@ namespace Musashi
 
         public static bool AimCancel()
         {
-            return Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(0);
+            return Input.GetMouseButtonUp(1);
         }
 
         public static bool CoolDownWeapon()

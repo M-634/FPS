@@ -15,7 +15,6 @@ namespace Musashi
 
         public BaseWeaponController CurrentHaveWeapon { get; private set; }
         int currentWeaponIndex = -1;
-        PlayerWeaponController wp;
         RaycastHit hit;
 
 
@@ -84,21 +83,6 @@ namespace Musashi
             {
                 equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
             }
-        }
-        public void PickUp()
-        {
-            CurrentHaveWeapon = wp;
-            CurrentHaveWeapon.transform.position = equipPosition.position;
-            CurrentHaveWeapon.transform.parent = equipPosition;
-            CurrentHaveWeapon.transform.localEulerAngles = new Vector3(0f, 0, 0);
-            CurrentHaveWeapon.GetComponent<Rigidbody>().isKinematic = true;
-        }
-
-        public void Drop()
-        {
-            CurrentHaveWeapon.transform.parent = null;
-            CurrentHaveWeapon.GetComponent<Rigidbody>().isKinematic = false;
-            CurrentHaveWeapon = null;
         }
     }
 }
