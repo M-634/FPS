@@ -82,6 +82,7 @@ namespace Musashi
             if (currentWeaponIndex != -1)
             {
                 equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
+                CurrentHaveWeapon = null;
             }
         }
     }

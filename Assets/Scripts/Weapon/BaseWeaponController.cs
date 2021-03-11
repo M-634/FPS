@@ -35,10 +35,12 @@ namespace Musashi
     {
         public WeaponGeneralData data;
         BulletControl[] arraysOfAmmo;
-     
+
+        Animator animator;
         AudioSource audioSource;
         float rateTimer;
         float coolTimeCount;
+
 
         public virtual int CurrentAmmo { get; set; }
 
@@ -47,6 +49,7 @@ namespace Musashi
         protected virtual void Start()
         {
             audioSource = GetComponent<AudioSource>();
+            animator = GetComponent<Animator>();
             //PoolingAmmo();
             ReLoad();
             gameObject.SetActive(false);
@@ -57,6 +60,19 @@ namespace Musashi
             CurrentAmmo = data.maxAmmo;
             IsCoolTime = false;
             coolTimeCount = 0f;
+        }
+
+        private void Update()
+        {
+            if (PlayerInputManager.Aiming())
+            {
+                animator.SetBool("isAiming", true);
+            }
+
+            if (PlayerInputManager.AimCancel())
+            {
+                animator.SetBool("isAiming", false);
+            }
         }
 
         void PoolingAmmo()
