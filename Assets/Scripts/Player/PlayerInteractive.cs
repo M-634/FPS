@@ -21,22 +21,23 @@ namespace Musashi
 
         private void Update()
         {
-            if (CheakPickUpObj() && PlayerInputManager.PickUp())
+            if (CheakPickUpObj() && PlayerInputManager.InteractiveAction())
             {
-                //if (CurrentHaveWeapon)
-                //    Drop();
-                //PickUp();
                 if (hit.collider.TryGetComponent(out IPickUpObjectable pickUpObjectable))
                 {
                     pickUpObjectable.OnPicked();
                 }
             }
 
-            //if (PlayerInputManager.Drop() && CurrentHaveWeapon)
-            //    Drop();
-
-            //if (CurrentHaveWeapon)
-            //     UseWeapon();
+            if (PlayerInputManager.Use())
+            {
+                //スロットが選択されているかどうか判定
+                if (Inventory.Instance.IsSlotSelected)
+                {
+                    //アイテムなら消費し、武器なら攻撃する
+                    Inventory.Instance.SelectedSlot.UseItemInSlot();
+                }
+            }
         }
 
         private bool CheakPickUpObj()
@@ -58,20 +59,32 @@ namespace Musashi
             return false;
         }
 
-        private void UseWeapon()
+        public void UseWeapon()
         {
-            if (PlayerInputManager.Shot())
-            {
-                CurrentHaveWeapon.TryShot();
-            }
-
-            if (PlayerInputManager.CoolDownWeapon())
-            {
-                CurrentHaveWeapon.IsCoolTime = true;
-            }
-            CurrentHaveWeapon.UpdateAmmo();
+            CurrentHaveWeapon.TryShot();
         }
 
+        public void EquipmentWeapon(KindOfItem kindOfItem)
+        {
+            for (int i = 0; i < equipWeapons.Length; i++)
+            {
+                if (equipWeapons[i].data.KindOfItem == kindOfItem)
+                {
+                    equipWeapons[i].gameObject.SetActive(true);
+                    CurrentHaveWeapon = equipWeapons[i];
+                    currentWeaponIndex = i;
+                }
+            }
+        }
+
+        public void RemoveEquipment()
+        {
+            //現在装備していれば装備を外す
+            if (currentWeaponIndex != -1)
+            {
+                equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
+            }
+        }
         public void PickUp()
         {
             CurrentHaveWeapon = wp;
@@ -86,26 +99,6 @@ namespace Musashi
             CurrentHaveWeapon.transform.parent = null;
             CurrentHaveWeapon.GetComponent<Rigidbody>().isKinematic = false;
             CurrentHaveWeapon = null;
-        }
-
-        public void EquipmentWeapon(KindOfItem kindOfItem)
-        {
-            //現在装備していれば装備を外す
-            if (currentWeaponIndex != -1)
-            {
-                equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
-            }
-
-
-            for (int i = 0; i < equipWeapons.Length; i++)
-            {
-                if (equipWeapons[i].data.KindOfItem == kindOfItem)
-                {
-                    equipWeapons[i].gameObject.SetActive(true);
-                    CurrentHaveWeapon = equipWeapons[i];
-                    currentWeaponIndex = i;
-                }
-            }
         }
     }
 }

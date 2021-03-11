@@ -24,7 +24,7 @@ namespace Musashi
         {
             if (!interactiveWeapon.CurrentHaveWeapon) return;
 
-            if (PlayerInputManager.Shot())
+            if (PlayerInputManager.Use())
             {
                 animator.Play("Fire");
                 isAiming = true;

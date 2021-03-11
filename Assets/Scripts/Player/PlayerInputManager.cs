@@ -46,9 +46,9 @@ namespace Musashi
             return Input.GetMouseButtonDown(1);//別のに変える
         }
 
-        public static bool Shot()
+        public static bool Use()
         {
-            return Input.GetMouseButton(0);
+            return Input.GetMouseButtonDown(0);
         }
 
         public static bool Aiming()
@@ -66,7 +66,7 @@ namespace Musashi
             return Input.GetMouseButtonUp(0);
         }
 
-        public static bool PickUp()
+        public static bool InteractiveAction()
         {
             return Input.GetKeyDown(KeyCode.E);
         }

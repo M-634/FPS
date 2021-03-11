@@ -13,15 +13,30 @@ namespace Musashi
         [SerializeField] TextMeshProUGUI stack;
         int stackNumber = 0;
 
-        public bool isSelected
+        PlayerInteractive playerInteractive;
+        public bool IsSelected
         {
             get { return Outline.color == highLightColor; }
             set
             {
                 if (value == true)
+                {
                     Outline.color = highLightColor;
+                    //スロット内が武器なら装備する
+                    if (!IsEmpty && CurrentItemData.IsWeapon)
+                    {
+                        playerInteractive.EquipmentWeapon(CurrentItemData.KindOfItem);
+                    }
+                }
                 else
+                {
                     Outline.color = Color.black;
+                    //現在武器を装備しているなら外す
+                    if (!IsEmpty && CurrentItemData.IsWeapon)
+                    {
+                        playerInteractive.RemoveEquipment();
+                    }
+                }
             }
         }
 
@@ -41,6 +56,11 @@ namespace Musashi
         }
 
 
+        public void Start()
+        {
+            playerInteractive = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInteractive>();
+        }
+
         public void SetInfo(ItemData getItemData)
         {
             icon.sprite = getItemData.Icon;
@@ -59,6 +79,14 @@ namespace Musashi
         public void UseItemInSlot()
         {
             if (IsEmpty) return;
+
+            //スロットないのアイテムが武器かどうかを判定する
+            if (CurrentItemData.IsWeapon)
+            {
+                playerInteractive.UseWeapon();
+                return;
+            }
+
 
             var item = Instantiate(CurrentItemData.ItemPrefab);
 

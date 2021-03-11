@@ -13,6 +13,9 @@ namespace Musashi
         [SerializeField] Slot[] slots;
         public Slot[] Slots { get => slots; }
 
+        public bool IsSlotSelected { get => SelectedSlot != null; }
+        public Slot SelectedSlot { get; private set; }
+
         int slotNumber = -1;
         int beforeNumber = -1;
 
@@ -28,10 +31,11 @@ namespace Musashi
 
             if (beforeNumber != -1)
             {
-                slots[beforeNumber].isSelected = false;
+                slots[beforeNumber].IsSelected = false;
             }
 
-            slots[slotNumber].isSelected = true;
+            slots[slotNumber].IsSelected = true;
+            SelectedSlot = slots[slotNumber];
             beforeNumber = slotNumber;
             slotNumber = -1;
         }

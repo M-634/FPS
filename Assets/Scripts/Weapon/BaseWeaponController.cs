@@ -44,7 +44,7 @@ namespace Musashi
         protected virtual void Start()
         {
             audioSource = GetComponent<AudioSource>();
-            PoolingAmmo();
+            //PoolingAmmo();
             ReLoad();
         }
 
