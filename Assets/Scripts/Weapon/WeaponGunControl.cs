@@ -13,14 +13,15 @@ namespace Musashi
         {
             public BulletControl bullet;
             public ParticleSystem muzzleFalsh;
-            readonly Rigidbody bulletRb;
+            Transform muzzle;
+         
 
             public PoolingObject(BulletControl bullet, ParticleSystem muzzleFalsh, Transform muzzle = null, bool active = false)
             {
                 this.bullet = Instantiate(bullet, muzzle.position, Quaternion.identity, muzzle);
-                bulletRb = bullet.GetComponent<Rigidbody>();
                 this.muzzleFalsh = Instantiate(muzzleFalsh, muzzle.position, Quaternion.identity, muzzle);
                 SetActive = active;
+                this.muzzle = muzzle;
             }
 
             public bool SetActive
@@ -29,6 +30,11 @@ namespace Musashi
                 {
                     bullet.gameObject.SetActive(value);
                     muzzleFalsh.gameObject.SetActive(value);
+                    if(value == true)
+                    {
+                        bullet.transform.position = muzzle.position;
+                        muzzleFalsh.transform.position = muzzle.position;
+                    }
                 }
             }
 
@@ -77,6 +83,11 @@ namespace Musashi
                 audioSource.Play(ReloadClip);
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.R)) ReLoad();
+        }
+
 
         private void Pooling()
         {
@@ -109,6 +120,9 @@ namespace Musashi
                 if (poolingObjects[i].CanUse)
                 {
                     //fire
+                    poolingObjects[i].SetActive = true;
+                    poolingObjects[i].muzzleFalsh.Play();
+                    poolingObjects[i].bullet.AddForce(ref shotPower);
 
                     if (audioSource)
                         audioSource.Play(shotClip);
