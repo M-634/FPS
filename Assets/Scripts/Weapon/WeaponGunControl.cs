@@ -120,9 +120,10 @@ namespace Musashi
                 if (poolingObjects[i].CanUse)
                 {
                     //fire
+                    Debug.Log("fire");
                     poolingObjects[i].SetActive = true;
                     poolingObjects[i].muzzleFalsh.Play();
-                    poolingObjects[i].bullet.AddForce(ref shotPower);
+                    poolingObjects[i].bullet.AddForce(ref shotPower,muzzle);
 
                     if (audioSource)
                         audioSource.Play(shotClip);
