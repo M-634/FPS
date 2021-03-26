@@ -2,10 +2,6 @@
 
 namespace Musashi
 {
-    /// <summary>
-    /// プレイヤープレハブの子供にある銃オブジェクトにアタッチする。
-    /// 初期化時は、弾とエフェクトをプールさせたらアクティブを切る
-    /// </summary>
     public class WeaponGunControl : BaseWeapon
     {
         [System.Serializable]
@@ -51,7 +47,9 @@ namespace Musashi
 
         [SerializeField] WeaponShootType weaponShootType;
         [SerializeField] Transform muzzle;
-        [SerializeField] PoolingObject poolingObject;
+       // [SerializeField] PoolingObject poolingObject;
+        public BulletControl bullet;
+        public ParticleSystem muzzleFalsh;
 
         [SerializeField] int maxAmmo;
 
@@ -77,7 +75,7 @@ namespace Musashi
             if (!muzzle)
                 muzzle = this.transform;
 
-            Pooling();
+            //Pooling();
             ReLoad();
             gameObject.SetActive(false);
         }
@@ -106,15 +104,15 @@ namespace Musashi
         }
 
 
-        private void Pooling()
-        {
-            poolingObjects = new PoolingObject[maxAmmo];
-            for (int i = 0; i < maxAmmo; i++)
-            {
-                var newObj = new PoolingObject(poolingObject.bullet, poolingObject.muzzleFalsh, muzzle, false);
-                poolingObjects[i] = newObj;
-            }
-        }
+        //private void Pooling()
+        //{
+        //    poolingObjects = new PoolingObject[maxAmmo];
+        //    for (int i = 0; i < maxAmmo; i++)
+        //    {
+        //        var newObj = new PoolingObject(poolingObject.bullet, poolingObject.muzzleFalsh, muzzle, false);
+        //        poolingObjects[i] = newObj;
+        //    }
+        //}
 
         public void TryShot()
         {
@@ -137,24 +135,35 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-            for (int i = 0; i < poolingObjects.Length; i++)
-            {
-                if (poolingObjects[i].CanUse)
-                {
-                    //fire
-                    Debug.Log("fire");
-                    poolingObjects[i].SetActive = true;
-                    poolingObjects[i].muzzleFalsh.Play();
-                    poolingObjects[i].bullet.AddForce(ref shotPower, muzzle);
+            var b = Instantiate(bullet,muzzle.position,Quaternion.identity);
+            b.AddForce(ref shotPower, muzzle);
 
-                    if (audioSource)
-                        audioSource.Play(shotClip);
+            muzzleFalsh.Play();
 
-                    CurrentAmmo--;
-                    lastTimeShot = Time.time;
-                    return;
-                }
-            }
+            if (audioSource)
+                audioSource.Play(shotClip);
+
+            CurrentAmmo--;
+            lastTimeShot = Time.time;
+
+            //for (int i = 0; i < poolingObjects.Length; i++)
+            //{
+            //    if (poolingObjects[i].CanUse)
+            //    {
+            //        //fire
+            //        Debug.Log("fire");
+            //        poolingObjects[i].SetActive = true;
+            //        poolingObjects[i].muzzleFalsh.Play();
+            //        poolingObjects[i].bullet.AddForce(ref shotPower, muzzle);
+
+            //        if (audioSource)
+            //            audioSource.Play(shotClip);
+
+            //        CurrentAmmo--;
+            //        lastTimeShot = Time.time;
+            //        return;
+            //    }
+            //}
         }
 
         /// <summary>

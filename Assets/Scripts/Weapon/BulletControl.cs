@@ -23,7 +23,8 @@ namespace Musashi
             if (timer > lifeTime) 
             {
                 timer = 0f;
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
+                Destroy(gameObject);
             }
         }
     }
