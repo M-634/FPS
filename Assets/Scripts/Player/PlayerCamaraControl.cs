@@ -28,6 +28,8 @@ namespace Musashi
         float fovSpeed;
         private float xRotation;
 
+        public bool LockCamera { get; set; } = false;
+
         private void Start()
         {
             playerCamera.fieldOfView = NOMAL_FOV;
@@ -40,6 +42,8 @@ namespace Musashi
 
         private void Update()
         {
+            if (LockCamera) return;
+
             Look();
             if (Input.GetKeyDown(KeyCode.N))//test
                 ChangePostProcess();
@@ -133,11 +137,15 @@ namespace Musashi
         public void OnEnable()
         {
             EventManeger.Instance.Subscribe(EventType.ChangePostProcess, ChangePostProcess);
+            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => LockCamera = true) ;
+            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => LockCamera = false);
         }
 
         public void OnDisable()
         {
             EventManeger.Instance.UnSubscribe(EventType.ChangePostProcess, ChangePostProcess);
+            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => LockCamera = true);
+            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => LockCamera = false);
         }
     }
 }

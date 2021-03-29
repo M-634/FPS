@@ -89,6 +89,8 @@ namespace Musashi
         Null,
         EnemyDie,
         ChangePostProcess,
+        OpenInventory,
+        CloseInventory,
     }
 }
 

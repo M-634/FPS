@@ -30,13 +30,15 @@ namespace Musashi
                 inventoryPanel.SetActive(!inventoryPanel.activeSelf);
                 if (inventoryPanel.activeSelf)
                 {
-                    GameManager.Instance.UnlockCusor();
-                    Time.timeScale = 0f;
+                    //GameManager.Instance.UnlockCusor();
+                    //Time.timeScale = 0f;
+                    EventManeger.Instance.Excute(EventType.OpenInventory);
                 }
                 else
                 {
-                    GameManager.Instance.LockCusor();
-                    Time.timeScale = 1f;
+                    EventManeger.Instance.Excute(EventType.CloseInventory);
+                    //GameManager.Instance.LockCusor();
+                    //Time.timeScale = 1f;
                 }
             }
         }

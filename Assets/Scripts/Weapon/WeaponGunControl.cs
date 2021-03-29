@@ -138,7 +138,7 @@ namespace Musashi
             var b = Instantiate(bullet,muzzle.position,Quaternion.identity);
             b.AddForce(ref shotPower, muzzle);
 
-            muzzleFalsh.Play();
+            var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
 
             if (audioSource)
                 audioSource.Play(shotClip);

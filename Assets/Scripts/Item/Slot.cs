@@ -4,6 +4,10 @@ using TMPro;
 
 namespace Musashi
 {
+    /// <summary>
+    /// インベントリースロットのベースクラス
+    /// カーソルを合わせるとハイライトとアイテムの説明が出てくる。
+    /// </summary>
     public class Slot : MonoBehaviour
     {
         [SerializeField] Image icon;

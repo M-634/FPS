@@ -110,5 +110,17 @@ namespace Musashi
 
             configure.gameObject.SetActive(false);
         }
+
+        public void OnEnable()
+        {
+            EventManeger.Instance.Subscribe(EventType.OpenInventory,UnlockCusor);
+            EventManeger.Instance.Subscribe(EventType.CloseInventory, LockCusor);
+        }
+
+        public void OnDisable()
+        {
+            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, UnlockCusor);
+            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, LockCusor);
+        }
     }
 }
