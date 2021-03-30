@@ -16,30 +16,17 @@ namespace Musashi
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public Slot SelectedSlot { get; private set; }
 
-        int slotNumber = -1;
-        int beforeNumber = -1;
-
+        bool isOpenInventory = true;
+     
         private void Start()
         {
-            //SetKeyCode();
-            CloseInventory();
+            OpenAndCloseInventory();
         }
 
         private void Update()
         {
-            //slotNumber = PlayerInputManager.SlotAction();
-
-            //if (slotNumber == -1) return;
-
-            //if (beforeNumber != -1)
-            //{
-            //    slots[beforeNumber].IsSelected = false;
-            //}
-
-            //slots[slotNumber].IsSelected = true;
-            //SelectedSlot = slots[slotNumber];
-            //beforeNumber = slotNumber;
-            //slotNumber = -1;
+            if (PlayerInputManager.InventoryAction())
+                OpenAndCloseInventory();
         }
 
         public void SetKeyCode()
@@ -126,30 +113,22 @@ namespace Musashi
             return false;//全てのスロットが埋まっている
         }
 
-        public void ShowInventory()
+ 
+        public void OpenAndCloseInventory()
         {
-            inventoryCanvasGroup.interactable = true;
-            inventoryCanvasGroup.alpha = 1f;
-            inventoryCanvasGroup.blocksRaycasts = true;
-        }
-
-        public void CloseInventory()
-        {
-            inventoryCanvasGroup.interactable = false;
-            inventoryCanvasGroup.alpha = 0f;
-            inventoryCanvasGroup.blocksRaycasts = false;
-        }
-
-        public void OnEnable()
-        {
-            EventManeger.Instance.Subscribe(EventType.OpenInventory, ShowInventory);
-            EventManeger.Instance.Subscribe(EventType.CloseInventory, CloseInventory);
-        }
-
-        public void OnDisable()
-        {
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, ShowInventory);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, CloseInventory);
+            if (isOpenInventory)
+            {
+                inventoryCanvasGroup.HideUIWithCanvasGroup();
+                GameManager.Instance.LockCusor();
+                EventManeger.Instance.Excute(EventType.CloseInventory);
+            }
+            else
+            {
+                inventoryCanvasGroup.ShowUIWithCanvasGroup();
+                GameManager.Instance.UnlockCusor();
+                EventManeger.Instance.Excute(EventType.OpenInventory);
+            }
+            isOpenInventory = !isOpenInventory; 
         }
     }
 }

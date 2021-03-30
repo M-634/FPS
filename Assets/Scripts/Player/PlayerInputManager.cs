@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 
-
 namespace Musashi
 {
     public class PlayerInputManager : MonoBehaviour
     {
-        [SerializeField] GameObject inventoryPanel;
-
         //mouse and controler
         public float Input_X { get; private set; }
         public float Input_Z { get; private set; }
@@ -24,23 +21,12 @@ namespace Musashi
             {
                 GameManager.Instance.ShowConfigure();
             }
+        }
 
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                inventoryPanel.SetActive(!inventoryPanel.activeSelf);
-                if (inventoryPanel.activeSelf)
-                {
-                    //GameManager.Instance.UnlockCusor();
-                    //Time.timeScale = 0f;
-                    EventManeger.Instance.Excute(EventType.OpenInventory);
-                }
-                else
-                {
-                    EventManeger.Instance.Excute(EventType.CloseInventory);
-                    //GameManager.Instance.LockCusor();
-                    //Time.timeScale = 1f;
-                }
-            }
+      
+        public static bool InventoryAction()
+        {
+            return Input.GetKeyDown(KeyCode.Tab);
         }
 
         public static bool HasPutGrapplingGunButton()

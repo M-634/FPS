@@ -72,8 +72,6 @@ namespace Musashi
             healAction?.Invoke(healPoint,healTime);
         }
 
- 
-
         public void Dispose()
         {
             eventTable.Clear();
