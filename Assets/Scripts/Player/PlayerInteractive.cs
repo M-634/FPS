@@ -27,16 +27,6 @@ namespace Musashi
                     pickUpObjectable.OnPicked();
                 }
             }
-
-            if (PlayerInputManager.Use())
-            {
-                //スロットが選択されているかどうか判定
-                if (Inventory.Instance.IsSlotSelected)
-                {
-                    //アイテムなら消費し、武器なら攻撃する
-                    Inventory.Instance.SelectedSlot.UseItemInSlot();
-                }
-            }
         }
 
         private bool CheakPickUpObj()

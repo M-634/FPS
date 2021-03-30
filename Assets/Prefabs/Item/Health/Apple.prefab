@@ -143,6 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 907b2ca451628314dbc47db4c62ec15f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: 1
+  kindOfitem: 2
   healPoint: 30
   healtime: 60

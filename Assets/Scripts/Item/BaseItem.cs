@@ -10,6 +10,12 @@ namespace Musashi
         protected bool canPickUp = true;
         protected bool canUseItem = true;
 
+        Rigidbody rb;
+
+        public void Start()
+        {
+            rb = GetComponent<Rigidbody>();
+        }
         public virtual void OnPicked()
         {
             canPickUp = Inventory.Instance.CanGetItem(this);
@@ -23,6 +29,28 @@ namespace Musashi
         public virtual bool CanUseItem()
         {
             return canUseItem;
+        }
+
+        /// <summary>
+        /// インベントリからアイテムを捨てる時に呼ばれる関数
+        /// </summary>
+        public void ThrowAway()
+        {
+            if(!rb) 
+                rb = GetComponent<Rigidbody>();
+
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.gameObject.CompareTag("Ground"))
+            {
+                rb.isKinematic = true;
+                rb.useGravity = false;
+            }
         }
     }
 

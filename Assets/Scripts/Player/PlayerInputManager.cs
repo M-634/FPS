@@ -34,9 +34,14 @@ namespace Musashi
             return Input.GetMouseButtonDown(1);//別のに変える
         }
 
-        public static bool Use()
+        public static bool ClickLeftMouse()
         {
             return Input.GetMouseButtonDown(0);
+        }
+
+        public static bool ClickRightMouse()
+        {
+            return Input.GetMouseButtonDown(1);
         }
 
         public static bool Aiming()

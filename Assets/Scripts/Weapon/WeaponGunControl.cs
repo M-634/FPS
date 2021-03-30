@@ -90,6 +90,8 @@ namespace Musashi
 
         private void Update()
         {
+            if (canUse == false) return;
+
             if (Input.GetKeyDown(KeyCode.R)) ReLoad();
 
             switch (weaponShootType)
