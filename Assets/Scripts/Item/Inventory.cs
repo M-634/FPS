@@ -9,12 +9,12 @@ namespace Musashi
     {
         [SerializeField] ItemDataBase itemDataBase;
         [SerializeField] CanvasGroup inventoryCanvasGroup;
-        [SerializeField] Slot[] weaponSlots;
-        [SerializeField] Slot[] itemSlots;
-        public Slot[] Slots { get => itemSlots; }
+        [SerializeField] SlotBase[] weaponSlots;
+        [SerializeField] SlotBase[] itemSlots;
+        public SlotBase[] Slots { get => itemSlots; }
 
         public bool IsSlotSelected { get => SelectedSlot != null; }
-        public Slot SelectedSlot { get; private set; }
+        public SlotBase SelectedSlot { get; private set; }
 
         bool isOpenInventory = true;
      
