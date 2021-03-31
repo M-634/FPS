@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1412644350}
   m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.2140503, y: -0.6710002, z: 0.848999}
+  m_LocalPosition: {x: 0.2140503, y: -0.64, z: 0.848999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3930138043940528801}
@@ -7591,8 +7591,9 @@ GameObject:
   - component: {fileID: 4035535613061906259}
   - component: {fileID: 4035535613061906257}
   - component: {fileID: 4035535613061906256}
-  - component: {fileID: 4035535613061906263}
   - component: {fileID: 586538198179755607}
+  - component: {fileID: 9195005651072178331}
+  - component: {fileID: 4035535613061906263}
   m_Layer: 10
   m_Name: FPSPlayer_ver2
   m_TagString: Player
@@ -7790,12 +7791,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 257bd40491cd0a34fb4f8ff0c4407821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSlots: []
   pickUpLayer:
     serializedVersion: 2
     m_Bits: 32768
   interactiveMessage: {fileID: 0}
   distance: 5
+--- !u!114 &586538198179755607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4035535613061906265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c704d66bd852de4f8395376fd047f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 586538197933687743}
+--- !u!114 &9195005651072178331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4035535613061906265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c751af7cb40c64789b8a8df5805fcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponDataBase: {fileID: 11400000, guid: 83d620799fb3615448ba46a10f50f801, type: 2}
+  activeWeapons:
+  - {fileID: 3930138043940699776}
+  weaponSlots:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!82 &4035535613061906263
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7893,19 +7924,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &586538198179755607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4035535613061906265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c704d66bd852de4f8395376fd047f28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 586538197933687743}
 --- !u!1 &4035535613154815012
 GameObject:
   m_ObjectHideFlags: 0
@@ -8104,7 +8122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 465ea10eed994bd48860ee69d588764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kindOfItem: 0
+  kindOfWeapon: 0
 --- !u!82 &4035535613270909586
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8339,6 +8357,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HandGun_Userable
       objectReference: {fileID: 0}
+    - target: {fileID: 8243539330904326337, guid: 2b57ac55a0ebb2b43900107a647f8bf4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8243539330904366305, guid: 2b57ac55a0ebb2b43900107a647f8bf4,
         type: 3}
       propertyPath: m_RootOrder
@@ -8402,3 +8425,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4966424624814816832}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3930138043940699776 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8243539330904326336, guid: 2b57ac55a0ebb2b43900107a647f8bf4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4966424624814816832}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9545f8c454d0d7243a08c21493fb73b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

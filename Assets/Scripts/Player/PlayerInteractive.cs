@@ -5,19 +5,14 @@ using System.Collections.Generic;
 namespace Musashi
 {
     /// <summary>
-    /// プレイヤーが武器やアイテムを扱う時に制御するクラス
+    /// プレイヤーが武器やアイテム、ステージギミックとのインタラクティブを管理するクラス
     /// </summary>
     public class PlayerInteractive : MonoBehaviour
     {
-        /// <summary>playerの子どもに存在する武器。使用時にアクティブを切り替える</summary>
-        [SerializeField] BaseWeapon[] activeWeapons;
-        [SerializeField] WeaponSlot[] weaponSlots;
         [SerializeField] LayerMask pickUpLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
 
-        public BaseWeapon CurrentHaveWeapon { get; private set; }
-        int currentWeaponIndex = -1;
         RaycastHit hit;
 
         private void Update()
@@ -40,16 +35,6 @@ namespace Musashi
             }
             InteractiveMessage.CloseMessage();
             return false;
-        }
-
-        public void PickUpWeapon()
-        {
-
-        }
-
-        public void EquipWeapon()
-        {
-
         }
     }
 }

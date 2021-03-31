@@ -10,20 +10,17 @@ namespace Musashi
     public class PlayerAnimationController : MonoBehaviour
     {
         [SerializeField] Animator animator;
-        PlayerInteractive interactiveWeapon;
+     
         PlayerCamaraControl camaraControl;
         bool isAiming;
 
         private void Start()
         {
             camaraControl = GetComponent<PlayerCamaraControl>();
-            interactiveWeapon = GetComponent<PlayerInteractive>();
         }
 
         public void ShotingAnimation()
         {
-            if (!interactiveWeapon.CurrentHaveWeapon) return;
-
             //if (PlayerInputManager.Use())
             //{
             //    animator.Play("Fire");

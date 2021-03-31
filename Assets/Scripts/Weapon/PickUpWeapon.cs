@@ -11,14 +11,18 @@ namespace Musashi
     public class PickUpWeapon : BaseWeapon,IPickUpObjectable
     {
         Rigidbody rb;
+        PlayerWeaponManager weaponManager;
 
-        protected virtual void Start()
+        private void Start()
         {
             rb = GetComponent<Rigidbody>();
+            weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWeaponManager>();
         }
         public void OnPicked()
         {
-            
+            var canPicup = weaponManager.CanPickUP(this);
+            if (canPicup)
+                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
         }
 
         /// <summary>
