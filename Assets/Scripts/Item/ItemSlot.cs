@@ -31,7 +31,7 @@ namespace Musashi
             var item = Instantiate(CurrentItemData.ItemPrefab);
 
             //アイテムが使用できたならスタック数を減らす
-            if (item.CanUseItem())
+            if (item.CanUseObject())
             {
                 stackNumber--;
                 stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
@@ -40,7 +40,7 @@ namespace Musashi
                 if (stackNumber == 0)
                     ResetInfo();
 
-                Inventory.Instance.OpenAndCloseInventory();
+                ItemInventory.Instance.OpenAndCloseInventory();
             }
         }
 

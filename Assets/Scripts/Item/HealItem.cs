@@ -14,7 +14,7 @@ namespace Musashi
             base.OnPicked();
         }
 
-        public override bool CanUseItem()
+        public override bool CanUseObject()
         {
             var playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
             if (playerHealth.IsMaxHP)

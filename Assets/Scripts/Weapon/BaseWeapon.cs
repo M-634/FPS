@@ -5,38 +5,33 @@ using UnityEngine.Events;
 
 namespace Musashi
 {
-    public abstract class BaseWeapon : BaseItem
+    public enum KindOfWeapon
     {
-        protected bool hasPlayer = false;
-        public abstract void Attack();
+        //defult
+        None = 0,
+        //Gun
+        ShotGun, HandGun, AssaultRifle,
+        //other
+        Grenade, Axe, CrossBow,
+    }
 
-        public override void OnPicked()
-        {
-            canPickUp = Inventory.Instance.CanGetWeapon(this);
-            if (canPickUp)
-            {
-                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-                hasPlayer = true;
-            }
-        }
+    public abstract class BaseWeapon : MonoBehaviour
+    {
+        public KindOfWeapon kindOfWeapon;
+        protected bool canUseWeapon = true;
 
-        public override void Drop()
-        {
-            base.Drop();
-            hasPlayer = false;
-        }
-
+        public virtual void Attack() { }
 
         private void OnEnable()
         {
-            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => canUseItem = false);
-            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => canUseItem = true);
+            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => canUseWeapon = false);
+            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => canUseWeapon = true);
         }
 
         private void OnDisable()
         {
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => canUseItem = false);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => canUseItem = true);
+            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => canUseWeapon = false);
+            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => canUseWeapon = true);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Musashi
     public class WeaponSlot : SlotBase
     {
         public int slotNumber;
+        public int activeWeaponIndex;//activeされるweapon配列のインデックス
         public override bool IsFilled => IsEmpty == false;
         public override void SetInfo(ItemData getItemData)
         {
@@ -21,8 +22,7 @@ namespace Musashi
         {
             if (IsEmpty) return;
 
-            playerInteractive.EquipmentWeaponByShotCutKeyOrInventory(slotNumber);
-            Inventory.Instance.OpenAndCloseInventory();
+            ItemInventory.Instance.OpenAndCloseInventory();
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Musashi
             OnPostProcess = EditorGUILayout.Toggle("OnPostProcess", OnPostProcess);
             if (GUILayout.Button("Set Slot KeyCode"))
             {
-                Inventory.Instance.SetKeyCode();
+                ItemInventory.Instance.SetKeyCode();
             }
             GUILayout.Space(1);
             GUILayout.Label("Test RunTime", EditorStyles.boldLabel);
