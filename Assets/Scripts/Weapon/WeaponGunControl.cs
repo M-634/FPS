@@ -68,8 +68,9 @@ namespace Musashi
         Animator animator;
         AudioSource audioSource;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
             if (!muzzle)
@@ -77,20 +78,19 @@ namespace Musashi
 
             //Pooling();
             ReLoad();
-            gameObject.SetActive(false);
         }
 
         public void ReLoad()
         {
             CurrentAmmo = maxAmmo;
 
-            if (audioSource)
+            if (audioSource && hasPlayer)
                 audioSource.Play(ReloadClip);
         }
 
         private void Update()
         {
-            if (canUse == false) return;
+            if (canUseItem == false || hasPlayer == false) return;
 
             if (Input.GetKeyDown(KeyCode.R)) ReLoad();
 

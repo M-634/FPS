@@ -11,15 +11,18 @@ namespace Musashi
         [SerializeField] CanvasGroup inventoryCanvasGroup;
         [SerializeField] SlotBase[] weaponSlots;
         [SerializeField] SlotBase[] itemSlots;
-        public SlotBase[] Slots { get => itemSlots; }
 
+        PlayerInteractive playerInteractive;
+        bool isOpenInventory = true;
+
+        public SlotBase[] WeaPonSlots { get => weaponSlots; }
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public SlotBase SelectedSlot { get; private set; }
 
-        bool isOpenInventory = true;
-     
+
         private void Start()
         {
+            playerInteractive = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInteractive>();
             OpenAndCloseInventory();
         }
 
@@ -50,44 +53,37 @@ namespace Musashi
         {
             foreach (var itemData in itemDataBase.ItemDataList)
             {
-                if (itemData.KindOfItem == getItem.kindOfitem)
+                if (itemData.KindOfItem == getItem.kindOfItem)
                 {
-                    return SearchSlot(itemData);
+                    return SearchItemSlot(itemData);
                 }
             }
             Debug.LogWarning("データベースに該当するアイテムがありません");
             return false;
         }
 
+        public bool CanGetWeapon(BaseWeapon getWeapon)
+        {
+            foreach (var itemData in itemDataBase.ItemDataList)
+            {
+                if (itemData.KindOfItem == getWeapon.kindOfItem)
+                {
+                    return CanEquipmentWeapon(itemData, getWeapon);
+                }
+            }
+            Debug.LogWarning("データベースに該当するアイテムがありません");
+            return false;
+        }
+
+
+
         /// <summary>
-        /// アイテムが武器なら武器スロットへ、アイテムならアイテムスロットへ入れる。
         /// 既にスロット内にあるアイテムかどうか調べる。
         /// ないなら左側から順番に埋めていく
         /// </summary>
         /// <returns></returns>
-        private bool SearchSlot(ItemData getItemData)
+        private bool SearchItemSlot(ItemData getItemData)
         {
-            //武器
-            if (getItemData.IsWeapon)
-            {
-                for (int i = 0; i < weaponSlots.Length; i++)
-                {
-                    //スタック内に武器があるなら次へ
-                    if (weaponSlots[i].IsFilled)
-                    {
-                        continue;
-                    }
-                    //スロットが空なら、武器データをセットする
-                    if (weaponSlots[i].IsEmpty)
-                    {
-                        weaponSlots[i].SetInfo(getItemData);
-                        return true;
-                    }
-                    return false;//全てのスロットが埋まっている
-                }
-            }
-
-            //アイテム
             for (int i = 0; i < itemSlots.Length; i++)
             {
                 //スタック数が満タンの時は次のスロットを調べる
@@ -113,7 +109,31 @@ namespace Musashi
             return false;//全てのスロットが埋まっている
         }
 
- 
+
+        private bool CanEquipmentWeapon(ItemData getWeaponData, BaseWeapon getWeapon)
+        {
+            //武器スロットを確認して、空きがあるか調べる
+            for (int i = 0; i < weaponSlots.Length; i++)
+            {
+                if (weaponSlots[i].IsEmpty)
+                {
+                    //スロットを埋めて武器を装備する
+                    weaponSlots[i].SetInfo(getWeaponData);
+                    playerInteractive.EquipmentWeapon(i, getWeapon);
+                    return true;
+                }
+            }
+
+            //今、装備中なら交換する。そうっでないなら武器は拾えない
+            if (playerInteractive.CurrentHaveWeapon)
+            {
+                playerInteractive.ChangeWeapon(getWeapon);
+                return true;
+            }
+
+            return false;
+        }
+
         public void OpenAndCloseInventory()
         {
             if (isOpenInventory)
@@ -128,7 +148,7 @@ namespace Musashi
                 GameManager.Instance.UnlockCusor();
                 EventManeger.Instance.Excute(EventType.OpenInventory);
             }
-            isOpenInventory = !isOpenInventory; 
+            isOpenInventory = !isOpenInventory;
         }
     }
 }

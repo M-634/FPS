@@ -6,13 +6,13 @@ namespace Musashi
 {
     public abstract class BaseItem : MonoBehaviour, IPickUpObjectable
     {
-        public KindOfItem kindOfitem;
+        public KindOfItem kindOfItem;
         protected bool canPickUp = true;
         protected bool canUseItem = true;
 
         Rigidbody rb;
 
-        public void Start()
+        protected virtual void Start()
         {
             rb = GetComponent<Rigidbody>();
         }
@@ -34,7 +34,7 @@ namespace Musashi
         /// <summary>
         /// インベントリからアイテムを捨てる時に呼ばれる関数
         /// </summary>
-        public void ThrowAway()
+        public virtual void Drop()
         {
             if(!rb) 
                 rb = GetComponent<Rigidbody>();

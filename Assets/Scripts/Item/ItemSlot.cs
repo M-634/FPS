@@ -48,7 +48,7 @@ namespace Musashi
         {
             if (IsEmpty) return;
             var item = Instantiate(CurrentItemData.ItemPrefab,worldPoint,Quaternion.identity);
-            item.ThrowAway();
+            item.Drop();
 
             stackNumber--;
             stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();

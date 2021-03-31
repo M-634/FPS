@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Musashi
 {
@@ -17,7 +19,6 @@ namespace Musashi
         int currentWeaponIndex = -1;
         RaycastHit hit;
 
-
         private void Update()
         {
             if (CheakPickUpObj() && PlayerInputManager.InteractiveAction())
@@ -27,6 +28,13 @@ namespace Musashi
                     pickUpObjectable.OnPicked();
                 }
             }
+
+            var key = PlayerInputManager.SwichWeaponAction();
+            if(key == -1)
+                return;
+            if (key == 2)
+                RemoveEquipment();
+            EquipmentWeaponByShotCutKeyOrInventory(key);
         }
 
         private bool CheakPickUpObj()
@@ -40,17 +48,61 @@ namespace Musashi
             return false;
         }
 
-        public void EquipmentWeapon(KindOfItem kindOfItem)
+        /// <summary>
+        ///武器を拾った際に、武器を装備する。装備中の武器があるならアクティブをfalseにする
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="getWeapon"></param>
+        public void EquipmentWeapon(int index, BaseWeapon getWeapon)
         {
-            for (int i = 0; i < equipWeapons.Length; i++)
+            var go = getWeapon;
+            equipWeapons[index] = go;
+            go.transform.SetParent(equipPosition);
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localRotation = Quaternion.Euler(Vector3.zero);
+
+            //装備中の武器があるなら装備中のアクティブをfalseにする
+            if (CurrentHaveWeapon)
             {
-                if (equipWeapons[i].KindOfItem == kindOfItem)
-                {
-                    equipWeapons[i].gameObject.SetActive(true);
-                    CurrentHaveWeapon = equipWeapons[i];
-                    currentWeaponIndex = i;
-                }
+                equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
             }
+            //現在装備中のものを更新
+            CurrentHaveWeapon = go;
+            currentWeaponIndex = index;
+        }
+
+        /// <summary>
+        /// 武器を装備するショートカットを押されたか、インベントリを開いてスロットをクリックしたら呼ばれる関数
+        /// </summary>
+        /// <param name="index"></param>
+        public void EquipmentWeaponByShotCutKeyOrInventory(int index)
+        {
+            //指定したスロットに装備武器がないか、装備中の武器と同じスロットを呼ばれたら何もしない
+            if (equipWeapons[index] == null || index == currentWeaponIndex) return;
+
+            //装備中の武器があるなら装備中のアクティブをfalseにする
+            if (CurrentHaveWeapon)
+            {
+                equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
+            }
+
+            equipWeapons[index].gameObject.SetActive(true);
+            CurrentHaveWeapon = equipWeapons[index];
+            currentWeaponIndex = index;
+        }
+
+        /// <summary>
+        /// 武器を拾う際に、武器スロットがいっぱいで、装備中だったら装備中の武器と拾った武器を交換する
+        /// </summary>
+        public void ChangeWeapon(BaseWeapon getWeapon)
+        {
+            //装備中の武器のスロットデータと武器を捨てる
+            CurrentHaveWeapon = null;
+            equipWeapons[currentWeaponIndex].transform.SetParent(null);
+            equipWeapons[currentWeaponIndex].Drop();
+            Inventory.Instance.WeaPonSlots[currentWeaponIndex].ResetInfo();
+            //拾った武器を装備する
+            EquipmentWeapon(currentWeaponIndex, getWeapon);
         }
 
         public void RemoveEquipment()
@@ -60,6 +112,7 @@ namespace Musashi
             {
                 equipWeapons[currentWeaponIndex].gameObject.SetActive(false);
                 CurrentHaveWeapon = null;
+                currentWeaponIndex = -1;
             }
         }
     }

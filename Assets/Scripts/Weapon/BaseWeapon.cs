@@ -1,30 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Musashi
 {
-    /// <summary>
-    /// 武器はプレイヤーに持たせた状態ででアクティブを切る
-    /// </summary>
-    public abstract class BaseWeapon : MonoBehaviour
+    public abstract class BaseWeapon : BaseItem
     {
-        public KindOfItem KindOfItem;
+        protected bool hasPlayer = false;
         public abstract void Attack();
 
-        protected bool canUse = true;
+        public override void OnPicked()
+        {
+            canPickUp = Inventory.Instance.CanGetWeapon(this);
+            if (canPickUp)
+            {
+                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+                hasPlayer = true;
+            }
+        }
 
-       
+        public override void Drop()
+        {
+            base.Drop();
+            hasPlayer = false;
+        }
+
+
         private void OnEnable()
         {
-            EventManeger.Instance.Subscribe(EventType.OpenInventory,()=> canUse = false);
-            EventManeger.Instance.Subscribe(EventType.CloseInventory,()=> canUse = true);
+            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => canUseItem = false);
+            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => canUseItem = true);
         }
 
         private void OnDisable()
         {
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => canUse = false);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => canUse = true);
+            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => canUseItem = false);
+            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => canUseItem = true);
         }
     }
 }

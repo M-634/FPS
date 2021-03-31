@@ -7,7 +7,7 @@ namespace Musashi
 {
     public class WeaponSlot : SlotBase
     {
-
+        public int slotNumber;
         public override bool IsFilled => IsEmpty == false;
         public override void SetInfo(ItemData getItemData)
         {
@@ -15,20 +15,13 @@ namespace Musashi
         }
 
         /// <summary>
-        /// 武器を装備する
+        /// スロットをクリックして武器を装備する
         /// </summary>
         public override void UseItemInSlot()
         {
             if (IsEmpty) return;
 
-            //既に装備していて...
-            if (playerInteractive.CurrentHaveWeapon)
-            {
-                //同一武器なら何もしない(ここ修正ポイントインスタンスIdで比べる)
-                if (playerInteractive.CurrentHaveWeapon.KindOfItem == currentItemData.KindOfItem) return;
-            }
-
-            playerInteractive.EquipmentWeapon(currentItemData.KindOfItem);
+            playerInteractive.EquipmentWeaponByShotCutKeyOrInventory(slotNumber);
             Inventory.Instance.OpenAndCloseInventory();
         }
     }
