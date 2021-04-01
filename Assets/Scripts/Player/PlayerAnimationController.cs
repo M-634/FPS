@@ -43,7 +43,7 @@ namespace Musashi
 
         public void MoveAnimation(float velocity, PlayerMoveControl.State state)
         {
-            ShotingAnimation();
+            //ShotingAnimation();
             //if (isAiming) return;
 
             //if (state != PlayerMoveControl.State.Normal)
