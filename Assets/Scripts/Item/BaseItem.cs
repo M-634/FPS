@@ -11,7 +11,7 @@ namespace Musashi
         //health
         HealthKit, Apple,
         //other
-        Battery, Key,
+        Battery, Key,AmmoBox,
     }
 
     public abstract class BaseItem : MonoBehaviour, IPickUpObjectable
