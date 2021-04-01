@@ -9,14 +9,11 @@ namespace Musashi
     {
         [SerializeField] ItemDataBase itemDataBase;
         [SerializeField] CanvasGroup inventoryCanvasGroup;
-        [SerializeField] SlotBase[] itemSlots;
-
+        [SerializeField] ItemSlot[] itemSlots;
 
         bool isOpenInventory = true;
-
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public SlotBase SelectedSlot { get; private set; }
-
 
         private void Start()
         {
@@ -27,17 +24,6 @@ namespace Musashi
         {
             if (PlayerInputManager.InventoryAction())
                 OpenAndCloseInventory();
-        }
-
-        public void SetKeyCode()
-        {
-            for (int i = 0; i < itemSlots.Length; i++)
-            {
-                if (i == 0)
-                    itemSlots[i].KeyCode = "Q";
-                else
-                    itemSlots[i].KeyCode = i.ToString();
-            }
         }
 
         /// <summary>

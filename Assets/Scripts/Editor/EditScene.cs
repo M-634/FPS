@@ -51,11 +51,7 @@ namespace Musashi
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
             GUILayout.Space(1);
             OnPostProcess = EditorGUILayout.Toggle("OnPostProcess", OnPostProcess);
-            if (GUILayout.Button("Set Slot KeyCode"))
-            {
-                ItemInventory.Instance.SetKeyCode();
-            }
-            GUILayout.Space(1);
+    
             GUILayout.Label("Test RunTime", EditorStyles.boldLabel);
             if(GUILayout.Button("Damage Player"))
             {

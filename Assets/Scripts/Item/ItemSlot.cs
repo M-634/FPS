@@ -7,15 +7,22 @@ namespace Musashi
 {
     public class ItemSlot : SlotBase 
     {
+        private ItemData currentItemData;
+        public ItemData CurrentItemData => currentItemData;
+
+        public override bool IsEmpty => currentItemData == null;
+
         int stackNumber = 0;
-        public override void SetInfo(ItemData getItemData)
+        public override void SetInfo<T>(T getData)
         {
-            base.SetInfo(getItemData);
+            currentItemData = getData as ItemData;
+            icon.sprite = currentItemData.Icon;
+
             stackNumber++;
-            stack.text = stackNumber.ToString() + " / " + getItemData.MaxStackNumber.ToString();
+            stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
         }
 
-        public override void AddItemInSlot()
+        public void AddItemInSlot()
         {
             if (IsFilled) return;
             stackNumber++;
@@ -24,7 +31,7 @@ namespace Musashi
             if (stackNumber == currentItemData.MaxStackNumber) IsFilled = true;
         }
 
-        public override void UseItemInSlot()
+        public override void UseObject()
         {
             if (IsEmpty) return;
 
@@ -44,7 +51,7 @@ namespace Musashi
             }
         }
 
-        public override void ThrowAwayItem(Vector3 worldPoint)
+        public override void DropObject(Vector3 worldPoint)
         {
             if (IsEmpty) return;
             var item = Instantiate(CurrentItemData.ItemPrefab,worldPoint,Quaternion.identity);
@@ -60,7 +67,8 @@ namespace Musashi
 
         public override void ResetInfo()
         {
-            base.ResetInfo();
+            currentItemData = null;
+            icon.sprite = null;
             stackNumber = 0;
             stack.text = "";
         }

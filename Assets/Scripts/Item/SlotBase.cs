@@ -21,54 +21,29 @@ namespace Musashi
         [SerializeField] protected TextMeshProUGUI keyCode;
         [SerializeField] protected Color highLightColor;
         [SerializeField] protected TextMeshProUGUI stack;
-        protected PlayerInteractive playerInteractive;
-        protected ItemData currentItemData;
-        public Image Icon { get => icon; set => icon = value; }
+    
         public string KeyCode { set => keyCode.text = value; }
-        public ItemData CurrentItemData { get => currentItemData; }
-
-        public bool IsEmpty { get => currentItemData == null; }
+        public virtual bool IsEmpty { get; set; } = true;
         public virtual bool IsFilled { get; set; } = false;
 
-
-        public virtual void Start()
-        {
-            playerInteractive = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInteractive>();
-        }
-
-        public virtual void SetInfo(ItemData getItemData)
-        {
-            currentItemData = getItemData;
-            icon.sprite = getItemData.Icon;
-        }
-
-        /// <summary>
-        /// アイテムスロットのみに使用する関数。
-        /// スロットないのスタック数を増やす。
-        /// </summary>
-        public virtual void AddItemInSlot(){ }
-
+        public virtual void SetInfo<T>(T getData) where T:ScriptableObject{}
+     
         /// <summary>
         /// 継承先でアイテムスロットなら使用、武器スロットなら装備する処理を実装する。
         /// その後、使用できたか、装備したらインベントリーを閉じる
         /// </summary>
-        public virtual void UseItemInSlot() {}
+        public virtual void UseObject() {}
 
+        /// <summary>
+        /// スロットないのアイテムを捨てる関数
+        /// </summary>
+        /// <param name="worldPoint"></param>
+        public virtual void DropObject(Vector3 worldPoint) { }
 
-        public virtual void ThrowAwayItem(Vector3 worldPoint)
-        {
-            if (IsEmpty) return;
-
-            var item = Instantiate(CurrentItemData.ItemPrefab,worldPoint,Quaternion.identity);
-            item.Drop();
-            ResetInfo();
-        }
-
-        public virtual void ResetInfo()
-        {
-            icon.sprite = null;
-            currentItemData = null;
-        }
+        /// <summary>
+        /// スロット内のデータを空にする
+        /// </summary>
+        public virtual void ResetInfo() { }
 
         bool isSelected = false;
 
@@ -90,7 +65,7 @@ namespace Musashi
             while (isSelected)
             {
                 if (PlayerInputManager.ClickLeftMouse())
-                    UseItemInSlot();
+                    UseObject();
 
                 if (PlayerInputManager.ClickRightMouse())
                 {
@@ -98,7 +73,7 @@ namespace Musashi
                     mousePosition.z += 2f;
 
                     var worldPoint = Camera.main.ScreenToWorldPoint(mousePosition);
-                    ThrowAwayItem(worldPoint);
+                    DropObject(worldPoint);
                 }
                 yield return null;
             }

@@ -14,9 +14,9 @@ namespace Musashi
         [SerializeField] BaseItem itemPrefab;
         [SerializeField] int maxStackNumber;
 
-        public KindOfItem KindOfItem { get => kindOfItem; }
-        public Sprite Icon { get => icon; }
-        public BaseItem ItemPrefab { get => itemPrefab; }
-        public int MaxStackNumber { get => maxStackNumber; }
+        public KindOfItem KindOfItem => kindOfItem;
+        public Sprite Icon => icon;
+        public BaseItem ItemPrefab => itemPrefab;
+        public int MaxStackNumber => maxStackNumber;
     }
 }

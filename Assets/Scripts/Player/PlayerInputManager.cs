@@ -64,11 +64,7 @@ namespace Musashi
             return Input.GetKeyDown(KeyCode.E);
         }
 
-        public static bool Drop()
-        {
-            return Input.GetKeyDown(KeyCode.Q);
-        }
-
+     
         public static bool Dash()
         {
             return Input.GetKeyDown(KeyCode.LeftShift);

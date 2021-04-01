@@ -11,11 +11,11 @@ namespace Musashi
         [SerializeField] KindOfWeapon kindOfWeapon;
         [SerializeField] Sprite icon;
         [SerializeField] BaseWeapon weaponPrefab;
-        [SerializeField] BaseWeapon pickUpWeaponPrefab;
+        [SerializeField] PickUpWeapon pickUpWeaponPrefab;
 
-        public KindOfWeapon KindOfWeapon { get => kindOfWeapon; }
-        public Sprite Icon { get => icon;  }
-        public BaseWeapon WeaponPrefab { get=> weaponPrefab;  }
-        public BaseWeapon PickUpWeaonPrefab { get => pickUpWeaponPrefab; }
+        public KindOfWeapon KindOfWeapon => kindOfWeapon;
+        public Sprite Icon => icon;
+        public BaseWeapon WeaponPrefab => weaponPrefab;
+        public PickUpWeapon PickUpWeaonPrefab => pickUpWeaponPrefab;
     }
 }

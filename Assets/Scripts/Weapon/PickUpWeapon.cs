@@ -22,7 +22,10 @@ namespace Musashi
         {
             var canPicup = weaponManager.CanPickUP(this);
             if (canPicup)
+            {
                 GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+                Destroy(gameObject);
+            }
         }
 
         /// <summary>
