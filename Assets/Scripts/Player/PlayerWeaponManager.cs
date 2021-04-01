@@ -95,8 +95,8 @@ namespace Musashi
         /// <param name="index">スロットのインデックス</param>
         public void EquipWeapon(int index)
         {
-            if (weaponSlots[index].IsEmpty) return;
             PutAwayWeapon();
+            if (weaponSlots[index].IsEmpty) return;
 
             for (int i = 0; i < activeWeapons.Length; i++)
             {
