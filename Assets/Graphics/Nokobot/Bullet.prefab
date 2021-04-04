@@ -94,6 +94,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed062af19fafb24c95827ef46f3a191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 65536
+  rayDistance: 0.24
   lifeTime: 0.2
 --- !u!96 &-6993561248997979340
 TrailRenderer:
