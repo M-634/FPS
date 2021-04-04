@@ -28,7 +28,7 @@ namespace Musashi
         }
         public virtual void OnPicked()
         {
-            canPickUp = ItemInventory.Instance.CanGetItem(this);
+            canPickUp = ItemInventory.Instance.CanGetItem(this,1);
             if (canPickUp)
             {
                 GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);

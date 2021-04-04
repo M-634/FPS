@@ -16,19 +16,23 @@ namespace Musashi
         public override void SetInfo<T>(T getData)
         {
             currentItemData = getData as ItemData;
-            icon.sprite = currentItemData.Icon;
+            if(currentItemData.Icon)
+                icon.sprite = currentItemData.Icon;
 
             stackNumber++;
             stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
         }
 
-        public void AddItemInSlot()
+        public void AddItemInSlot(int getNumber)
         {
             if (IsFilled) return;
-            stackNumber++;
+            stackNumber += getNumber;
+            if (stackNumber >= currentItemData.MaxStackNumber)
+            {
+                IsFilled = true;
+                stackNumber = currentItemData.MaxStackNumber;
+            }
             stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
-
-            if (stackNumber == currentItemData.MaxStackNumber) IsFilled = true;
         }
 
         public override void UseObject()

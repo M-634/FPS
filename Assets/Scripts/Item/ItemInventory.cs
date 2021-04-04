@@ -10,7 +10,7 @@ namespace Musashi
         [SerializeField] ItemDataBase itemDataBase;
         [SerializeField] CanvasGroup inventoryCanvasGroup;
         [SerializeField] ItemSlot[] itemSlots;
-
+      
         bool isOpenInventory = true;
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public SlotBase SelectedSlot { get; private set; }
@@ -32,13 +32,13 @@ namespace Musashi
         /// </summary>
         /// <param name="getItem"></param>
         /// <returns></returns>
-        public bool CanGetItem(BaseItem getItem)
+        public bool CanGetItem(BaseItem getItem,int getNumber)
         {
             foreach (var itemData in itemDataBase.ItemDataList)
             {
                 if (itemData.KindOfItem == getItem.kindOfItem)
                 {
-                    return SearchItemSlot(itemData);
+                    return SearchItemSlot(itemData,getNumber);
                 }
             }
             Debug.LogWarning("データベースに該当するアイテムがありません");
@@ -51,7 +51,7 @@ namespace Musashi
         /// ないなら左側から順番に埋めていく
         /// </summary>
         /// <returns></returns>
-        private bool SearchItemSlot(ItemData getItemData)
+        private bool SearchItemSlot(ItemData getItemData, int getNumber)
         {
             for (int i = 0; i < itemSlots.Length; i++)
             {
@@ -64,7 +64,7 @@ namespace Musashi
                 //同一アイテムがスロット内にあり,かつスタック数が満タンではない時はスタック数を足していく
                 if (!itemSlots[i].IsEmpty && itemSlots[i].CurrentItemData.KindOfItem == getItemData.KindOfItem && !itemSlots[i].IsFilled)
                 {
-                    itemSlots[i].AddItemInSlot();
+                    itemSlots[i].AddItemInSlot(getNumber);
                     return true;
                 }
 

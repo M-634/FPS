@@ -12,6 +12,7 @@ namespace Musashi
     {
         public Dictionary<EventType, Action> eventTable;
         public Action<float,float> healAction;
+        public Action<int> pickUpAmmoAction;
    
         private static EventManeger instance;
         public static EventManeger Instance
@@ -49,6 +50,11 @@ namespace Musashi
             healAction += action;
         }
 
+        public void Subscribe(Action<int> action)
+        {
+            pickUpAmmoAction += action;
+        }
+
    
         public void UnSubscribe(EventType eventType, Action action)
         {
@@ -61,6 +67,12 @@ namespace Musashi
             healAction -= action;
         }
 
+        public void UnSubscribe(Action<int> action)
+        {
+            pickUpAmmoAction -= action;
+        }
+
+
         public void Excute(EventType eventType)
         {
             eventTable[eventType]?.Invoke();
@@ -70,6 +82,11 @@ namespace Musashi
         public void Excute(float healPoint,float healTime)
         {
             healAction?.Invoke(healPoint,healTime);
+        }
+
+        public void Excute(int ammoNum)
+        {
+            pickUpAmmoAction?.Invoke(ammoNum);
         }
 
         public void Dispose()

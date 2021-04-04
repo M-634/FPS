@@ -46,8 +46,9 @@ namespace Musashi
         }
 
         [SerializeField] WeaponShootType weaponShootType;
+        [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] Transform muzzle;
-       // [SerializeField] PoolingObject poolingObject;
+        // [SerializeField] PoolingObject poolingObject;
         public BulletControl bullet;
         public ParticleSystem muzzleFalsh;
 
@@ -75,13 +76,13 @@ namespace Musashi
             if (!muzzle)
                 muzzle = this.transform;
 
-            //Pooling();
-            ReLoad();
+            currentAmmo = maxAmmo;
         }
 
         public void ReLoad()
         {
-            CurrentAmmo = maxAmmo;
+            if (ammoCounter)
+                currentAmmo = ammoCounter.ReloadAmmo(maxAmmo, currentAmmo);
 
             if (audioSource)
                 audioSource.Play(ReloadClip);
@@ -136,7 +137,7 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-            var b = Instantiate(bullet,muzzle.position,Quaternion.identity);
+            var b = Instantiate(bullet, muzzle.position, Quaternion.identity);
             b.AddForce(ref shotPower, muzzle);
 
             var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
@@ -145,6 +146,8 @@ namespace Musashi
                 audioSource.Play(shotClip);
 
             CurrentAmmo--;
+            if (ammoCounter)
+                ammoCounter.UseAmmo();
             lastTimeShot = Time.time;
 
             //for (int i = 0; i < poolingObjects.Length; i++)
@@ -178,6 +181,23 @@ namespace Musashi
         public override void Attack()
         {
             TryShot();
+        }
+
+
+
+        public void OnEnable()
+        {
+            if (ammoCounter)
+            {
+                ammoCounter.Text.enabled = true;
+                ammoCounter.SetCurrentAmmo(currentAmmo);
+            }
+        }
+
+        public void OnDisable()
+        {
+            if (ammoCounter)
+                ammoCounter.Text.enabled = false;
         }
     }
 }
