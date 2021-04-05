@@ -68,17 +68,13 @@ namespace Musashi
 
         #region State's Instance and property
 
-        readonly EnemyIdle enemyIdle = new EnemyIdle();
-        readonly EnemyPatrol enemyPatrol = new EnemyPatrol();
-        readonly EnemyPursue enemyPursue = new EnemyPursue();
-        readonly EnemyAttack enemyAttack = new EnemyAttack();
 
 
         public IEnemyState CurrentState { get; set; }
-        public EnemyIdle EnemyIdle { get => enemyIdle; }
-        public EnemyPatrol EnemyPatrol { get => enemyPatrol; }
-        public EnemyPursue EnemyPursue { get => enemyPursue; }
-        public EnemyAttack EnemyAttack { get => enemyAttack; }
+        public EnemyIdle EnemyIdle { get; } = new EnemyIdle();
+        public EnemyPatrol EnemyPatrol { get; } = new EnemyPatrol();
+        public EnemyPursue EnemyPursue { get; } = new EnemyPursue();
+        public EnemyAttack EnemyAttack { get; } = new EnemyAttack();
         #endregion
 
         #region Method
@@ -181,7 +177,7 @@ namespace Musashi
     {
         void IEnemyState.OnEnter(EnemyAI owner, IEnemyState prevState)
         {
-
+            owner.Animator.Play("Idle");
         }
 
         void IEnemyState.OnExit(EnemyAI owner, IEnemyState nextState)
@@ -237,11 +233,13 @@ namespace Musashi
             owner.Agent.destination = owner.PatrolPoints[owner.PatrolPointsIndex].position;
             owner.Agent.speed = owner.PatrolSpeed;
             owner.Agent.isStopped = false;
+            owner.Animator.Play("Walk");
         }
 
         public void StopPoint(EnemyAI owner)
         {
             owner.Agent.isStopped = true;
+            owner.Animator.Play("Idle");
             waitTime += Time.deltaTime;
 
             if (waitTime > owner.BreakTime)
@@ -257,6 +255,7 @@ namespace Musashi
         {
             owner.Agent.speed = owner.PursueSpeed;
             owner.Agent.isStopped = false;
+            owner.Animator.Play("Run");
         }
 
         void IEnemyState.OnExit(EnemyAI owner, IEnemyState nextState)
@@ -274,10 +273,11 @@ namespace Musashi
                 owner.ChangeState(owner.EnemyAttack);
             }
 
-            if (!owner.CanSeePlayer())
-            {
-                owner.ChangeState(owner.EnemyPatrol);
-            }
+            //if (!owner.CanSeePlayer())
+            //{
+            //    //追っている状態で、Playerを見逃した時の挙動が変！
+            //    owner.ChangeState(owner.EnemyPatrol);
+            //}
         }
     }
 
@@ -287,6 +287,7 @@ namespace Musashi
         {
             Debug.Log("攻撃を開始します。");
             owner.Agent.isStopped = true;
+            owner.Animator.Play("Attack");
         }
 
         void IEnemyState.OnExit(EnemyAI owner, IEnemyState nextState)
