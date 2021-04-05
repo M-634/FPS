@@ -10,6 +10,7 @@ namespace Musashi
     public class BulletControl : MonoBehaviour
     {
         [SerializeField] float lifeTime = 1f;
+        [SerializeField] GameObject bloodVFX;
         float shotDamage;
         Rigidbody rb;
         Vector3 prevPos;
@@ -31,6 +32,7 @@ namespace Musashi
                 //Debug.Log(hits[i].collider.gameObject.name);
                 if(hits[i].collider.TryGetComponent(out IDamageable target))
                 {
+                    Instantiate(bloodVFX, hits[i].point ,Quaternion.LookRotation(hits[i].normal));
                     target.OnDamage(shotDamage);
                 }
                 Destroy(gameObject);
