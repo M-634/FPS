@@ -85,7 +85,7 @@ namespace Musashi
                 currentAmmo = ammoCounter.ReloadAmmo(maxAmmo, currentAmmo);
 
             if (audioSource)
-                audioSource.Play(ReloadClip);
+                audioSource.Play(ReloadClip, audioSource.volume);
         }
 
         private void Update()
@@ -141,7 +141,7 @@ namespace Musashi
             var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
 
             if (audioSource)
-                audioSource.Play(shotClip);
+                audioSource.Play(shotClip,audioSource.volume);
 
             CurrentAmmo--;
             if (ammoCounter)
