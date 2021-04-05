@@ -65,9 +65,12 @@ namespace Musashi
 
         void Update()
         {
-            //playerの位置とHPBarを同期させる
+            //BillBord
             if (healthBarFillImage)
+            {
                 healthBarFillImage.transform.parent.position = transform.position + Vector3.up * healthBarHightOffset;
+                healthBarFillImage.transform.parent.LookAt(Camera.main.transform.position);
+            }
 
             //set material color
 

@@ -18,20 +18,6 @@ namespace Musashi
     public abstract class BaseWeapon : MonoBehaviour
     {
         public KindOfWeapon kindOfWeapon;
-        protected bool canUseWeapon = true;
-
         public virtual void Attack() { }
-
-        private void OnEnable()
-        {
-            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => canUseWeapon = false);
-            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => canUseWeapon = true);
-        }
-
-        private void OnDisable()
-        {
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => canUseWeapon = false);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => canUseWeapon = true);
-        }
     }
 }

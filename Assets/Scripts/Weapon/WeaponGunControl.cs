@@ -90,8 +90,6 @@ namespace Musashi
 
         private void Update()
         {
-            if (canUseWeapon == false) return;
-
             if (Input.GetKeyDown(KeyCode.R)) ReLoad();
 
             switch (weaponShootType)
@@ -192,12 +190,17 @@ namespace Musashi
                 ammoCounter.Text.enabled = true;
                 ammoCounter.SetCurrentAmmo(currentAmmo);
             }
+            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => enabled = false);
+            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => enabled = true);
+
         }
 
         public void OnDisable()
         {
             if (ammoCounter)
                 ammoCounter.Text.enabled = false;
+            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => enabled = false);
+            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => enabled = true);
         }
     }
 }
