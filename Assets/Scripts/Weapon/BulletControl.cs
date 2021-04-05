@@ -4,46 +4,39 @@ using UnityEngine.Events;
 
 namespace Musashi
 {
+    /// <summary>
+    /// 1frame前の位置から、現在の位置までにRayを飛ばして当たり判定をとる
+    /// </summary>
     public class BulletControl : MonoBehaviour
     {
-        [SerializeField] LayerMask targetLayer;
-        [SerializeField] float rayDistance;
         [SerializeField] float lifeTime = 1f;
-        float timer = 0f;
-        float shotPower;
-        Transform muzzle;
-        public void AddForce(ref float shotPower ,Transform muzzle )
+        float shotDamage;
+        Rigidbody rb;
+        Vector3 prevPos;
+
+        public void AddForce(ref float shotPower,ref float shotDamage, Transform muzzle)
         {
-            this.shotPower = shotPower;
-            this.muzzle = muzzle;
+            this.shotDamage = shotDamage;
+            rb = GetComponent<Rigidbody>();
+            rb.velocity = muzzle.forward * shotPower;
+            prevPos = transform.position;
         }
 
-        public void Update()
+        private void Update()
         {
-            timer += Time.deltaTime;
-            transform.position += muzzle.forward * shotPower;
+            RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
 
-            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, rayDistance, targetLayer))
+            for (int i = 0; i < hits.Length;i++)
             {
-                if(hit.collider.TryGetComponent(out IDamageable target))
+                //Debug.Log(hits[i].collider.gameObject.name);
+                if(hits[i].collider.TryGetComponent(out IDamageable target))
                 {
-                    Debug.Log("当たった");
-                    target.OnDamage(shotPower);
-                    Destroy(gameObject)S
+                    target.OnDamage(shotDamage);
                 }
-            }
-
-            if (timer > lifeTime) 
-            {
-                timer = 0f;
-                //gameObject.SetActive(false);
                 Destroy(gameObject);
             }
-        }
-
-        private void OnDrawGizmos()
-        {
-            Debug.DrawRay(transform.position, transform.forward * rayDistance , Color.white);  
+            prevPos = transform.position;
+            Destroy(gameObject, lifeTime);
         }
     }
 }

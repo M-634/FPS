@@ -138,7 +138,7 @@ namespace Musashi
         public void Shot()
         {
             var b = Instantiate(bullet, muzzle.position, Quaternion.identity);
-            b.AddForce(ref shotPower, muzzle);
+            b.AddForce(ref shotPower,ref shotDamage, muzzle);
 
             var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
 

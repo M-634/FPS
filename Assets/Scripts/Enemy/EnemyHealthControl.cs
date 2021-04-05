@@ -71,12 +71,12 @@ namespace Musashi
 
             //set material color
 
-            var currentColor = onHitBodyGradient.Evaluate((Time.time - lasitTimeDamaged) / flashOnHitDuration);
-            bodyFlashMaterialPropertyBlock.SetColor(propertyID, currentColor);
-            foreach (var data in bodyRenderers)
-            {
-                data.renderer.SetPropertyBlock(bodyFlashMaterialPropertyBlock, data.materialIndex);
-            }
+            //var currentColor = onHitBodyGradient.Evaluate((Time.time - lasitTimeDamaged) / flashOnHitDuration);
+            //bodyFlashMaterialPropertyBlock.SetColor(propertyID, currentColor);
+            //foreach (var data in bodyRenderers)
+            //{
+            //    data.renderer.SetPropertyBlock(bodyFlashMaterialPropertyBlock, data.materialIndex);
+            //}
         }
 
         public override void OnDamage(float damage)
@@ -102,7 +102,7 @@ namespace Musashi
                 healthBarFillImage.transform.parent.gameObject.SetActive(false);
             transform.gameObject.SetActive(false);
 
-            EventManeger.Instance.Excute(EventType.EnemyDie);
+            //EventManeger.Instance.Excute(EventType.EnemyDie);
         }
     }
 }
