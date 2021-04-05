@@ -1,4 +1,5 @@
-﻿namespace Musashi
+﻿using UnityEngine;
+namespace Musashi
 {
     public interface IDamageable
     {

@@ -3,6 +3,10 @@ using UnityEngine.UI;
 
 namespace Musashi
 {
+    /// <summary>
+    /// 攻撃を受けることができるオブジェクトにアタッチするベースクラス。
+    /// 設定された体力がなくなるとそのオブジェットは消える
+    /// </summary>
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
     {
         [SerializeField] protected float maxHp;
