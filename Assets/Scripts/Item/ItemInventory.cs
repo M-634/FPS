@@ -11,13 +11,13 @@ namespace Musashi
         [SerializeField] CanvasGroup inventoryCanvasGroup;
         [SerializeField] ItemSlot[] itemSlots;
       
-        bool isOpenInventory = true;
+        bool isOpenInventory = false;
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public SlotBase SelectedSlot { get; private set; }
 
         private void Start()
         {
-            OpenAndCloseInventory();
+            inventoryCanvasGroup.HideUIWithCanvasGroup();
         }
 
         private void Update()
