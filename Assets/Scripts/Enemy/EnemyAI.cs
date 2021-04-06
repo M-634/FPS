@@ -27,16 +27,14 @@ namespace Musashi
         [SerializeField] float pursueSpeed = 5f;
 
         [Header("パトロール中の各種設定値")]
-        [SerializeField] LayerMask layerMask;
         [SerializeField] Transform enemyEye;
         [SerializeField] float visitDistance = 10.0f;
         [SerializeField] float viewingAngle = 30.0f;
         [SerializeField] float attackRange = 7.0f;
-
-        [Header("パトロールする中継地点")]
         [SerializeField] Transform[] patrolPoints;
         /// <summary>目標地点に到達してから次の中継地点へ出発するまでの待ち時間</summary>
         [SerializeField] float breakTime = 2f;
+        [SerializeField] float stopOffset = 0.5f;
 
         [Header("攻撃の各種設定")]
         /// <summary>振り向きの補間スピード </summary>
@@ -53,17 +51,18 @@ namespace Musashi
         #endregion
 
         #region Field's property
-        public Transform Target { get => target; }
-        public float PatrolSpeed { get => patrolSpeed; }
-        public float PursueSpeed { get => pursueSpeed; }
+        public Transform Target => target;
+        public float PatrolSpeed => patrolSpeed;
+        public float PursueSpeed => pursueSpeed;
 
-        public Transform[] PatrolPoints { get => patrolPoints; }
+        public Transform[] PatrolPoints => patrolPoints;
         public int PatrolPointsIndex { get; set; }
 
-        public float BreakTime { get => breakTime; }
-        public NavMeshAgent Agent { get => agent; }
-        public Animator Animator { get => animator; }
-        public IEnemyAttack Attack { get => attack; }
+        public float BreakTime => breakTime;
+        public float StopOffset => stopOffset;
+        public NavMeshAgent Agent => agent;
+        public Animator Animator => animator;
+        public IEnemyAttack Attack => attack;
         #endregion
 
         #region State's Instance and property
@@ -117,14 +116,17 @@ namespace Musashi
             if (dir.magnitude < visitDistance && angle < viewingAngle)
             {
                 //Playerと敵の間に障害物があるかどうかRayを飛ばして確かめる
-                if (Physics.Linecast(enemyEye.position, target.position, layerMask))
+                if (Physics.Linecast(enemyEye.position, target.position,out RaycastHit hit))
                 {
-#if UNITY_EDITOR
                     Debug.DrawLine(enemyEye.position, target.position, Color.white);
-#endif
+                    if(hit.collider.gameObject.CompareTag("Player"))
+                    {
+                        return true;
+                    }
                     return false;
+                    //return false;
                 }
-                return true;
+                //return true;
             }
             return false;
         }
@@ -210,9 +212,18 @@ namespace Musashi
 
         }
 
+        bool isStopping = false;
         void IEnemyState.OnUpdate(EnemyAI owner)
         {
-            if (!owner.Agent.pathPending && owner.Agent.remainingDistance < 0.5f)
+            //Debug.Log(owner.Agent.remainingDistance);
+            //いったん0.5f以下になった後remainDistanceが再び0.53fとかになってしまい、想定どうりの動きが出来ないときがある
+            //これは、 Idleアニメーションが再生されるときに、位置がずれてしまっていることが原因である
+            if (!owner.Agent.pathPending && owner.Agent.remainingDistance < owner.StopOffset)
+            {
+                isStopping = true;
+            }
+
+            if (isStopping)
             {
                 StopPoint(owner);
             }
@@ -224,9 +235,10 @@ namespace Musashi
         }
 
         float waitTime;
-        public void GoToNextPoint(EnemyAI owner)
+        private void GoToNextPoint(EnemyAI owner)
         {
             waitTime = 0;
+            isStopping = false;
             if (owner.PatrolPoints.Length == 0) return;
 
             owner.PatrolPointsIndex = (owner.PatrolPointsIndex + 1) % owner.PatrolPoints.Length;
@@ -236,7 +248,7 @@ namespace Musashi
             owner.Animator.Play("Walk");
         }
 
-        public void StopPoint(EnemyAI owner)
+        private void StopPoint(EnemyAI owner)
         {
             owner.Agent.isStopped = true;
             owner.Animator.Play("Idle");
@@ -273,11 +285,10 @@ namespace Musashi
                 owner.ChangeState(owner.EnemyAttack);
             }
 
-            //if (!owner.CanSeePlayer())
-            //{
-            //    //追っている状態で、Playerを見逃した時の挙動が変！
-            //    owner.ChangeState(owner.EnemyPatrol);
-            //}
+            if (!owner.CanSeePlayer())
+            {
+                owner.ChangeState(owner.EnemyPatrol);
+            }
         }
     }
 

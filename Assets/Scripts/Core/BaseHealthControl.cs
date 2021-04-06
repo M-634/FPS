@@ -13,7 +13,9 @@ namespace Musashi
         [SerializeField] protected Image healthBarFillImage = default;
 
         protected float currentHp;
-        protected float CurrentHp { get => currentHp;
+        protected virtual float CurrentHp 
+        {
+            get { return currentHp; }
             set
             {
                 currentHp = value;

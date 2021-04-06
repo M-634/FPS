@@ -10,6 +10,7 @@ namespace Musashi
     ///nodeをCtr+Dで複製したら、パスのリストに加える。
     ///削除されたら、該当するnodeをリストから削除する
     /// </summary>
+    [ExecuteAlways]
     public class CreatePathTool : MonoBehaviour
     {
         [SerializeField] EnemyAI owner;
@@ -18,7 +19,6 @@ namespace Musashi
 
         public List<Transform> Pathes { get; set; }
 
-        [ExecuteAlways]
         private void OnEnable()
         {
             if (pathes.Count > 0) return;

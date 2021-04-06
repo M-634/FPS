@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Musashi
 {
+#if UNITY_EDITOR
     [ExecuteAlways]
     public class PathNode : MonoBehaviour
     {
@@ -24,5 +25,6 @@ namespace Musashi
             createPathTool.DeleteNode(this.transform);
         }
     }
+#endif
 }
 

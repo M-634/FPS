@@ -1,9 +1,26 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+
 
 namespace Musashi
 {
     public class PlayerHealthControl : BaseHealthControl
     {
+        [SerializeField] Image damageEffectImage;
+   
+        protected override float CurrentHp 
+        {
+            get => base.CurrentHp;
+            set
+            {
+                currentHp = value;
+                float ratio = currentHp / maxHp;
+                if (healthBarFillImage)
+                    healthBarFillImage.fillAmount = ratio;
+                if (damageEffectImage)
+                    damageEffectImage.color = new Color(1, 1, 1, 1 - ratio);
+            } 
+        }
         public  bool IsMaxHP { get => CurrentHp == maxHp; }
 
         public override void OnDamage(float damage)
