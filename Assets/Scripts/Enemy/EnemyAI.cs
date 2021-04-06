@@ -74,6 +74,7 @@ namespace Musashi
         public EnemyPatrol EnemyPatrol { get; } = new EnemyPatrol();
         public EnemyPursue EnemyPursue { get; } = new EnemyPursue();
         public EnemyAttack EnemyAttack { get; } = new EnemyAttack();
+        public EnemyOnDamage EnemyOnDamage { get; } = new EnemyOnDamage();
         #endregion
 
         #region Method
@@ -318,6 +319,24 @@ namespace Musashi
             {
                 owner.Attack.Excute(owner);
             }
+        }
+    }
+
+    public class EnemyOnDamage : IEnemyState
+    {
+        public void OnEnter(EnemyAI owner, IEnemyState prevState = null)
+        {
+            Debug.Log("攻撃を受けた");
+            owner.ChangeState(owner.EnemyPursue);
+        }
+
+        public void OnExit(EnemyAI owner, IEnemyState nextState = null)
+        {
+        }
+
+        public void OnUpdate(EnemyAI owner)
+        {
+           
         }
     }
 }

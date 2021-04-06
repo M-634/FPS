@@ -31,6 +31,7 @@ namespace Musashi
         [Header("RagDoll")]
         [SerializeField] GameObject dethEffect;
 
+        EnemyAI owner;
 
         List<RenderIndexData> bodyRenderers = new List<RenderIndexData>();
         MaterialPropertyBlock bodyFlashMaterialPropertyBlock = null;//memo: standard shaderだと反応しない。独自のshaderが必要である
@@ -40,6 +41,8 @@ namespace Musashi
         protected override void Start()
         {
             base.Start();
+
+            owner = GetComponent<EnemyAI>();
 
             if (dethEffect)
                 dethEffect.SetActive(false);
@@ -85,6 +88,7 @@ namespace Musashi
         public override void OnDamage(float damage)
         {
             base.OnDamage(damage);
+            owner.ChangeState(owner.EnemyOnDamage); 
             lasitTimeDamaged = Time.time;
         }
 
