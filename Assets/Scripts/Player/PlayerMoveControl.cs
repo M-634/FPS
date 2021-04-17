@@ -4,6 +4,7 @@ using TMPro;
 
 namespace Musashi
 {
+    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerMoveControl : MonoBehaviour
     {
         [Header("Move")]
@@ -20,12 +21,9 @@ namespace Musashi
         public enum State { Normal, JumpUpper, JumpDown, Grappling, }
         public State state;
 
-
         [Header("Camera")]
         [SerializeField] PlayerCamaraControl cameraControl;
-        //[SerializeField] float NOMAL_FOV = 60f;
-        //[SerializeField] float GRAPPLING_FOV = 90f;
-
+    
         [Header("Audio")]
         [SerializeField] float footstepSFXFrequency = 0.3f;
         float footstepDistanceCounter;
@@ -33,25 +31,25 @@ namespace Musashi
         [SerializeField] AudioClip footstepSFX;
         [SerializeField] AudioClip jumpSFX;
         [SerializeField] AudioClip landSFX;
-        [SerializeField] AudioClip grapplingWindSFX;
         AudioSource audioSource;
 
-        PlayerInputManager inputManager;
         PlayerAnimationController animationController;
+        PlayerInputManager playerInputManager;
         CharacterController characterController;
         Vector3 characterVelocity;
         Vector3 groundNormal;
 
         private void Start()
         {
-            inputManager = GetComponent<PlayerInputManager>();
-            characterController = GetComponent<CharacterController>();
             animationController = GetComponent<PlayerAnimationController>();
+            playerInputManager = GetComponent<PlayerInputManager>();
+            characterController = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
 
             GameManager.Instance.LockCusor();
         }
 
+   
         private void Update()
         {
             //isGround = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
@@ -85,7 +83,8 @@ namespace Musashi
             //grounded movement
             if (state == State.Normal)
             {
-                if (isGround && inputManager.HasPutJumpButton)
+                //inputManager.HasPutJumpButtonを変更する
+                if (isGround && playerInputManager.Jump)
                 {
                     state = State.JumpUpper;
                     audioSource.Play(jumpSFX);
@@ -98,12 +97,10 @@ namespace Musashi
                     return;
                 }
 
-                var x = inputManager.Input_X;
-                var z = inputManager.Input_Z;
 
-                var dir = transform.forward * z + transform.right * x;
+                var dir = transform.right * playerInputManager.Move.x + transform.forward * playerInputManager.Move.y;
 
-                var isSprinting = PlayerInputManager.Dash();
+                var isSprinting = false;//PlayerInputManager.Dash();
                 var speedModifier = isSprinting ? sprintSpeedModifier : 1f;
 
                 var targetVelocity = dir.normalized * maxSpeedOnGround * speedModifier;
@@ -114,7 +111,7 @@ namespace Musashi
 
                 //footsteps sound
                 if (footstepDistanceCounter > 1f / footstepSFXFrequency)
-                {
+                {   
                     footstepDistanceCounter = 0;
                     audioSource.PlayRandomPitch(footstepSFX, 1f, 0.5f);
                 }

@@ -455,7 +455,6 @@ GameObject:
   - component: {fileID: 4035535613061906258}
   - component: {fileID: 4035535613061906264}
   - component: {fileID: 4035535613061906262}
-  - component: {fileID: 4035535613061906259}
   - component: {fileID: 4035535613061906257}
   - component: {fileID: 4035535613061906256}
   - component: {fileID: 586538198179755607}
@@ -588,8 +587,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   isGround: 0
   state: 0
-  grapplingGun: {fileID: 0}
-  grapplingEffect: {fileID: 0}
   cameraControl: {fileID: 4035535613061906262}
   footstepSFXFrequency: 0.3
   footstepSFX: {fileID: 8300000, guid: 18f1f68d6ecde43468ed6538af9ab81b, type: 3}
@@ -613,25 +610,12 @@ MonoBehaviour:
   fovGrapplingSpeed: 4
   fovAimingSpeed: 10
   NOMAL_FOV: 60
-  GRAPPLING_FOV: 90
   AIMING_FOV: 30
   volume: {fileID: 4035535612163436818}
   standard: {fileID: 11400000, guid: bd5dafb868e5ff64990a3ae7b00a855c, type: 2}
   nightVision: {fileID: 11400000, guid: 6a1aa00a183c1534983724274a424b99, type: 2}
   nightVisionOverlay: {fileID: 0}
   flashLight: {fileID: 586538197588820094}
---- !u!114 &4035535613061906259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4035535613061906265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73110d4e222b1f844941c817104d5b4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4035535613061906257
 MonoBehaviour:
   m_ObjectHideFlags: 0

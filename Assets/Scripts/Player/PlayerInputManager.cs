@@ -1,103 +1,39 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
+
 
 namespace Musashi
 {
+    /// <summary>
+    /// プレイヤーの入力を管理するクラス
+    /// </summary>
     public class PlayerInputManager : MonoBehaviour
     {
-        //mouse and controler
-        public float Input_X { get; private set; }
-        public float Input_Z { get; private set; }
-        public bool HasPutJumpButton { get; private set; }
+        MyInputActions inputActions;
+        MyInputActions.PlayerActions PlayerInputActions;
+   
+        public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
+        public Vector2 Look => PlayerInputActions.Look.ReadValue<Vector2>();
+        public bool Jump => PlayerInputActions.Jump.triggered;
+        public bool Fire => PlayerInputActions.Fire.triggered;
 
+        public bool IsGamepad => Gamepad.current.wasUpdatedThisFrame;
 
-        private void Update()
+        private void Awake()
         {
-            Input_X = Input.GetAxis("Horizontal");
-            Input_Z = Input.GetAxis("Vertical");
-
-            HasPutJumpButton = Input.GetButton("Jump");
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                GameManager.Instance.ShowConfigure();
-            }
+            inputActions = new MyInputActions();
+            PlayerInputActions = inputActions.Player;
         }
 
-      
-        public static bool InventoryAction()
+        private void OnEnable()
         {
-            return Input.GetKeyDown(KeyCode.Tab);
+            inputActions.Enable();
         }
 
-        public static bool HasPutGrapplingGunButton()
+        private void OnDisable()
         {
-            return Input.GetMouseButtonDown(1);//別のに変える
+            inputActions.Disable();
         }
-
-        public static bool ClickLeftMouse()
-        {
-            return Input.GetMouseButtonDown(0);
-        }
-
-        public static bool ClickRightMouse()
-        {
-            return Input.GetMouseButtonDown(1);
-        }
-
-        public static bool Aiming()
-        {
-            return Input.GetMouseButton(1);
-        }
-
-        public static bool AimCancel()
-        {
-            return Input.GetMouseButtonUp(1);
-        }
-
-        public static bool CoolDownWeapon()
-        {
-            return Input.GetMouseButtonUp(0);
-        }
-
-        public static bool InteractiveAction()
-        {
-            return Input.GetKeyDown(KeyCode.E);
-        }
-
-     
-        public static bool Dash()
-        {
-            return Input.GetKeyDown(KeyCode.LeftShift);
-        }
-
-        public static int SwichWeaponAction()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) return 0;
-            if (Input.GetKeyDown(KeyCode.Alpha2)) return 1;
-            if (Input.GetKeyDown(KeyCode.Q)) return 2;
-            return -1;
-        }
-
-        bool CanProcessInput()
-        {
-            return Cursor.lockState == CursorLockMode.Locked;
-        }
-
-        public Vector3 GetMoveInput()
-        {
-            if (CanProcessInput())
-            {
-                var move = new Vector3(Input.GetAxisRaw(GameContstans.AXISNAMEHoriZonTal), 0f, Input.GetAxisRaw(GameContstans.AXISNAMEVERTICAL));
-                move = Vector3.ClampMagnitude(move, 1f);
-                return move;
-            }
-            return Vector3.zero;
-        }
-    }
-
-    public class GameContstans
-    {
-        public const string AXISNAMEVERTICAL = "Vertical";
-        public const string AXISNAMEHoriZonTal = "Horizontal";
     }
 }

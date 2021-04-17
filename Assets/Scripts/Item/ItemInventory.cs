@@ -22,8 +22,8 @@ namespace Musashi
 
         private void Update()
         {
-            if (PlayerInputManager.InventoryAction())
-                OpenAndCloseInventory();
+            //if (PlayerInputManager.InventoryAction())
+            //    OpenAndCloseInventory();
         }
 
         /// <summary>

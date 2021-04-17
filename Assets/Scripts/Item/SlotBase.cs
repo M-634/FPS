@@ -64,17 +64,18 @@ namespace Musashi
         {
             while (isSelected)
             {
-                if (PlayerInputManager.ClickLeftMouse())
-                    UseObject();
+                //PlayerInputManagerの部分を変更する
+                //if (PlayerInputManager.ClickLeftMouse())
+                //    UseObject();
 
-                if (PlayerInputManager.ClickRightMouse())
-                {
-                    var mousePosition = Input.mousePosition;
-                    mousePosition.z += 2f;
+                //if (PlayerInputManager.ClickRightMouse())
+                //{
+                //    var mousePosition = Input.mousePosition;
+                //    mousePosition.z += 2f;
 
-                    var worldPoint = Camera.main.ScreenToWorldPoint(mousePosition);
-                    DropObject(worldPoint);
-                }
+                //    var worldPoint = Camera.main.ScreenToWorldPoint(mousePosition);
+                //    DropObject(worldPoint);
+                //}
                 yield return null;
             }
         }

@@ -27,18 +27,18 @@ namespace Musashi
             //    isAiming = true;
             //}
 
-            if (PlayerInputManager.Aiming())
-            {
-                //animator.Play("Aiming");
-                camaraControl.SetAimingFov();
-                isAiming = true;
-            }
+            //if (PlayerInputManager.Aiming())
+            //{
+            //    //animator.Play("Aiming");
+            //    camaraControl.SetAimingFov();
+            //    isAiming = true;
+            //}
 
-            if (PlayerInputManager.AimCancel())
-            {
-                camaraControl.SetNormalFov(true);
-                isAiming = false;
-            }
+            //if (PlayerInputManager.AimCancel())
+            //{
+            //    camaraControl.SetNormalFov(true);
+            //    isAiming = false;
+            //}
         }
 
         public void MoveAnimation(float velocity, PlayerMoveControl.State state)

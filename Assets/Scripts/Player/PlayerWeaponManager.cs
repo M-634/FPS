@@ -34,9 +34,10 @@ namespace Musashi
         private void Update()
         {
             if (!canInputAction) return;
-            var i = PlayerInputManager.SwichWeaponAction();
-            if (i == 0 || i == 1) EquipWeapon(i);
-            if (i == 2) PutAwayWeapon();
+            // PlayerInputManager.SwichWeaponAction()を変更する
+            //var i = PlayerInputManager.SwichWeaponAction();
+            //if (i == 0 || i == 1) EquipWeapon(i);
+            //if (i == 2) PutAwayWeapon();
         }
 
         /// <summary>

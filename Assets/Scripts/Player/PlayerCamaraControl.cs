@@ -3,17 +3,18 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace Musashi
 {
+    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerCamaraControl : MonoBehaviour
     {
         [Header("Base Setting")]
         [SerializeField] Camera playerCamera;
-        [SerializeField] float sensitivity = 50f;
+        [SerializeField] float mouseSensitivity = 1f;
+        [SerializeField] float controllerSensitivity = 50f;
         [SerializeField] float fovGrapplingSpeed = 4f;
         [SerializeField] float fovAimingSpeed = 1f;
 
         [Header("Field Of View")]
         [SerializeField] float NOMAL_FOV = 60f;
-        [SerializeField] float GRAPPLING_FOV = 90f;
         [SerializeField] float AIMING_FOV = 30f;
 
         [Header("PostProcess")]
@@ -28,10 +29,13 @@ namespace Musashi
         float fovSpeed;
         private float xRotation;
 
+        PlayerInputManager playerInputManager;
         public bool LockCamera { get; set; } = false;
 
         private void Start()
         {
+            playerInputManager = GetComponent<PlayerInputManager>();
+
             playerCamera.fieldOfView = NOMAL_FOV;
             targetFov = playerCamera.fieldOfView;
             fov = targetFov;
@@ -45,8 +49,8 @@ namespace Musashi
             if (LockCamera) return;
 
             Look();
-            if (Input.GetKeyDown(KeyCode.N))//test
-                ChangePostProcess();
+            //if (Input.GetKeyDown(KeyCode.N))//test
+            //    ChangePostProcess();
 
             fov = Mathf.Lerp(fov, targetFov, Time.deltaTime * fovSpeed);
             playerCamera.fieldOfView = fov;
@@ -62,12 +66,6 @@ namespace Musashi
                 fovSpeed = fovGrapplingSpeed;
         }
 
-        public void SetGrapplingFov()
-        {
-            this.targetFov = GRAPPLING_FOV;
-            fovSpeed = fovGrapplingSpeed;
-        }
-
         public void SetAimingFov()
         {
             this.targetFov = AIMING_FOV;
@@ -80,8 +78,13 @@ namespace Musashi
             float mouseX;
             float mouseY;
 
-            mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime;
-            mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
+
+            //マウス と コントロール でsensitivityを変えること
+            float sensitivity = playerInputManager.IsGamepad ? controllerSensitivity : mouseSensitivity; 
+
+            mouseX = Mathf.Round(playerInputManager.Look.x) * sensitivity * Time.fixedDeltaTime;
+            mouseY = Mathf.Round(playerInputManager.Look.y) * sensitivity * Time.fixedDeltaTime;
+         
 
             xRotation += mouseY;
 

@@ -17,13 +17,14 @@ namespace Musashi
 
         private void Update()
         {
-            if (CheakPickUpObj() && PlayerInputManager.InteractiveAction())
-            {
-                if (hit.collider.TryGetComponent(out IPickUpObjectable pickUpObjectable))
-                {
-                    pickUpObjectable.OnPicked();
-                }
-            }
+            // PlayerInputManager.InteractiveAction()を変更する
+            //if (CheakPickUpObj() && PlayerInputManager.InteractiveAction())
+            //{
+            //    if (hit.collider.TryGetComponent(out IPickUpObjectable pickUpObjectable))
+            //    {
+            //        pickUpObjectable.OnPicked();
+            //    }
+            //}
         }
 
         private bool CheakPickUpObj()
