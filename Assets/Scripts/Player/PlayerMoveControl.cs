@@ -49,7 +49,6 @@ namespace Musashi
             GameManager.Instance.LockCusor();
         }
 
-   
         private void Update()
         {
             //isGround = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);

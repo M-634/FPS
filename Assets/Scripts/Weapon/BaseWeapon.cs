@@ -18,6 +18,5 @@ namespace Musashi
     public abstract class BaseWeapon : MonoBehaviour
     {
         public KindOfWeapon kindOfWeapon;
-        public virtual void Attack() { }
     }
 }

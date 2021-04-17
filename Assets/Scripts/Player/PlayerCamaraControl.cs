@@ -6,11 +6,10 @@ namespace Musashi
     [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerCamaraControl : MonoBehaviour
     {
-        [Header("Base Setting")]
+        [Header("Camera Setting")]
         [SerializeField] Camera playerCamera;
         [SerializeField] float mouseSensitivity = 1f;
         [SerializeField] float controllerSensitivity = 50f;
-        [SerializeField] float fovGrapplingSpeed = 4f;
         [SerializeField] float fovAimingSpeed = 1f;
 
         [Header("Field Of View")]
@@ -62,8 +61,6 @@ namespace Musashi
             if (isAimCancel)
                 fovSpeed = fovAimingSpeed;
                 //playerCamera.fieldOfView = targetFov;
-            else
-                fovSpeed = fovGrapplingSpeed;
         }
 
         public void SetAimingFov()

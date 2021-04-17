@@ -8,7 +8,7 @@ namespace Musashi
     /// 落ちている武器にアタッチするクラス
     /// プレイヤーに装備するものと別とする
     /// </summary>
-    public class PickUpWeapon : BaseWeapon,IPickUpObjectable
+    public sealed class PickUpWeapon : BaseWeapon,IPickUpObjectable
     {
         Rigidbody rb;
         PlayerWeaponManager weaponManager;
@@ -18,6 +18,7 @@ namespace Musashi
             rb = GetComponent<Rigidbody>();
             weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWeaponManager>();
         }
+
         public void OnPicked()
         {
             var canPicup = weaponManager.CanPickUP(this);

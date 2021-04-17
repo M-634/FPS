@@ -66,11 +66,13 @@ namespace Musashi
         public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
 
         PoolingObject[] poolingObjects;
+        PlayerInputManager playerInput;
         Animator animator;
         AudioSource audioSource;
 
         private void Start()
         {
+            playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInputManager>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
             if (!muzzle)
@@ -84,21 +86,23 @@ namespace Musashi
             if (ammoCounter)
                 currentAmmo = ammoCounter.ReloadAmmo(maxAmmo, currentAmmo);
 
+            //残りの弾丸が０なのにリロードしている
             if (audioSource)
                 audioSource.Play(ReloadClip, audioSource.volume);
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.R)) ReLoad();
+            //if (Input.GetKeyDown(KeyCode.R)) ReLoad();
+            if (playerInput.Reload) ReLoad();
 
             switch (weaponShootType)
             {
                 case WeaponShootType.Manual:
-                    if (Input.GetMouseButtonDown(0)) TryShot();
+                    if (playerInput.Fire) TryShot();
                     break;
                 case WeaponShootType.Automatic:
-                    if (Input.GetMouseButton(0)) TryShot();
+                    if (playerInput.HeldFire) TryShot();
                     break;
             }
         }
@@ -175,13 +179,6 @@ namespace Musashi
         {
 
         }
-
-        public override void Attack()
-        {
-            TryShot();
-        }
-
-
 
         public void OnEnable()
         {
