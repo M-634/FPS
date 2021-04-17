@@ -21,10 +21,6 @@ namespace Musashi
         public State state;
 
 
-        [Header("Grappling Weapon")]
-        [SerializeField] GrapplingGun grapplingGun;
-        [SerializeField] ParticleSystem grapplingEffect;
-
         [Header("Camera")]
         [SerializeField] PlayerCamaraControl cameraControl;
         //[SerializeField] float NOMAL_FOV = 60f;
@@ -53,7 +49,6 @@ namespace Musashi
             animationController = GetComponent<PlayerAnimationController>();
             audioSource = GetComponent<AudioSource>();
 
-            grapplingEffect.Stop();
             GameManager.Instance.LockCusor();
         }
 
@@ -129,71 +124,7 @@ namespace Musashi
                 characterController.Move(characterVelocity * Time.deltaTime);
             }
 
-            //ここの動きの修正は
-            if (state == State.Grappling)
-            {
-                //set camera
-                if (cameraControl)
-                    cameraControl.SetGrapplingFov();
-
-                //play effect
-                if (grapplingEffect.isStopped)
-                    grapplingEffect.Play();
-
-                //Play Audio
-                //memo:条件分岐付けないと音は鳴らないことに注意
-                if (!audioSource.isPlaying)
-                    audioSource.Play(grapplingWindSFX);
-
-                var dir = grapplingGun.GetGrapplePoint - transform.position;
-
-                //Adjust speed 
-                var grapplingSpeedMin = 10f;
-                var grapplingSpeedMax = 40f;
-                var grapplingSpeed = Mathf.Clamp(Vector3.Distance(transform.position, grapplingGun.GetGrapplePoint), grapplingSpeedMin, grapplingSpeedMax);
-                var hookshotSpeedMultipiker = 2f;
-
-
-                //Grappling move   
-                characterController.Move(dir.normalized * grapplingSpeed * hookshotSpeedMultipiker * Time.deltaTime);
-
-                //Stop Grapping move
-                if (Vector3.Distance(transform.position, grapplingGun.GetGrapplePoint) < 1.0f)
-                {
-                    state = State.JumpDown;
-                    grapplingGun.IsGrappling = false;
-
-                    //Stop audio
-                    audioSource.StopWithFadeOut(0.1f);
-
-                    //Stop effect
-                    grapplingEffect.Stop();
-
-                    if (cameraControl)
-                        cameraControl.SetNormalFov();
-                }
-
-                //Cancel Grappling move
-                //memo;キャンセル後の動きもゲームのおもしさに関わると思うので要調整が必要。
-                if (inputManager.HasPutJumpButton)
-                {
-                    characterVelocity = dir;
-                    grapplingGun.IsGrappling = false;
-                    state = State.JumpUpper;
-
-                    //Stop audio
-                    audioSource.StopWithFadeOut(0.1f);
-
-                    //Stop audio
-                    grapplingEffect.Stop();
-
-                    if (cameraControl)
-                        cameraControl.SetNormalFov();
-                }
-            }
-
-            if (grapplingGun.IsGrappling) state = State.Grappling;
-
+          
             //Set animation
             if (animationController)
                 animationController.MoveAnimation(characterVelocity.magnitude,state);
