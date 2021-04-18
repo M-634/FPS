@@ -9,23 +9,34 @@ namespace Musashi
         [SerializeField] float healPoint = 30f;
         [SerializeField] float healtime = 60f;
 
-        public override void OnPicked()
+        public override bool CanUseObject(GameObject player)
         {
-            base.OnPicked();
-        }
-
-        public override bool CanUseObject()
-        {
-            var playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
-            if (playerHealth.IsMaxHP)
+            if (player.TryGetComponent(out PlayerHealthControl healthControl))
             {
-                InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
-                canUseItem = false;
+                if (healthControl.enabled)
+                {
+                    if (healthControl.IsMaxHP)
+                    {
+                        InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
+                        canUseItem = false;
+                    }
+                    else
+                    {
+                        canUseItem = true;
+                        healthControl.Heal(healPoint, healtime);//回復時間を実装する
+                    }
+
+                }
+                else
+                {
+                    canUseItem = false;
+                    Debug.LogWarning($"PlayerHealthControlコンポーネントのアクティブがoffになっています");
+                }
             }
             else
             {
-                canUseItem = true;
-                EventManeger.Instance.Excute(healtime, healPoint);
+                canUseItem = false;
+                Debug.LogWarning($"PlayerHealthControlコンポーネントがPlayerにアタッチされていません");
             }
             Destroy(gameObject, 0.1f);
             return canUseItem;

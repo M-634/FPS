@@ -5,25 +5,39 @@ using UnityEngine.UI;
 
 namespace Musashi
 {
-    public class ItemInventory : SingletonMonoBehaviour<ItemInventory>
+    [RequireComponent(typeof(PlayerInputManager))]
+    public class PlayerItemInventory : MonoBehaviour
     {
         [SerializeField] ItemDataBase itemDataBase;
         [SerializeField] CanvasGroup inventoryCanvasGroup;
         [SerializeField] ItemSlot[] itemSlots;
-      
+
         bool isOpenInventory = false;
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public SlotBase SelectedSlot { get; private set; }
 
+        PlayerInputManager playerInput;
+
         private void Start()
         {
             inventoryCanvasGroup.HideUIWithCanvasGroup();
+            playerInput = GetComponent<PlayerInputManager>();
+            if (playerInput)
+            {
+                foreach (var slot in itemSlots)
+                {
+                    slot.SetInput(playerInput);
+                    slot.SetItemSlot(this);
+                }
+            }
         }
 
         private void Update()
         {
-            //if (PlayerInputManager.InventoryAction())
-            //    OpenAndCloseInventory();
+            if (playerInput.Inventory)
+            {
+                OpenAndCloseInventory();
+            }
         }
 
         /// <summary>
@@ -32,13 +46,13 @@ namespace Musashi
         /// </summary>
         /// <param name="getItem"></param>
         /// <returns></returns>
-        public bool CanGetItem(BaseItem getItem,int getNumber)
+        public bool CanGetItem(BaseItem getItem, int getNumber)
         {
             foreach (var itemData in itemDataBase.ItemDataList)
             {
                 if (itemData.KindOfItem == getItem.kindOfItem)
                 {
-                    return SearchItemSlot(itemData,getNumber);
+                    return SearchItemSlot(itemData, getNumber);
                 }
             }
             Debug.LogWarning("データベースに該当するアイテムがありません");

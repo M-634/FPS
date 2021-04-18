@@ -29,18 +29,18 @@ namespace Musashi
         /// <summary>
         /// スロットをクリックして武器を装備する
         /// </summary>
-        public override void UseObject()
+        public override void UseObject(GameObject player)
         {
             if (IsEmpty) return;
             playerWeaponManager.EquipWeapon(slotNumber);
-            ItemInventory.Instance.OpenAndCloseInventory();
+            player.GetComponent<PlayerItemInventory>().OpenAndCloseInventory();//playerEvent
         }
 
         public override void DropObject(Vector3 worldPoint)
         {
             if (IsEmpty) return;
             playerWeaponManager.PutAwayWeapon();
-            var go = Instantiate(CurrentWeaponData.PickUpWeaonPrefab, worldPoint, Quaternion.identity);
+            var go = Instantiate(CurrentWeaponData.PickUpWeaonPrefab, worldPoint, Quaternion.Euler(0,0,90));
             go.Drop();
             ResetInfo();
         }

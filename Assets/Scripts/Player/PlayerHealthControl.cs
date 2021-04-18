@@ -21,7 +21,7 @@ namespace Musashi
                     damageEffectImage.color = new Color(1, 1, 1, 1 - ratio);
             } 
         }
-        public  bool IsMaxHP { get => CurrentHp == maxHp; }
+        public  bool IsMaxHP  => CurrentHp == maxHp;
 
         public override void OnDamage(float damage)
         {
@@ -44,14 +44,14 @@ namespace Musashi
             Debug.Log($"{healPoint}を{healtime}かけて回復した");
         }
 
-        private void OnEnable()
-        {
-            EventManeger.Instance.Subscribe(Heal);
-        }
+        //private void OnEnable()
+        //{
+        //    EventManeger.Instance.Subscribe(Heal);
+        //}
 
-        private void OnDisable()
-        {
-            EventManeger.Instance.UnSubscribe(Heal);
-        }
+        //private void OnDisable()
+        //{
+        //    EventManeger.Instance.UnSubscribe(Heal);
+        //}
     }
 }

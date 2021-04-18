@@ -10,7 +10,7 @@ namespace Musashi
     [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerInteractive : MonoBehaviour
     {
-        [SerializeField] LayerMask pickUpLayer;//全てのインタラクティブなものを対象にする
+        [SerializeField] LayerMask interactiveLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
         PlayerInputManager playerInputManager;
@@ -23,18 +23,18 @@ namespace Musashi
 
         private void Update()
         {
-            if (CheakPickUpObj() && playerInputManager.Interactive)
+            if (CheakInteractiveObj() && playerInputManager.Interactive)
             {
-                if (hit.collider.TryGetComponent(out IPickUpObjectable pickUpObjectable))
+                if (hit.collider.TryGetComponent(out IInteractable obj))
                 {
-                    pickUpObjectable.OnPicked();
+                    obj.Excute(this.gameObject);
                 }
             }
         }
 
-        private bool CheakPickUpObj()
+        private bool CheakInteractiveObj()
         {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance, pickUpLayer))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance, interactiveLayer))
             {
                 InteractiveMessage.ShowInteractiveMessage(InteractiveMessage.InteractiveText);
                 return true;

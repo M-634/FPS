@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace Musashi
 {
     /// <summary>
-    /// 攻撃を受けることができるオブジェクトにアタッチするベースクラス。
+    /// 体力があるオブジェクトにアタッチするベースクラス。
     /// 設定された体力がなくなるとそのオブジェットは消える
     /// </summary>
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
@@ -12,10 +12,12 @@ namespace Musashi
         [SerializeField] protected float maxHp;
         [SerializeField] protected Image healthBarFillImage = default;
 
+        protected bool isDead;
         protected float currentHp;
+
         protected virtual float CurrentHp 
         {
-            get { return currentHp; }
+            get => currentHp;
             set
             {
                 currentHp = value;
@@ -23,7 +25,6 @@ namespace Musashi
                     healthBarFillImage.fillAmount = currentHp / maxHp;
             } 
         }
-        protected bool isDead;
 
         protected virtual void Start()
         {
@@ -33,10 +34,6 @@ namespace Musashi
         public virtual void OnDamage(float damage)
         {
             CurrentHp -= damage;
-
-            //if (healthBarFillImage)
-            //    healthBarFillImage.fillAmount = CurrentHp / maxHp;
-
             if (CurrentHp <= 0) OnDie();
         }
 

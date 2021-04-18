@@ -7,15 +7,18 @@ namespace Musashi
 {
     /// <summary>
     /// プレイヤーの入力を管理するクラス
-    /// 必ず、playerタグが付いたオブジェクトにアタッチすること
     /// </summary>
-    public class PlayerInputManager : MonoBehaviour
+    public class PlayerInputManager : MonoBehaviour//このクラスに依存しているクラスが多いので依存関係を解消させること
     {
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
-   
+        public bool IsGamepad => Gamepad.current.wasUpdatedThisFrame;
+
+        //Input property
         public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
         public Vector2 Look => PlayerInputActions.Look.ReadValue<Vector2>();
+
+        public Vector2 MousePosition => PlayerInputActions.MousePosition.ReadValue<Vector2>();
         public bool Jump => PlayerInputActions.Jump.triggered;
         public bool Fire => PlayerInputActions.Fire.triggered;
 
@@ -23,7 +26,11 @@ namespace Musashi
         public bool HeldFire => heldFire;
         public bool Reload => PlayerInputActions.Reload.triggered;
         public bool Interactive => PlayerInputActions.Interactive.triggered;
-        public bool IsGamepad => Gamepad.current.wasUpdatedThisFrame;
+        public bool Inventory => PlayerInputActions.Inventory.triggered;
+        public bool UseItem => PlayerInputActions.UseItem.triggered;
+        public bool DropItem => PlayerInputActions.DropItem.triggered;
+        public bool Aim => PlayerInputActions.Aim.triggered;
+
 
         private void Awake()
         {
@@ -32,11 +39,6 @@ namespace Musashi
 
             PlayerInputActions.Fire.performed += ctx => heldFire = true;
             PlayerInputActions.Fire.canceled += ctx => heldFire = false;
-        }
-
-        private void Reset()
-        {
-            gameObject.tag = "Player";
         }
 
         private void OnEnable()

@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8243539330904326338}
   - component: {fileID: 8243539330904326336}
   - component: {fileID: 8243539330904326397}
-  m_Layer: 15
+  m_Layer: 0
   m_Name: HandGun_Userable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,11 +150,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kindOfWeapon: 2
   weaponShootType: 0
-  ammoCounter: {fileID: 0}
   muzzle: {fileID: 8243539329357067646}
-  bullet: {fileID: 7226835763990504235, guid: 4e6681b98c900094db70752ad3bb9697, type: 3}
   muzzleFalsh: {fileID: 198719912503724044, guid: 3dd9cf2e209c504448f1c4c6835675cf,
     type: 3}
+  bullet: {fileID: 7226835763990504235, guid: 4e6681b98c900094db70752ad3bb9697, type: 3}
+  ammoCounter: {fileID: 0}
   maxAmmo: 12
   shotPower: 30
   shotDamage: 11

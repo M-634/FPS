@@ -8,47 +8,18 @@ namespace Musashi
     /// 落ちている武器にアタッチするクラス
     /// プレイヤーに装備するものと別とする
     /// </summary>
-    public sealed class PickUpWeapon : BaseWeapon,IPickUpObjectable
+    public class PickUpWeapon : CanPickUpObject
     {
-        Rigidbody rb;
-        PlayerWeaponManager weaponManager;
-
-        private void Start()
+        public KindOfWeapon kindOfWeapon;
+     
+        public override void OnPicked(GameObject player)
         {
-            rb = GetComponent<Rigidbody>();
-            weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWeaponManager>();
-        }
-
-        public void OnPicked()
-        {
-            var canPicup = weaponManager.CanPickUP(this);
-            if (canPicup)
+            var canPickUp = player.GetComponent<PlayerWeaponManager>().CanPickUP(this);
+            if (canPickUp)
             {
                 GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
                 Destroy(gameObject);
             }
         }
-
-        /// <summary>
-        /// インベントリからアイテムを捨てる時に呼ばれる関数
-        /// </summary>
-        public void Drop()
-        {
-            if (!rb)
-                rb = GetComponent<Rigidbody>();
-
-            rb.isKinematic = false;
-            rb.useGravity = true;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.CompareTag("Ground"))
-            {
-                rb.isKinematic = true;
-                rb.useGravity = false;
-            }
-        }
-
     }
 }

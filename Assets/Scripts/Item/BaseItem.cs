@@ -11,24 +11,18 @@ namespace Musashi
         //health
         HealthKit, Apple,
         //other
-        Battery, Key,AmmoBox,
+        Battery, Key, AmmoBox,
     }
 
-    public abstract class BaseItem : MonoBehaviour, IPickUpObjectable
+    public abstract class BaseItem : CanPickUpObject
     {
         public KindOfItem kindOfItem;
         protected bool canPickUp = true;
         protected bool canUseItem = true;
 
-        Rigidbody rb;
-
-        protected virtual void Start()
+        public override void OnPicked(GameObject player)
         {
-            rb = GetComponent<Rigidbody>();
-        }
-        public virtual void OnPicked()
-        {
-            canPickUp = ItemInventory.Instance.CanGetItem(this,1);
+            canPickUp = player.GetComponent<PlayerItemInventory>().CanGetItem(this, 1);
             if (canPickUp)
             {
                 GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
@@ -36,31 +30,9 @@ namespace Musashi
             }
         }
 
-        public virtual bool CanUseObject()
+        public virtual bool CanUseObject(GameObject player)
         {
             return canUseItem;
-        }
-
-        /// <summary>
-        /// インベントリからアイテムを捨てる時に呼ばれる関数
-        /// </summary>
-        public virtual void Drop()
-        {
-            if(!rb) 
-                rb = GetComponent<Rigidbody>();
-
-            rb.isKinematic = false;
-            rb.useGravity = true;
-        }
-
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if(other.gameObject.CompareTag("Ground"))
-            {
-                rb.isKinematic = true;
-                rb.useGravity = false;
-            }
         }
     }
 }

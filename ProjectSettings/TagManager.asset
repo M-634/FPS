@@ -17,15 +17,15 @@ TagManager:
   - UI
   - 
   - 
-  - Grappleable
+  - 
   - Ground
   - Player
   - Enemy
   - Level
   - MinimapIcon
   - PostProcessing
-  - PickUp
-  - IDamageable
+  - Interactable
+  - 
   - 
   - 
   - 

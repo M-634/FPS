@@ -46,31 +46,32 @@ namespace Musashi
         }
 
         [SerializeField] WeaponShootType weaponShootType;
-        [SerializeField] AmmoCounter ammoCounter;
-        [SerializeField] Transform muzzle;
         // [SerializeField] PoolingObject poolingObject;
-        public BulletControl bullet;
+        [SerializeField] Transform muzzle;
         public ParticleSystem muzzleFalsh;
 
+        [Header("Ammo")]
+        [SerializeField] BulletControl bullet;
+        [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] int maxAmmo;
+        int currentAmmo;
 
+        [Header("Settings")]
         [SerializeField] float shotPower = 100f;
         [SerializeField] float shotDamage;
         [SerializeField] float shotRateTime;
         float lastTimeShot = Mathf.NegativeInfinity;
 
+        [Header("SFX")]
         [SerializeField] AudioClip shotClip;
         [SerializeField] AudioClip ReloadClip;
-
-        int currentAmmo;
-        public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
 
         PoolingObject[] poolingObjects;
         PlayerInputManager playerInput;
         Animator animator;
         AudioSource audioSource;
 
-        private void Start()
+        private void Awake()
         {
             playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInputManager>();
             animator = GetComponent<Animator>();
@@ -81,20 +82,25 @@ namespace Musashi
             currentAmmo = maxAmmo;
         }
 
-        public void ReLoad()
+        public void Reload()
         {
-            if (ammoCounter)
-                currentAmmo = ammoCounter.ReloadAmmo(maxAmmo, currentAmmo);
-
-            //残りの弾丸が０なのにリロードしている
-            if (audioSource)
-                audioSource.Play(ReloadClip, audioSource.volume);
+            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            if (canReload)
+            {
+                currentAmmo = maxAmmo;
+                if (audioSource)
+                    audioSource.Play(ReloadClip, 0.5f);
+                //リロード中は、弾が撃てないようにすること!
+            }
+            else
+            {
+                //弾切れ！
+            }    
         }
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.R)) ReLoad();
-            if (playerInput.Reload) ReLoad();
+            if (playerInput.Reload) Reload();
 
             switch (weaponShootType)
             {
@@ -120,10 +126,10 @@ namespace Musashi
 
         public void TryShot()
         {
-            if (CurrentAmmo < 1)
+            if (currentAmmo < 1)
             {
-                CurrentAmmo = 0;
-                ReLoad();
+                currentAmmo = 0;
+                Reload();
                 return;
             }
 
@@ -140,36 +146,17 @@ namespace Musashi
         public void Shot()
         {
             var b = Instantiate(bullet, muzzle.position, Quaternion.identity);
-            b.AddForce(ref shotPower,ref shotDamage, muzzle);
+            b.AddForce(ref shotPower, ref shotDamage, muzzle);
 
             var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
 
             if (audioSource)
-                audioSource.Play(shotClip,audioSource.volume);
+                audioSource.Play(shotClip, audioSource.volume);
 
-            CurrentAmmo--;
+            currentAmmo--;
             if (ammoCounter)
-                ammoCounter.UseAmmo();
+                ammoCounter.Display(ref currentAmmo);
             lastTimeShot = Time.time;
-
-            //for (int i = 0; i < poolingObjects.Length; i++)
-            //{
-            //    if (poolingObjects[i].CanUse)
-            //    {
-            //        //fire
-            //        Debug.Log("fire");
-            //        poolingObjects[i].SetActive = true;
-            //        poolingObjects[i].muzzleFalsh.Play();
-            //        poolingObjects[i].bullet.AddForce(ref shotPower, muzzle);
-
-            //        if (audioSource)
-            //            audioSource.Play(shotClip);
-
-            //        CurrentAmmo--;
-            //        lastTimeShot = Time.time;
-            //        return;
-            //    }
-            //}
         }
 
         /// <summary>
@@ -183,10 +170,7 @@ namespace Musashi
         public void OnEnable()
         {
             if (ammoCounter)
-            {
-                ammoCounter.Text.enabled = true;
-                ammoCounter.SetCurrentAmmo(currentAmmo);
-            }
+                ammoCounter.Display(ref currentAmmo);
             EventManeger.Instance.Subscribe(EventType.OpenInventory, () => enabled = false);
             EventManeger.Instance.Subscribe(EventType.CloseInventory, () => enabled = true);
 

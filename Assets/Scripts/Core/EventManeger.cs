@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+//playerに関わるイベントとゲームシステムに関わるイベントで分けた方がいい。
+//MulitPlayとかになった場合を想定した時、シングルトンで作成するのはまずい。
+/// </summary>
 namespace Musashi
 {
     /// <summary>

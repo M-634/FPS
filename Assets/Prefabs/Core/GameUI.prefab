@@ -1855,6 +1855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 8100897186506600227}
+  sumNumberOfAmmoInInventory: 0
 --- !u!1 &1315448306654040601
 GameObject:
   m_ObjectHideFlags: 0
@@ -3781,7 +3782,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5931748999471043450}
   - component: {fileID: 2849098344463594827}
-  - component: {fileID: 6136482857896952701}
   - component: {fileID: 113293661079109576}
   m_Layer: 5
   m_Name: Inventory
@@ -3818,29 +3818,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3761396882606777216}
   m_CullTransparentMesh: 0
---- !u!114 &6136482857896952701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3761396882606777216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2f2d88e28c2c754b970947c9c15b2d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemDataBase: {fileID: 11400000, guid: c1513bb49e6915f45a8c1ec633dc3163, type: 2}
-  inventoryCanvasGroup: {fileID: 113293661079109576}
-  itemSlots:
-  - {fileID: 1371407398001898269}
-  - {fileID: 5890453817503959242}
-  - {fileID: 2129054812118380418}
-  - {fileID: 3258350086127345414}
-  - {fileID: 4029189716955502032}
-  - {fileID: 6309425282159970794}
-  - {fileID: 4327315694244457461}
-  - {fileID: 8773028947726364398}
 --- !u!225 &113293661079109576
 CanvasGroup:
   m_ObjectHideFlags: 0

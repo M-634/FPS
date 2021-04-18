@@ -21,10 +21,24 @@ namespace Musashi
         [SerializeField] protected TextMeshProUGUI keyCode;
         [SerializeField] protected Color highLightColor;
         [SerializeField] protected TextMeshProUGUI stack;
-    
+
+        bool isSelected = false;
+
+        protected PlayerInputManager playerInput;
         public string KeyCode { set => keyCode.text = value; }
         public virtual bool IsEmpty { get; set; } = true;
         public virtual bool IsFilled { get; set; } = false;
+
+        /// <summary>
+        /// 初期化時に PlayerItemInventoryクラスから呼ばれる。
+        /// 必要なコンポーネントを設定する。
+        /// </summary>
+        /// <param name="_playerInput"></param>
+        /// <param name="_itemInventory"></param>
+        public void SetInput(PlayerInputManager _playerInput)
+        {
+            playerInput = _playerInput;
+        }
 
         public virtual void SetInfo<T>(T getData) where T:ScriptableObject{}
      
@@ -32,7 +46,7 @@ namespace Musashi
         /// 継承先でアイテムスロットなら使用、武器スロットなら装備する処理を実装する。
         /// その後、使用できたか、装備したらインベントリーを閉じる
         /// </summary>
-        public virtual void UseObject() {}
+        public virtual void UseObject(GameObject player) {}
 
         /// <summary>
         /// スロットないのアイテムを捨てる関数
@@ -45,8 +59,11 @@ namespace Musashi
         /// </summary>
         public virtual void ResetInfo() { }
 
-        bool isSelected = false;
-
+        /// <summary>
+        /// スロットの上にポインターが来たら、選択されたと判定する関数。
+        /// スロットにハイライトをつけ、入力を受け付ける非同期処理を走らせる
+        /// </summary>
+        /// <param name="eventData"></param>
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
             Outline.color = highLightColor;
@@ -54,28 +71,33 @@ namespace Musashi
             StartCoroutine(ReciveInteractiveAction());
         }
 
+        /// <summary>
+        ///スロット上からポインターがなくなったら、選択された判定すを解除し
+        ///ハイライトを消す
+        /// </summary>
+        /// <param name="eventData"></param>
         public virtual void OnPointerExit(PointerEventData eventData)
         {
             Outline.color = Color.black;
             isSelected = false;
         }
         
+        /// <summary>
+        /// スロットを選択を選択されている間、入力を受け付ける関数。
+        /// </summary>
+        /// <returns></returns>
         IEnumerator ReciveInteractiveAction()
         {
             while (isSelected)
             {
-                //PlayerInputManagerの部分を変更する
-                //if (PlayerInputManager.ClickLeftMouse())
-                //    UseObject();
+                if (playerInput.UseItem)
+                    UseObject(playerInput.transform.gameObject);
 
-                //if (PlayerInputManager.ClickRightMouse())
-                //{
-                //    var mousePosition = Input.mousePosition;
-                //    mousePosition.z += 2f;
-
-                //    var worldPoint = Camera.main.ScreenToWorldPoint(mousePosition);
-                //    DropObject(worldPoint);
-                //}
+                if (playerInput.DropItem)
+                {
+                    var dir = playerInput.transform.GetComponentInChildren<Camera>().transform.forward;
+                    DropObject(playerInput.transform.position + transform.up + dir * 2f);
+                }
                 yield return null;
             }
         }

@@ -67,6 +67,46 @@ namespace Musashi
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""b64af509-54ad-4347-832d-8b4da1a2a841"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""UseItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""5c5d42d5-ec56-48c9-b3ee-d0815a3426ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""a4799d2a-ad07-4520-8bbf-ff809b2df3c9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""cdb49c6e-c131-40ce-9ab0-43b8c0b33df6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""4d478009-ac2d-4dfe-aad7-874ecdde81b2"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -364,6 +404,105 @@ namespace Musashi
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96d5e998-a27b-4878-ac4c-5522e1b3a4c8"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50de9d03-5ef9-4057-a4fd-6c40797aedf4"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea578cc7-6142-47b6-861f-d302219a02a2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UseItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44e0e4c8-bdcf-4e74-b677-efa555886afd"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7b8a088e-2de9-4bbf-b51c-086835fb3dcc"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a60b0e47-38f6-456f-a321-5df1ab3b8ce5"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01f621d4-13a5-470f-8b24-fb86b919979e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1deedfe9-4f3c-4f11-95bc-01d8258656b3"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""445752c4-2596-4b12-9247-9cf15baeafec"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -947,6 +1086,11 @@ namespace Musashi
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Interactive = m_Player.FindAction("Interactive", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+            m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+            m_Player_UseItem = m_Player.FindAction("UseItem", throwIfNotFound: true);
+            m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
+            m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
+            m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1014,6 +1158,11 @@ namespace Musashi
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Interactive;
         private readonly InputAction m_Player_Reload;
+        private readonly InputAction m_Player_Inventory;
+        private readonly InputAction m_Player_UseItem;
+        private readonly InputAction m_Player_DropItem;
+        private readonly InputAction m_Player_Aim;
+        private readonly InputAction m_Player_MousePosition;
         public struct PlayerActions
         {
             private @MyInputActions m_Wrapper;
@@ -1024,6 +1173,11 @@ namespace Musashi
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Interactive => m_Wrapper.m_Player_Interactive;
             public InputAction @Reload => m_Wrapper.m_Player_Reload;
+            public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+            public InputAction @UseItem => m_Wrapper.m_Player_UseItem;
+            public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
+            public InputAction @Aim => m_Wrapper.m_Player_Aim;
+            public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1051,6 +1205,21 @@ namespace Musashi
                     @Reload.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                     @Reload.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                     @Reload.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
+                    @Inventory.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
+                    @Inventory.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
+                    @Inventory.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
+                    @UseItem.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseItem;
+                    @UseItem.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseItem;
+                    @UseItem.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseItem;
+                    @DropItem.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropItem;
+                    @DropItem.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropItem;
+                    @DropItem.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropItem;
+                    @Aim.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                    @Aim.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                    @Aim.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                    @MousePosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
+                    @MousePosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
+                    @MousePosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1073,6 +1242,21 @@ namespace Musashi
                     @Reload.started += instance.OnReload;
                     @Reload.performed += instance.OnReload;
                     @Reload.canceled += instance.OnReload;
+                    @Inventory.started += instance.OnInventory;
+                    @Inventory.performed += instance.OnInventory;
+                    @Inventory.canceled += instance.OnInventory;
+                    @UseItem.started += instance.OnUseItem;
+                    @UseItem.performed += instance.OnUseItem;
+                    @UseItem.canceled += instance.OnUseItem;
+                    @DropItem.started += instance.OnDropItem;
+                    @DropItem.performed += instance.OnDropItem;
+                    @DropItem.canceled += instance.OnDropItem;
+                    @Aim.started += instance.OnAim;
+                    @Aim.performed += instance.OnAim;
+                    @Aim.canceled += instance.OnAim;
+                    @MousePosition.started += instance.OnMousePosition;
+                    @MousePosition.performed += instance.OnMousePosition;
+                    @MousePosition.canceled += instance.OnMousePosition;
                 }
             }
         }
@@ -1235,6 +1419,11 @@ namespace Musashi
             void OnJump(InputAction.CallbackContext context);
             void OnInteractive(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
+            void OnInventory(InputAction.CallbackContext context);
+            void OnUseItem(InputAction.CallbackContext context);
+            void OnDropItem(InputAction.CallbackContext context);
+            void OnAim(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

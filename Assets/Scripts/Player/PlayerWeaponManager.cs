@@ -15,10 +15,15 @@ namespace Musashi
         int currentEquipmentActiveWeaponsIndex = -1;
         int currentEquipmentWeaponSlot = -1;
         bool canInputAction = true;
+
+        PlayerInputManager playerInput;
+        PlayerItemInventory itemInventory;
         public bool IsEquipmentWeapon => currentEquipmentActiveWeaponsIndex != -1;
        
         private void Start()
         {
+            playerInput = GetComponent<PlayerInputManager>();
+            itemInventory = GetComponent<PlayerItemInventory>();
             foreach (var weapon in activeWeapons)
             {
                 weapon.gameObject.SetActive(false);
@@ -26,6 +31,7 @@ namespace Musashi
 
             for (int i = 0; i < weaponSlots.Length; i++)
             {
+                weaponSlots[i].SetInput(playerInput);
                 weaponSlots[i].SetWeaponSlot(i,this);
             }
         }
@@ -45,7 +51,7 @@ namespace Musashi
         /// </summary>
         /// <param name="getWeapon"></param>
         /// <returns></returns>
-        public bool CanPickUP(BaseWeapon getWeapon)
+        public bool CanPickUP(PickUpWeapon getWeapon)
         {
             foreach (var weaponData in weaponDataBase.WeaponDataList)
             {
