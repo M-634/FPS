@@ -66,12 +66,11 @@ namespace Musashi
             }
         }
 
-        public override void DropObject(Vector3 worldPoint)
+        public override void DropObject()
         {
             if (IsEmpty) return;
-            var item = Instantiate(CurrentItemData.ItemPrefab,worldPoint,Quaternion.identity);
-            item.Drop();
-
+            var item = Instantiate(CurrentItemData.ItemPrefab, playerCamera.position + playerCamera.forward * 2f, Quaternion.identity);
+            item.Drop(playerCamera);
             stackNumber--;
             stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
             IsFilled = false;

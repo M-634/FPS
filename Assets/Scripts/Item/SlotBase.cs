@@ -29,6 +29,13 @@ namespace Musashi
         public virtual bool IsEmpty { get; set; } = true;
         public virtual bool IsFilled { get; set; } = false;
 
+       protected Transform playerCamera;
+      
+        protected virtual void Start()
+        {
+            playerCamera = Camera.main.transform;
+        }
+
         /// <summary>
         /// 初期化時に PlayerItemInventoryクラスから呼ばれる。
         /// 必要なコンポーネントを設定する。
@@ -52,7 +59,7 @@ namespace Musashi
         /// スロットないのアイテムを捨てる関数
         /// </summary>
         /// <param name="worldPoint"></param>
-        public virtual void DropObject(Vector3 worldPoint) { }
+        public virtual void DropObject() { }
 
         /// <summary>
         /// スロット内のデータを空にする
@@ -95,8 +102,7 @@ namespace Musashi
 
                 if (playerInput.DropItem)
                 {
-                    var dir = playerInput.transform.GetComponentInChildren<Camera>().transform.forward;
-                    DropObject(playerInput.transform.position + transform.up + dir * 2f);
+                    DropObject();
                 }
                 yield return null;
             }

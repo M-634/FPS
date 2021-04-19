@@ -620,6 +620,11 @@ PrefabInstance:
       propertyPath: sumNumberOfAmmoInInventory
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 7056163273485188850, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7347966021133263152, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: m_AnchorMax.y

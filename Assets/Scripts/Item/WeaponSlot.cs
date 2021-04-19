@@ -33,15 +33,15 @@ namespace Musashi
         {
             if (IsEmpty) return;
             playerWeaponManager.EquipWeapon(slotNumber);
-            player.GetComponent<PlayerItemInventory>().OpenAndCloseInventory();//playerEvent
+            player.GetComponent<PlayerItemInventory>().OpenAndCloseInventory();
         }
 
-        public override void DropObject(Vector3 worldPoint)
+        public override void DropObject()
         {
             if (IsEmpty) return;
             playerWeaponManager.PutAwayWeapon();
-            var go = Instantiate(CurrentWeaponData.PickUpWeaonPrefab, worldPoint, Quaternion.Euler(0,0,90));
-            go.Drop();
+            var go = Instantiate(CurrentWeaponData.PickUpWeaonPrefab, playerCamera.position + playerCamera.forward * 2f, Quaternion.Euler(0,0,90));
+            go.Drop(playerCamera);
             ResetInfo();
         }
 

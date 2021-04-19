@@ -18,13 +18,13 @@ namespace Musashi
         /// <summary>
         /// インベントリからアイテムを捨てる時に呼ばれる関数
         /// </summary>
-        public void Drop()
+        public void Drop(Transform playerCamera)
         {
             if (!rb)
                 rb = GetComponent<Rigidbody>();
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;//地面に埋まるのを防止するため
-            rb.AddForce(transform.forward * 100f);
+            rb.AddForce(playerCamera.forward * 100f);
             rb.useGravity = true;
 
             if (!collider)
