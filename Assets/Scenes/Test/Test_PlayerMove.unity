@@ -453,7 +453,7 @@ PrefabInstance:
     - target: {fileID: 4035535613061906264, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: inputSensitivityInAirModifier
-      value: 0.1
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 4035535613061906265, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
