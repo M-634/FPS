@@ -17,7 +17,6 @@ namespace Musashi
         //Input property
         public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
         public Vector2 Look => PlayerInputActions.Look.ReadValue<Vector2>();
-
         public Vector2 MousePosition => PlayerInputActions.MousePosition.ReadValue<Vector2>();
         public bool Jump => PlayerInputActions.Jump.triggered;
         public bool Fire => PlayerInputActions.Fire.triggered;
@@ -31,6 +30,8 @@ namespace Musashi
         public bool DropItem => PlayerInputActions.DropItem.triggered;
         public bool Aim => PlayerInputActions.Aim.triggered;
 
+        private bool sprint;
+        public bool Sprint => sprint;
 
         private void Awake()
         {
@@ -39,6 +40,11 @@ namespace Musashi
 
             PlayerInputActions.Fire.performed += ctx => heldFire = true;
             PlayerInputActions.Fire.canceled += ctx => heldFire = false;
+
+            PlayerInputActions.Sprint.performed += ctx => sprint = true;
+            PlayerInputActions.Sprint.canceled += ctx => sprint = false;
+
+            PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
         }
 
         private void OnEnable()

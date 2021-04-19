@@ -107,6 +107,22 @@ namespace Musashi
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""bac2078f-a342-4770-b450-0692d8671777"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Esc"",
+                    ""type"": ""Button"",
+                    ""id"": ""62a7cb73-b9d2-45ea-bb53-6690155b8abb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -503,6 +519,39 @@ namespace Musashi
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""88b80daa-3523-485e-8dbf-0b21b8f1d1ef"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfe0bace-5ba2-4dc4-af46-89e543b51717"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6323e740-f32e-4ad2-b97a-bf6fd04cb9e1"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Esc"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1091,6 +1140,8 @@ namespace Musashi
             m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
             m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
             m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
+            m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+            m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1163,6 +1214,8 @@ namespace Musashi
         private readonly InputAction m_Player_DropItem;
         private readonly InputAction m_Player_Aim;
         private readonly InputAction m_Player_MousePosition;
+        private readonly InputAction m_Player_Sprint;
+        private readonly InputAction m_Player_Esc;
         public struct PlayerActions
         {
             private @MyInputActions m_Wrapper;
@@ -1178,6 +1231,8 @@ namespace Musashi
             public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
             public InputAction @Aim => m_Wrapper.m_Player_Aim;
             public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
+            public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+            public InputAction @Esc => m_Wrapper.m_Player_Esc;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1220,6 +1275,12 @@ namespace Musashi
                     @MousePosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
                     @MousePosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
                     @MousePosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
+                    @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                    @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                    @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                    @Esc.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
+                    @Esc.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
+                    @Esc.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1257,6 +1318,12 @@ namespace Musashi
                     @MousePosition.started += instance.OnMousePosition;
                     @MousePosition.performed += instance.OnMousePosition;
                     @MousePosition.canceled += instance.OnMousePosition;
+                    @Sprint.started += instance.OnSprint;
+                    @Sprint.performed += instance.OnSprint;
+                    @Sprint.canceled += instance.OnSprint;
+                    @Esc.started += instance.OnEsc;
+                    @Esc.performed += instance.OnEsc;
+                    @Esc.canceled += instance.OnEsc;
                 }
             }
         }
@@ -1424,6 +1491,8 @@ namespace Musashi
             void OnDropItem(InputAction.CallbackContext context);
             void OnAim(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
+            void OnSprint(InputAction.CallbackContext context);
+            void OnEsc(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

@@ -60,6 +60,7 @@ namespace Musashi
 
         public void ExitGame()
         {
+            Debug.Log("a");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -93,6 +94,15 @@ namespace Musashi
             Debug.Log("GameClear");
             IsGameClear = true;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
+        }
+
+
+        public void SwichConfiguUI()
+        {
+            if (configure.gameObject.activeSelf)
+                CloseConfigure();
+            else
+                ShowConfigure();
         }
 
         public void ShowConfigure()

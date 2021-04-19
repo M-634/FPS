@@ -41,8 +41,8 @@ namespace Musashi
             //}
         }
 
-        public void MoveAnimation(float velocity, PlayerMoveControl.State state)
-        {
+        //public void MoveAnimation(float velocity, PlayerMoveControl.State state)
+        //{
             //ShotingAnimation();
             //if (isAiming) return;
 
@@ -67,6 +67,6 @@ namespace Musashi
             //    else
             //        animator.Play("Idle");
             //}
-        }
+       // }
     }
 }
