@@ -48,7 +48,7 @@ namespace Musashi
             if (LockCamera) return;
 
             Look();
-            //if (Input.GetKeyDown(KeyCode.N))//test
+            //if (Input.GetKeyDown(KeyCode.N))
             //    ChangePostProcess();
 
             fov = Mathf.Lerp(fov, targetFov, Time.deltaTime * fovSpeed);
@@ -134,18 +134,26 @@ namespace Musashi
         }
 
 
+
+        PlayerEventManager playerEvent;
         public void OnEnable()
         {
-            EventManeger.Instance.Subscribe(EventType.ChangePostProcess, ChangePostProcess);
-            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => LockCamera = true) ;
-            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => LockCamera = false);
+            playerEvent = GetComponent<PlayerEventManager>();
+            playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
+            playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            //GameEventManeger.Instance.Subscribe(EventType.ChangePostProcess, ChangePostProcess);
+            //GameEventManeger.Instance.Subscribe(GameEventType.OpenInventory, () => LockCamera = true) ;
+            //GameEventManeger.Instance.Subscribe(GameEventType.CloseInventory, () => LockCamera = false);
+            
         }
 
         public void OnDisable()
         {
-            EventManeger.Instance.UnSubscribe(EventType.ChangePostProcess, ChangePostProcess);
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => LockCamera = true);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => LockCamera = false);
+            playerEvent.UnSubscribe(PlayerEventType.OpenInventory, ()=> LockCamera = true);
+            playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            //GameEventManeger.Instance.UnSubscribe(GameEventType.ChangePostProcess, ChangePostProcess);
+            //GameEventManeger.Instance.UnSubscribe(GameEventType.OpenInventory, () => LockCamera = true);
+            //GameEventManeger.Instance.UnSubscribe(GameEventType.CloseInventory, () => LockCamera = false);
         }
     }
 }

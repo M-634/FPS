@@ -37,12 +37,12 @@ namespace Musashi
 
         private void OnEnable()
         {
-            EventManeger.Instance.Subscribe(EventType.EnemyDie, UpdateEnemyCounter);
+            GameEventManeger.Instance.Subscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
         }
 
         private void OnDisable()
         {
-            EventManeger.Instance.UnSubscribe(EventType.EnemyDie, UpdateEnemyCounter); 
+            GameEventManeger.Instance.UnSubscribe(GameEventType.EnemyDie, UpdateEnemyCounter); 
         }
     }
 }

@@ -171,17 +171,12 @@ namespace Musashi
         {
             if (ammoCounter)
                 ammoCounter.Display(ref currentAmmo);
-            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => enabled = false);
-            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => enabled = true);
-
         }
 
         public void OnDisable()
         {
             if (ammoCounter)
                 ammoCounter.Text.enabled = false;
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => enabled = false);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => enabled = true);
         }
     }
 }

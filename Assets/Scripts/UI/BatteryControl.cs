@@ -28,7 +28,7 @@ namespace Musashi
             if (powerOff)
             {
                 //unityEvent?.Invoke();
-                EventManeger.Instance.Excute(EventType.ChangePostProcess);
+                //GameEventManeger.Instance.Excute(GameEventType.ChangePostProcess);
                 InteractiveMessage.WarningMessage(InteractiveMessage.NoBatteryText);
             }
         }
@@ -54,7 +54,7 @@ namespace Musashi
                 fillImage.color = Color.white;
                 isFlashing = false;
                 //unityEvent?.Invoke();
-                EventManeger.Instance.Excute(EventType.ChangePostProcess);
+                //GameEventManeger.Instance.Excute(GameEventType.ChangePostProcess);
             }
         }
 

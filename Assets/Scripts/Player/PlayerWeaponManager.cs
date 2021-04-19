@@ -17,13 +17,12 @@ namespace Musashi
         bool canInputAction = true;
 
         PlayerInputManager playerInput;
-        PlayerItemInventory itemInventory;
+ 
         public bool IsEquipmentWeapon => currentEquipmentActiveWeaponsIndex != -1;
        
         private void Start()
         {
             playerInput = GetComponent<PlayerInputManager>();
-            itemInventory = GetComponent<PlayerItemInventory>();
             foreach (var weapon in activeWeapons)
             {
                 weapon.gameObject.SetActive(false);
@@ -118,9 +117,11 @@ namespace Musashi
             Debug.LogError("activeWeaponsに装備したい武器が存在しません。インスペクターにアタッチしてないと思われる");
         }
 
+        /// <summary>
+        /// 装備中の武器を捨てる関数
+        /// </summary>
         public void PutAwayWeapon()
         {
-            //装備中の武器をしまう
             if (IsEquipmentWeapon)
             {
                 activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(false);
@@ -129,17 +130,26 @@ namespace Musashi
             }
         }
 
+        private void ReciveInventoryEvent(bool value)
+        {
+            canInputAction = value;
+            if(IsEquipmentWeapon)
+                activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(value);
+        }
 
+
+        PlayerEventManager playerEvent;
         private void OnEnable()
         {
-            EventManeger.Instance.Subscribe(EventType.OpenInventory, () => canInputAction = false);
-            EventManeger.Instance.Subscribe(EventType.CloseInventory, () => canInputAction = true);
+            playerEvent = GetComponent<PlayerEventManager>();
+            playerEvent.Subscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
+            playerEvent.Subscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
         }
 
         private void OnDisable()
         {
-            EventManeger.Instance.UnSubscribe(EventType.OpenInventory, () => canInputAction = false);
-            EventManeger.Instance.UnSubscribe(EventType.CloseInventory, () => canInputAction = true);
+            playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
+            playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
         }
     }
 }

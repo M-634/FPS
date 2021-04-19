@@ -17,11 +17,13 @@ namespace Musashi
         public SlotBase SelectedSlot { get; private set; }
 
         PlayerInputManager playerInput;
+        PlayerEventManager playerEvent;
 
         private void Start()
         {
             inventoryCanvasGroup.HideUIWithCanvasGroup();
             playerInput = GetComponent<PlayerInputManager>();
+            playerEvent = GetComponent<PlayerEventManager>();
             if (playerInput)
             {
                 foreach (var slot in itemSlots)
@@ -98,13 +100,13 @@ namespace Musashi
             {
                 inventoryCanvasGroup.HideUIWithCanvasGroup();
                 GameManager.Instance.LockCusor();
-                EventManeger.Instance.Excute(EventType.CloseInventory);
+                playerEvent.Excute(PlayerEventType.CloseInventory);
             }
             else
             {
                 inventoryCanvasGroup.ShowUIWithCanvasGroup();
                 GameManager.Instance.UnlockCusor();
-                EventManeger.Instance.Excute(EventType.OpenInventory);
+                playerEvent.Excute(PlayerEventType.OpenInventory);
             }
             isOpenInventory = !isOpenInventory;
         }

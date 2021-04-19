@@ -32,7 +32,7 @@ namespace Musashi
 
         private bool sprint;
         public bool Sprint => sprint;
-
+          
         private void Awake()
         {
             inputActions = new MyInputActions();
