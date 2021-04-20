@@ -9,38 +9,21 @@ namespace Musashi
     /// ゲームに常駐するクラスをまとめる。
     /// 初期化シーンに置いておく
     /// </summary>
-    public class GameManager : MonoBehaviour
+    public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         [SerializeField] SoundManager soundManager;
         [SerializeField] SceneLoder sceneLoder;
         [SerializeField] Configure configure;
 
-        public SoundManager SoundManager { get => soundManager;}
-        public SceneLoder SceneLoder { get => sceneLoder; }
+        public SoundManager SoundManager => soundManager;
+        public SceneLoder SceneLoder => sceneLoder;
+        public bool HaveShowConfigure => configure.gameObject.activeSelf;
         public bool IsGameClear { get; private set; }
 
-        //singlton
-        private static GameManager instance;
-        public static GameManager Instance
+       
+        protected override void Awake()
         {
-            get
-            {
-                if (!instance)
-                {
-                    instance = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-                    if (!instance)
-                    {
-                        Debug.LogWarning("GameManagerが存在しません");
-                    }
-                }
-                return instance;
-            }
-        }
-
-
-        private void Awake()
-        {
-            if (this != Instance) Destroy(this.gameObject);
+            base.Awake();
             DontDestroyOnLoad(this.gameObject);
         }
 

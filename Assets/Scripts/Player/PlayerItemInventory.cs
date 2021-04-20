@@ -96,6 +96,8 @@ namespace Musashi
 
         public void OpenAndCloseInventory()
         {
+            if (GameManager.Instance.HaveShowConfigure) return;
+
             if (isOpenInventory)
             {
                 inventoryCanvasGroup.HideUIWithCanvasGroup();

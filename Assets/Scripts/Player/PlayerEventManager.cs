@@ -10,20 +10,25 @@ namespace Musashi
     /// </summary>
     public class PlayerEventManager : MonoBehaviour
     {
-        public Dictionary<PlayerEventType, Action> playerEventTable;
-
-        private void Awake()
+        private Dictionary<PlayerEventType, Action> playerEventTable;
+        public Dictionary<PlayerEventType, Action> PlayerEventTable 
         {
-            playerEventTable = new Dictionary<PlayerEventType, Action>();
+            get
+            {
+                // null check property
+                if (playerEventTable == null)
+                    playerEventTable = new Dictionary<PlayerEventType, Action>();
+                return playerEventTable;
+            }
         }
 
         public void Subscribe(PlayerEventType eventType, Action action)
         {
             //すでにイベントキーが存在するなら、actionのみ追加する
-            if (playerEventTable.ContainsKey(eventType))
-                playerEventTable[eventType] += action;
+            if (PlayerEventTable.ContainsKey(eventType))
+                PlayerEventTable[eventType] += action;
             else
-                playerEventTable.Add(eventType, action);
+                PlayerEventTable.Add(eventType, action);
 
             Debug.Log($"{eventType}イベントに{action.Method.Name}が追加された");
         }
@@ -31,12 +36,12 @@ namespace Musashi
         public void UnSubscribe(PlayerEventType eventType, Action action)
         {
             Debug.Log($"{eventType}イベントの{action.Method.Name}が解除されたよ");
-            playerEventTable[eventType] -= action;
+            PlayerEventTable[eventType] -= action;
         }
 
         public void Excute(PlayerEventType eventType)
         {
-            playerEventTable[eventType]?.Invoke();
+            PlayerEventTable[eventType]?.Invoke();
             Debug.Log($"{eventType}イベントが実行された");
         }
 

@@ -140,6 +140,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Apple
       objectReference: {fileID: 0}
+    - target: {fileID: 1105760525757012, guid: bfec01bc3e4d0444dbe595b4f55c6730, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4068391342463826, guid: bfec01bc3e4d0444dbe595b4f55c6730, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -275,6 +279,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AmmoBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 6145467518136034485, guid: 51c718ff3700ffa45b08b3af5781e3c4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6145467518136279329, guid: 51c718ff3700ffa45b08b3af5781e3c4,
         type: 3}
@@ -851,6 +860,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HandGun_PickUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7581346462871451620, guid: c7e692222827edc42b09a77642bc8ca2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7581346462871451621, guid: c7e692222827edc42b09a77642bc8ca2,
         type: 3}
