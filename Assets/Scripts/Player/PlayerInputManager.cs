@@ -28,7 +28,9 @@ namespace Musashi
         public bool Inventory => PlayerInputActions.Inventory.triggered;
         public bool UseItem => PlayerInputActions.UseItem.triggered;
         public bool DropItem => PlayerInputActions.DropItem.triggered;
-        public bool Aim => PlayerInputActions.Aim.triggered;
+
+        private bool aim;
+        public bool Aim => aim;
 
         private bool sprint;
         public bool Sprint => sprint;
@@ -43,6 +45,9 @@ namespace Musashi
 
             PlayerInputActions.Sprint.performed += ctx => sprint = true;
             PlayerInputActions.Sprint.canceled += ctx => sprint = false;
+
+            PlayerInputActions.Aim.started += ctx => aim = true;
+            PlayerInputActions.Aim.canceled += ctx => aim = false;
 
             PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
         }

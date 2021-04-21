@@ -66,14 +66,14 @@ namespace Musashi
         [SerializeField] AudioClip shotClip;
         [SerializeField] AudioClip ReloadClip;
 
-        PoolingObject[] poolingObjects;
+        //PoolingObject[] poolingObjects;
         PlayerInputManager playerInput;
         Animator animator;
         AudioSource audioSource;
 
         private void Awake()
         {
-            playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInputManager>();
+            playerInput = transform.GetComponentInParent<PlayerInputManager>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
             if (!muzzle)
@@ -95,12 +95,20 @@ namespace Musashi
             else
             {
                 //弾切れ！
-            }    
+            }
         }
 
+        bool isAiming = false;
         private void Update()
         {
             if (playerInput.Reload) Reload();
+
+            if (playerInput.Aim)
+                isAiming = true;
+            else
+                isAiming = false;
+
+            SetAim();
 
             switch (weaponShootType)
             {
@@ -111,6 +119,11 @@ namespace Musashi
                     if (playerInput.HeldFire) TryShot();
                     break;
             }
+        }
+
+        void SetAim()
+        {
+            animator.SetBool("Aim", isAiming);
         }
 
 
