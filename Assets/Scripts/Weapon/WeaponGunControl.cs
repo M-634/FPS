@@ -51,9 +51,9 @@ namespace Musashi
         public ParticleSystem muzzleFalsh;
 
         [Header("Ammo")]
-        [SerializeField] BulletControl bullet;
-        [SerializeField] AmmoCounter ammoCounter;
+        [SerializeField] BulletControl bulletPrefab;
         [SerializeField] int maxAmmo;
+        AmmoCounter ammoCounter;
         int currentAmmo;
 
         [Header("Settings")]
@@ -74,8 +74,10 @@ namespace Musashi
         private void Awake()
         {
             playerInput = transform.GetComponentInParent<PlayerInputManager>();
+            ammoCounter = transform.parent.GetComponentInChildren<AmmoCounter>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
+
             if (!muzzle)
                 muzzle = this.transform;
 
@@ -158,7 +160,7 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-            var b = Instantiate(bullet, muzzle.position, Quaternion.identity);
+            var b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
             b.AddForce(ref shotPower, ref shotDamage, muzzle);
 
             var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
