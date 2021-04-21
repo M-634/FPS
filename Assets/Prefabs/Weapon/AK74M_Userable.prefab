@@ -101,8 +101,7 @@ MonoBehaviour:
   weaponShootType: 1
   muzzle: {fileID: 3422086566074258811}
   muzzleFalsh: {fileID: 0}
-  bullet: {fileID: 0}
-  ammoCounter: {fileID: 0}
+  bulletPrefab: {fileID: 0}
   maxAmmo: 0
   shotPower: 100
   shotDamage: 0
@@ -1687,8 +1686,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5892976177907513820}
-  m_LocalRotation: {x: -0.70818406, y: -0.000000004883175, z: 0.0000000048683075,
-    w: 0.70602787}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.21368358, y: 0.1172, z: 0.884}
   m_LocalScale: {x: 0.6379014, y: 0.6379014, z: 0.6379014}
   m_Children: []

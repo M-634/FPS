@@ -52,8 +52,8 @@ namespace Musashi
 
         [Header("Ammo")]
         [SerializeField] BulletControl bulletPrefab;
+        [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] int maxAmmo;
-        AmmoCounter ammoCounter;
         int currentAmmo;
 
         [Header("Settings")]
@@ -61,7 +61,7 @@ namespace Musashi
         [SerializeField] float shotDamage;
         [SerializeField] float shotRateTime;
         float lastTimeShot = Mathf.NegativeInfinity;
-
+      
         [Header("SFX")]
         [SerializeField] AudioClip shotClip;
         [SerializeField] AudioClip ReloadClip;
@@ -74,7 +74,7 @@ namespace Musashi
         private void Awake()
         {
             playerInput = transform.GetComponentInParent<PlayerInputManager>();
-            ammoCounter = transform.parent.GetComponentInChildren<AmmoCounter>();
+            Debug.Log(ammoCounter);
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
 
@@ -86,19 +86,27 @@ namespace Musashi
 
         public void Reload()
         {
-            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo,ref currentAmmo) : true;
             if (canReload)
             {
-                currentAmmo = maxAmmo;
+                animator.Play("Reload");
                 if (audioSource)
-                    audioSource.Play(ReloadClip, 0.5f);
-                //リロード中は、弾が撃てないようにすること!
+                    audioSource.Play(ReloadClip, audioSource.volume);
             }
             else
             {
                 //弾切れ！
             }
         }
+
+        /// <summary>
+        /// リロードアニメーションイベントから呼ばれる関数
+        /// </summary>
+        public void EndReload()
+        {
+            currentAmmo = maxAmmo;//ここ、必ずしも, maxAmmoとは限らない
+            ammoCounter.Display(ref currentAmmo);
+        } 
 
         bool isAiming = false;
         private void Update()
@@ -128,6 +136,7 @@ namespace Musashi
             animator.SetBool("Aim", isAiming);
         }
 
+     
 
         //private void Pooling()
         //{
@@ -151,7 +160,7 @@ namespace Musashi
             if (lastTimeShot + shotRateTime < Time.time)
             {
                 if (animator)
-                    animator.SetTrigger("Fire");//auto時のアニメーションは速くしないと合わないことに注意
+                    animator.Play("Shoot");
             }
         }
 
@@ -160,10 +169,11 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
+            var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
+            mF.Play();
+
             var b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
             b.AddForce(ref shotPower, ref shotDamage, muzzle);
-
-            var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
 
             if (audioSource)
                 audioSource.Play(shotClip, audioSource.volume);

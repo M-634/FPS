@@ -42,16 +42,26 @@ namespace Musashi
         /// </summary>
         /// <param name="maxAmmo">各銃の最大装填数</param>
         /// <param name="currentAmmo">現在の弾の装填数</param>
-        public  bool CanReloadAmmo(int maxAmmo,int currentAmmo)
+        public  bool CanReloadAmmo(ref int maxAmmo,ref int currentAmmo)
         {
             int diff = maxAmmo - currentAmmo;
+            if (diff <= 0) return false;
+
             if(sumNumberOfAmmoInInventory - diff >= 0)
             {
                 sumNumberOfAmmoInInventory -= diff;
-                Display(ref maxAmmo);
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// 実際にリロード出来る弾数
+        /// </summary>
+        /// <returns></returns>
+       public int ReloadAmmoNumber(ref int currentAmmo)
+        {
+            return 0;
         }
         //private void OnEnable()
         //{
