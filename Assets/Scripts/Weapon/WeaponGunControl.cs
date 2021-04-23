@@ -134,6 +134,7 @@ namespace Musashi
         void SetAim()
         {
             animator.SetBool("Aim", isAiming);
+            //playerEventでFOVを変える
         }
 
      
