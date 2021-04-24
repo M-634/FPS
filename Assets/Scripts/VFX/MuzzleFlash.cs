@@ -5,9 +5,27 @@ using UnityEngine;
 public class MuzzleFlash : MonoBehaviour
 {
     [SerializeField] float lifeTime = 0.5f;
-    void Start()
+    float timer;
+
+    void Update()
     {
-        Destroy(gameObject, lifeTime);
+        timer += Time.deltaTime;
+        if(timer > lifeTime)
+        {
+            timer = 0f;
+            gameObject.SetActive(false);
+           
+        }
+    }
+
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+        
     }
 
 }

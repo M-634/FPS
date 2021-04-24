@@ -1,44 +1,43 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Musashi
 {
+    /// <summary>
+    /// プレイヤーの子どもに銃を持たせおく。
+    /// 銃を使用時にアクティブをtrueに、しまったらアクティブをfalseにする。
+    /// muzzle flash と弾丸はオブジェットプールさせる。
+    /// </summary>
     public class WeaponGunControl : BaseWeapon
     {
-        [System.Serializable]
-        class PoolingObject
+        class PoolObjcet
         {
-            public BulletControl bullet;
+            public BulletControl bulletControl;
             public ParticleSystem muzzleFalsh;
-            Transform muzzle;
-
-
-            public PoolingObject(BulletControl bullet, ParticleSystem muzzleFalsh, Transform muzzle = null, bool active = false)
+            public bool ActiveSelf
             {
-                this.bullet = Instantiate(bullet, muzzle.position, Quaternion.identity, muzzle);
-                this.muzzleFalsh = Instantiate(muzzleFalsh, muzzle.position, Quaternion.identity, muzzle);
-                SetActive = active;
-                this.muzzle = muzzle;
-            }
-
-            public bool SetActive
-            {
-                set
+                get
                 {
-                    bullet.gameObject.SetActive(value);
-                    muzzleFalsh.gameObject.SetActive(value);
-                    if (value == true)
-                    {
-                        bullet.transform.position = muzzle.position;
-                        muzzleFalsh.transform.position = muzzle.position;
-                    }
+                    if (!bulletControl.gameObject.activeSelf && !muzzleFalsh.gameObject.activeSelf)
+                        return false;
+                    return true;
                 }
             }
 
-            public bool CanUse
+            public void SetActive(bool value)
             {
-                get => !bullet.gameObject.activeSelf && !muzzleFalsh.gameObject.activeSelf;
+                bulletControl.gameObject.SetActive(value);
+                muzzleFalsh.gameObject.SetActive(value);
+            }
+
+            public void SetPosition(Vector3 pos)
+            {
+                bulletControl.transform.position = pos;
+                muzzleFalsh.transform.position = pos;
             }
         }
+
 
         private enum WeaponShootType
         {
@@ -46,27 +45,30 @@ namespace Musashi
         }
 
         [SerializeField] WeaponShootType weaponShootType;
-        // [SerializeField] PoolingObject poolingObject;
         [SerializeField] Transform muzzle;
-        public ParticleSystem muzzleFalsh;
+        [SerializeField] ParticleSystem muzzleFalsh;
 
-        [Header("Ammo")]
+
+        [Header("Ammo Settings")]
         [SerializeField] BulletControl bulletPrefab;
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] int maxAmmo;
         int currentAmmo;
 
-        [Header("Settings")]
+        [Header("Pool Setting")]
+        [SerializeField] int maxPoolNumber;
+        List<PoolObjcet> poolObjcetsList;
+
+        [Header("Shot Settings")]
         [SerializeField] float shotPower = 100f;
         [SerializeField] float shotDamage;
         [SerializeField] float shotRateTime;
         float lastTimeShot = Mathf.NegativeInfinity;
-      
+
         [Header("SFX")]
         [SerializeField] AudioClip shotClip;
         [SerializeField] AudioClip ReloadClip;
 
-        //PoolingObject[] poolingObjects;
         PlayerInputManager playerInput;
         Animator animator;
         AudioSource audioSource;
@@ -82,11 +84,57 @@ namespace Musashi
                 muzzle = this.transform;
 
             currentAmmo = maxAmmo;
+
+            InitializePoolObject();
         }
 
-        public void Reload()
+
+        /// <summary>
+        /// bullet と muzzleFlashのオブジェットポールを初期化する
+        /// </summary>
+        private void InitializePoolObject()
         {
-            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo,ref currentAmmo) : true;
+            poolObjcetsList = new List<PoolObjcet>();
+            for (int i = 0; i < maxPoolNumber; i++)
+            {
+                var poolObj = InstantiatePoolObj();
+                poolObj.SetActive(false);
+            }
+        }
+
+        private PoolObjcet InstantiatePoolObj()
+        {
+            var poolObj = new PoolObjcet
+            {
+                bulletControl = Instantiate(bulletPrefab, transform),
+                muzzleFalsh = Instantiate(muzzleFalsh, transform)
+            };
+
+            poolObj.bulletControl.SetInfo(ref shotPower, ref shotDamage);
+            poolObjcetsList.Add(poolObj);
+            return poolObj;
+        }
+
+        private void UsePoolObject()
+        {
+            foreach (var item in poolObjcetsList)
+            {
+                if (item.ActiveSelf) continue;
+                item.SetPosition(muzzle.position);
+                item.SetActive(true);
+                return;
+            }
+
+            //用意したオブジェットプール内のオブジェットのアクティブが全てtrueなら
+            //新しいプールオブジェットを創る
+            var poolObj = InstantiatePoolObj();
+            poolObj.SetPosition(muzzle.position);
+            poolObj.SetActive(true);
+        }
+
+        private void Reload()
+        {
+            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo, ref currentAmmo) : true;
             if (canReload)
             {
                 animator.Play("Reload");
@@ -107,7 +155,7 @@ namespace Musashi
             //To Do :ここ,実際にリロードできる数を返すこと
             currentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
             ammoCounter.Display(ref currentAmmo);
-        } 
+        }
 
         bool isAiming = false;
         private void Update()
@@ -138,19 +186,8 @@ namespace Musashi
             //playerEventでFOVを変える
         }
 
-     
 
-        //private void Pooling()
-        //{
-        //    poolingObjects = new PoolingObject[maxAmmo];
-        //    for (int i = 0; i < maxAmmo; i++)
-        //    {
-        //        var newObj = new PoolingObject(poolingObject.bullet, poolingObject.muzzleFalsh, muzzle, false);
-        //        poolingObjects[i] = newObj;
-        //    }
-        //}
-
-        public void TryShot()
+        private void TryShot()
         {
             if (currentAmmo < 1)
             {
@@ -171,11 +208,13 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-            var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
-            mF.Play();
+            //var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
+            //mF.Play();
 
-            var b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
-            b.AddForce(ref shotPower, ref shotDamage, muzzle);
+            //var b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
+            //b.AddForce(ref shotPower, ref shotDamage, muzzle);
+
+            UsePoolObject();
 
             if (audioSource)
                 audioSource.Play(shotClip, audioSource.volume);

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5664894901593072665}
   - component: {fileID: 7069840191309764376}
   - component: {fileID: 6316094081853433336}
+  - component: {fileID: 8323559870894526872}
   m_Layer: 0
   m_Name: AK74M Fire Particle
   m_TagString: Untagged
@@ -4755,6 +4756,19 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &8323559870894526872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3299639556288241786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c329a8b7f6cf54dad133e3b9e97f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 0.5
 --- !u!1 &5701202039201125059
 GameObject:
   m_ObjectHideFlags: 0

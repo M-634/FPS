@@ -12,33 +12,66 @@ namespace Musashi
         [SerializeField] float lifeTime = 1f;
         [SerializeField] GameObject bloodVFX;
         float shotDamage;
+        float shotPower;
         Rigidbody rb;
         Vector3 prevPos;
+        float timer;
 
-        public void AddForce(ref float shotPower,ref float shotDamage, Transform muzzle)
+        private void OnEnable()
+        {
+            if(!rb)
+                rb = GetComponent<Rigidbody>();
+            prevPos = transform.position;
+            rb.velocity = transform.forward * shotPower;
+        }
+
+        private void OnDisable()
+        {
+            
+        }
+
+
+        public void SetInfo(ref float shotPower,ref float shotDamage)
         {
             this.shotDamage = shotDamage;
-            rb = GetComponent<Rigidbody>();
-            rb.velocity = muzzle.forward * shotPower;
-            prevPos = transform.position;
+            this.shotPower = shotPower;
         }
+
+        //public void AddForce(ref float shotPower,ref float shotDamage, Transform muzzle)
+        //{
+        //    this.shotDamage = shotDamage;
+        //    rb = GetComponent<Rigidbody>();
+        //    rb.velocity = muzzle.forward * shotPower;
+        //    prevPos = transform.position;
+        //}
 
         private void Update()
         {
-            RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
 
-            for (int i = 0; i < hits.Length;i++)
+            timer += Time.deltaTime;
+
+            if(timer > lifeTime)
             {
-                //Debug.Log(hits[i].collider.gameObject.name);
-                if(hits[i].collider.TryGetComponent(out IDamageable target))
-                {
-                    Instantiate(bloodVFX, hits[i].point ,Quaternion.LookRotation(hits[i].normal));
-                    target.OnDamage(shotDamage);
-                }
-                Destroy(gameObject);
+                timer = 0f;
+                gameObject.SetActive(false);
             }
-            prevPos = transform.position;
-            Destroy(gameObject, lifeTime);
+
+
+
+            //RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
+
+            //for (int i = 0; i < hits.Length;i++)
+            //{
+            //    //Debug.Log(hits[i].collider.gameObject.name);
+            //    if(hits[i].collider.TryGetComponent(out IDamageable target))
+            //    {
+            //        Instantiate(bloodVFX, hits[i].point ,Quaternion.LookRotation(hits[i].normal));
+            //        target.OnDamage(shotDamage);
+            //    }
+            //    Destroy(gameObject);
+            //}
+            //prevPos = transform.position;
+            //Destroy(gameObject, lifeTime);
         }
     }
 }
