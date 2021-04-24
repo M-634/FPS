@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace Musashi
 {
     /// <summary>
-    /// 1frame前の位置から、現在の位置までにRayを飛ばして当たり判定をとる
+    /// 1frame前の位置から、現在の位置までにRayを飛ばして当たり判定をとる。
     /// </summary>
     public class BulletControl : MonoBehaviour
     {
@@ -25,29 +25,15 @@ namespace Musashi
             rb.velocity = transform.forward * shotPower;
         }
 
-        private void OnDisable()
-        {
-            
-        }
-
-
         public void SetInfo(ref float shotPower,ref float shotDamage)
         {
             this.shotDamage = shotDamage;
             this.shotPower = shotPower;
         }
 
-        //public void AddForce(ref float shotPower,ref float shotDamage, Transform muzzle)
-        //{
-        //    this.shotDamage = shotDamage;
-        //    rb = GetComponent<Rigidbody>();
-        //    rb.velocity = muzzle.forward * shotPower;
-        //    prevPos = transform.position;
-        //}
-
+ 
         private void Update()
         {
-
             timer += Time.deltaTime;
 
             if(timer > lifeTime)
@@ -56,22 +42,19 @@ namespace Musashi
                 gameObject.SetActive(false);
             }
 
+            //hit check
+            RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
 
-
-            //RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
-
-            //for (int i = 0; i < hits.Length;i++)
-            //{
-            //    //Debug.Log(hits[i].collider.gameObject.name);
-            //    if(hits[i].collider.TryGetComponent(out IDamageable target))
-            //    {
-            //        Instantiate(bloodVFX, hits[i].point ,Quaternion.LookRotation(hits[i].normal));
-            //        target.OnDamage(shotDamage);
-            //    }
-            //    Destroy(gameObject);
-            //}
-            //prevPos = transform.position;
-            //Destroy(gameObject, lifeTime);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].collider.TryGetComponent(out IDamageable target))
+                {
+                    Instantiate(bloodVFX, hits[i].point, Quaternion.LookRotation(hits[i].normal));
+                    target.OnDamage(shotDamage);
+                }
+                gameObject.SetActive(false);
+            }
+            prevPos = transform.position;
         }
     }
 }

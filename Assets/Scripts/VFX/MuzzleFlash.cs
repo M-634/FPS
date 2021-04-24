@@ -17,15 +17,4 @@ public class MuzzleFlash : MonoBehaviour
            
         }
     }
-
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
-        
-    }
-
 }

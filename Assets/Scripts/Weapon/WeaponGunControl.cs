@@ -11,6 +11,7 @@ namespace Musashi
     /// </summary>
     public class WeaponGunControl : BaseWeapon
     {
+
         class PoolObjcet
         {
             public BulletControl bulletControl;
@@ -38,7 +39,6 @@ namespace Musashi
             }
         }
 
-
         private enum WeaponShootType
         {
             Manual, Automatic,
@@ -46,20 +46,19 @@ namespace Musashi
 
         [SerializeField] WeaponShootType weaponShootType;
         [SerializeField] Transform muzzle;
-        [SerializeField] ParticleSystem muzzleFalsh;
 
-
-        [Header("Ammo Settings")]
+        [Header("Pool Setting")]
         [SerializeField] BulletControl bulletPrefab;
+        [SerializeField] ParticleSystem muzzleFalsh;
+        [SerializeField] int maxPoolNumber;
+        List<PoolObjcet> poolObjcetsList;
+
+        [Header("Ammo Setting")]
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] int maxAmmo;
         int currentAmmo;
 
-        [Header("Pool Setting")]
-        [SerializeField] int maxPoolNumber;
-        List<PoolObjcet> poolObjcetsList;
-
-        [Header("Shot Settings")]
+        [Header("Shot Setting")]
         [SerializeField] float shotPower = 100f;
         [SerializeField] float shotDamage;
         [SerializeField] float shotRateTime;
@@ -72,6 +71,8 @@ namespace Musashi
         PlayerInputManager playerInput;
         Animator animator;
         AudioSource audioSource;
+
+        bool isAiming = false;
 
         private void Awake()
         {
@@ -157,7 +158,6 @@ namespace Musashi
             ammoCounter.Display(ref currentAmmo);
         }
 
-        bool isAiming = false;
         private void Update()
         {
             if (playerInput.Reload) Reload();
