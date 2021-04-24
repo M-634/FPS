@@ -104,7 +104,8 @@ namespace Musashi
         /// </summary>
         public void EndReload()
         {
-            currentAmmo = maxAmmo;//ここ、必ずしも, maxAmmoとは限らない
+            //To Do :ここ,実際にリロードできる数を返すこと
+            currentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
             ammoCounter.Display(ref currentAmmo);
         } 
 

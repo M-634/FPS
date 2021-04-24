@@ -49,7 +49,11 @@ namespace Musashi
 
             if(sumNumberOfAmmoInInventory - diff >= 0)
             {
-                sumNumberOfAmmoInInventory -= diff;
+                return true;
+            }
+
+            if(sumNumberOfAmmoInInventory > 0)
+            {
                 return true;
             }
             return false;
@@ -59,20 +63,20 @@ namespace Musashi
         /// 実際にリロード出来る弾数
         /// </summary>
         /// <returns></returns>
-       public int ReloadAmmoNumber(ref int currentAmmo)
+       public int ReloadAmmoNumber(ref int maxAmmo, ref int currentAmmo)
         {
-            return 0;
+            int diff = maxAmmo - currentAmmo;
+
+            if (sumNumberOfAmmoInInventory - diff >= 0)
+            {
+                sumNumberOfAmmoInInventory -= diff;
+                return maxAmmo;
+            }
+
+            int temp = sumNumberOfAmmoInInventory;
+            sumNumberOfAmmoInInventory = 0;
+            return temp;
         }
-        //private void OnEnable()
-        //{
-        //    EventManeger.Instance.Subscribe(AddSumOfAmmo);
-        //}
-
-        //public void OnDisable()
-        //{
-        //    EventManeger.Instance.UnSubscribe(AddSumOfAmmo);
-
-        //}
     }
 }
 

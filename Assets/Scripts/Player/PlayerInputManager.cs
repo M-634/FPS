@@ -12,7 +12,9 @@ namespace Musashi
     {
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
-        public bool IsGamepad => Gamepad.current.wasUpdatedThisFrame;
+
+
+        public bool IsGamepad => Gamepad.current != null;
 
         //Input property
         public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
