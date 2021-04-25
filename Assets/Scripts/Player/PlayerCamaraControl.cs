@@ -10,12 +10,10 @@ namespace Musashi
         [SerializeField] Camera playerCamera;
         [SerializeField] float mouseSensitivity = 1f;
         [SerializeField] float controllerSensitivity = 50f;
-        [SerializeField] float fovAimingSpeed = 1f;
 
         [Header("Field Of View")]
-        [SerializeField] float NOMAL_FOV = 60f;
-        [SerializeField] float AIMING_FOV = 30f;
-
+        [SerializeField] const float NOMAL_FOV = 60f;
+    
         [Header("PostProcess")]
         [SerializeField] PostProcessVolume volume;
         [SerializeField] PostProcessProfile standard;
@@ -55,21 +53,29 @@ namespace Musashi
             playerCamera.fieldOfView = fov;
         }
 
-        public void SetNormalFov(bool isAimCancel = false)
+        /// <summary>
+        /// デフォルト時のカメラのFOVにもどす関数
+        /// </summary>
+        public void SetNormalFovOfCamera(float fovSpeed)
         {
             this.targetFov = NOMAL_FOV;
-            if (isAimCancel)
-                fovSpeed = fovAimingSpeed;
-                //playerCamera.fieldOfView = targetFov;
+            this.fovSpeed = fovSpeed;
         }
 
-        public void SetAimingFov()
+        /// <summary>
+        ///カメラのFOVを変える関数 
+        /// </summary>
+        /// <param name="targetFov"></param>
+        /// <param name="fovSpeed"></param>
+        public void SetFovOfCamera(float targetFov, float fovSpeed)
         {
-            this.targetFov = AIMING_FOV;
-            fovSpeed = fovAimingSpeed;
-            //playerCamera.fieldOfView = AIMING_FOV;
+            this.targetFov = targetFov;
+            this.fovSpeed = fovSpeed;
         }
 
+        /// <summary>
+        /// カメラの感度と回転を制御する関数
+        /// </summary>
         private void Look()
         {
             float mouseX;
@@ -141,19 +147,12 @@ namespace Musashi
             playerEvent = GetComponent<PlayerEventManager>();
             playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
             playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
-            //GameEventManeger.Instance.Subscribe(EventType.ChangePostProcess, ChangePostProcess);
-            //GameEventManeger.Instance.Subscribe(GameEventType.OpenInventory, () => LockCamera = true) ;
-            //GameEventManeger.Instance.Subscribe(GameEventType.CloseInventory, () => LockCamera = false);
-            
         }
 
         public void OnDisable()
         {
             playerEvent.UnSubscribe(PlayerEventType.OpenInventory, ()=> LockCamera = true);
             playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
-            //GameEventManeger.Instance.UnSubscribe(GameEventType.ChangePostProcess, ChangePostProcess);
-            //GameEventManeger.Instance.UnSubscribe(GameEventType.OpenInventory, () => LockCamera = true);
-            //GameEventManeger.Instance.UnSubscribe(GameEventType.CloseInventory, () => LockCamera = false);
         }
     }
 }

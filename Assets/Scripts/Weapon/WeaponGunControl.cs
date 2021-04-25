@@ -66,11 +66,17 @@ namespace Musashi
         [SerializeField] float shotRateTime;
         float lastTimeShot = Mathf.NegativeInfinity;
 
+        [Header("Aim Setting")]
+        [SerializeField] float aimCameraFOV;
+        [Tooltip("Aimアニメーションが終わるフレームと同じにするといい感じになる")]
+        [SerializeField] float aimSpeed;
+
         [Header("SFX")]
         [SerializeField] AudioClip shotClip;
         [SerializeField] AudioClip ReloadClip;
 
         PlayerInputManager playerInput;
+        PlayerCamaraControl playerCamara;
         Animator animator;
         AudioSource audioSource;
 
@@ -79,7 +85,7 @@ namespace Musashi
         private void Awake()
         {
             playerInput = transform.GetComponentInParent<PlayerInputManager>();
-            Debug.Log(ammoCounter);
+            playerCamara = transform.GetComponentInParent<PlayerCamaraControl>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
 
@@ -185,7 +191,14 @@ namespace Musashi
         void SetAim()
         {
             animator.SetBool("Aim", isAiming);
-            //playerEventでFOVを変える
+            if (isAiming)
+            {
+                playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);
+            }
+            else
+            {
+                playerCamara.SetNormalFovOfCamera(aimSpeed);
+            }
         }
 
 

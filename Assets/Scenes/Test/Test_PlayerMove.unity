@@ -646,7 +646,7 @@ PrefabInstance:
     - target: {fileID: 4035535613061906270, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4049969998523675071, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
@@ -1064,7 +1064,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 79bec2adf18b7c84d9bf814dfca9f79c, type: 2}
+  - {fileID: 2100000, guid: 0925098d37c502848925ce741332d45f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1430,6 +1430,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 398625518826680916, guid: 75850793b77fd0a49b90941744870e0d,
         type: 3}
+      propertyPath: aimSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 398625518826680916, guid: 75850793b77fd0a49b90941744870e0d,
+        type: 3}
       propertyPath: shotClip
       value: 
       objectReference: {fileID: 8300000, guid: 58d88e3cbcb9ff143a0dfd112ade1e79, type: 3}
@@ -1454,6 +1459,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7069840191309764376, guid: b1a9f9bb6d6221940a3b0433b8549edb,
         type: 3}
+    - target: {fileID: 398625518826680916, guid: 75850793b77fd0a49b90941744870e0d,
+        type: 3}
+      propertyPath: aimCameraFOV
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 398625518826680916, guid: 75850793b77fd0a49b90941744870e0d,
         type: 3}
       propertyPath: bulletPrefab
