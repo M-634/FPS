@@ -75,6 +75,9 @@ namespace Musashi
         [SerializeField] AudioClip shotClip;
         [SerializeField] AudioClip ReloadClip;
 
+        [Header("Reticle")]
+        [SerializeField] ReticleAnimation reticle;
+
         PlayerInputManager playerInput;
         PlayerCamaraControl playerCamara;
         Animator animator;
@@ -223,12 +226,6 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-            //var mF = Instantiate(muzzleFalsh, muzzle.position, muzzle.rotation);
-            //mF.Play();
-
-            //var b = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
-            //b.AddForce(ref shotPower, ref shotDamage, muzzle);
-
             UsePoolObject();
 
             if (audioSource)
@@ -237,6 +234,10 @@ namespace Musashi
             currentAmmo--;
             if (ammoCounter)
                 ammoCounter.Display(ref currentAmmo);
+
+            if (reticle)
+                reticle.IsShot = true;
+
             lastTimeShot = Time.time;
         }
 
@@ -252,12 +253,18 @@ namespace Musashi
         {
             if (ammoCounter)
                 ammoCounter.Display(ref currentAmmo);
+
+            if (reticle)
+                reticle.IsEquipingGun = true;
         }
 
         public void OnDisable()
         {
             if (ammoCounter)
                 ammoCounter.Text.enabled = false;
+
+            if (reticle)
+                reticle.IsEquipingGun = false;
         }
     }
 }

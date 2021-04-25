@@ -202,6 +202,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f48bc755327b1e545972007eaa4c5832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &189664790 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3859293243324413574, guid: e872703af809ea54a87d6434794bf1d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1497920990}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53fd8fd349d5cf24f9a2d8c67addf914, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &222002784 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 751504137082260113, guid: e872703af809ea54a87d6434794bf1d0,
@@ -508,6 +520,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3859293243324413574, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: top
+      value: 
+      objectReference: {fileID: 1934909626}
     - target: {fileID: 3930138043940699776, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: ammoCounter
@@ -757,6 +774,21 @@ PrefabInstance:
         type: 3}
       propertyPath: sumNumberOfAmmoInInventory
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7056163273485188848, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7056163273485188848, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7056163273485188850, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_Name
+      value: Reticle
       objectReference: {fileID: 0}
     - target: {fileID: 7056163273485188850, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
@@ -1119,6 +1151,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f48bc755327b1e545972007eaa4c5832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1934909626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7250520446164868312, guid: e872703af809ea54a87d6434794bf1d0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1497920990}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2065093388 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7937033923103706109, guid: e872703af809ea54a87d6434794bf1d0,
@@ -1428,6 +1472,11 @@ PrefabInstance:
       propertyPath: maxAmmo
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 398625518826680916, guid: 75850793b77fd0a49b90941744870e0d,
+        type: 3}
+      propertyPath: reticle
+      value: 
+      objectReference: {fileID: 189664790}
     - target: {fileID: 398625518826680916, guid: 75850793b77fd0a49b90941744870e0d,
         type: 3}
       propertyPath: aimSpeed
