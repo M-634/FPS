@@ -11,7 +11,9 @@ namespace Musashi
     /// </summary>
     public class WeaponGunControl : BaseWeapon
     {
-
+        /// <summary>
+        /// memo : 抽象化させる
+        /// </summary>
         class PoolObjcet
         {
             public BulletControl bulletControl;
@@ -98,8 +100,7 @@ namespace Musashi
             poolObjcetsList = new List<PoolObjcet>();
             for (int i = 0; i < maxPoolNumber; i++)
             {
-                var poolObj = InstantiatePoolObj();
-                poolObj.SetActive(false);
+                InstantiatePoolObj();
             }
         }
 
@@ -113,6 +114,7 @@ namespace Musashi
 
             poolObj.bulletControl.SetInfo(ref shotPower, ref shotDamage);
             poolObjcetsList.Add(poolObj);
+            poolObj.SetActive(false);
             return poolObj;
         }
 
