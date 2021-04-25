@@ -73,7 +73,7 @@ namespace Musashi
                 return maxAmmo;
             }
 
-            int temp = sumNumberOfAmmoInInventory;
+            int temp = currentAmmo + sumNumberOfAmmoInInventory;
             sumNumberOfAmmoInInventory = 0;
             return temp;
         }

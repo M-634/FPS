@@ -148,7 +148,7 @@ namespace Musashi
             poolObj.SetActive(true);
         }
 
-        private void Reload()
+        private void BeginningReload()
         {
             bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo, ref currentAmmo) : true;
             if (canReload)
@@ -187,7 +187,7 @@ namespace Musashi
         {
             if (!canAction) return;
 
-            if (playerInput.Reload) Reload();
+            if (playerInput.Reload) BeginningReload();
 
             if (playerInput.Aim)
                 isAiming = true;
@@ -226,7 +226,7 @@ namespace Musashi
             if (currentAmmo < 1)
             {
                 currentAmmo = 0;
-                Reload();
+                BeginningReload();
                 return;
             }
 
@@ -277,8 +277,17 @@ namespace Musashi
             playerEvent = transform.GetComponentInParent<PlayerEventManager>();
             if (playerEvent)
             {
-                playerEvent.Subscribe(PlayerEventType.OpenInventory, () => canAction = false);
-                playerEvent.Subscribe(PlayerEventType.CloseInventory, () => canAction = true);
+                playerEvent.Subscribe(PlayerEventType.OpenInventory, () =>
+                {
+                    canAction = false;
+                    reticle.gameObject.SetActive(false); 
+                });
+
+                playerEvent.Subscribe(PlayerEventType.CloseInventory, () =>
+                {
+                    canAction = true;
+                    reticle.gameObject.SetActive(true);
+                });
             }
         }
 
@@ -292,8 +301,17 @@ namespace Musashi
 
             if (playerEvent)
             {
-                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => canAction = false);
-                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => canAction = true);
+                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () =>
+                {
+                    canAction = false;
+                    reticle.gameObject.SetActive(false);
+                });
+
+                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () =>
+                {
+                    canAction = true;
+                    reticle.gameObject.SetActive(true);
+                });
             }
         }
     }
