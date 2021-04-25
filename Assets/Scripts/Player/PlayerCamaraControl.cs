@@ -13,7 +13,7 @@ namespace Musashi
 
         [Header("Field Of View")]
         [SerializeField] const float NOMAL_FOV = 60f;
-    
+
         [Header("PostProcess")]
         [SerializeField] PostProcessVolume volume;
         [SerializeField] PostProcessProfile standard;
@@ -87,7 +87,7 @@ namespace Musashi
 
             mouseX = Mathf.Round(playerInputManager.Look.x) * sensitivity * Time.fixedDeltaTime;
             mouseY = Mathf.Round(playerInputManager.Look.y) * sensitivity * Time.fixedDeltaTime;
-         
+
 
             xRotation += mouseY;
 
@@ -145,14 +145,20 @@ namespace Musashi
         public void OnEnable()
         {
             playerEvent = GetComponent<PlayerEventManager>();
-            playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
-            playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            if (playerEvent)
+            {
+                playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
+                playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            }
         }
 
         public void OnDisable()
         {
-            playerEvent.UnSubscribe(PlayerEventType.OpenInventory, ()=> LockCamera = true);
-            playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            if (playerEvent)
+            {
+                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
+                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            }
         }
     }
 }

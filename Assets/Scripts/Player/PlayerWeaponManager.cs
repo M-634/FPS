@@ -17,9 +17,9 @@ namespace Musashi
         bool canInputAction = true;
 
         PlayerInputManager playerInput;
- 
+
         public bool IsEquipmentWeapon => currentEquipmentActiveWeaponsIndex != -1;
-       
+
         private void Start()
         {
             playerInput = GetComponent<PlayerInputManager>();
@@ -31,7 +31,7 @@ namespace Musashi
             for (int i = 0; i < weaponSlots.Length; i++)
             {
                 weaponSlots[i].SetInput(playerInput);
-                weaponSlots[i].SetWeaponSlot(i,this);
+                weaponSlots[i].SetWeaponSlot(i, this);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Musashi
         private void ReciveInventoryEvent(bool value)
         {
             canInputAction = value;
-            if(IsEquipmentWeapon)
+            if (IsEquipmentWeapon)
                 activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(value);
         }
 
@@ -142,14 +142,20 @@ namespace Musashi
         private void OnEnable()
         {
             playerEvent = GetComponent<PlayerEventManager>();
-            playerEvent.Subscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
-            playerEvent.Subscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+            if (playerEvent)
+            {
+                playerEvent.Subscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
+                playerEvent.Subscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+            }
         }
 
         private void OnDisable()
         {
-            playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
-            playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+            if (playerEvent)
+            {
+                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
+                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+            }
         }
     }
 }

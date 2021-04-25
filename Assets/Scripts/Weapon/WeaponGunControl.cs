@@ -80,15 +80,19 @@ namespace Musashi
 
         PlayerInputManager playerInput;
         PlayerCamaraControl playerCamara;
+        PlayerEventManager playerEvent;
+
         Animator animator;
         AudioSource audioSource;
 
+        bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
         bool isAiming = false;
 
         private void Awake()
         {
             playerInput = transform.GetComponentInParent<PlayerInputManager>();
             playerCamara = transform.GetComponentInParent<PlayerCamaraControl>();
+
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
 
@@ -149,7 +153,11 @@ namespace Musashi
             bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo, ref currentAmmo) : true;
             if (canReload)
             {
-                animator.Play("Reload");
+                if (animator)
+                    animator.Play("Reload");
+                else
+                    currentAmmo = maxAmmo;
+
                 if (audioSource)
                     audioSource.Play(ReloadClip, audioSource.volume);
             }
@@ -164,13 +172,21 @@ namespace Musashi
         /// </summary>
         public void EndReload()
         {
-            //To Do :ここ,実際にリロードできる数を返すこと
-            currentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
-            ammoCounter.Display(ref currentAmmo);
+            if (ammoCounter)
+            {
+                currentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
+                ammoCounter.Display(ref currentAmmo);
+            }
+            else
+            {
+                currentAmmo = maxAmmo;
+            }
         }
 
         private void Update()
         {
+            if (!canAction) return;
+
             if (playerInput.Reload) Reload();
 
             if (playerInput.Aim)
@@ -256,6 +272,14 @@ namespace Musashi
 
             if (reticle)
                 reticle.IsEquipingGun = true;
+
+
+            playerEvent = transform.GetComponentInParent<PlayerEventManager>();
+            if (playerEvent)
+            {
+                playerEvent.Subscribe(PlayerEventType.OpenInventory, () => canAction = false);
+                playerEvent.Subscribe(PlayerEventType.CloseInventory, () => canAction = true);
+            }
         }
 
         public void OnDisable()
@@ -265,6 +289,12 @@ namespace Musashi
 
             if (reticle)
                 reticle.IsEquipingGun = false;
+
+            if (playerEvent)
+            {
+                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => canAction = false);
+                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => canAction = true);
+            }
         }
     }
 }
