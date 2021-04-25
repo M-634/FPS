@@ -77,7 +77,7 @@ namespace Musashi
 
 
             //マウス と コントロール でsensitivityを変えること
-            float sensitivity = playerInputManager.IsGamepad ? controllerSensitivity : mouseSensitivity; 
+            float sensitivity = playerInputManager.IsGamepad ? controllerSensitivity : mouseSensitivity;
 
             mouseX = Mathf.Round(playerInputManager.Look.x) * sensitivity * Time.fixedDeltaTime;
             mouseY = Mathf.Round(playerInputManager.Look.y) * sensitivity * Time.fixedDeltaTime;

@@ -13,8 +13,17 @@ namespace Musashi
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
 
-
-        public bool IsGamepad => Gamepad.current != null;
+        private bool isGamepad;
+        public bool IsGamepad
+        {
+            get
+            {
+                if (Gamepad.current == null) return false;
+                if (Gamepad.current.wasUpdatedThisFrame) isGamepad = true;
+                if (Mouse.current.wasUpdatedThisFrame) isGamepad = false;
+                return isGamepad;
+            }
+        }
 
         //Input property
         public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
@@ -36,7 +45,7 @@ namespace Musashi
 
         private bool sprint;
         public bool Sprint => sprint;
-          
+
         private void Awake()
         {
             inputActions = new MyInputActions();
