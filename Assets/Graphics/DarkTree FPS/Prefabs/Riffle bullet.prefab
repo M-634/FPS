@@ -209,3 +209,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeTime: 1
   bloodVFX: {fileID: 987344610385491406, guid: bc87df58283efe54ca5ee5e6b8718f88, type: 3}
+  decal: {fileID: 1479812948273588, guid: 75d25fbf0af4c2d4f9e4d34675a304ff, type: 3}

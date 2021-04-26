@@ -11,6 +11,7 @@ namespace Musashi
     {
         [SerializeField] float lifeTime = 1f;
         [SerializeField] GameObject bloodVFX;
+        [SerializeField] GameObject decal;
         float shotDamage;
         float shotPower;
         Rigidbody rb;
@@ -51,6 +52,10 @@ namespace Musashi
                 {
                     Instantiate(bloodVFX, hits[i].point, Quaternion.LookRotation(hits[i].normal));
                     target.OnDamage(shotDamage);
+                }
+                else
+                {
+                    Instantiate(decal, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f));
                 }
                 gameObject.SetActive(false);
             }
