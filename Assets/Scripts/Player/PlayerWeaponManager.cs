@@ -59,6 +59,7 @@ namespace Musashi
                     return CanEquipWeapon(weaponData);
                 }
             }
+            Debug.LogWarning("武器データに存在しないため拾えません");
             return false;
         }
 

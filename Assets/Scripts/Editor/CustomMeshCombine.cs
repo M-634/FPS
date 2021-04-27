@@ -13,9 +13,18 @@ namespace Musashi
             {
                 if (GUILayout.Button("Apply"))
                 {
-                    t.ExcuteCombineMesh();  
+                    t.ExcuteCombineMesh();
                 }
             }
         }
+
+        [MenuItem("Tools/MeshCombine")]
+        static void CreatMeshCombine()
+        {
+            var obj = new GameObject("MeshCombine");
+            obj.AddComponent<MeshCombine>();
+        }
     }
+
+
 }

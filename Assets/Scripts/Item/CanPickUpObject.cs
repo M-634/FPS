@@ -61,9 +61,9 @@ namespace Musashi
             if (!collider)
                 collider = GetComponent<Collider>();
 
-            rb.isKinematic = isKinematic;
             rb.useGravity = useGravity;
             rb.collisionDetectionMode = mode;
+            rb.isKinematic = isKinematic;
             collider.isTrigger = isTrigger;
         }
 
