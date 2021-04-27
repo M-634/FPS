@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 namespace Musashi
 {
@@ -9,19 +10,25 @@ namespace Musashi
     /// </summary>
     public class BulletControl : MonoBehaviour
     {
-        [SerializeField] float lifeTime = 1f;
+
         [SerializeField] GameObject bloodVFX;
         [SerializeField] GameObject decal;
+
+        [SerializeField] float lifeTime = 1f;
+
         float shotDamage;
         float shotPower;
+
+        float timer;
+
         Rigidbody rb;
         Vector3 prevPos;
-        float timer;
 
         private void OnEnable()
         {
-            if(!rb)
+            if(rb == null)
                 rb = GetComponent<Rigidbody>();
+      
             prevPos = transform.position;
             rb.velocity = transform.forward * shotPower;
         }
@@ -32,7 +39,6 @@ namespace Musashi
             this.shotPower = shotPower;
         }
 
- 
         private void Update()
         {
             timer += Time.deltaTime;

@@ -9,38 +9,8 @@ namespace Musashi
     /// 銃を使用時にアクティブをtrueに、しまったらアクティブをfalseにする。
     /// muzzle flash と弾丸はオブジェットプールさせる。
     /// </summary>
-    public class WeaponGunControl : BaseWeapon
+    public class WeaponGunControl : BaseWeapon,IPoolUser<WeaponGunControl>
     {
-        /// <summary>
-        /// memo : 抽象化させる
-        /// </summary>
-        class PoolObjcet
-        {
-            public BulletControl bulletControl;
-            public ParticleSystem muzzleFalsh;
-            public bool ActiveSelf
-            {
-                get
-                {
-                    if (!bulletControl.gameObject.activeSelf && !muzzleFalsh.gameObject.activeSelf)
-                        return false;
-                    return true;
-                }
-            }
-
-            public void SetActive(bool value)
-            {
-                bulletControl.gameObject.SetActive(value);
-                muzzleFalsh.gameObject.SetActive(value);
-            }
-
-            public void SetPosition(Vector3 pos)
-            {
-                bulletControl.transform.position = pos;
-                muzzleFalsh.transform.position = pos;
-            }
-        }
-
         private enum WeaponShootType
         {
             Manual, Automatic,
@@ -52,8 +22,8 @@ namespace Musashi
         [Header("Pool Setting")]
         [SerializeField] BulletControl bulletPrefab;
         [SerializeField] ParticleSystem muzzleFalsh;
-        [SerializeField] int maxPoolNumber;
-        List<PoolObjcet> poolObjcetsList;
+        [SerializeField] int initPoolNumber;
+        PoolObjectManager poolObjectManager;
 
         [Header("Ammo Setting")]
         [SerializeField] AmmoCounter ammoCounter;
@@ -101,51 +71,38 @@ namespace Musashi
 
             currentAmmo = maxAmmo;
 
-            InitializePoolObject();
+            InitializePoolObject(initPoolNumber);
         }
-
 
         /// <summary>
-        /// bullet と muzzleFlashのオブジェットポールを初期化する
+        /// bulletとmuzzleFlashのオブジェットプールを初期化
         /// </summary>
-        private void InitializePoolObject()
+        public void InitializePoolObject(int num = 1)
         {
-            poolObjcetsList = new List<PoolObjcet>();
-            for (int i = 0; i < maxPoolNumber; i++)
+            poolObjectManager = new PoolObjectManager();
+            for (int i = 0; i < num; i++)
             {
-                InstantiatePoolObj();
+                SetPoolObj();
             }
         }
 
-        private PoolObjcet InstantiatePoolObj()
+        /// <summary>
+        /// bulletとmuzzleFlashを生成して、プールオブジェットにセットする
+        /// </summary>
+        /// <returns></returns>
+        public PoolObjectManager.PoolObject SetPoolObj()
         {
-            var poolObj = new PoolObjcet
-            {
-                bulletControl = Instantiate(bulletPrefab, transform),
-                muzzleFalsh = Instantiate(muzzleFalsh, transform)
-            };
+            var poolObj = poolObjectManager.InstantiatePoolObj();
 
-            poolObj.bulletControl.SetInfo(ref shotPower, ref shotDamage);
-            poolObjcetsList.Add(poolObj);
-            poolObj.SetActive(false);
+            var b = Instantiate(bulletPrefab, transform);
+            var mF = Instantiate(muzzleFalsh, transform);
+
+            poolObj.AddObj(b.gameObject);
+            poolObj.AddObj(mF.gameObject);
+
+            b.SetInfo(ref shotPower, ref shotDamage);
+            poolObj.SetActiveAll(false);
             return poolObj;
-        }
-
-        private void UsePoolObject()
-        {
-            foreach (var item in poolObjcetsList)
-            {
-                if (item.ActiveSelf) continue;
-                item.SetPosition(muzzle.position);
-                item.SetActive(true);
-                return;
-            }
-
-            //用意したオブジェットプール内のオブジェットのアクティブが全てtrueなら
-            //新しいプールオブジェットを創る
-            var poolObj = InstantiatePoolObj();
-            poolObj.SetPosition(muzzle.position);
-            poolObj.SetActive(true);
         }
 
         private void BeginningReload()
@@ -242,7 +199,7 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-            UsePoolObject();
+            poolObjectManager.UsePoolObject(muzzle.position,muzzle.rotation,()=> SetPoolObj());
 
             if (audioSource)
                 audioSource.Play(shotClip, audioSource.volume);

@@ -207,6 +207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed062af19fafb24c95827ef46f3a191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 1
   bloodVFX: {fileID: 987344610385491406, guid: bc87df58283efe54ca5ee5e6b8718f88, type: 3}
   decal: {fileID: 1479812948273588, guid: 75d25fbf0af4c2d4f9e4d34675a304ff, type: 3}
+  lifeTime: 1
