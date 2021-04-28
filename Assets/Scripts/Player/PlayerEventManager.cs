@@ -30,19 +30,19 @@ namespace Musashi
             else
                 PlayerEventTable.Add(eventType, action);
 
-            Debug.Log($"{eventType}イベントに{action.Method.Name}が追加された");
+            //Debug.Log($"{eventType}イベントに{action.Method.Name}が追加された");
         }
 
         public void UnSubscribe(PlayerEventType eventType, Action action)
         {
-            Debug.Log($"{eventType}イベントの{action.Method.Name}が解除されたよ");
+            //Debug.Log($"{eventType}イベントの{action.Method.Name}が解除されたよ");
             PlayerEventTable[eventType] -= action;
         }
 
         public void Excute(PlayerEventType eventType)
         {
             PlayerEventTable[eventType]?.Invoke();
-            Debug.Log($"{eventType}イベントが実行された");
+           // Debug.Log($"{eventType}イベントが実行された");
         }
 
     }

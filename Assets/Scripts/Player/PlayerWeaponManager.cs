@@ -9,7 +9,8 @@ namespace Musashi
     {
         [SerializeField] WeaponDataBase weaponDataBase;
         /// <summary>playerの子どもに存在する武器。使用時にアクティブを切り替える</summary>
-        [SerializeField] BaseWeapon[] activeWeapons;
+        //[SerializeField] BaseWeapon[] activeWeapons;
+        [SerializeField] WeaponActiveControl[] activeControls;
         [SerializeField] WeaponSlot[] weaponSlots;
 
         int currentEquipmentActiveWeaponsIndex = -1;//active
@@ -23,9 +24,14 @@ namespace Musashi
         private void Start()
         {
             playerInput = GetComponent<PlayerInputManager>();
-            foreach (var weapon in activeWeapons)
+            //foreach (var weapon in activeWeapons)
+            //{
+            //    weapon.gameObject.SetActive(false);
+            //}
+
+            foreach (var item in activeControls)
             {
-                weapon.gameObject.SetActive(false);
+                item.SetActive(false);
             }
 
             for (int i = 0; i < weaponSlots.Length; i++)
@@ -41,7 +47,7 @@ namespace Musashi
             if (!canInputAction) return;
 
             var i = playerInput.SwichWeaponID;
-            if (i == -1) return;
+            if (i == -1 || i == currentEquipmentWeaponSlotIndex) return;
             EquipWeapon(i);
         }
 
@@ -105,11 +111,24 @@ namespace Musashi
             EquipmentWeaponSetActiveFalse();
             if (weaponSlots[index].IsEmpty) return;
 
-            for (int i = 0; i < activeWeapons.Length; i++)
+            //for (int i = 0; i < activeWeapons.Length; i++)
+            //{
+            //    if (weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeWeapons[i].kindOfWeapon)
+            //    {
+            //        activeWeapons[i].gameObject.SetActive(true);
+            //        currentEquipmentActiveWeaponsIndex = i;
+            //        currentEquipmentWeaponSlotIndex = index;
+            //        return;
+            //    }
+            //}
+
+
+
+            for (int i = 0; i < activeControls.Length; i++)
             {
-                if (weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeWeapons[i].kindOfWeapon)
+                if(weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeControls[i].kindOfWeapon)
                 {
-                    activeWeapons[i].gameObject.SetActive(true);
+                    activeControls[i].SetActive(true);
                     currentEquipmentActiveWeaponsIndex = i;
                     currentEquipmentWeaponSlotIndex = index;
                     return;
@@ -125,7 +144,8 @@ namespace Musashi
         {
             if (IsEquipmentWeapon)
             {
-                activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(false);
+                //activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(false);
+                activeControls[currentEquipmentWeaponSlotIndex].SetActive(false);
                 currentEquipmentActiveWeaponsIndex = -1;
                 currentEquipmentWeaponSlotIndex = -1;
             }
@@ -135,7 +155,10 @@ namespace Musashi
         {
             canInputAction = value;
             if (IsEquipmentWeapon)
-                activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(value);
+            {
+                //activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(value);
+                activeControls[currentEquipmentActiveWeaponsIndex].SetActive(value);
+            }
         }
 
 
