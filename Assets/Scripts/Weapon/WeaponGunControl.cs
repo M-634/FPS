@@ -106,9 +106,9 @@ namespace Musashi
         }
 
         /// <summary>
-        /// playerがリロードするボタンを押したら呼ばれる関数
+        /// リロードできるかどうか判定する関数
         /// </summary>
-        private void BeginningReload()
+        private void CanReload()
         {
             bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo, ref currentAmmo) : true;
             if (canReload)
@@ -167,7 +167,7 @@ namespace Musashi
         {
             if (!canAction) return;
 
-            if (playerInput.Reload) BeginningReload();
+            if (playerInput.Reload) CanReload();
 
             if (playerInput.Aim)
                 isAiming = true;
@@ -206,7 +206,7 @@ namespace Musashi
             if (currentAmmo < 1)
             {
                 currentAmmo = 0;
-                BeginningReload();
+                CanReload();
                 return;
             }
 
