@@ -163,6 +163,14 @@ namespace Musashi
 
         }
 
+        /// <summary>
+        /// 再生中のアニメーションを中断させる関数
+        /// </summary>
+        public void CancelAnimation()
+        {
+            animator.Play("Idle");
+        }
+
         private void Update()
         {
             if (!canAction) return;
@@ -273,6 +281,7 @@ namespace Musashi
 
         public void OnDisable()
         {
+            CancelAnimation();
             if (ammoCounter)
                 ammoCounter.Text.enabled = false;
 

@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kindOfWeapon: 1
-  gameObjects:
+  switchActiveObjects:
   - {fileID: 1224300612}
   - {fileID: 1835391980}
   - {fileID: 975492790}
@@ -722,7 +722,7 @@ PrefabInstance:
     - target: {fileID: 4035535613061906262, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: controllerSensitivity
-      value: 30
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4035535613061906264, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
@@ -2389,7 +2389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kindOfWeapon: 3
-  gameObjects:
+  switchActiveObjects:
   - {fileID: 1051461313}
   - {fileID: 529844720}
   - {fileID: 928784875}

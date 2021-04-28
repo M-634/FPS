@@ -9,7 +9,6 @@ namespace Musashi
     {
         [SerializeField] WeaponDataBase weaponDataBase;
         /// <summary>playerの子どもに存在する武器。使用時にアクティブを切り替える</summary>
-        //[SerializeField] BaseWeapon[] activeWeapons;
         [SerializeField] WeaponActiveControl[] activeControls;
         [SerializeField] WeaponSlot[] weaponSlots;
 
@@ -24,11 +23,7 @@ namespace Musashi
         private void Start()
         {
             playerInput = GetComponent<PlayerInputManager>();
-            //foreach (var weapon in activeWeapons)
-            //{
-            //    weapon.gameObject.SetActive(false);
-            //}
-
+    
             foreach (var item in activeControls)
             {
                 item.SetActive(false);
@@ -109,20 +104,8 @@ namespace Musashi
         public void EquipWeapon(int index)
         {
             EquipmentWeaponSetActiveFalse();
+
             if (weaponSlots[index].IsEmpty) return;
-
-            //for (int i = 0; i < activeWeapons.Length; i++)
-            //{
-            //    if (weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeWeapons[i].kindOfWeapon)
-            //    {
-            //        activeWeapons[i].gameObject.SetActive(true);
-            //        currentEquipmentActiveWeaponsIndex = i;
-            //        currentEquipmentWeaponSlotIndex = index;
-            //        return;
-            //    }
-            //}
-
-
 
             for (int i = 0; i < activeControls.Length; i++)
             {
@@ -144,7 +127,6 @@ namespace Musashi
         {
             if (IsEquipmentWeapon)
             {
-                //activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(false);
                 activeControls[currentEquipmentWeaponSlotIndex].SetActive(false);
                 currentEquipmentActiveWeaponsIndex = -1;
                 currentEquipmentWeaponSlotIndex = -1;
@@ -156,7 +138,6 @@ namespace Musashi
             canInputAction = value;
             if (IsEquipmentWeapon)
             {
-                //activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(value);
                 activeControls[currentEquipmentActiveWeaponsIndex].SetActive(value);
             }
         }

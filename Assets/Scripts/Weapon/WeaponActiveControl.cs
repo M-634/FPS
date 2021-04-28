@@ -14,15 +14,20 @@ namespace Musashi
 
         public KindOfWeapon kindOfWeapon;
 
-        [SerializeField] GameObject[] gameObjects;
+        [SerializeField] GameObject[] switchActiveObjects;
         [SerializeField] WeaponGunControl control;
         [SerializeField] AudioSource audioSource;
 
         public bool ActiveSelf { get; private set; }
 
+        private void Awake()
+        {
+            kindOfWeapon = control.kindOfWeapon;
+        }
+
         public void SetActive(bool value)
         {
-            foreach (var item in gameObjects)
+            foreach (var item in switchActiveObjects)
             {
                 item.SetActive(value);
             }
