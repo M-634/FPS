@@ -108,6 +108,30 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "SwichWeapon0",
+                    "type": "Button",
+                    "id": "bbda28f7-02b1-4740-9af2-c859cf51e02c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "SwichWeapon1",
+                    "type": "Button",
+                    "id": "3e284158-a8f6-4e91-b343-e6efa1460dd6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "SwichWeaponByGamePad",
+                    "type": "Button",
+                    "id": "fe8fd5cf-c31b-48c1-b1a6-fb007b323730",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -537,6 +561,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Esc",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2a48b3b-cf83-4f5c-b74c-b7aeafbd474b",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SwichWeapon0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4f8d1c18-ec40-4ae9-a91c-7b61c3f5f55f",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SwichWeapon1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f527ba56-cea7-43c8-8966-3c4f1fb7638e",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SwichWeaponByGamePad",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

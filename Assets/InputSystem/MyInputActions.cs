@@ -123,6 +123,30 @@ namespace Musashi
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""SwichWeapon0"",
+                    ""type"": ""Button"",
+                    ""id"": ""bbda28f7-02b1-4740-9af2-c859cf51e02c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""SwichWeapon1"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e284158-a8f6-4e91-b343-e6efa1460dd6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""SwichWeaponByGamePad"",
+                    ""type"": ""Button"",
+                    ""id"": ""fe8fd5cf-c31b-48c1-b1a6-fb007b323730"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -552,6 +576,39 @@ namespace Musashi
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Esc"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2a48b3b-cf83-4f5c-b74c-b7aeafbd474b"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwichWeapon0"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f8d1c18-ec40-4ae9-a91c-7b61c3f5f55f"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwichWeapon1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f527ba56-cea7-43c8-8966-3c4f1fb7638e"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SwichWeaponByGamePad"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1142,6 +1199,9 @@ namespace Musashi
             m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
+            m_Player_SwichWeapon0 = m_Player.FindAction("SwichWeapon0", throwIfNotFound: true);
+            m_Player_SwichWeapon1 = m_Player.FindAction("SwichWeapon1", throwIfNotFound: true);
+            m_Player_SwichWeaponByGamePad = m_Player.FindAction("SwichWeaponByGamePad", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1216,6 +1276,9 @@ namespace Musashi
         private readonly InputAction m_Player_MousePosition;
         private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Esc;
+        private readonly InputAction m_Player_SwichWeapon0;
+        private readonly InputAction m_Player_SwichWeapon1;
+        private readonly InputAction m_Player_SwichWeaponByGamePad;
         public struct PlayerActions
         {
             private @MyInputActions m_Wrapper;
@@ -1233,6 +1296,9 @@ namespace Musashi
             public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
             public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
             public InputAction @Esc => m_Wrapper.m_Player_Esc;
+            public InputAction @SwichWeapon0 => m_Wrapper.m_Player_SwichWeapon0;
+            public InputAction @SwichWeapon1 => m_Wrapper.m_Player_SwichWeapon1;
+            public InputAction @SwichWeaponByGamePad => m_Wrapper.m_Player_SwichWeaponByGamePad;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1281,6 +1347,15 @@ namespace Musashi
                     @Esc.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
                     @Esc.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
                     @Esc.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
+                    @SwichWeapon0.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
+                    @SwichWeapon0.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
+                    @SwichWeapon0.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
+                    @SwichWeapon1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
+                    @SwichWeapon1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
+                    @SwichWeapon1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
+                    @SwichWeaponByGamePad.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad;
+                    @SwichWeaponByGamePad.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad;
+                    @SwichWeaponByGamePad.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1324,6 +1399,15 @@ namespace Musashi
                     @Esc.started += instance.OnEsc;
                     @Esc.performed += instance.OnEsc;
                     @Esc.canceled += instance.OnEsc;
+                    @SwichWeapon0.started += instance.OnSwichWeapon0;
+                    @SwichWeapon0.performed += instance.OnSwichWeapon0;
+                    @SwichWeapon0.canceled += instance.OnSwichWeapon0;
+                    @SwichWeapon1.started += instance.OnSwichWeapon1;
+                    @SwichWeapon1.performed += instance.OnSwichWeapon1;
+                    @SwichWeapon1.canceled += instance.OnSwichWeapon1;
+                    @SwichWeaponByGamePad.started += instance.OnSwichWeaponByGamePad;
+                    @SwichWeaponByGamePad.performed += instance.OnSwichWeaponByGamePad;
+                    @SwichWeaponByGamePad.canceled += instance.OnSwichWeaponByGamePad;
                 }
             }
         }
@@ -1493,6 +1577,9 @@ namespace Musashi
             void OnMousePosition(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
             void OnEsc(InputAction.CallbackContext context);
+            void OnSwichWeapon0(InputAction.CallbackContext context);
+            void OnSwichWeapon1(InputAction.CallbackContext context);
+            void OnSwichWeaponByGamePad(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

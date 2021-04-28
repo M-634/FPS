@@ -46,6 +46,26 @@ namespace Musashi
         private bool sprint;
         public bool Sprint => sprint;
 
+        private int swichWeaponIDByGamepad = 0;
+        /// <summary>
+        ///押してない時は -１。武器チェンジする時は、0か1を返す.
+        /// </summary>
+        public int SwichWeaponID
+        {
+            get
+            {
+                if (PlayerInputActions.SwichWeapon0.triggered) return 0;
+                if (PlayerInputActions.SwichWeapon1.triggered) return 1;
+                if (PlayerInputActions.SwichWeaponByGamePad.triggered)
+                {
+                    //押す度に0と１を切り替える
+                    swichWeaponIDByGamepad =(swichWeaponIDByGamepad + 1) % 2;
+                    return swichWeaponIDByGamepad;
+                }
+                return -1;
+            }
+        }
+
         private void Awake()
         {
             inputActions = new MyInputActions();

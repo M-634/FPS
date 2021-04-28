@@ -39,10 +39,10 @@ namespace Musashi
         private void Update()
         {
             if (!canInputAction) return;
-            // PlayerInputManager.SwichWeaponAction()を変更する
-            //var i = PlayerInputManager.SwichWeaponAction();
-            //if (i == 0 || i == 1) EquipWeapon(i);
-            //if (i == 2) PutAwayWeapon();
+
+            var i = playerInput.SwichWeaponID;
+            if (i == -1) return;
+            EquipWeapon(i);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Musashi
             {
                 //装備中の武器と拾った武器を交換する
                 PutAwayWeapon();
-                weaponSlots[currentEquipmentWeaponSlot].ResetInfo();
+                weaponSlots[currentEquipmentWeaponSlot].ResetInfo();//error 
                 weaponSlots[currentEquipmentWeaponSlot].SetInfo(weaponData);
                 EquipWeapon(currentEquipmentWeaponSlot);
                 return true;
