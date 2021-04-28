@@ -100,6 +100,7 @@ namespace Musashi
         private void Update()
         {
             CurrentState.OnUpdate(this);
+            Debug.Log(CurrentState);
         }
 
         public void ChangeState(IEnemyState nextstate)
@@ -279,7 +280,8 @@ namespace Musashi
         void IEnemyState.OnUpdate(EnemyAI owner)
         {
             owner.LookAtPlayer();
-            owner.Agent.SetDestination(owner.Target.position);
+           var t = owner.Agent.SetDestination(owner.Target.position);
+            Debug.Log(t);
 
             if (owner.CanAttackPlayer())
             {
@@ -327,7 +329,6 @@ namespace Musashi
         public void OnEnter(EnemyAI owner, IEnemyState prevState = null)
         {
             Debug.Log("攻撃を受けた");
-            owner.ChangeState(owner.EnemyPursue);
         }
 
         public void OnExit(EnemyAI owner, IEnemyState nextState = null)
@@ -336,7 +337,7 @@ namespace Musashi
 
         public void OnUpdate(EnemyAI owner)
         {
-           
+            owner.ChangeState(owner.EnemyPursue);
         }
     }
 }
