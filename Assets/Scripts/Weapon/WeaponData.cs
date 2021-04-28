@@ -18,4 +18,11 @@ namespace Musashi
         public BaseWeapon WeaponPrefab => weaponPrefab;
         public PickUpWeapon PickUpWeaonPrefab => pickUpWeaponPrefab;
     }
+
+    [Serializable]
+    [CreateAssetMenu(fileName = "WeaponData", menuName = "CreateGunData")]
+    public class GunData : WeaponData
+    {
+
+    }
 }

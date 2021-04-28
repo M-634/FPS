@@ -12,8 +12,8 @@ namespace Musashi
         [SerializeField] BaseWeapon[] activeWeapons;
         [SerializeField] WeaponSlot[] weaponSlots;
 
-        int currentEquipmentActiveWeaponsIndex = -1;
-        int currentEquipmentWeaponSlot = -1;
+        int currentEquipmentActiveWeaponsIndex = -1;//active
+        int currentEquipmentWeaponSlotIndex = -1;//slot
         bool canInputAction = true;
 
         PlayerInputManager playerInput;
@@ -64,7 +64,7 @@ namespace Musashi
         }
 
         /// <summary>
-        /// 武器を装備することができるか確認する関数
+        /// 拾える武器が装備することができるか確認する関数
         /// </summary>
         /// <param name="weaponData"></param>
         /// <returns></returns>
@@ -82,13 +82,13 @@ namespace Musashi
             }
 
 
+            //装備中の武器と拾った武器を交換する
             if (IsEquipmentWeapon)
             {
-                //装備中の武器と拾った武器を交換する
-                PutAwayWeapon();
-                weaponSlots[currentEquipmentWeaponSlot].ResetInfo();//error 
-                weaponSlots[currentEquipmentWeaponSlot].SetInfo(weaponData);
-                EquipWeapon(currentEquipmentWeaponSlot);
+                int temp = currentEquipmentWeaponSlotIndex;
+                weaponSlots[temp].DropObject();
+                weaponSlots[temp].SetInfo(weaponData);
+                EquipWeapon(temp);
                 return true;
             }
 
@@ -97,12 +97,12 @@ namespace Musashi
         }
 
         /// <summary>
-        /// スロットのインデックスを指定して、スロット内の武器データとactiveWeaponsの武器データを照合して、武器を装備する
+        /// スロットのインデックスを指定して、スロット内の武器データとactiveWeaponsの武器データを照合し、武器を装備する
         /// </summary>
         /// <param name="index">スロットのインデックス</param>
         public void EquipWeapon(int index)
         {
-            PutAwayWeapon();
+            EquipmentWeaponSetActiveFalse();
             if (weaponSlots[index].IsEmpty) return;
 
             for (int i = 0; i < activeWeapons.Length; i++)
@@ -111,7 +111,7 @@ namespace Musashi
                 {
                     activeWeapons[i].gameObject.SetActive(true);
                     currentEquipmentActiveWeaponsIndex = i;
-                    currentEquipmentWeaponSlot = index;
+                    currentEquipmentWeaponSlotIndex = index;
                     return;
                 }
             }
@@ -119,15 +119,15 @@ namespace Musashi
         }
 
         /// <summary>
-        /// 装備中の武器を捨てる関数
+        /// 装備中の武器のアクティブを切り、各インデックスをリセットする
         /// </summary>
-        public void PutAwayWeapon()
+        public void EquipmentWeaponSetActiveFalse()
         {
             if (IsEquipmentWeapon)
             {
                 activeWeapons[currentEquipmentActiveWeaponsIndex].gameObject.SetActive(false);
                 currentEquipmentActiveWeaponsIndex = -1;
-                currentEquipmentWeaponSlot = -1;
+                currentEquipmentWeaponSlotIndex = -1;
             }
         }
 

@@ -11,6 +11,8 @@ namespace Musashi
         PlayerWeaponManager playerWeaponManager;
         private WeaponData currentWeaponData;
         public WeaponData CurrentWeaponData => currentWeaponData;
+
+        public int CurrentAmmoNum { get; set; }
         public override bool IsFilled => IsEmpty == false;
 
         public void SetWeaponSlot(int index,PlayerWeaponManager playerWeaponManager)
@@ -39,7 +41,7 @@ namespace Musashi
         public override void DropObject()
         {
             if (IsEmpty) return;
-            playerWeaponManager.PutAwayWeapon();
+            playerWeaponManager.EquipmentWeaponSetActiveFalse();
             var go = Instantiate(CurrentWeaponData.PickUpWeaonPrefab, playerCamera.position + playerCamera.forward * 2f, Quaternion.Euler(0,0,90));
             go.Drop(playerCamera);
             ResetInfo();
