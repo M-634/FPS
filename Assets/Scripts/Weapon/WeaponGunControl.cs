@@ -105,6 +105,9 @@ namespace Musashi
             return poolObj;
         }
 
+        /// <summary>
+        /// playerがリロードするボタンを押したら呼ばれる関数
+        /// </summary>
         private void BeginningReload()
         {
             bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo, ref currentAmmo) : true;
@@ -124,6 +127,7 @@ namespace Musashi
             }
         }
 
+       
         /// <summary>
         /// リロードアニメーションイベントから呼ばれる関数
         /// </summary>
@@ -138,6 +142,25 @@ namespace Musashi
             {
                 currentAmmo = maxAmmo;
             }
+        }
+
+
+        /// <summary>
+        ///アニメーションイベントから呼ばれる関数
+        ///単発銃のリロード
+        /// </summary>
+        public void AutoBeginningRelod()
+        {
+
+        }
+
+        /// <summary>
+        /// アニメーションイベントから呼ばれる関数。
+        /// 単発銃のリロード終了
+        /// </summary>
+        public void AutoEndRelod()
+        {
+
         }
 
         private void Update()
@@ -190,7 +213,7 @@ namespace Musashi
             if (lastTimeShot + shotRateTime < Time.time)
             {
                 if (animator)
-                    animator.Play("Shoot");
+                    animator.Play("Shot");
             }
         }
 
