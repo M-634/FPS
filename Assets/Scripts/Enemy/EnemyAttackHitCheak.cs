@@ -18,7 +18,7 @@ namespace Musashi
                 if(other.TryGetComponent(out IDamageable target))
                 {
                     target.OnDamage(attackDamage);
-                    Debug.Log($"playerに{attackDamage}のダメージを与えた");
+                    Debug.Log($"{target}に{attackDamage}のダメージを与えた");
                 }
             }
         }

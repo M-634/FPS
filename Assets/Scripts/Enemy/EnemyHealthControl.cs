@@ -6,37 +6,11 @@ namespace Musashi
 {
     public class EnemyHealthControl : BaseHealthControl
     {
-
-        [System.Serializable]
-        public struct RenderIndexData
-        {
-            public Renderer renderer;
-            public int materialIndex;
-
-            public RenderIndexData(Renderer renderer, int index)
-            {
-                this.renderer = renderer;
-                this.materialIndex = index;
-            }
-        }
-
-        [SerializeField] float healthBarHightOffset;
-
-        [Header("被ダメージ時の処理")]
-        [SerializeField] Material bodyMaterial;
-        [GradientUsage(true)]
-        [SerializeField] Gradient onHitBodyGradient;
-        [SerializeField] float flashOnHitDuration = 0.5f;
-
         [Header("RagDoll")]
         [SerializeField] GameObject dethEffect;
+        [SerializeField] float healthBarHightOffset;
 
         EnemyAI owner;
-
-        List<RenderIndexData> bodyRenderers = new List<RenderIndexData>();
-        MaterialPropertyBlock bodyFlashMaterialPropertyBlock = null;//memo: standard shaderだと反応しない。独自のshaderが必要である
-        float lasitTimeDamaged = float.NegativeInfinity;
-        int propertyID;
 
         protected override void Start()
         {
@@ -46,23 +20,6 @@ namespace Musashi
 
             if (dethEffect)
                 dethEffect.SetActive(false);
-
-            propertyID = Shader.PropertyToID("_Color");
-
-            //set PropertyBlock
-            bodyFlashMaterialPropertyBlock = new MaterialPropertyBlock();
-            //set Renderer
-            var renderers = GetComponentsInChildren<Renderer>();
-            foreach (var renderer in renderers)
-            {
-                for (int i = 0; i < renderer.sharedMaterials.Length; i++)
-                {
-                    if (renderer.sharedMaterials[i] == bodyMaterial)//Materialの参照を比較
-                    {
-                        bodyRenderers.Add(new RenderIndexData(renderer, i));
-                    }
-                }
-            }
         }
 
 
@@ -74,28 +31,26 @@ namespace Musashi
                 healthBarFillImage.transform.parent.position = transform.position + Vector3.up * healthBarHightOffset;
                 healthBarFillImage.transform.parent.LookAt(Camera.main.transform.position);
             }
-
-            //set material color
-
-            //var currentColor = onHitBodyGradient.Evaluate((Time.time - lasitTimeDamaged) / flashOnHitDuration);
-            //bodyFlashMaterialPropertyBlock.SetColor(propertyID, currentColor);
-            //foreach (var data in bodyRenderers)
-            //{
-            //    data.renderer.SetPropertyBlock(bodyFlashMaterialPropertyBlock, data.materialIndex);
-            //}
         }
 
         public override void OnDamage(float damage)
         {
-            base.OnDamage(damage);
-            owner.ChangeState(owner.EnemyOnDamage); 
-            lasitTimeDamaged = Time.time;
+            if (isDead) return;
+
+            CurrentHp -= damage;
+            if (CurrentHp <= 0)
+            {
+                OnDie();
+            }
+            else
+            {
+                if (owner)
+                    owner.ChangeState(owner.EnemyOnDamage);
+            }
         }
 
         protected override void OnDie()
         {
-            if (isDead) return;
-
             isDead = true;
 
             //Active ragdoll
@@ -105,8 +60,12 @@ namespace Musashi
                 dethEffect.SetActive(true);
             }
 
+
+            //hide helth bar
             if (healthBarFillImage)
                 healthBarFillImage.transform.parent.gameObject.SetActive(false);
+
+            //hide enemy object
             transform.gameObject.SetActive(false);
 
             //EventManeger.Instance.Excute(EventType.EnemyDie);

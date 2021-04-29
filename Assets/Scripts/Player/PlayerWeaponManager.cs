@@ -127,7 +127,9 @@ namespace Musashi
         {
             if (IsEquipmentWeapon)
             {
-                activeControls[currentEquipmentWeaponSlotIndex].SetActive(false);
+                var haveWeapon = activeControls[currentEquipmentWeaponSlotIndex];
+                haveWeapon.GetComponent<WeaponGunControl>().CancelAnimation();//memo: WeaponGunControl → 抽象化
+                haveWeapon.SetActive(false);
                 currentEquipmentActiveWeaponsIndex = -1;
                 currentEquipmentWeaponSlotIndex = -1;
             }

@@ -281,7 +281,6 @@ namespace Musashi
 
         public void OnDisable()
         {
-            CancelAnimation();
             if (ammoCounter)
                 ammoCounter.Text.enabled = false;
 

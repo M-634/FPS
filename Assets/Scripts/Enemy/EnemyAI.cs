@@ -100,7 +100,6 @@ namespace Musashi
         private void Update()
         {
             CurrentState.OnUpdate(this);
-            Debug.Log(CurrentState);
         }
 
         public void ChangeState(IEnemyState nextstate)
@@ -118,10 +117,10 @@ namespace Musashi
             if (dir.magnitude < visitDistance && angle < viewingAngle)
             {
                 //Playerと敵の間に障害物があるかどうかRayを飛ばして確かめる
-                if (Physics.Linecast(enemyEye.position, target.position,out RaycastHit hit))
+                if (Physics.Linecast(enemyEye.position, target.position, out RaycastHit hit))
                 {
                     Debug.DrawLine(enemyEye.position, target.position, Color.white);
-                    if(hit.collider.gameObject.CompareTag("Player"))
+                    if (hit.collider.gameObject.CompareTag("Player"))
                     {
                         return true;
                     }
@@ -265,8 +264,10 @@ namespace Musashi
 
     public class EnemyPursue : IEnemyState
     {
+        bool isAngry = false; //怒り状態 ターゲットを一定時間追いかけ回す
         void IEnemyState.OnEnter(EnemyAI owner, IEnemyState prevState)
         {
+            if (prevState is EnemyOnDamage) isAngry = true;
             owner.Agent.speed = owner.PursueSpeed;
             owner.Agent.isStopped = false;
             owner.Animator.Play("Run");
@@ -280,17 +281,27 @@ namespace Musashi
         void IEnemyState.OnUpdate(EnemyAI owner)
         {
             owner.LookAtPlayer();
-           var t = owner.Agent.SetDestination(owner.Target.position);
-            Debug.Log(t);
+            owner.Agent.SetDestination(owner.Target.position);
 
-            if (owner.CanAttackPlayer())
+            if (isAngry)
             {
-                owner.ChangeState(owner.EnemyAttack);
+                if (owner.CanAttackPlayer())
+                {
+                    owner.ChangeState(owner.EnemyAttack);
+                    isAngry = false;
+                }
             }
-
-            if (!owner.CanSeePlayer())
+            else
             {
-                owner.ChangeState(owner.EnemyPatrol);
+                if (owner.CanAttackPlayer())
+                {
+                    owner.ChangeState(owner.EnemyAttack);
+                }
+
+                if (!owner.CanSeePlayer())
+                {
+                    owner.ChangeState(owner.EnemyPatrol);
+                }
             }
         }
     }
