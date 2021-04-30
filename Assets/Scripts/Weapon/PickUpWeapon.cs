@@ -10,7 +10,7 @@ namespace Musashi
     /// </summary>
     public class PickUpWeapon : CanPickUpObject
     {
-        public KindOfWeapon kindOfWeapon;
+        public WeaponType kindOfWeapon;
      
         public override void OnPicked(GameObject player)
         {

@@ -5,18 +5,13 @@ using UnityEngine.Events;
 
 namespace Musashi
 {
-    public enum KindOfWeapon
+    public enum WeaponType
     {
-        //defult
-        None = 0,
-        //Gun
         ShotGun, HandGun, AssaultRifle,
-        //other
-        Grenade, Axe, CrossBow,
     }
 
     public abstract class BaseWeapon : MonoBehaviour
     {
-        public KindOfWeapon kindOfWeapon;
+        public WeaponType weaponType;
     }
 }

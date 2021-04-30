@@ -5,8 +5,8 @@ using System.Collections.Generic;
 namespace Musashi
 {
     /// <summary>
-    /// プレイヤーの子どもに銃を持たせおく。
-    /// 銃を使用時にアクティブをtrueに、しまったらアクティブをfalseにする。
+    /// プレイヤーの子ども武器を持たせおく。
+    /// 武器を使用時にアクティブをtrueに、しまったらアクティブをfalseにする。
     /// muzzle flash と弾丸はオブジェットプールさせる。
     /// </summary>
     public class WeaponGunControl : BaseWeapon,IPoolUser<WeaponGunControl>

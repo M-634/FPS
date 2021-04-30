@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Test
+  m_EditorClassIdentifier: Assembly-CSharp:Musashi:WeaponSettingSOData
+  weaponName: 
+  weaponType: 0
+  weaponIcon: {fileID: 0}
+  muzzleFlash: {fileID: 0}
+  shotSFX: {fileID: 0}
+  reloadSFX: {fileID: 0}
+  emptySFX: {fileID: 0}
+  shotDamage: 0
+  shotPower: 0
+  fireRate: 0
+  recoil: {x: 0, y: 0}
+  aimCameraFOV: 0
+  aimSpeed: 0
+  bullet: {fileID: 0}
+  maxAmmo: 0
+  ammoAndMuzzleFlashPoolSize: 1
+  shotgunLoadingClip: {fileID: 0}

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Musashi
 {
     [CustomEditor(typeof(MeshCombine))]
-    public class CustomMeshCombine : Editor
+    public class MeshCombineCustomInspector : Editor
     {
         public override void OnInspectorGUI()
         {

@@ -12,7 +12,7 @@ namespace Musashi
     public class WeaponActiveControl : MonoBehaviour
     {
 
-        public KindOfWeapon kindOfWeapon;
+        public WeaponType kindOfWeapon;
 
         [SerializeField] GameObject[] switchActiveObjects;
         [SerializeField] WeaponGunControl control;
@@ -22,7 +22,7 @@ namespace Musashi
 
         private void Awake()
         {
-            kindOfWeapon = control.kindOfWeapon;
+            kindOfWeapon = control.weaponType;
         }
 
         public void SetActive(bool value)
