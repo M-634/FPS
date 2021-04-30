@@ -52,7 +52,7 @@ namespace Musashi
         {
             foreach (var itemData in itemDataBase.ItemDataList)
             {
-                if (itemData.KindOfItem == getItem.kindOfItem)
+                if (itemData.KindOfItem == getItem.itemType)
                 {
                     return SearchItemSlot(itemData, getNumber);
                 }
@@ -67,7 +67,7 @@ namespace Musashi
         /// ないなら左側から順番に埋めていく
         /// </summary>
         /// <returns></returns>
-        private bool SearchItemSlot(ItemData getItemData, int getNumber)
+        private bool SearchItemSlot(ItemSettingSOData getItemData, int getNumber)
         {
             for (int i = 0; i < itemSlots.Length; i++)
             {

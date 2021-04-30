@@ -7,7 +7,7 @@ namespace Musashi
     /// </summary>
     public class PlayerWeaponManager : MonoBehaviour
     {
-        [SerializeField] WeaponDataBase weaponDataBase;
+        [SerializeField] WeaponDataBase weaponDataBase;//要らない
         /// <summary>playerの子どもに存在する武器。使用時にアクティブを切り替える</summary>
         [SerializeField] WeaponActiveControl[] activeControls;
         [SerializeField] WeaponSlot[] weaponSlots;

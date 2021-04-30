@@ -8,8 +8,8 @@ namespace Musashi
     public class ItemSlot : SlotBase 
     {
         PlayerItemInventory itemInventory;
-        private ItemData currentItemData;
-        public ItemData CurrentItemData => currentItemData;
+        private ItemSettingSOData currentItemData;
+        public ItemSettingSOData CurrentItemData => currentItemData;
 
         public override bool IsEmpty => currentItemData == null;
 
@@ -26,7 +26,7 @@ namespace Musashi
 
         public override void SetInfo<T>(T getData)
         {
-            currentItemData = getData as ItemData;
+            currentItemData = getData as ItemSettingSOData;
             if(currentItemData.Icon)
                 icon.sprite = currentItemData.Icon;
 

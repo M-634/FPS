@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba4c85f791becb94eae1af054a360661, type: 3}
   m_Name: AmmoBox
   m_EditorClassIdentifier: 
-  kindOfItem: 5
+  itemName: 
+  description: 
+  itemType: 5
   icon: {fileID: 0}
   itemPrefab: {fileID: 2641697173464524729, guid: 51c718ff3700ffa45b08b3af5781e3c4,
     type: 3}
-  maxStackNumber: 1
+  stackable: 0
+  maxStackSize: 1
+  stackSize: 1

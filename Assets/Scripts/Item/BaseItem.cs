@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Musashi
 {
-    public enum KindOfItem
-    {
-        //defult
-        None = 0,
+    public enum ItemType
+    { 
+        //Weapon
+        Rifle,
         //health
         HealthKit, Apple,
         //other
@@ -16,7 +16,7 @@ namespace Musashi
 
     public abstract class BaseItem : CanPickUpObject
     {
-        public KindOfItem kindOfItem;
+        public ItemType itemType;
         protected bool canPickUp = true;
         protected bool canUseItem = true;
 

@@ -18,7 +18,7 @@ namespace Musashi
 
         public override void OnInspectorGUI()
         {
-            //weaponSetting = target as WeaponSettingSOData;
+            if (!weaponSetting) return;
 
             DrawGeneral();
 

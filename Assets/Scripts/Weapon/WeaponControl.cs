@@ -40,6 +40,7 @@ namespace Musashi
 
         [Header("Reference pick up weapon from Id")]
         public int ammoID;//拾った武器のIDを参照して、弾を管理する(publicはdebug用)
+        public int currentAmmo;//拾った武器のスタック数をセットする
 
         [Header("Set muzzle")]
         [SerializeField] Transform muzzle;
@@ -47,7 +48,6 @@ namespace Musashi
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] ReticleAnimation reticle;
 
-        int currentAmmo;
         float lastTimeShot = Mathf.NegativeInfinity;
         bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
         bool isAiming = false;

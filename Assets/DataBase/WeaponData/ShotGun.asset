@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae230a4eed3aa4c47bb5ec65e4622efb, type: 3}
   m_Name: ShotGun
   m_EditorClassIdentifier: 
-  kindOfWeapon: 1
+  kindOfWeapon: 0
   icon: {fileID: 21300000, guid: e3870010a2423204698d9213da38ca44, type: 3}
   weaponPrefab: {fileID: 7738923249941455177, guid: cafa84a461b9a7d4e87b7c25b9c51936,
     type: 3}

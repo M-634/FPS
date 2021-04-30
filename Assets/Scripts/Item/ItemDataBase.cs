@@ -6,8 +6,8 @@ namespace Musashi
     [CreateAssetMenu(fileName = "ItemDataBase", menuName = "CreateItemDataBase")]
     public class ItemDataBase : ScriptableObject
     {
-        [SerializeField] List<ItemData> itemDataList = new List<ItemData>();
+        [SerializeField] List<ItemSettingSOData> itemDataList = new List<ItemSettingSOData>();
 
-        public List<ItemData> ItemDataList{ get => itemDataList; }
+        public List<ItemSettingSOData> ItemDataList{ get => itemDataList; }
     }
 }
