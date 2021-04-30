@@ -642,6 +642,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1412644350, guid: e872703af809ea54a87d6434794bf1d0, type: 3}
+      propertyPath: m_Name
+      value: EquipmentWeaponHolder
+      objectReference: {fileID: 0}
     - target: {fileID: 270714388612860764, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: m_Enabled
@@ -1477,7 +1481,7 @@ PrefabInstance:
     - target: {fileID: 8406177044936173299, guid: 26806a9afc3d1384ea1ce9a7728e0416,
         type: 3}
       propertyPath: maxHp
-      value: 20
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 8816496099626256336, guid: 26806a9afc3d1384ea1ce9a7728e0416,
         type: 3}
