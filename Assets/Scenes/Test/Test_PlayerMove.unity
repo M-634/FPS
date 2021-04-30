@@ -578,6 +578,63 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1894772428}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1452034915
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1546040219424834, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_Name
+      value: Gun bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.793396
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.29219818
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435874491352680, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f9178ff2c7773f74682b8fb1f8bede74, type: 3}
 --- !u!1001 &1497920990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -675,6 +732,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4035535612052335602, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4035535612163436816, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -699,6 +761,16 @@ PrefabInstance:
         type: 3}
       propertyPath: near clip plane
       value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4035535612662389306, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4035535612662389311, guid: e872703af809ea54a87d6434794bf1d0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4035535613061906256, guid: e872703af809ea54a87d6434794bf1d0,
         type: 3}
@@ -2489,7 +2561,7 @@ PrefabInstance:
         type: 3}
       propertyPath: muzzleFalsh
       value: 
-      objectReference: {fileID: 7069840191309764376, guid: b1a9f9bb6d6221940a3b0433b8549edb,
+      objectReference: {fileID: 198918201244081940, guid: 46d4eddf844d2514fb79db11ee0f38e9,
         type: 3}
     - target: {fileID: 7738923249941455177, guid: cafa84a461b9a7d4e87b7c25b9c51936,
         type: 3}

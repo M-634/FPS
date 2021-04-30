@@ -308,6 +308,8 @@ namespace Musashi
 
     public class EnemyAttack : IEnemyState
     {
+        float timer;
+        bool onTimer;
         void IEnemyState.OnEnter(EnemyAI owner, IEnemyState prevState)
         {
             Debug.Log("攻撃を開始します。");
@@ -320,17 +322,38 @@ namespace Musashi
 
         }
 
+        /// <summary>
+        /// memo：ここの処理は、修正中...
+        /// </summary>
+        /// <param name="owner"></param>
         void IEnemyState.OnUpdate(EnemyAI owner)
         {
-            owner.LookAtPlayer();
-            if (!owner.CanAttackPlayer())
+            if (owner.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
             {
-                owner.ChangeState(owner.EnemyIdle);
+                //攻撃アニメーションが終了時の処理
+                if (owner.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    owner.Animator.Play("Idle");
+                    onTimer = true;
+                }
+
+                if (!owner.CanAttackPlayer())
+                {
+                    owner.ChangeState(owner.EnemyIdle);
+                }
             }
 
-            if (owner.Attack != null)
+            if (onTimer)
             {
-                owner.Attack.Excute(owner);
+                timer += Time.deltaTime;
+                owner.LookAtPlayer();
+            }
+
+            if(timer > 1f)
+            {
+                timer = 0;
+                onTimer = false;
+                owner.Animator.Play("Attack");
             }
         }
     }
