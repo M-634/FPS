@@ -42,7 +42,7 @@ namespace Musashi
         [Range(1,100)]
         public int ammoAndMuzzleFlashPoolSize = 1;
 
-        public AudioClip shotgunLoadingClip;
+        public AudioClip shotgunLoadingSFX;
         #endregion
     }
 }

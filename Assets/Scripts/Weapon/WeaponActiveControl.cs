@@ -8,7 +8,6 @@ namespace Musashi
     /// Animatorのアクティブをいじるとアニメーションがバクるので、
     /// アクティブをいじるオブジェットを指定し、管理するクラス。
     /// </summary>
-    [RequireComponent(typeof(WeaponGunControl))]
     public class WeaponActiveControl : MonoBehaviour
     {
 

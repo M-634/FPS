@@ -10,9 +10,15 @@ namespace Musashi
     {
         WeaponSettingSOData weaponSetting;
 
+
+        private void OnEnable()
+        {
+            weaponSetting = target as WeaponSettingSOData;    
+        }
+
         public override void OnInspectorGUI()
         {
-            weaponSetting = target as WeaponSettingSOData;
+            //weaponSetting = target as WeaponSettingSOData;
 
             DrawGeneral();
 
@@ -69,7 +75,7 @@ namespace Musashi
             if (weaponSetting.weaponType == WeaponType.ShotGun)
             {
                 GUILayout.Label("Shotgun cartridge loading clip");
-                weaponSetting.shotgunLoadingClip = (AudioClip)EditorGUILayout.ObjectField(weaponSetting.shotgunLoadingClip, typeof(AudioClip), false);
+                weaponSetting.shotgunLoadingSFX = (AudioClip)EditorGUILayout.ObjectField(weaponSetting.shotgunLoadingSFX, typeof(AudioClip), false);
             }
             GUILayout.EndVertical();
             //Objcets
