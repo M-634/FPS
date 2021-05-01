@@ -46,8 +46,11 @@ namespace Musashi
             OnDropEvent += () =>
             {
                 Transform playerCamera = Camera.main.transform;
-                transform.position = playerCamera.position + playerCamera.forward * 2f;
-                transform.rotation = playerCamera.rotation;
+                transform.position = playerCamera.position + playerCamera.forward * 5f;
+                if (ItemType == ItemType.Rifle)
+                    transform.rotation = Quaternion.Euler(0, 0, 90f);
+                else
+                    transform.rotation = playerCamera.rotation;
                 gameObject.SetActive(true);
                 Drop(playerCamera);
             };
@@ -118,8 +121,8 @@ namespace Musashi
                 collider = GetComponent<Collider>();
 
             rb.useGravity = useGravity;
-            rb.collisionDetectionMode = mode;
             rb.isKinematic = isKinematic;
+            rb.collisionDetectionMode = mode;
             collider.isTrigger = isTrigger;
         }
     }
