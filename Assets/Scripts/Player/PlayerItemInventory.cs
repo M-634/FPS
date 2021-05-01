@@ -80,8 +80,6 @@ namespace Musashi
                 if (!itemSlots[i].IsEmpty && itemSlots[i].currentItemInSlot.ItemName == getItem.ItemName && !itemSlots[i].IsFilled)
                 {
                     itemSlots[i].AddItemInSlot(getItem);
-                    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-                    getItem.gameObject.SetActive(false);
                     return true;
                 }
 
@@ -89,8 +87,6 @@ namespace Musashi
                 if (itemSlots[i].IsEmpty)
                 {
                     itemSlots[i].SetInfo(getItem);
-                    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-                    getItem.gameObject.SetActive(false);
                     return true;
                 }
             }

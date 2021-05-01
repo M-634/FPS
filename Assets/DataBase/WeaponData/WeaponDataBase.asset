@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: WeaponDataBase
   m_EditorClassIdentifier: 
   weaponDataList:
-  - {fileID: 11400000, guid: 029f784818eb91148bcf5ce2c7534800, type: 2}
-  - {fileID: 11400000, guid: efca9c8712ec28c4ebed16895263e4f3, type: 2}
-  - {fileID: 11400000, guid: b5ec50ff137f2784694dac887fb29c3d, type: 2}
+  - {fileID: 11400000, guid: deb06da88f5be0246a664de557345ba3, type: 2}

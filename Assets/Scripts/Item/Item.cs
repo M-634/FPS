@@ -21,7 +21,7 @@ namespace Musashi
         public bool Stackable { get; private set; }
         public int MaxStacSize { get; private set; }
         public int StacSize { get; set; }
-        public bool canUseItem { get; set; } //アイテムを使用できたかどうか判定する
+        public bool CanUseItem { get; set; } //アイテムを使用できたかどうか判定する
 
         Rigidbody rb;
         new Collider collider;

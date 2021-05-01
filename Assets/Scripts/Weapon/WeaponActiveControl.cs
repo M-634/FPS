@@ -10,20 +10,14 @@ namespace Musashi
     /// </summary>
     public class WeaponActiveControl : MonoBehaviour
     {
-
-        public WeaponType kindOfWeapon;
-
         [SerializeField] GameObject[] switchActiveObjects;
-        [SerializeField] WeaponGunControl control;
+        [SerializeField] WeaponControl control;
         [SerializeField] AudioSource audioSource;
 
+        public WeaponControl Control => control;
         public bool ActiveSelf { get; private set; }
 
-        private void Awake()
-        {
-            kindOfWeapon = control.weaponType;
-        }
-
+  
         public void SetActive(bool value)
         {
             foreach (var item in switchActiveObjects)

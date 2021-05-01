@@ -28,7 +28,7 @@ namespace Musashi
                     else
                     {
                         healthControl.Heal(healPoint, healtime);//回復時間を実装する
-                        canUseItem = true;
+                        CanUseItem = true;
                         return;
                     }
                 }
@@ -41,7 +41,7 @@ namespace Musashi
             {
                 Debug.LogWarning($"PlayerHealthControlコンポーネントがPlayerにアタッチされていません");
             }
-            canUseItem = false;
+            CanUseItem = false;
         }
     }
 }

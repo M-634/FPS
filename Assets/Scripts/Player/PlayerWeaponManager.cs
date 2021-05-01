@@ -7,7 +7,7 @@ namespace Musashi
     /// </summary>
     public class PlayerWeaponManager : MonoBehaviour
     {
-        [SerializeField] WeaponDataBase weaponDataBase;//要らない
+        [SerializeField] WeaponDataBase weaponDataBase;
         /// <summary>playerの子どもに存在する武器。使用時にアクティブを切り替える</summary>
         [SerializeField] WeaponActiveControl[] activeControls;
         [SerializeField] WeaponSlot[] weaponSlots;
@@ -76,7 +76,7 @@ namespace Musashi
             {
                 if (weaponSlots[i].IsEmpty)
                 {
-                   // weaponSlots[i].SetInfo(weaponData);
+                    weaponSlots[i].SetInfo(getWeapon);
                     EquipWeapon(i);
                     return true;
                 }
@@ -88,7 +88,7 @@ namespace Musashi
             {
                 int temp = currentEquipmentWeaponSlotIndex;
                 weaponSlots[temp].DropObject();
-               // weaponSlots[temp].SetInfo(weaponData);
+                weaponSlots[temp].SetInfo(getWeapon);
                 EquipWeapon(temp);
                 return true;
             }
@@ -103,19 +103,18 @@ namespace Musashi
         /// <param name="index">スロットのインデックス</param>
         public void EquipWeapon(int index)
         {
-            EquipmentWeaponSetActiveFalse();
-
-            if (weaponSlots[index].IsEmpty) return;
+            //if (weaponSlots[index].IsEmpty)
+            //    EquipmentWeaponSetActiveFalse    
 
             for (int i = 0; i < activeControls.Length; i++)
             {
-                //if(weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeControls[i].kindOfWeapon)
-                //{
-                //    activeControls[i].SetActive(true);
-                //    currentEquipmentActiveWeaponsIndex = i;
-                //    currentEquipmentWeaponSlotIndex = index;
-                //    return;
-                //}
+                if (weaponSlots[index].currentItemInSlot.ItemName == activeControls[i].Control.weaponName)
+                {
+                    activeControls[i].SetActive(true);
+                    currentEquipmentActiveWeaponsIndex = i;
+                    currentEquipmentWeaponSlotIndex = index;
+                    return;
+                }
             }
             Debug.LogError("activeWeaponsに装備したい武器が存在しません。インスペクターにアタッチしてないと思われる");
         }
@@ -128,7 +127,7 @@ namespace Musashi
             if (IsEquipmentWeapon)
             {
                 var haveWeapon = activeControls[currentEquipmentWeaponSlotIndex];
-                haveWeapon.GetComponent<WeaponGunControl>().CancelAnimation();//memo: WeaponGunControl → 抽象化
+                haveWeapon.GetComponent<WeaponControl>().CancelAnimation();
                 haveWeapon.SetActive(false);
                 currentEquipmentActiveWeaponsIndex = -1;
                 currentEquipmentWeaponSlotIndex = -1;

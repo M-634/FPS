@@ -76,6 +76,8 @@ namespace Musashi
             maxStacSizeInSlot = getItem.MaxStacSize;
             StacSizeInSlot = getItem.StacSize;
             itemsInSlot.Enqueue(getItem);
+            getItem.gameObject.SetActive(false);
+            GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
         }
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace Musashi
         /// <summary>
         /// スロット内のデータを空にする
         /// </summary>
-        public void ResetInfo()
+        public virtual void ResetInfo()
         {
             icon.sprite = null;
             stackSizeInSlot = 0;
@@ -133,7 +135,7 @@ namespace Musashi
                 {
                     currentItemInSlot.OnUseEvent?.Invoke(playerInput.transform.gameObject);
 
-                    if (currentItemInSlot.canUseItem)
+                    if (currentItemInSlot.CanUseItem)
                     {
                         itemsInSlot.Dequeue();
                         Destroy(currentItemInSlot.gameObject);
@@ -155,7 +157,12 @@ namespace Musashi
                     {
                         currentItemInSlot = itemsInSlot.Peek();
                     }
-                    StacSizeInSlot--;
+
+
+                    if (currentItemInSlot.ItemType == ItemType.Rifle)
+                        ResetInfo();
+                    else
+                        StacSizeInSlot--;
                 }
 
                 yield return null;

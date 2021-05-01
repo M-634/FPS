@@ -17,6 +17,8 @@ namespace Musashi
 
             StacSizeInSlot = temp;
             itemsInSlot.Enqueue(getItem);
+            getItem.gameObject.SetActive(false);
+            GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
         }
     }
 }
