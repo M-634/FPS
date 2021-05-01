@@ -34,9 +34,14 @@ namespace Musashi
             {
                 stackSizeInSlot = value;
                 if (stackSizeInSlot > 0)
+                {
                     stackSize.text = stackSizeInSlot.ToString() + "/" + maxStacSizeInSlot.ToString();
+                }
                 else
-                    ResetInfo();
+                {
+                    if(currentItemInSlot.ItemType != ItemType.Rifle)
+                        ResetInfo();
+                }
             }
         }
 
@@ -81,10 +86,41 @@ namespace Musashi
         }
 
         /// <summary>
+        /// スロット内のアイテムを使う関数
+        /// </summary>
+        public virtual void UseItem()
+        {
+            currentItemInSlot.OnUseEvent?.Invoke(playerInput.transform.gameObject);
+
+            if (currentItemInSlot.CanUseItem)
+            {
+                itemsInSlot.Dequeue();
+                Destroy(currentItemInSlot.gameObject);
+                if (itemsInSlot.Count > 0)
+                {
+                    currentItemInSlot = itemsInSlot.Peek();
+                }
+                StacSizeInSlot--;
+            }
+        }
+
+        /// <summary>
         /// スロットないのアイテムを捨てる関数
         /// </summary>
-        /// <param name="worldPoint"></param>
-        public virtual void DropObject() { }
+        public virtual void DropItem() 
+        {
+            currentItemInSlot.OnDropEvent?.Invoke();
+            itemsInSlot.Dequeue();
+            if (itemsInSlot.Count > 0)
+            {
+                currentItemInSlot = itemsInSlot.Peek();
+            }
+
+            if (currentItemInSlot.ItemType == ItemType.Rifle)
+                ResetInfo();
+            else
+                StacSizeInSlot--;
+        }
 
         /// <summary>
         /// スロット内のデータを空にする
@@ -130,41 +166,11 @@ namespace Musashi
         {
             while (isSelected && !IsEmpty)
             {
-              
                 if (playerInput.UseItem)
-                {
-                    currentItemInSlot.OnUseEvent?.Invoke(playerInput.transform.gameObject);
-
-                    if (currentItemInSlot.CanUseItem)
-                    {
-                        itemsInSlot.Dequeue();
-                        Destroy(currentItemInSlot.gameObject);
-                        if (itemsInSlot.Count > 0)
-                        {
-                            currentItemInSlot = itemsInSlot.Peek();
-                        }
-                        StacSizeInSlot--;
-                    }
-                }
-
-
+                    UseItem();
                 if (playerInput.DropItem)
-                {
-                    // DropObject();
-                    currentItemInSlot.OnDropEvent?.Invoke();
-                    itemsInSlot.Dequeue();
-                    if (itemsInSlot.Count > 0)
-                    {
-                        currentItemInSlot = itemsInSlot.Peek();
-                    }
-
-
-                    if (currentItemInSlot.ItemType == ItemType.Rifle)
-                        ResetInfo();
-                    else
-                        StacSizeInSlot--;
-                }
-
+                    DropItem();
+                
                 yield return null;
             }
         }

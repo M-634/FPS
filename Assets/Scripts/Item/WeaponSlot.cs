@@ -7,7 +7,7 @@ namespace Musashi
 {
     public class WeaponSlot : SlotBase
     {
-        int slotNumber;
+        public int slotNumber;
         PlayerWeaponManager weaponManager;
         public void SetWeaponSlot(int slotNumber,PlayerWeaponManager weaponManager)
         {
@@ -15,11 +15,10 @@ namespace Musashi
             this.weaponManager = weaponManager;
         }
 
-        public override void ResetInfo()
+        public override void DropItem()
         {
-            base.ResetInfo();
-            //装備中の武器を解除する
-            weaponManager.EquipmentWeaponSetActiveFalse();
+            weaponManager.PutAwayCurrentWeapon();
+            base.DropItem();
         }
     }
 }

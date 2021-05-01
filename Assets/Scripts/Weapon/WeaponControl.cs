@@ -40,13 +40,24 @@ namespace Musashi
 
         [Header("Reference pick up weapon from Id")]
         public int ammoID;//拾った武器のIDを参照して、弾を管理する(publicはdebug用)
-        public int currentAmmo;//拾った武器のスタック数をセットする
 
         [Header("Set muzzle")]
         [SerializeField] Transform muzzle;
         [Header("Require Component")]
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] ReticleAnimation reticle;
+
+        private int currentAmmo;
+        public int CurrentAmmo 
+        {
+            get => currentAmmo; 
+            set 
+            {
+                currentAmmo = value;
+                if (ammoCounter)
+                    ammoCounter.Display(ref currentAmmo);
+            }
+        }
 
         float lastTimeShot = Mathf.NegativeInfinity;
         bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
@@ -149,7 +160,7 @@ namespace Musashi
                 if (animator)
                     animator.Play("Reload");
                 else
-                    currentAmmo = maxAmmo;
+                    CurrentAmmo = maxAmmo;
 
                 if (audioSource)
                     audioSource.Play(reloadSFX, audioSource.volume);
@@ -167,12 +178,12 @@ namespace Musashi
         {
             if (ammoCounter)
             {
-                currentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
-                ammoCounter.Display(ref currentAmmo);
+                CurrentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
+                //ammoCounter.Display(ref currentAmmo);
             }
             else
             {
-                currentAmmo = maxAmmo;
+                CurrentAmmo = maxAmmo;
             }
         }
 
@@ -242,9 +253,9 @@ namespace Musashi
 
         private void TryShot()
         {
-            if (currentAmmo < 1)
+            if (CurrentAmmo < 1)
             {
-                currentAmmo = 0;
+                CurrentAmmo = 0;
                 CanReload();
                 return;
             }
@@ -261,14 +272,15 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
+
             poolObjectManager.UsePoolObject(muzzle.position, muzzle.rotation, () => SetPoolObj());
 
             if (audioSource)
                 audioSource.Play(shotSFX, audioSource.volume);
 
-            currentAmmo--;
-            if (ammoCounter)
-                ammoCounter.Display(ref currentAmmo);
+            CurrentAmmo--;
+            //if (ammoCounter)
+            //    ammoCounter.Display(ref currentAmmo);
 
             if (reticle)
                 reticle.IsShot = true;

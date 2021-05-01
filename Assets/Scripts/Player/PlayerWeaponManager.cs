@@ -12,13 +12,14 @@ namespace Musashi
         [SerializeField] WeaponActiveControl[] activeControls;
         [SerializeField] WeaponSlot[] weaponSlots;
 
-        int currentEquipmentActiveWeaponsIndex = -1;//active
-        int currentEquipmentWeaponSlotIndex = -1;//slot
         bool canInputAction = true;
 
         PlayerInputManager playerInput;
 
-        public bool IsEquipmentWeapon => currentEquipmentActiveWeaponsIndex != -1;
+        //cheack 
+        public WeaponActiveControl currentActiveWeapon;
+        public WeaponSlot currentActiveSlot;
+        public bool HaveWeapon => currentActiveWeapon != null && currentActiveSlot != null;
 
         private void Start()
         {
@@ -42,7 +43,8 @@ namespace Musashi
             if (!canInputAction) return;
 
             var i = playerInput.SwichWeaponID;
-            if (i == -1 || i == currentEquipmentWeaponSlotIndex) return;
+            if (i == -1) return;
+            if (HaveWeapon && i == currentActiveSlot.slotNumber) return;
             EquipWeapon(i);
         }
 
@@ -84,12 +86,14 @@ namespace Musashi
 
 
             //装備中の武器と拾った武器を交換する
-            if (IsEquipmentWeapon)
+            if (HaveWeapon)
             {
-                int temp = currentEquipmentWeaponSlotIndex;
-                weaponSlots[temp].DropObject();
-                weaponSlots[temp].SetInfo(getWeapon);
-                EquipWeapon(temp);
+                currentActiveSlot.DropItem();
+                currentActiveWeapon.SetActive(false);
+
+                int i = currentActiveSlot.slotNumber;
+                weaponSlots[i].SetInfo(getWeapon);
+                EquipWeapon(i);
                 return true;
             }
 
@@ -101,45 +105,45 @@ namespace Musashi
         /// スロットのインデックスを指定して、スロット内の武器データとactiveWeaponsの武器データを照合し、武器を装備する
         /// </summary>
         /// <param name="index">スロットのインデックス</param>
-        public void EquipWeapon(int index)
+        public  void EquipWeapon(int index)
         {
-            //if (weaponSlots[index].IsEmpty)
-            //    EquipmentWeaponSetActiveFalse    
-
+            PutAwayCurrentWeapon();
             for (int i = 0; i < activeControls.Length; i++)
             {
-                if (weaponSlots[index].currentItemInSlot.ItemName == activeControls[i].Control.weaponName)
+                if (weaponSlots[index].currentItemInSlot == null) continue;
+
+                if(weaponSlots[index].currentItemInSlot.ItemName == activeControls[i].Control.weaponName)
                 {
                     activeControls[i].SetActive(true);
-                    currentEquipmentActiveWeaponsIndex = i;
-                    currentEquipmentWeaponSlotIndex = index;
+                    activeControls[i].Control.CurrentAmmo = weaponSlots[index].currentItemInSlot.StacSize;
+          
+                    currentActiveWeapon = activeControls[i];
+                    currentActiveSlot = weaponSlots[index];
                     return;
                 }
             }
-            Debug.LogError("activeWeaponsに装備したい武器が存在しません。インスペクターにアタッチしてないと思われる");
         }
 
         /// <summary>
-        /// 装備中の武器のアクティブを切り、各インデックスをリセットする
+        /// 装備中の武器と、スロットをはずす。
         /// </summary>
-        public void EquipmentWeaponSetActiveFalse()
+        public void PutAwayCurrentWeapon()
         {
-            if (IsEquipmentWeapon)
-            {
-                var haveWeapon = activeControls[currentEquipmentWeaponSlotIndex];
-                haveWeapon.GetComponent<WeaponControl>().CancelAnimation();
-                haveWeapon.SetActive(false);
-                currentEquipmentActiveWeaponsIndex = -1;
-                currentEquipmentWeaponSlotIndex = -1;
-            }
+            if (!HaveWeapon) return;
+            currentActiveSlot.currentItemInSlot.StacSize = currentActiveWeapon.Control.CurrentAmmo;
+
+            currentActiveWeapon.Control.CancelAnimation();
+            currentActiveWeapon.SetActive(false);
+            currentActiveWeapon = null;
+            currentActiveSlot = null;
         }
 
         private void ReciveInventoryEvent(bool value)
         {
             canInputAction = value;
-            if (IsEquipmentWeapon)
+            if (HaveWeapon)
             {
-                activeControls[currentEquipmentActiveWeaponsIndex].SetActive(value);
+                currentActiveWeapon.SetActive(value);
             }
         }
 

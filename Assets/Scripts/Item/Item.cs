@@ -15,12 +15,17 @@ namespace Musashi
         [SerializeField] ItemSettingSOData itemSetting;
 
         public int id;//識別id (ランダム生成)
+        [Range(1, 100)]
+        public int maxStackSize = 1;
+        [Range(1, 100)]
+        public int stackSize = 1;
+
         public string ItemName { get; private set; }
         public ItemType ItemType { get; private set; }
         public Sprite Icon { get; private set; }
         public bool Stackable { get; private set; }
-        public int MaxStacSize { get; private set; }
-        public int StacSize { get; set; }
+        public int MaxStacSize { get => maxStackSize; }
+        public int StacSize { get => stackSize; set => stackSize = value; }
         public bool CanUseItem { get; set; } //アイテムを使用できたかどうか判定する
 
         Rigidbody rb;
@@ -57,10 +62,10 @@ namespace Musashi
             }
             ItemName = itemSetting.itemName;
             ItemType = itemSetting.itemType;
-            Icon = itemSetting.Icon;
+            Icon = itemSetting.icon;
             Stackable = itemSetting.stackable;
-            MaxStacSize = itemSetting.maxStackSize;
-            StacSize = itemSetting.stackSize;
+            //MaxStacSize = itemSetting.maxStackSize;
+            //StacSize = itemSetting.stackSize;
         }
 
         public void Excute(GameObject player)

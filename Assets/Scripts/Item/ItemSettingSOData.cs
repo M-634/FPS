@@ -17,14 +17,5 @@ namespace Musashi
         public Sprite icon;
         public BaseItem itemPrefab;
         public bool stackable;
-        [Range(1,100)]
-        public int maxStackSize = 1;
-        [Range(1, 100)]
-        public int stackSize = 1;
-
-        public ItemType ItemType => itemType;
-        public Sprite Icon => icon;
-        public BaseItem ItemPrefab => itemPrefab;
-        public int MaxStackNumber => maxStackSize;
     }
 }
