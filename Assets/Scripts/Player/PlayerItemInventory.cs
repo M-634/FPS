@@ -29,7 +29,6 @@ namespace Musashi
                 foreach (var slot in itemSlots)
                 {
                     slot.SetInput(playerInput);
-                    slot.SetItemSlot(this);
                 }
             }
         }
