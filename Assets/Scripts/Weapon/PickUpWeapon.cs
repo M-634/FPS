@@ -10,16 +10,16 @@ namespace Musashi
     /// </summary>
     public class PickUpWeapon : CanPickUpObject
     {
-        public WeaponType kindOfWeapon;
+        //public WeaponType kindOfWeapon;
      
-        public override void OnPicked(GameObject player)
-        {
-            var canPickUp = player.GetComponent<PlayerWeaponManager>().CanPickUP(this);
-            if (canPickUp)
-            {
-                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-                Destroy(gameObject);
-            }
-        }
+        //public override void OnPicked(GameObject player)
+        //{
+        //    var canPickUp = player.GetComponent<PlayerWeaponManager>().CanPickUP(this);
+        //    if (canPickUp)
+        //    {
+        //        GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+        //        Destroy(gameObject);
+        //    }
+        //}
     }
 }

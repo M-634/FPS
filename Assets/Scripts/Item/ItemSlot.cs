@@ -8,13 +8,7 @@ namespace Musashi
     public class ItemSlot : SlotBase 
     {
         PlayerItemInventory itemInventory;
-        private ItemSettingSOData currentItemData;
-        public ItemSettingSOData CurrentItemData => currentItemData;
-
-        public override bool IsEmpty => currentItemData == null;
-
-        int stackNumber = 0;
-
+      
         /// <summary>
         /// 初期化時に PlayerItemInventoryクラスから呼ばれる関数
         /// </summary>
@@ -24,67 +18,38 @@ namespace Musashi
             itemInventory = _itemInventory;
         }
 
-        public override void SetInfo<T>(T getData)
-        {
-            currentItemData = getData as ItemSettingSOData;
-            if(currentItemData.Icon)
-                icon.sprite = currentItemData.Icon;
-
-            stackNumber++;
-            stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
-        }
-
-        public void AddItemInSlot(int getNumber)
+     
+        public void AddItemInSlot(Item getItem)
         {
             if (IsFilled) return;
-            stackNumber += getNumber;
-            if (stackNumber >= currentItemData.MaxStackNumber)
-            {
-                IsFilled = true;
-                stackNumber = currentItemData.MaxStackNumber;
-            }
-            stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
-        }
+            int temp = StacSizeInSlot + getItem.StacSize;
 
-        public override void UseObject(GameObject player)
-        {
-            if (IsEmpty) return;
+            if (temp > maxStacSizeInSlot)
+                temp = maxStacSizeInSlot;
 
-            var item = Instantiate(CurrentItemData.ItemPrefab);
-
-            //アイテムが使用できたならスタック数を減らす
-            if (item.CanUseObject(player))
-            {
-                stackNumber--;
-                stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
-                IsFilled = false;
-
-                if (stackNumber == 0)
-                    ResetInfo();
-
-                itemInventory.OpenAndCloseInventory();
-            }
+            StacSizeInSlot = temp;
+            itemsInSlot.Enqueue(getItem);
         }
 
         public override void DropObject()
         {
             if (IsEmpty) return;
-            var item = Instantiate(CurrentItemData.ItemPrefab, playerCamera.position + playerCamera.forward * 2f, Quaternion.identity);
-            item.Drop(playerCamera);
-            stackNumber--;
-            stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
-            IsFilled = false;
+            //var item = Instantiate(CurrentItemData.ItemPrefab, playerCamera.position + playerCamera.forward * 2f, Quaternion.identity);
+            //item.Drop(playerCamera);
+            //stackNumber--;
+            //stack.text = stackNumber.ToString() + " / " + currentItemData.MaxStackNumber.ToString();
+            //IsFilled = false;
 
-            if (stackNumber == 0)
-                ResetInfo();
+            //if (stackNumber == 0)
+            //    ResetInfo();
         }
 
-        public override void ResetInfo()
-        {
-            currentItemData = null;
-            icon.sprite = null;
-            stackNumber = 0;
-            stack.text = "";
-        }
+        //public override void ResetInfo()
+        //{
+        //    //currentItemData = null;
+        //    icon.sprite = null;
+        //    //stackNumber = 0;
+        //    //stack.text = "";
+        //}
     }
 }

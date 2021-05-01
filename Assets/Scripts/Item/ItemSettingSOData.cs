@@ -22,7 +22,7 @@ namespace Musashi
         [Range(1, 100)]
         public int stackSize = 1;
 
-        public ItemType KindOfItem => itemType;
+        public ItemType ItemType => itemType;
         public Sprite Icon => icon;
         public BaseItem ItemPrefab => itemPrefab;
         public int MaxStackNumber => maxStackSize;

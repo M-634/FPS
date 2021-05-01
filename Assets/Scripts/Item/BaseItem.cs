@@ -16,23 +16,23 @@ namespace Musashi
 
     public abstract class BaseItem : CanPickUpObject
     {
-        public ItemType itemType;
-        protected bool canPickUp = true;
-        protected bool canUseItem = true;
+        //public ItemType itemType;
+        //protected bool canPickUp = true;
+        //protected bool canUseItem = true;
 
-        public override void OnPicked(GameObject player)
-        {
-            canPickUp = player.GetComponent<PlayerItemInventory>().CanGetItem(this, 1);
-            if (canPickUp)
-            {
-                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-                Destroy(gameObject);
-            }
-        }
+        //public override void OnPicked(GameObject player)
+        //{
+        //    canPickUp = player.GetComponent<PlayerItemInventory>().CanGetItem(this, 1);
+        //    if (canPickUp)
+        //    {
+        //        GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+        //        Destroy(gameObject);
+        //    }
+        //}
 
-        public virtual bool CanUseObject(GameObject player)
-        {
-            return canUseItem;
-        }
+        //public virtual bool CanUseObject(GameObject player)
+        //{
+        //    return canUseItem;
+        //}
     }
 }

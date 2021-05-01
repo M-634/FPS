@@ -48,13 +48,13 @@ namespace Musashi
         /// </summary>
         /// <param name="getItem"></param>
         /// <returns></returns>
-        public bool CanGetItem(BaseItem getItem, int getNumber)
+        public bool CanGetItem(Item getItem)
         {
             foreach (var itemData in itemDataBase.ItemDataList)
             {
-                if (itemData.KindOfItem == getItem.itemType)
+                if (itemData.itemName == getItem.ItemName)
                 {
-                    return SearchItemSlot(itemData, getNumber);
+                    return SearchItemSlot(getItem);
                 }
             }
             Debug.LogWarning("データベースに該当するアイテムがありません");
@@ -63,11 +63,11 @@ namespace Musashi
 
 
         /// <summary>
-        /// 既にスロット内にあるアイテムかどうか調べる。
-        /// ないなら左側から順番に埋めていく
+        /// 既にスロット内にアイテムが存在するか調べる。
+        /// ないなら左側から順番に埋めていく。
         /// </summary>
         /// <returns></returns>
-        private bool SearchItemSlot(ItemSettingSOData getItemData, int getNumber)
+        private bool SearchItemSlot(Item getItem)
         {
             for (int i = 0; i < itemSlots.Length; i++)
             {
@@ -78,16 +78,20 @@ namespace Musashi
                 }
 
                 //同一アイテムがスロット内にあり,かつスタック数が満タンではない時はスタック数を足していく
-                if (!itemSlots[i].IsEmpty && itemSlots[i].CurrentItemData.KindOfItem == getItemData.KindOfItem && !itemSlots[i].IsFilled)
+                if (!itemSlots[i].IsEmpty && itemSlots[i].currentItemInSlot.ItemName == getItem.ItemName && !itemSlots[i].IsFilled)
                 {
-                    itemSlots[i].AddItemInSlot(getNumber);
+                    itemSlots[i].AddItemInSlot(getItem);
+                    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+                    getItem.gameObject.SetActive(false);
                     return true;
                 }
 
                 //スロットが空なら、アイテムデータをセットする
                 if (itemSlots[i].IsEmpty)
                 {
-                    itemSlots[i].SetInfo(getItemData);
+                    itemSlots[i].SetInfo(getItem);
+                    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+                    getItem.gameObject.SetActive(false);
                     return true;
                 }
             }

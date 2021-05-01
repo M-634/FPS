@@ -51,13 +51,13 @@ namespace Musashi
         /// </summary>
         /// <param name="getWeapon"></param>
         /// <returns></returns>
-        public bool CanPickUP(PickUpWeapon getWeapon)
+        public bool CanGetItem(Item getWeapon)
         {
             foreach (var weaponData in weaponDataBase.WeaponDataList)
             {
-                if (getWeapon.kindOfWeapon == weaponData.KindOfWeapon)
+                if (getWeapon.ItemName == weaponData.weaponName)
                 {
-                    return CanEquipWeapon(weaponData);
+                    return CanEquipWeapon(getWeapon);
                 }
             }
             Debug.LogWarning("武器データに存在しないため拾えません");
@@ -69,14 +69,14 @@ namespace Musashi
         /// </summary>
         /// <param name="weaponData"></param>
         /// <returns></returns>
-        public bool CanEquipWeapon(WeaponData weaponData)
+        public bool CanEquipWeapon(Item getWeapon)
         {
             //スロットに空きがあるか調べる
             for (int i = 0; i < weaponSlots.Length; i++)
             {
                 if (weaponSlots[i].IsEmpty)
                 {
-                    weaponSlots[i].SetInfo(weaponData);
+                   // weaponSlots[i].SetInfo(weaponData);
                     EquipWeapon(i);
                     return true;
                 }
@@ -88,7 +88,7 @@ namespace Musashi
             {
                 int temp = currentEquipmentWeaponSlotIndex;
                 weaponSlots[temp].DropObject();
-                weaponSlots[temp].SetInfo(weaponData);
+               // weaponSlots[temp].SetInfo(weaponData);
                 EquipWeapon(temp);
                 return true;
             }
@@ -109,13 +109,13 @@ namespace Musashi
 
             for (int i = 0; i < activeControls.Length; i++)
             {
-                if(weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeControls[i].kindOfWeapon)
-                {
-                    activeControls[i].SetActive(true);
-                    currentEquipmentActiveWeaponsIndex = i;
-                    currentEquipmentWeaponSlotIndex = index;
-                    return;
-                }
+                //if(weaponSlots[index].CurrentWeaponData.KindOfWeapon == activeControls[i].kindOfWeapon)
+                //{
+                //    activeControls[i].SetActive(true);
+                //    currentEquipmentActiveWeaponsIndex = i;
+                //    currentEquipmentWeaponSlotIndex = index;
+                //    return;
+                //}
             }
             Debug.LogError("activeWeaponsに装備したい武器が存在しません。インスペクターにアタッチしてないと思われる");
         }

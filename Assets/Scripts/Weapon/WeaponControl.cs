@@ -19,8 +19,8 @@ namespace Musashi
 
         #region Gun settings from WeaponSettingSOData 
         //general settings
-        [SerializeField] string weaponName;
-        private WeaponType weaponType;
+        public string weaponName;
+        public WeaponType weaponType;
         //Main settins
         private float shotDamage;
         private float shotPower;

@@ -2,7 +2,7 @@
 namespace Musashi
 {
     /// <summary>
-    /// インタラクティブなオブジェットが継承するインターファイス
+    /// プレイヤーとインタラクティブなオブジェットが継承するインターファイス
     /// </summary>
     public interface IInteractable
     {

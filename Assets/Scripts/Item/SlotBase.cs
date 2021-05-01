@@ -14,26 +14,44 @@ namespace Musashi
     /// スロットを左クリックしたらインベントリーを閉じてアイテムを使用する。
     /// 右クリックしたらアイテムを捨てる。
     /// </summary>
-    public abstract class SlotBase : MonoBehaviour, IPointerEnterHandler,IPointerExitHandler
+    public abstract class SlotBase : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] protected Image icon;
         [SerializeField] protected Image Outline;
         [SerializeField] protected TextMeshProUGUI keyCode;
         [SerializeField] protected Color highLightColor;
-        [SerializeField] protected TextMeshProUGUI stack;
+        [SerializeField] protected TextMeshProUGUI stackSize;
+
+        public Queue<Item> itemsInSlot;//アイテムスロットのみ
+        public Item currentItemInSlot;//次の使用時に使うアイテム
+
+        protected int maxStacSizeInSlot;
+        private int stackSizeInSlot;
+        public int StacSizeInSlot
+        {
+            get { return stackSizeInSlot; }
+            set
+            {
+                stackSizeInSlot = value;
+                if (stackSizeInSlot > 0)
+                    stackSize.text = stackSizeInSlot.ToString() + "/" + maxStacSizeInSlot.ToString();
+                else
+                    ResetInfo();
+            }
+        }
 
         bool isSelected = false;
+        public string KeyCode { set => keyCode.text = value; }
+        public virtual bool IsEmpty => stackSizeInSlot == 0;
+        public virtual bool IsFilled => stackSizeInSlot != 0 && stackSizeInSlot == maxStacSizeInSlot;
 
         protected PlayerInputManager playerInput;
-        public string KeyCode { set => keyCode.text = value; }
-        public virtual bool IsEmpty { get; set; } = true;
-        public virtual bool IsFilled { get; set; } = false;
+        protected Transform playerCamera;
 
-       protected Transform playerCamera;
-      
         protected virtual void Start()
         {
             playerCamera = Camera.main.transform;
+            itemsInSlot = new Queue<Item>();
         }
 
         /// <summary>
@@ -47,13 +65,18 @@ namespace Musashi
             playerInput = _playerInput;
         }
 
-        public virtual void SetInfo<T>(T getData) where T:ScriptableObject{}
-     
         /// <summary>
-        /// 継承先でアイテムスロットなら使用、武器スロットなら装備する処理を実装する。
-        /// その後、使用できたか、装備したらインベントリーを閉じる
+        /// 取得したアイテムをスロットにセットする関数。
         /// </summary>
-        public virtual void UseObject(GameObject player) {}
+        /// <param name="getItem"></param>
+        public virtual void SetInfo(Item getItem)
+        {
+            currentItemInSlot = getItem;
+            icon.sprite = getItem.Icon;
+            maxStacSizeInSlot = getItem.MaxStacSize;
+            StacSizeInSlot = getItem.StacSize;
+            itemsInSlot.Enqueue(getItem);
+        }
 
         /// <summary>
         /// スロットないのアイテムを捨てる関数
@@ -64,7 +87,15 @@ namespace Musashi
         /// <summary>
         /// スロット内のデータを空にする
         /// </summary>
-        public virtual void ResetInfo() { }
+        public void ResetInfo()
+        {
+            icon.sprite = null;
+            stackSizeInSlot = 0;
+            maxStacSizeInSlot = 0;
+            stackSize.text = "";
+            currentItemInSlot = null;
+            itemsInSlot.Clear();
+        }
 
         /// <summary>
         /// スロットの上にポインターが来たら、選択されたと判定する関数。
@@ -88,22 +119,45 @@ namespace Musashi
             Outline.color = Color.black;
             isSelected = false;
         }
-        
+
         /// <summary>
         /// スロットを選択を選択されている間、入力を受け付ける関数。
         /// </summary>
         /// <returns></returns>
         IEnumerator ReciveInteractiveAction()
         {
-            while (isSelected)
+            while (isSelected && !IsEmpty)
             {
+              
                 if (playerInput.UseItem)
-                    UseObject(playerInput.transform.gameObject);
+                {
+                    currentItemInSlot.OnUseEvent?.Invoke(playerInput.transform.gameObject);
+
+                    if (currentItemInSlot.canUseItem)
+                    {
+                        itemsInSlot.Dequeue();
+                        Destroy(currentItemInSlot.gameObject);
+                        if (itemsInSlot.Count > 0)
+                        {
+                            currentItemInSlot = itemsInSlot.Peek();
+                        }
+                        StacSizeInSlot--;
+                    }
+                }
+
 
                 if (playerInput.DropItem)
                 {
-                    DropObject();
+                    // DropObject();
+                    currentItemInSlot.OnDropEvent?.Invoke();
+                    itemsInSlot.Dequeue();
+                    if (itemsInSlot.Count > 0)
+                    {
+                        currentItemInSlot = itemsInSlot.Peek();
+                    }
+                    StacSizeInSlot--;
                 }
+
                 yield return null;
             }
         }

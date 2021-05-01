@@ -10,7 +10,6 @@ namespace Musashi
     {
         WeaponSettingSOData weaponSetting;
 
-
         private void OnEnable()
         {
             weaponSetting = target as WeaponSettingSOData;    

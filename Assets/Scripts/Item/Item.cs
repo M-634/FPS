@@ -6,13 +6,14 @@ using System;
 namespace Musashi
 {
     [RequireComponent(typeof(Rigidbody), typeof(Collider))]
-    public class Item : MonoBehaviour,IInteractable
+    public class Item : MonoBehaviour, IInteractable
     {
         public Action<GameObject> OnPickUpEvent;
         public Action<GameObject> OnUseEvent;
-
+        public Action OnDropEvent;
+       
         [SerializeField] ItemSettingSOData itemSetting;
-        
+
         public int id;//識別id (ランダム生成)
         public string ItemName { get; private set; }
         public ItemType ItemType { get; private set; }
@@ -20,6 +21,7 @@ namespace Musashi
         public bool Stackable { get; private set; }
         public int MaxStacSize { get; private set; }
         public int StacSize { get; set; }
+        public bool canUseItem { get; set; } //アイテムを使用できたかどうか判定する
 
         Rigidbody rb;
         new Collider collider;
@@ -27,6 +29,23 @@ namespace Musashi
         protected virtual void Start()
         {
             SetItemDataFromScriptableObject();
+
+            OnPickUpEvent += (GameObject player) =>
+            {
+                if (ItemType == ItemType.Rifle)
+                    player.GetComponent<PlayerWeaponManager>().CanGetItem(this);
+                else
+                    player.GetComponent<PlayerItemInventory>().CanGetItem(this);
+            };
+
+            OnDropEvent += () =>
+            {
+                Transform playerCamera = Camera.main.transform;
+                transform.position = playerCamera.position + playerCamera.forward * 2f;
+                transform.rotation = playerCamera.rotation;
+                gameObject.SetActive(true);
+                Drop(playerCamera);
+            };
         }
 
         private void SetItemDataFromScriptableObject()
@@ -48,6 +67,7 @@ namespace Musashi
         {
             OnPickUpEvent?.Invoke(player);
         }
+
 
         /// <summary>
         /// コンポーネントをアタッチした時に呼ばれる。
