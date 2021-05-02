@@ -26,7 +26,7 @@ MonoBehaviour:
   recoil: {x: 0, y: 0}
   aimCameraFOV: 55
   aimSpeed: 20
-  bullet: {fileID: 2259787257450939996, guid: 3744e971b409ff74cacda4c9d968c48e, type: 3}
+  bullet: {fileID: -409909776651488930, guid: 3744e971b409ff74cacda4c9d968c48e, type: 3}
   maxAmmo: 5
   ammoAndMuzzleFlashPoolSize: 3
   shotgunLoadingSFX: {fileID: 8300000, guid: a7e25831448a24641a37e2e398d0cda7, type: 3}

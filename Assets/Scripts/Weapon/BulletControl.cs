@@ -10,16 +10,13 @@ namespace Musashi
     /// </summary>
     public class BulletControl : MonoBehaviour
     {
-
-        [SerializeField] GameObject bloodVFX;
-        [SerializeField] GameObject decal;
-
-        [SerializeField] float lifeTime = 1f;
+        [SerializeField] int lifeTime = 1;
 
         float shotDamage;
         float shotPower;
 
         float timer;
+        bool init = true;
 
         HitVFXManager hitVFXManager;
         Rigidbody rb;
@@ -32,6 +29,11 @@ namespace Musashi
       
             prevPos = transform.position;
             rb.velocity = transform.forward * shotPower;
+
+            if (init == false)
+                gameObject.SetActive(false, lifeTime);
+           
+             init = false;
         }
 
         public void SetInfo(float shotPower,float shotDamage,HitVFXManager hitVFXManager)
@@ -43,13 +45,13 @@ namespace Musashi
 
         private void Update()
         {
-            timer += Time.deltaTime;
+            //timer += Time.deltaTime;
 
-            if(timer > lifeTime)
-            {
-                timer = 0f;
-                gameObject.SetActive(false);
-            }
+            //if (timer > lifeTime)
+            //{
+            //    timer = 0f;
+            //    gameObject.SetActive(false);
+            //}
 
             //hit check
             RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
@@ -66,8 +68,8 @@ namespace Musashi
                 {
                     //Instantiate(decal, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f));
                     hitVFXManager.PoolObjectManager.UsePoolObject(hitVFXManager.DecalVFX, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f), hitVFXManager.SetPoolObj);
+                    hitVFXManager.AudioSource.Play(hitVFXManager.HitSFX);
                 }
-                gameObject.SetActive(false);
             }
             prevPos = transform.position;
         }

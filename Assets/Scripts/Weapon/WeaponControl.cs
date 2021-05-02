@@ -43,8 +43,9 @@ namespace Musashi
         [SerializeField] WeaponSettingSOData weaponSetting;
         [Header("Manual is single shot. Automatic is rapid fire")]
         [SerializeField] WeaponShootType weaponShootType;
-        [Header("Set muzzle")]
+        [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
+        [SerializeField] Transform poolObjectParent;
         [Header("Require Component")]
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] ReticleAnimation reticle;
@@ -90,6 +91,8 @@ namespace Musashi
 
             if (!muzzle)
                 muzzle = this.transform;
+            if (!poolObjectParent)
+                poolObjectParent = this.transform;
 
             currentAmmo = maxAmmo;
 
@@ -146,8 +149,8 @@ namespace Musashi
         {
             var poolObj = poolObjectManager.InstantiatePoolObj();
 
-            var b = Instantiate(bullet, transform);
-            var mF = Instantiate(muzzleFalsh, transform);
+            var b = Instantiate(bullet, poolObjectParent);
+            var mF = Instantiate(muzzleFalsh, poolObjectParent);
 
             poolObj.AddObj(b.gameObject);
             poolObj.AddObj(mF.gameObject);

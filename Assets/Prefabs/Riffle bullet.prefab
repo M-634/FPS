@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23033829210902890}
   - component: {fileID: 54702508974386156}
   - component: {fileID: 96332004534772270}
-  - component: {fileID: 2259787257450939996}
+  - component: {fileID: -409909776651488930}
   m_Layer: 0
   m_Name: Riffle bullet
   m_TagString: Untagged
@@ -195,7 +195,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
---- !u!114 &2259787257450939996
+--- !u!114 &-409909776651488930
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,6 +207,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed062af19fafb24c95827ef46f3a191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bloodVFX: {fileID: 987344610385491406, guid: bc87df58283efe54ca5ee5e6b8718f88, type: 3}
-  decal: {fileID: 1479812948273588, guid: 75d25fbf0af4c2d4f9e4d34675a304ff, type: 3}
-  lifeTime: 1
+  lifeTime: 3

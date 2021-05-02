@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5664894901593072665}
   - component: {fileID: 7069840191309764376}
   - component: {fileID: 6316094081853433336}
-  - component: {fileID: 8323559870894526872}
+  - component: {fileID: 6374680576354957824}
   m_Layer: 0
   m_Name: AK74M Fire Particle
   m_TagString: Untagged
@@ -4712,7 +4712,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 3062613153ea47f42a262f065fec69d1, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4756,7 +4755,7 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &8323559870894526872
+--- !u!114 &6374680576354957824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4765,10 +4764,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3299639556288241786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c329a8b7f6cf54dad133e3b9e97f00, type: 3}
+  m_Script: {fileID: 11500000, guid: 308e54d730aab8d489705d40d2c9c1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 0.5
+  lifeTime: 1
 --- !u!1 &5701202039201125059
 GameObject:
   m_ObjectHideFlags: 0
@@ -9479,7 +9478,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 77d08210df254d845885518314593544, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

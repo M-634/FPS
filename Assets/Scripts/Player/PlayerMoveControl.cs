@@ -32,7 +32,7 @@ namespace Musashi
         bool isGround;
 
         [Header("Camera")]
-        [SerializeField] PlayerCamaraControl cameraControl;
+        //[SerializeField] PlayerCamaraControl cameraControl;
 
         [Header("Audio")]
         [SerializeField] float footstepSFXFrequency = 0.3f;
@@ -42,13 +42,13 @@ namespace Musashi
         [SerializeField] AudioClip landSFX;
         AudioSource audioSource;
 
-        PlayerAnimationController animationController;
+        //PlayerAnimationController animationController;
         PlayerInputManager playerInput;
         CharacterController characterController;
 
         private void Start()
         {
-            animationController = GetComponent<PlayerAnimationController>();
+            //animationController = GetComponent<PlayerAnimationController>();
             playerInput = GetComponent<PlayerInputManager>();
             characterController = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
