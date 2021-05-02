@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41c13ad2bd541a8479ee27f4f54d3eb1, type: 3}
-  m_Name: AK47M
+  m_Name: ShutGun
   m_EditorClassIdentifier: 
-  weaponName: AK47M
-  weaponType: 2
+  weaponName: ShutGun
+  weaponType: 0
   weaponIcon: {fileID: 0}
-  muzzleFlash: {fileID: 7069840191309764376, guid: b1a9f9bb6d6221940a3b0433b8549edb,
+  muzzleFlash: {fileID: 198918201244081940, guid: 46d4eddf844d2514fb79db11ee0f38e9,
     type: 3}
-  shotSFX: {fileID: 8300000, guid: 58d88e3cbcb9ff143a0dfd112ade1e79, type: 3}
-  reloadSFX: {fileID: 8300000, guid: a583b87ae0d8568438ce93ece5a6b773, type: 3}
+  shotSFX: {fileID: 8300000, guid: 66aad6b55a3b54a40ad2cc0928fef073, type: 3}
+  reloadSFX: {fileID: 8300000, guid: d2275ecd4bfd2944296775cd759a4ecf, type: 3}
   emptySFX: {fileID: 8300000, guid: 2f79ad7952b593347a5b597889ba9be9, type: 3}
-  shotDamage: 11
+  shotDamage: 100
   shotPower: 100
-  fireRate: 0
+  fireRate: 5
   recoil: {x: 0, y: 0}
-  aimCameraFOV: 50
+  aimCameraFOV: 55
   aimSpeed: 20
   bullet: {fileID: 2259787257450939996, guid: 3744e971b409ff74cacda4c9d968c48e, type: 3}
-  maxAmmo: 20
-  ammoAndMuzzleFlashPoolSize: 8
-  shotgunLoadingSFX: {fileID: 0}
+  maxAmmo: 5
+  ammoAndMuzzleFlashPoolSize: 3
+  shotgunLoadingSFX: {fileID: 8300000, guid: a7e25831448a24641a37e2e398d0cda7, type: 3}

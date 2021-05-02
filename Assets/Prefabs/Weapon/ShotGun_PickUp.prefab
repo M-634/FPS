@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2445599449569530224}
   - component: {fileID: 2445599449569530225}
   - component: {fileID: 2445599449569530238}
-  - component: {fileID: 2445599449569530239}
+  - component: {fileID: 3558537320897004066}
   m_Layer: 15
   m_Name: ShotGun_PickUp
   m_TagString: Untagged
@@ -111,7 +111,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2445599449569530239
+--- !u!114 &3558537320897004066
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,7 +120,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2445599449569530236}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51538afef9410c445848332248e4fe82, type: 3}
+  m_Script: {fileID: 11500000, guid: a1b79f2feb120394a8b3d21fe1cf01ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kindOfWeapon: 1
+  itemSetting: {fileID: 11400000, guid: b4e0887f34e87604fbc2cf4ebded6549, type: 2}
+  id: 0
+  maxStackSize: 5
+  stackSize: 5

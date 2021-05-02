@@ -2450,8 +2450,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6718654215965856580}
   - component: {fileID: 3726578781071605310}
-  - component: {fileID: 7738923249941455177}
   - component: {fileID: 7738923249941455190}
+  - component: {fileID: 8815212414057521233}
+  - component: {fileID: 3607387268567410541}
   m_Layer: 0
   m_Name: Shotgun_Userable
   m_TagString: Untagged
@@ -2495,34 +2496,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7738923249941455177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7738923249941455191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9545f8c454d0d7243a08c21493fb73b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kindOfWeapon: 1
-  weaponShootType: 0
-  muzzle: {fileID: 6579477964808295300}
-  bulletPrefab: {fileID: 0}
-  muzzleFalsh: {fileID: 0}
-  initPoolNumber: 0
-  ammoCounter: {fileID: 0}
-  maxAmmo: 7
-  shotPower: 100
-  shotDamage: 50
-  shotRateTime: 5
-  aimCameraFOV: 55
-  aimSpeed: 20
-  shotClip: {fileID: 8300000, guid: 66aad6b55a3b54a40ad2cc0928fef073, type: 3}
-  ReloadClip: {fileID: 8300000, guid: a7e25831448a24641a37e2e398d0cda7, type: 3}
-  reticle: {fileID: 0}
 --- !u!82 &7738923249941455190
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2619,6 +2592,44 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8815212414057521233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7738923249941455191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0116151db53756e4297897728d1cf820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponSetting: {fileID: 11400000, guid: c3a61e398ef29ad4b875a8cb34c23b56, type: 2}
+  weaponShootType: 0
+  weaponName: ShutGun
+  weaponType: 0
+  ammoID: 0
+  muzzle: {fileID: 6579477964808295300}
+  ammoCounter: {fileID: 0}
+  reticle: {fileID: 0}
+--- !u!114 &3607387268567410541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7738923249941455191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 357cfd0ba28e87447a2c4d3a8045ccc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  switchActiveObjects:
+  - {fileID: 1840929876894054338}
+  - {fileID: 2986648588955244573}
+  - {fileID: 6579477964808295301}
+  control: {fileID: 8815212414057521233}
+  audioSource: {fileID: 7738923249941455190}
 --- !u!1 &8142743079391237216
 GameObject:
   m_ObjectHideFlags: 0

@@ -88,10 +88,10 @@ namespace Musashi
             //装備中の武器と拾った武器を交換する
             if (HaveWeapon)
             {
-                currentActiveSlot.DropItem();
-                currentActiveWeapon.SetActive(false);
-
                 int i = currentActiveSlot.slotNumber;
+                currentActiveWeapon.SetActive(false);
+                currentActiveSlot.DropItem();
+
                 weaponSlots[i].SetInfo(getWeapon);
                 EquipWeapon(i);
                 return true;
