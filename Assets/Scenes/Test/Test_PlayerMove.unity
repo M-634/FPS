@@ -4740,37 +4740,37 @@ PrefabInstance:
     - target: {fileID: 5140869026363875168, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5140958031699888098, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5142324257459735038, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5142451303827551098, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5142500574164980308, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5142533376270903362, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5142723003290930540, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5143094976410848197, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
@@ -4785,7 +4785,7 @@ PrefabInstance:
     - target: {fileID: 5143094976410848197, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5143094976410848197, guid: 49b7cdf564560ce4ca540cfba1bb4fc4,
         type: 3}
@@ -5184,7 +5184,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 2046203726675178863}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6573675264505380521}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0116151db53756e4297897728d1cf820, type: 3}
   m_Name: 
@@ -5196,7 +5196,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6573675264505380521}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}

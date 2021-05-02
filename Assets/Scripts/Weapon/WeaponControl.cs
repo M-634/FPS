@@ -14,12 +14,13 @@ namespace Musashi
             Manual, Automatic,
         }
 
-        [SerializeField] WeaponSettingSOData weaponSetting;
-        [SerializeField] WeaponShootType weaponShootType;
+        #region Field
 
         #region Gun settings from WeaponSettingSOData 
         //general settings
+        [HideInInspector]
         public string weaponName;
+        [HideInInspector]
         public WeaponType weaponType;
         //Main settins
         private float shotDamage;
@@ -39,14 +40,16 @@ namespace Musashi
         #endregion
 
         [Header("Reference pick up weapon from Id")]
-        public int ammoID;//拾った武器のIDを参照して、弾を管理する(publicはdebug用)
-
+        [SerializeField] WeaponSettingSOData weaponSetting;
+        [Header("Manual is single shot. Automatic is rapid fire")]
+        [SerializeField] WeaponShootType weaponShootType;
         [Header("Set muzzle")]
         [SerializeField] Transform muzzle;
         [Header("Require Component")]
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] ReticleAnimation reticle;
 
+        //public int ammoID;//拾った武器のIDを参照して、弾を管理する(publicはdebug用)
         private int currentAmmo;
         public int CurrentAmmo
         {
@@ -72,6 +75,7 @@ namespace Musashi
         PlayerEventManager playerEvent;
         Animator animator;
         AudioSource audioSource;
+        #endregion
 
         private void Awake()
         {
@@ -280,10 +284,12 @@ namespace Musashi
                 return;
             }
 
-            if (lastTimeShot + fireRate < Time.time)
+            if (Time.time > lastTimeShot + fireRate)
             {
                 if (animator)
                     animator.Play("Shot");
+                else
+                    Shot();
             }
         }
 

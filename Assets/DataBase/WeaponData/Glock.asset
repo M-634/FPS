@@ -22,7 +22,7 @@ MonoBehaviour:
   emptySFX: {fileID: 8300000, guid: 2f79ad7952b593347a5b597889ba9be9, type: 3}
   shotDamage: 40
   shotPower: 150
-  fireRate: 2
+  fireRate: 0.2
   recoil: {x: 0, y: 0}
   aimCameraFOV: 50
   aimSpeed: 20
