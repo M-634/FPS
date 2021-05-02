@@ -21,6 +21,7 @@ namespace Musashi
 
         float timer;
 
+        HitVFXManager hitVFXManager;
         Rigidbody rb;
         Vector3 prevPos;
 
@@ -33,10 +34,11 @@ namespace Musashi
             rb.velocity = transform.forward * shotPower;
         }
 
-        public void SetInfo(ref float shotPower,ref float shotDamage)
+        public void SetInfo(float shotPower,float shotDamage,HitVFXManager hitVFXManager)
         {
             this.shotDamage = shotDamage;
             this.shotPower = shotPower;
+            this.hitVFXManager = hitVFXManager;
         }
 
         private void Update()
@@ -56,12 +58,14 @@ namespace Musashi
             {
                 if (hits[i].collider.TryGetComponent(out IDamageable target))
                 {
-                    Instantiate(bloodVFX, hits[i].point, Quaternion.LookRotation(hits[i].normal));
+                    //Instantiate(bloodVFX, hits[i].point, Quaternion.LookRotation(hits[i].normal));
+                    hitVFXManager.PoolObjectManager.UsePoolObject(hitVFXManager.BloodVFX, hits[i].point, Quaternion.LookRotation(hits[i].normal), hitVFXManager.SetPoolObj);
                     target.OnDamage(shotDamage);
                 }
                 else
                 {
-                    Instantiate(decal, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f));
+                    //Instantiate(decal, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f));
+                    hitVFXManager.PoolObjectManager.UsePoolObject(hitVFXManager.DecalVFX, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f), hitVFXManager.SetPoolObj);
                 }
                 gameObject.SetActive(false);
             }

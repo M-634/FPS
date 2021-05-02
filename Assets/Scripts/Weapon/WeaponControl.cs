@@ -48,9 +48,22 @@ namespace Musashi
         [Header("Require Component")]
         [SerializeField] AmmoCounter ammoCounter;
         [SerializeField] ReticleAnimation reticle;
+        [SerializeField] HitVFXManager hitVFXManager;
 
-        //public int ammoID;//拾った武器のIDを参照して、弾を管理する(publicはdebug用)
-        private int currentAmmo;
+        int currentAmmo;
+        float lastTimeShot = Mathf.NegativeInfinity;
+        bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
+        bool isAiming = false;
+     
+        PoolObjectManager poolObjectManager;
+        PlayerInputManager playerInput;
+        PlayerCamaraControl playerCamara;
+        PlayerEventManager playerEvent;
+        Animator animator;
+        AudioSource audioSource;
+        #endregion
+
+        #region Property
         public int CurrentAmmo
         {
             get => currentAmmo;
@@ -63,20 +76,9 @@ namespace Musashi
                     ammoCounter.Display(currentAmmo);
             }
         }
-
-        float lastTimeShot = Mathf.NegativeInfinity;
-        bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
-        bool isAiming = false;
-
-
-        PoolObjectManager poolObjectManager;
-        PlayerInputManager playerInput;
-        PlayerCamaraControl playerCamara;
-        PlayerEventManager playerEvent;
-        Animator animator;
-        AudioSource audioSource;
         #endregion
 
+        #region Method
         private void Awake()
         {
             SetDataFromWeaponSettingSOData();
@@ -131,10 +133,10 @@ namespace Musashi
             ammmoAndMuzzleFlashPoolsize = weaponSetting.ammoAndMuzzleFlashPoolSize;
         }
 
-        public void InitializePoolObject(int num = 1)
+        public void InitializePoolObject(int poolSize = 1)
         {
             poolObjectManager = new PoolObjectManager();
-            for (int i = 0; i < num; i++)
+            for (int i = 0; i < poolSize; i++)
             {
                 SetPoolObj();
             }
@@ -150,7 +152,7 @@ namespace Musashi
             poolObj.AddObj(b.gameObject);
             poolObj.AddObj(mF.gameObject);
 
-            b.SetInfo(ref shotPower, ref shotDamage);
+            b.SetInfo(shotPower, shotDamage,hitVFXManager);
             poolObj.SetActiveAll(false);
             return poolObj;
         }
@@ -299,7 +301,7 @@ namespace Musashi
         public void Shot()
         {
 
-            poolObjectManager.UsePoolObject(muzzle.position, muzzle.rotation, () => SetPoolObj());
+            poolObjectManager.UsePoolObject(muzzle.position, muzzle.rotation, SetPoolObj);
 
             if (audioSource)
                 audioSource.Play(shotSFX, audioSource.volume);
@@ -372,5 +374,6 @@ namespace Musashi
                 });
             }
         }
+        #endregion
     }
 }
