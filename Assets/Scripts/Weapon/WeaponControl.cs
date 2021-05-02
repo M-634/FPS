@@ -218,8 +218,11 @@ namespace Musashi
         public void ShutGunPullEnd()
         {
             canAction = true;
-            audioSource.Play(shotgunLoadingSFX);
-            animator.SetBool("ReloadCycleEnd", false);
+            if (weaponType == WeaponType.ShotGun)
+            {
+                audioSource.Play(shotgunLoadingSFX);
+                animator.SetBool("ReloadCycleEnd", false);
+            }
         }
 
         /// <summary>
@@ -256,7 +259,8 @@ namespace Musashi
 
         void SetAim()
         {
-            animator.SetBool("Aim", isAiming);
+            if(animator)
+                 animator.SetBool("Aim", isAiming);
             if (isAiming)
             {
                 playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);

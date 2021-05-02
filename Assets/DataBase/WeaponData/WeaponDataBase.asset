@@ -15,3 +15,4 @@ MonoBehaviour:
   weaponDataList:
   - {fileID: 11400000, guid: ad6c1a48dacc79a4fb86081693e1bc85, type: 2}
   - {fileID: 11400000, guid: c3a61e398ef29ad4b875a8cb34c23b56, type: 2}
+  - {fileID: 11400000, guid: 6b3c2cae97f737d4db15d0692d02b242, type: 2}
