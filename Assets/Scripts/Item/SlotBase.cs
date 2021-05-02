@@ -29,7 +29,10 @@ namespace Musashi
         private int stackSizeInSlot;
         public int StacSizeInSlot
         {
-            get { return stackSizeInSlot; }
+            get
+            {
+                return stackSizeInSlot;
+            }
             set
             {
                 stackSizeInSlot = value;

@@ -21,7 +21,7 @@ namespace Musashi
             text.enabled = false;
         }
 
-        public void Display(ref int ammoNum)
+        public void Display(int ammoNum)
         {
             text.enabled = true;
             text.text = ammoNum.ToString() + " | " + sumNumberOfAmmoInInventory.ToString();
@@ -42,7 +42,7 @@ namespace Musashi
         /// </summary>
         /// <param name="maxAmmo">各銃の最大装填数</param>
         /// <param name="currentAmmo">現在の弾の装填数</param>
-        public  bool CanReloadAmmo(ref int maxAmmo,ref int currentAmmo)
+        public  bool CanReloadAmmo(int maxAmmo, int currentAmmo)
         {
             int diff = maxAmmo - currentAmmo;
             if (diff <= 0) return false;
@@ -63,7 +63,7 @@ namespace Musashi
         /// 実際にリロード出来る弾数
         /// </summary>
         /// <returns></returns>
-       public int ReloadAmmoNumber(ref int maxAmmo, ref int currentAmmo)
+       public int ReloadAmmoNumber(int maxAmmo,  int currentAmmo)
         {
             int diff = maxAmmo - currentAmmo;
 
@@ -76,6 +76,18 @@ namespace Musashi
             int temp = currentAmmo + sumNumberOfAmmoInInventory;
             sumNumberOfAmmoInInventory = 0;
             return temp;
+        }
+
+        /// <summary>
+        /// ショットガンのリロード。一発ずつ行う
+        /// </summary>
+        /// <returns></returns>
+        public int ReloadAmmNumber()
+        {
+            sumNumberOfAmmoInInventory--;
+            if (sumNumberOfAmmoInInventory < 0)
+                sumNumberOfAmmoInInventory = 0;
+            return 1;
         }
     }
 }

@@ -14,12 +14,10 @@ namespace Musashi
        
         [SerializeField] ItemSettingSOData itemSetting;
 
-        public int id;//識別id (ランダム生成)
-        [Range(1, 100)]
-        public int maxStackSize = 1;
-        [Range(1, 100)]
-        public int stackSize = 1;
-
+        [SerializeField] int id;//識別id (ランダム生成)
+        [SerializeField,Range(1, 100)] int maxStackSize = 1;
+        [SerializeField,Range(1, 100)] int stackSize = 1;
+        [SerializeField] float dropPosOffset = 1f;
         public string ItemName { get; private set; }
         public ItemType ItemType { get; private set; }
         public Sprite Icon { get; private set; }
@@ -46,7 +44,7 @@ namespace Musashi
             OnDropEvent += () =>
             {
                 Transform playerCamera = Camera.main.transform;
-                transform.position = playerCamera.position + playerCamera.forward * 5f;
+                transform.position = playerCamera.position + playerCamera.forward * dropPosOffset;
                 if (ItemType == ItemType.Rifle)
                     transform.rotation = Quaternion.Euler(0, 0, 90f);
                 else
@@ -85,6 +83,7 @@ namespace Musashi
             SetRigdBodyAndColliderProperty(true, false, CollisionDetectionMode.Discrete, true);
             this.gameObject.layer = LayerMask.NameToLayer("Interactable");
         }
+
         /// <summary>
         /// インベントリからアイテムを捨てる時に呼ばれる関数
         /// </summary>

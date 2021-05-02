@@ -115,10 +115,11 @@ namespace Musashi
                 if(weaponSlots[index].currentItemInSlot.ItemName == activeControls[i].Control.weaponName)
                 {
                     activeControls[i].SetActive(true);
-                    activeControls[i].Control.CurrentAmmo = weaponSlots[index].currentItemInSlot.StacSize;
-          
                     currentActiveWeapon = activeControls[i];
                     currentActiveSlot = weaponSlots[index];
+
+                    currentActiveWeapon.Control.CurrentAmmo = weaponSlots[index].currentItemInSlot.StacSize;
+                    currentActiveSlot.StacSizeInSlot = weaponSlots[index].currentItemInSlot.StacSize;
                     return;
                 }
             }
@@ -131,16 +132,26 @@ namespace Musashi
         {
             if (!HaveWeapon) return;
             currentActiveSlot.currentItemInSlot.StacSize = currentActiveWeapon.Control.CurrentAmmo;
-
+       
             currentActiveWeapon.Control.CancelAnimation();
             currentActiveWeapon.SetActive(false);
             currentActiveWeapon = null;
             currentActiveSlot = null;
         }
 
+        /// <summary>
+        /// インベントリの開閉イベントの通知を受ける関数
+        /// </summary>
+        /// <param name="value">false : Open Inventory</param>
         private void ReciveInventoryEvent(bool value)
         {
             canInputAction = value;
+
+            if (!value && HaveWeapon)
+            {
+                currentActiveSlot.StacSizeInSlot = currentActiveWeapon.Control.CurrentAmmo;
+            }
+
             if (HaveWeapon)
             {
                 currentActiveWeapon.SetActive(value);

@@ -7,7 +7,7 @@ namespace Musashi
     /// <summary>
     /// プレイヤーの入力処理に応じて武器を制御するクラス
     /// </summary>
-    public class WeaponControl : MonoBehaviour,IPoolUser<WeaponControl>
+    public class WeaponControl : MonoBehaviour, IPoolUser<WeaponControl>
     {
         private enum WeaponShootType
         {
@@ -48,14 +48,16 @@ namespace Musashi
         [SerializeField] ReticleAnimation reticle;
 
         private int currentAmmo;
-        public int CurrentAmmo 
+        public int CurrentAmmo
         {
-            get => currentAmmo; 
-            set 
+            get => currentAmmo;
+            set
             {
                 currentAmmo = value;
+                if (currentAmmo > maxAmmo)
+                    currentAmmo = maxAmmo;
                 if (ammoCounter)
-                    ammoCounter.Display(ref currentAmmo);
+                    ammoCounter.Display(currentAmmo);
             }
         }
 
@@ -93,7 +95,7 @@ namespace Musashi
         /// </summary>
         private void SetDataFromWeaponSettingSOData()
         {
-            if(weaponSetting == null)
+            if (weaponSetting == null)
             {
                 Debug.LogError("武器データがアサインされていません！");
                 return;
@@ -106,7 +108,7 @@ namespace Musashi
             shotSFX = weaponSetting.shotSFX;
             reloadSFX = weaponSetting.reloadSFX;
             emptySFX = weaponSetting.emptySFX;
-            if(weaponType == WeaponType.ShotGun)
+            if (weaponType == WeaponType.ShotGun)
             {
                 shotgunLoadingSFX = weaponSetting.shotgunLoadingSFX;
             }
@@ -154,7 +156,7 @@ namespace Musashi
         /// </summary>
         private void CanReload()
         {
-            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(ref maxAmmo, ref currentAmmo) : true;
+            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(maxAmmo, currentAmmo) : true;
             if (canReload)
             {
                 if (animator)
@@ -162,12 +164,14 @@ namespace Musashi
                 else
                     CurrentAmmo = maxAmmo;
 
-                if (audioSource)
+
+                if (audioSource && weaponType != WeaponType.ShotGun)
                     audioSource.Play(reloadSFX, audioSource.volume);
             }
             else
             {
                 //弾切れ！
+                audioSource.Play(emptySFX);
             }
         }
 
@@ -178,31 +182,44 @@ namespace Musashi
         {
             if (ammoCounter)
             {
-                CurrentAmmo = ammoCounter.ReloadAmmoNumber(ref maxAmmo, ref currentAmmo);
-                //ammoCounter.Display(ref currentAmmo);
+                CurrentAmmo = ammoCounter.ReloadAmmoNumber(maxAmmo, currentAmmo);
             }
             else
             {
                 CurrentAmmo = maxAmmo;
             }
         }
-
-        /// <summary>
-        ///アニメーションイベントから呼ばれる関数
-        ///単発銃のリロード
-        /// </summary>
-        public void AutoBeginningRelod()
+        public void ShutGunCycleReload()
         {
+            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            if (canReload)
+            {
+                if (ammoCounter)
+                    CurrentAmmo += ammoCounter.ReloadAmmNumber();
+                else
+                    CurrentAmmo++;
 
+                if (audioSource)
+                    audioSource.Play(reloadSFX, audioSource.volume);
+
+                if (CurrentAmmo == maxAmmo)
+                    animator.SetBool("ReloadCycleEnd", true);
+
+            }
+            else
+            {
+                animator.SetBool("ReloadCycleEnd", true);
+            }
         }
-
-        /// <summary>
-        /// アニメーションイベントから呼ばれる関数。
-        /// 単発銃のリロード終了
-        /// </summary>
-        public void AutoEndRelod()
+        public void ShutGunPullStart()
         {
-
+            canAction = false;
+        }
+        public void ShutGunPullEnd()
+        {
+            canAction = true;
+            audioSource.Play(shotgunLoadingSFX);
+            animator.SetBool("ReloadCycleEnd", false);
         }
 
         /// <summary>
@@ -212,7 +229,6 @@ namespace Musashi
         {
             animator.Play("Idle");
         }
-
 
         void Update()
         {
@@ -279,8 +295,9 @@ namespace Musashi
                 audioSource.Play(shotSFX, audioSource.volume);
 
             CurrentAmmo--;
+
             //if (ammoCounter)
-            //    ammoCounter.Display(ref currentAmmo);
+            //    ammoCounter.Display(currentAmmo);
 
             if (reticle)
                 reticle.IsShot = true;
@@ -299,7 +316,7 @@ namespace Musashi
         public void OnEnable()
         {
             if (ammoCounter)
-                ammoCounter.Display(ref currentAmmo);
+                ammoCounter.Display(currentAmmo);
 
             if (reticle)
                 reticle.IsEquipingGun = true;
