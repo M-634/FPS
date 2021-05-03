@@ -17,26 +17,32 @@ public class ReticleAnimation : MonoBehaviour
 
     public bool IsShot { get; set; }
 
-    bool isEquipingGun = false;
-    public bool IsEquipingGun
+    bool isDefult = true;
+    public bool IsDefult
     {
-        get { return isEquipingGun; }
+        get { return isDefult; }
         set
         {
-            defult.enabled = !value;
-            top.enabled = value;
-            bottom.enabled = value;
-            left.enabled = value;
-            right.enabled = value;
-            isEquipingGun = value;
+            defult.enabled = value;
+            top.enabled = !value;
+            bottom.enabled = !value;
+            left.enabled = !value;
+            right.enabled = !value;
+            isDefult = value;
         }
     }
+   
+    private void Start()
+    {
+        IsDefult = true;
+    }
 
-
-    // Update is called once per frame
+    /// <summary>
+    /// memo: 暇な時に、DoTweenを使った処理に変えること（優先度は低い）
+    /// </summary>
     void Update()
     {
-        if (!IsEquipingGun) return;
+        if (IsDefult) return;
 
         top.rectTransform.anchoredPosition = new Vector2(top.rectTransform.anchoredPosition.x, Mathf.Lerp(top.rectTransform.anchoredPosition.y, startPosValue, Time.deltaTime * coolSpeed));
         bottom.rectTransform.anchoredPosition = new Vector2(bottom.rectTransform.anchoredPosition.x, Mathf.Lerp(bottom.rectTransform.anchoredPosition.y, -startPosValue, Time.deltaTime * coolSpeed));

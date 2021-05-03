@@ -273,10 +273,14 @@ namespace Musashi
             if (isAiming)
             {
                 playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);
+                if (reticle)
+                    reticle.gameObject.SetActive(false);
             }
             else
             {
                 playerCamara.SetNormalFovOfCamera(aimSpeed);
+                if (reticle)
+                    reticle.gameObject.SetActive(true);
             }
         }
 
@@ -334,9 +338,8 @@ namespace Musashi
                 ammoCounter.Display(currentAmmo);
 
             if (reticle)
-                reticle.IsEquipingGun = true;
-
-
+                reticle.IsDefult = false;
+      
             playerEvent = transform.GetComponentInParent<PlayerEventManager>();
             if (playerEvent)
             {
@@ -360,7 +363,7 @@ namespace Musashi
                 ammoCounter.Text.enabled = false;
 
             if (reticle)
-                reticle.IsEquipingGun = false;
+                reticle.IsDefult = true;           
 
             if (playerEvent)
             {
