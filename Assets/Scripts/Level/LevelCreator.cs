@@ -105,7 +105,7 @@ namespace Musashi.Level
             levelFloor.transform.localScale = Vector3.one;
             levelFloor.GetComponent<MeshFilter>().mesh = mesh;
             levelFloor.GetComponent<MeshRenderer>().material = material;
-
+            levelFloor.transform.parent = transform;
             levelObjectList.Add(levelFloor);
         }
 

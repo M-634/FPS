@@ -34,10 +34,10 @@ namespace Musashi.Level
             allSpaceNodes = bsp.PrepareNodesCollection(maxIterations, roomWidthMin, roomLengthMin);
             List<Node> roomSpaces = StructurHelper.TraverseGraphToExtractLowestLeafes(bsp.RootNode);
 
-            //部屋の大きさをランダムに再定義して、部屋のリストに加える
-            //RoomGenerator roomGenerator = new RoomGenerator(maxIterations, roomLengthMin, roomWidthMin);
-            //List<RoomNode> roomList = roomGenerator.GenerateRoomsInGivienSpaces(roomSpaces,roomBottomCornerModifier, roomTopCornerModifier, roomOffset);
-            return new List<Node>(roomSpaces);
+            //空間の頂点を再定義（小さくする）して、最終的な空間の頂点を決める
+            RoomGenerator roomGenerator = new RoomGenerator(maxIterations, roomLengthMin, roomWidthMin);
+            List<RoomNode> roomList = roomGenerator.GenerateRoomsInGivienSpaces(roomSpaces, roomBottomCornerModifier, roomTopCornerModifier, roomOffset);
+            return new List<Node>(roomList);
         }
     }
 }
