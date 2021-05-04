@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 111413427}
   - component: {fileID: 111413426}
   m_Layer: 0
-  m_Name: LevelGenerator
+  m_Name: LevelCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,6 +150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ff4666b705ef32479f2d6927fdf9c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dungeonwidth: 100
+  dungeonLength: 100
+  roomWidthMin: 25
+  roomLengthMin: 25
+  maxIterations: 1
+  corridorWidth: 5
 --- !u!4 &111413427
 Transform:
   m_ObjectHideFlags: 0
@@ -357,7 +363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &1834163256
 MeshCollider:
   m_ObjectHideFlags: 0

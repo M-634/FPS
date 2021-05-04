@@ -12,7 +12,7 @@ namespace Musashi.Level
     public class Line
     {
         Orientation orientation;
-        Vector2Int coordinates;//方向ベクトル {(x,0) or (0, y)}
+        Vector2Int coordinates;//x = a or y = a (aは任意の整数)の直線
         public Line(Orientation orientation,Vector2Int coordinates)
         {
             this.orientation = orientation;

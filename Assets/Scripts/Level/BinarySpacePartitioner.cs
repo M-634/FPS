@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Musashi.Level
 {
     /// <summary>
-    /// BSPアルゴリズムのメイン部分。
+    /// BSPアルゴリズムのメイン部分。空間を切るための線を引く。 空間を切る。切った空間をノードとして集める。
     /// </summary>
     public class BinarySpacePartitioner
     {
@@ -50,13 +50,37 @@ namespace Musashi.Level
             Line line = GetLineDividingSpaece(currentNode.BottomLeftAreaCorner, currentNode.TopRightAreaCorner,
                 roomWidthMin, roomLengthMin);
 
-            RoomNode node1, node2;//切った後の２つの部屋(node)
+            RoomNode node1, node2;//切った後の２つの空間を用意する.
             if(line.Orientation == Orientation.Horizontal)
             {
+                //横に切った場合(下を１とする)
                 node1 = new RoomNode(currentNode.BottomLeftAreaCorner, new Vector2Int(currentNode.TopRightAreaCorner.x, line.Coordinates.y)
                     , currentNode
                     , currentNode.TreeLayerIndex + 1);
+
+                node2 = new RoomNode(new Vector2Int(currentNode.BottomLeftAreaCorner.x,line.Coordinates.y),currentNode.TopRightAreaCorner
+                 , currentNode
+                 , currentNode.TreeLayerIndex + 1);
             }
+            else
+            {
+                //縦に切った場合(左を１とする)
+                node1 = new RoomNode(currentNode.BottomLeftAreaCorner, new Vector2Int(line.Coordinates.x, currentNode.TopRightAreaCorner.x)
+                  , currentNode
+                  , currentNode.TreeLayerIndex + 1); ;
+
+                node2 = new RoomNode(new Vector2Int(line.Coordinates.x,currentNode.BottomLeftAreaCorner.y), currentNode.TopRightAreaCorner
+                 , currentNode
+                 , currentNode.TreeLayerIndex + 1);
+            }
+            AddNewNodeToCollections(listToReturn, graph, node1);
+            AddNewNodeToCollections(listToReturn, graph, node2);
+        }
+
+        private void AddNewNodeToCollections(List<RoomNode> listToReturn, Queue<RoomNode> graph, RoomNode node)
+        {
+            listToReturn.Add(node);
+            graph.Enqueue(node);
         }
 
         /// <summary>
