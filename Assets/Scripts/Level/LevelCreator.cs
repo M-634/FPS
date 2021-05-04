@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Musashi.Level
@@ -24,19 +25,43 @@ namespace Musashi.Level
         [SerializeField] int corridorWidth;
         /// <summary>ステージのマテリアル</summary>
         [SerializeField] Material material;
+        [Range(0.0f, 0.3f)]
+        [SerializeField] float roomBottomCornerModifier;
+        [Range(0.7f, 1.0f)]
+        [SerializeField] float roomTopCornerModifier;
+        [Range(0, 2)]
+        [SerializeField] int roomOffset;
+        [SerializeField] GameObject wallVertical; 
+        [SerializeField] GameObject wallHorizontal;
+        List<Vector3Int> possibleDoorVerticalPosition;
+        List<Vector3Int> possibleDoorHorizontalPosition;
+        List<Vector3Int> possibleWallHorizontalPosition;
+        List<Vector3Int> possibleWallVerticalPosition;
+
+
+
+
+        private List<GameObject> levelObjectList;
 
         private void Start()
         {
             CreateDungeon();
         }
 
-        private void CreateDungeon()
+        public async void CreateDungeon()
         {
+            if (levelObjectList != null && levelObjectList.Count > 0)
+                DeletDungeon();
+            else
+                levelObjectList = new List<GameObject>();
+
             LevelGenerator generator = new LevelGenerator(dungeonwidth, dungeonLength);
-            var listOfRooms = generator.CalculateRooms(maxIterations, roomWidthMin, roomLengthMin);
+            var listOfRooms = generator.CalculateRooms(maxIterations, roomWidthMin, roomLengthMin,roomBottomCornerModifier,roomTopCornerModifier,roomOffset,corridorWidth);
+
             for(int i = 0; i < listOfRooms.Count; i++)
             {
                 CreateMesh(listOfRooms[i].BottomLeftAreaCorner, listOfRooms[i].TopRightAreaCorner);
+                await Task.Delay(1000 * 1);
             }
         }
 
@@ -74,12 +99,23 @@ namespace Musashi.Level
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
-            GameObject levelFloor = new GameObject("Mesh" + bottomLeftCorner, typeof(MeshFilter), typeof(MeshRenderer));
+            GameObject levelFloor = new GameObject("Mesh" + bottomLeftCorner + topRightCorner, typeof(MeshFilter), typeof(MeshRenderer));
 
             levelFloor.transform.position = Vector3.zero;
             levelFloor.transform.localScale = Vector3.one;
             levelFloor.GetComponent<MeshFilter>().mesh = mesh;
             levelFloor.GetComponent<MeshRenderer>().material = material;
+
+            levelObjectList.Add(levelFloor);
+        }
+
+        
+        public void DeletDungeon()
+        {
+            if(Application.isPlaying)
+                levelObjectList.ForEach(obj => Destroy(obj));
+            else
+                levelObjectList.ForEach(obj => DestroyImmediate(obj));
         }
 
     }

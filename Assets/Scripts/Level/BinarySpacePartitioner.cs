@@ -28,10 +28,12 @@ namespace Musashi.Level
             {
                 iterations++;
                 RoomNode currentNode = graph.Dequeue();
-                if(currentNode.Width >= roomWidthMin * 2 || currentNode.Length >= roomLengthMin * 2)
-                {
+
+                if (currentNode.Width <= roomWidthMin || currentNode.Length <= roomLengthMin)
+                    continue;
+
+                if (currentNode.Width > roomWidthMin * 2 || currentNode.Length > roomLengthMin * 2) 
                     SplitTheSpace(currentNode, listToReturn, roomLengthMin, roomWidthMin, graph);
-                }
             }
 
             return listToReturn;
@@ -51,28 +53,33 @@ namespace Musashi.Level
                 roomWidthMin, roomLengthMin);
 
             RoomNode node1, node2;//切った後の２つの空間を用意する.
-            if(line.Orientation == Orientation.Horizontal)
+            if (line.Orientation == Orientation.Horizontal)
             {
                 //横に切った場合(下を１とする)
                 node1 = new RoomNode(currentNode.BottomLeftAreaCorner, new Vector2Int(currentNode.TopRightAreaCorner.x, line.Coordinates.y)
                     , currentNode
                     , currentNode.TreeLayerIndex + 1);
 
-                node2 = new RoomNode(new Vector2Int(currentNode.BottomLeftAreaCorner.x,line.Coordinates.y),currentNode.TopRightAreaCorner
+                node2 = new RoomNode(new Vector2Int(currentNode.BottomLeftAreaCorner.x, line.Coordinates.y), currentNode.TopRightAreaCorner
                  , currentNode
                  , currentNode.TreeLayerIndex + 1);
             }
             else
             {
                 //縦に切った場合(左を１とする)
-                node1 = new RoomNode(currentNode.BottomLeftAreaCorner, new Vector2Int(line.Coordinates.x, currentNode.TopRightAreaCorner.x)
+                node1 = new RoomNode(currentNode.BottomLeftAreaCorner, new Vector2Int(line.Coordinates.x, currentNode.TopRightAreaCorner.y)
                   , currentNode
-                  , currentNode.TreeLayerIndex + 1); ;
+                  , currentNode.TreeLayerIndex + 1);
 
-                node2 = new RoomNode(new Vector2Int(line.Coordinates.x,currentNode.BottomLeftAreaCorner.y), currentNode.TopRightAreaCorner
+                node2 = new RoomNode(new Vector2Int(line.Coordinates.x, currentNode.BottomLeftAreaCorner.y), currentNode.TopRightAreaCorner
                  , currentNode
                  , currentNode.TreeLayerIndex + 1);
             }
+
+            //切った後の空間が各辺の最小値を下回っていないかチェック。
+            if (node1.Width < roomWidthMin || node1.Length < roomLengthMin) return;
+            if (node2.Width < roomWidthMin || node2.Length < roomLengthMin) return;
+
             AddNewNodeToCollections(listToReturn, graph, node1);
             AddNewNodeToCollections(listToReturn, graph, node2);
         }
@@ -94,23 +101,34 @@ namespace Musashi.Level
         private Line GetLineDividingSpaece(Vector2Int bottomLeftAreaCorner, Vector2Int topRightAreaCorner, int roomWidthMin, int roomLengthMin)
         {
             Orientation orientation;
-            bool lengthStatus = (topRightAreaCorner.y - bottomLeftAreaCorner.y) >= 2 * roomWidthMin;
-            bool widthStatus = (topRightAreaCorner.x - bottomLeftAreaCorner.x) >= 2 * roomWidthMin;
 
-            if(lengthStatus && widthStatus)
-            {
-                orientation = (Orientation)(UnityEngine.Random.Range(0, 2));
-            }
-            else if(widthStatus)
-            {
-                orientation = Orientation.Horizontal;
-            }
-            else
-            {
+            //空間（部屋）の縦と横の長さを計算し、長い辺の方から切る。縦横が等しいならランダム。
+            int lx = topRightAreaCorner.x - bottomLeftAreaCorner.x;
+            int ly = topRightAreaCorner.y - bottomLeftAreaCorner.y;
+
+            if (lx > ly)
                 orientation = Orientation.Vertival;
-            }
+            else if (ly > lx)
+                orientation = Orientation.Horizontal;
+            else
+                orientation = (Orientation)UnityEngine.Random.Range(0, 2);
+
+            //bool lengthStatus = (topRightAreaCorner.y - bottomLeftAreaCorner.y) >= 2 * roomWidthMin;
+            //bool widthStatus = (topRightAreaCorner.x - bottomLeftAreaCorner.x) >= 2 * roomWidthMin;
+            //if (lengthStatus && widthStatus)
+            //{
+            //    orientation = (Orientation)(UnityEngine.Random.Range(0, 2));
+            //}
+            //else if (widthStatus)
+            //{
+            //    orientation = Orientation.Horizontal;
+            //}
+            //else
+            //{
+            //    orientation = Orientation.Vertival;
+            //}
             return new Line(orientation,
-                GetCoodinatesFororientation(orientation, bottomLeftAreaCorner, topRightAreaCorner, roomWidthMin, roomLengthMin));
+                GetCoodinatesForOrientation(orientation, bottomLeftAreaCorner, topRightAreaCorner, roomWidthMin, roomLengthMin));
         }
 
         /// <summary>
@@ -122,16 +140,32 @@ namespace Musashi.Level
         /// <param name="roomWidthMin"></param>
         /// <param name="roomLengthMin"></param>
         /// <returns></returns>
-        private Vector2Int GetCoodinatesFororientation(Orientation orientation, Vector2Int bottomLeftAreaCorner, Vector2Int topRightAreaCorner, int roomWidthMin, int roomLengthMin)
+        private Vector2Int GetCoodinatesForOrientation(Orientation orientation, Vector2Int bottomLeftAreaCorner, Vector2Int topRightAreaCorner, int roomWidthMin, int roomLengthMin)
         {
-            Vector2Int coordinates;
-            if(orientation == Orientation.Horizontal)
+            //辺の中点を求める。その後求めた中点と空間の頂点とのそれぞれ中点を求め、その範囲内からランダムに切る直線を求める。
+            //空間を切る直線が、空間外に出てしまうことを防ぐため。
+            Vector2Int coordinates;//直線
+            int mP;//中点
+            int subMp1;//頂点と中点の間の中点その１
+            int subMp2;//頂点と中点の間の中点その2
+
+            if (orientation == Orientation.Horizontal)
             {
-                coordinates = new Vector2Int(0, UnityEngine.Random.Range(bottomLeftAreaCorner.y + roomLengthMin, topRightAreaCorner.y - roomLengthMin));
+                //coordinates = new Vector2Int(0, UnityEngine.Random.Range(bottomLeftAreaCorner.y + roomLengthMin, topRightAreaCorner.y - roomLengthMin));
+                mP = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.y, topRightAreaCorner.y);
+                subMp1 = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.y, mP);
+                subMp2 = StructurHelper.CalculateMiddlePoint(mP, topRightAreaCorner.y);
+
+                coordinates = new Vector2Int(0, UnityEngine.Random.Range(subMp1, subMp2));
             }
             else
             {
-                coordinates = new Vector2Int(UnityEngine.Random.Range(bottomLeftAreaCorner.x + roomWidthMin, topRightAreaCorner.x - roomWidthMin),0);
+                //coordinates = new Vector2Int(UnityEngine.Random.Range(bottomLeftAreaCorner.x + roomWidthMin, topRightAreaCorner.x - roomWidthMin), 0);
+                mP = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.x, topRightAreaCorner.x);
+                subMp1 = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.x, mP);
+                subMp2 = StructurHelper.CalculateMiddlePoint(mP, topRightAreaCorner.x);
+
+                coordinates = new Vector2Int(UnityEngine.Random.Range(subMp1, subMp2),0);
             }
             return coordinates;
         }

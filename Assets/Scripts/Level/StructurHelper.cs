@@ -50,11 +50,6 @@ namespace Musashi.Level
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="boundaryLeftPoint"></param>
-        /// <param name="boundaryRightPoint"></param>
-        /// <param name="pointModifier">0.1f < pointModifire < 0.5 </param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public static Vector2Int GeneraterBottomLeftConerBetween(Vector2Int boundaryLeftPoint, Vector2Int boundaryRightPoint, float pointModifier, int offset)
         {
             int minX = boundaryLeftPoint.x + offset;
@@ -71,11 +66,6 @@ namespace Musashi.Level
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="boundaryLeftPoint"></param>
-        /// <param name="boundaryRightPoint"></param>
-        /// <param name="pointModifier">0.5< point Modifier < 1f</param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
         public static Vector2Int GeneraterTopRightCornerConerBetween(Vector2Int boundaryLeftPoint, Vector2Int boundaryRightPoint, float pointModifier, int offset)
         {
             int minX = boundaryLeftPoint.x + offset;
@@ -88,5 +78,26 @@ namespace Musashi.Level
                 UnityEngine.Random.Range((int)(minY + (maxY - minY) * pointModifier),maxY)
                 );
         }
+
+
+        public static Vector2Int CalculateMiddlePoint(Vector2Int v1, Vector2Int v2)
+        {
+            Vector2 sum = v1 + v2;
+            Vector2 tempVector = sum / 2;
+            return new Vector2Int((int)tempVector.x, (int)tempVector.y);
+        }
+
+        public static int CalculateMiddlePoint(int v1,int v2)
+        {
+            return (v1 + v2) / 2;//余りは切り捨て
+        }
+    }
+
+    public enum RelativePosition
+    {
+        Up,
+        Down,
+        Right,
+        Left
     }
 }

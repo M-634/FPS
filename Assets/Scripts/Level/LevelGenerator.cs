@@ -25,7 +25,8 @@ namespace Musashi.Level
         /// <param name="roomWidthMin"></param>
         /// <param name="roomLengthMin"></param>
         /// <returns></returns>
-        public List<Node> CalculateRooms(int maxIterations, int roomWidthMin, int roomLengthMin)
+        public List<Node> CalculateRooms(int maxIterations, int roomWidthMin, int roomLengthMin
+            ,float roomBottomCornerModifier,float roomTopCornerModifier,int roomOffset,int corridorWidth)
         {
             //BSPアルゴリズムで、空間を切断していき、部屋を定義していく。
             BinarySpacePartitioner bsp = new BinarySpacePartitioner(dungeonwidth, dungeonLength);
@@ -34,9 +35,9 @@ namespace Musashi.Level
             List<Node> roomSpaces = StructurHelper.TraverseGraphToExtractLowestLeafes(bsp.RootNode);
 
             //部屋の大きさをランダムに再定義して、部屋のリストに加える
-            RoomGenerator roomGenerator = new RoomGenerator(maxIterations, roomLengthMin, roomWidthMin);
-            List<RoomNode> roomList = roomGenerator.GenerateRoomsInGivienSpaces(roomSpaces);
-            return new List<Node>(roomList);
+            //RoomGenerator roomGenerator = new RoomGenerator(maxIterations, roomLengthMin, roomWidthMin);
+            //List<RoomNode> roomList = roomGenerator.GenerateRoomsInGivienSpaces(roomSpaces,roomBottomCornerModifier, roomTopCornerModifier, roomOffset);
+            return new List<Node>(roomSpaces);
         }
     }
 }
