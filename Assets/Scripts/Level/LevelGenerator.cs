@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Musashi.Level
@@ -7,7 +8,7 @@ namespace Musashi.Level
     public class LevelGenerator
     {
         RoomNode rootNode;
-        List<RoomNode> allSpaceNodes = new List<RoomNode>();
+        List<RoomNode> allNodesCollection = new List<RoomNode>();
 
         private int dungeonwidth;
         private int dungeonLength;
@@ -25,19 +26,24 @@ namespace Musashi.Level
         /// <param name="roomWidthMin"></param>
         /// <param name="roomLengthMin"></param>
         /// <returns></returns>
-        public List<Node> CalculateRooms(int maxIterations, int roomWidthMin, int roomLengthMin
+        public List<Node> CalculateDungeon(int maxIterations, int roomWidthMin, int roomLengthMin
             ,float roomBottomCornerModifier,float roomTopCornerModifier,int roomOffset,int corridorWidth)
         {
             //BSPアルゴリズムで、空間を切断していき、部屋を定義していく。
             BinarySpacePartitioner bsp = new BinarySpacePartitioner(dungeonwidth, dungeonLength);
             //木構造のデータ構造からノードを全て回収し、その名からリーフノード（部屋）を見つけてリスト化する。
-            allSpaceNodes = bsp.PrepareNodesCollection(maxIterations, roomWidthMin, roomLengthMin);
-            List<Node> roomSpaces = StructurHelper.TraverseGraphToExtractLowestLeafes(bsp.RootNode);
+            allNodesCollection = bsp.PrepareNodesCollection(maxIterations, roomWidthMin, roomLengthMin);
+            List<Node> roomSpaces = StructureHelper.TraverseGraphToExtractLowestLeafes(bsp.RootNode);
 
             //空間の頂点を再定義（小さくする）して、最終的な空間の頂点を決める
             RoomGenerator roomGenerator = new RoomGenerator(maxIterations, roomLengthMin, roomWidthMin);
             List<RoomNode> roomList = roomGenerator.GenerateRoomsInGivienSpaces(roomSpaces, roomBottomCornerModifier, roomTopCornerModifier, roomOffset);
-            return new List<Node>(roomList);
+
+            CorridorsGenrator corridorsGenrator = new CorridorsGenrator();
+            var corridorList = corridorsGenrator.CreateCorridor(allNodesCollection, corridorWidth);
+
+
+            return new List<Node>(roomList).Concat(corridorList).ToList();
         }
     }
 }

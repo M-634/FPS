@@ -15,7 +15,7 @@ namespace Musashi.Level
         public Vector2Int BottomLeftAreaCorner { get; set; }
         public Vector2Int BottomRightAreaCorner { get; set; }
         public Vector2Int TopRightAreaCorner { get; set; }
-        public Vector2Int TopLeftAreaCroner { get; set; }
+        public Vector2Int TopLeftAreaCorner { get; set; }
         public Node Parent { get; set; }
         public int TreeLayerIndex { get; set; }
 

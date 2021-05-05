@@ -152,18 +152,18 @@ namespace Musashi.Level
             if (orientation == Orientation.Horizontal)
             {
                 //coordinates = new Vector2Int(0, UnityEngine.Random.Range(bottomLeftAreaCorner.y + roomLengthMin, topRightAreaCorner.y - roomLengthMin));
-                mP = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.y, topRightAreaCorner.y);
-                subMp1 = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.y, mP);
-                subMp2 = StructurHelper.CalculateMiddlePoint(mP, topRightAreaCorner.y);
+                mP = StructureHelper.CalculateMiddlePoint(bottomLeftAreaCorner.y, topRightAreaCorner.y);
+                subMp1 = StructureHelper.CalculateMiddlePoint(bottomLeftAreaCorner.y, mP);
+                subMp2 = StructureHelper.CalculateMiddlePoint(mP, topRightAreaCorner.y);
 
                 coordinates = new Vector2Int(0, UnityEngine.Random.Range(subMp1, subMp2));
             }
             else
             {
                 //coordinates = new Vector2Int(UnityEngine.Random.Range(bottomLeftAreaCorner.x + roomWidthMin, topRightAreaCorner.x - roomWidthMin), 0);
-                mP = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.x, topRightAreaCorner.x);
-                subMp1 = StructurHelper.CalculateMiddlePoint(bottomLeftAreaCorner.x, mP);
-                subMp2 = StructurHelper.CalculateMiddlePoint(mP, topRightAreaCorner.x);
+                mP = StructureHelper.CalculateMiddlePoint(bottomLeftAreaCorner.x, topRightAreaCorner.x);
+                subMp1 = StructureHelper.CalculateMiddlePoint(bottomLeftAreaCorner.x, mP);
+                subMp2 = StructureHelper.CalculateMiddlePoint(mP, topRightAreaCorner.x);
 
                 coordinates = new Vector2Int(UnityEngine.Random.Range(subMp1, subMp2),0);
             }

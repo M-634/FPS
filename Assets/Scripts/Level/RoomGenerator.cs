@@ -48,7 +48,7 @@ namespace Musashi.Level
                 space.BottomLeftAreaCorner = new Vector2Int(space.BottomLeftAreaCorner.x + roomOffset, space.BottomLeftAreaCorner.y + roomOffset);
                 space.TopRightAreaCorner = new Vector2Int(space.TopRightAreaCorner.x - roomOffset, space.TopRightAreaCorner.y - roomOffset);
                 space.BottomRightAreaCorner = new Vector2Int(space.TopRightAreaCorner.x - roomOffset, space.BottomLeftAreaCorner.y + roomOffset);
-                space.TopLeftAreaCroner = new Vector2Int(space.BottomLeftAreaCorner.x + roomOffset, space.TopRightAreaCorner.y - roomOffset);
+                space.TopLeftAreaCorner = new Vector2Int(space.BottomLeftAreaCorner.x + roomOffset, space.TopRightAreaCorner.y - roomOffset);
 
                 listToReturn.Add((RoomNode)space); 
             }

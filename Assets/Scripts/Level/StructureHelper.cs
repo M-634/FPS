@@ -4,18 +4,17 @@ using UnityEngine;
 
 namespace Musashi.Level
 {
-    public static class StructurHelper
+    public static class StructureHelper
     {
         /// <summary>
         /// 木構造の子どもを持たないノード（leaf）部分を集めて、リスト化する関数。
-        /// (ゲーム上では、このノード部分が部屋となる)
         /// </summary>
         /// <param name="parentNode"></param>
         /// <returns></returns>
-        public static List<Node> TraverseGraphToExtractLowestLeafes(RoomNode parentNode)
+        public static List<Node> TraverseGraphToExtractLowestLeafes(Node parentNode)
         {
             Queue<Node> nodesToCheck = new Queue<Node>();//子どもノードを持っているかチェックするキュー
-            List<Node> listToReturn = new List<Node>();//部屋となるノードのリスト
+            List<Node> listToReturn = new List<Node>();//戻り値となるノードのリスト
 
             if (parentNode.ChildrenNodeList.Count == 0)
             {

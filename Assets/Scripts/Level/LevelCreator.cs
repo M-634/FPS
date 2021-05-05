@@ -56,7 +56,7 @@ namespace Musashi.Level
                 levelObjectList = new List<GameObject>();
 
             LevelGenerator generator = new LevelGenerator(dungeonwidth, dungeonLength);
-            var listOfRooms = generator.CalculateRooms(maxIterations, roomWidthMin, roomLengthMin,roomBottomCornerModifier,roomTopCornerModifier,roomOffset,corridorWidth);
+            var listOfRooms = generator.CalculateDungeon(maxIterations, roomWidthMin, roomLengthMin,roomBottomCornerModifier,roomTopCornerModifier,roomOffset,corridorWidth);
 
             for(int i = 0; i < listOfRooms.Count; i++)
             {

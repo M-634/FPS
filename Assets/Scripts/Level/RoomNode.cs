@@ -12,7 +12,7 @@ namespace Musashi.Level
             this.BottomLeftAreaCorner = bottomLeftAreaCorner;
             this.TopRightAreaCorner = topRightAreaCorner;
             this.BottomRightAreaCorner = new Vector2Int(topRightAreaCorner.x, bottomLeftAreaCorner.y);
-            this.TopLeftAreaCroner = new Vector2Int(bottomLeftAreaCorner.x, TopRightAreaCorner.y);
+            this.TopLeftAreaCorner = new Vector2Int(bottomLeftAreaCorner.x, TopRightAreaCorner.y);
             this.TreeLayerIndex = index;
         }
 
