@@ -60,7 +60,9 @@ namespace Musashi
         protected virtual void OnDie()
         {
             IsDead = true;
-            healthBarFillImage.transform.parent.gameObject.SetActive(false);
+
+            if(healthBarFillImage)
+                healthBarFillImage.transform.parent.gameObject.SetActive(false);
             gameObject.SetActive(false);
         }
     }
