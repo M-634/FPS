@@ -15,7 +15,9 @@ namespace Musashi.Level
     {
         [SerializeField] NavMeshSurface surface;
         [SerializeField] GameObject player;
+        [SerializeField, Range(0, 2)] float playerSpwanOffset = 2f;
         [SerializeField] GameObject enemySpwaner;
+        [SerializeField, Range(0, 2)] float enemySpwanerSpwanOffset = 1.5f;
 
         /// <summary>最初に定義する空間の幅</summary>
         [SerializeField] int dungeonwidth;
@@ -59,10 +61,7 @@ namespace Musashi.Level
 
         public async void CreateDungeon()
         {
-            if (levelObjectList != null && levelObjectList.Count > 0)
-                DeletDungeon();
-            else
-                levelObjectList = new List<GameObject>();
+            DeletDungeon();
 
             if (levelParent == null) levelParent = transform;
 
@@ -94,16 +93,21 @@ namespace Musashi.Level
             //Instanciate enemy spwaner in room of midpoint
             if (enemySpwaner)
             {
+                var manager = GameManager.Instance;
+                if(manager)
+                    manager.SumOfEnemySpwaner = 0;
                 for (int i = 1; i < listOfRoomFloors.Count; i++)
                 {
-                    SpwanObjectInRoom(enemySpwaner, listOfRoomFloors[i], 1.5f);
+                    SpwanObjectInRoom(enemySpwaner, listOfRoomFloors[i], enemySpwanerSpwanOffset);
+                    if (manager)
+                        manager.SumOfEnemySpwaner++;
                 }
             }
 
             //Spwan player
             if (player)
             {
-                SpwanObjectInRoom(player, listOfRoomFloors[0], 2f);
+                SpwanObjectInRoom(player, listOfRoomFloors[0], playerSpwanOffset);
             }
         }
 
@@ -237,9 +241,13 @@ namespace Musashi.Level
 
         public void DeletDungeon()
         {
-            if (Application.isPlaying)
-                levelObjectList.ForEach(obj => Destroy(obj));
-            else
+            if (levelObjectList == null)
+            {
+                levelObjectList = new List<GameObject>();
+                return;
+            }
+
+           if(levelObjectList.Count > 0)
                 levelObjectList.ForEach(obj => DestroyImmediate(obj));
         }
 

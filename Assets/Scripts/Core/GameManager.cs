@@ -14,13 +14,14 @@ namespace Musashi
         [SerializeField] SoundManager soundManager;
         [SerializeField] SceneLoder sceneLoder;
         [SerializeField] Configure configure;
-
         public SoundManager SoundManager => soundManager;
         public SceneLoder SceneLoder => sceneLoder;
         public bool HaveShowConfigure => configure.gameObject.activeSelf;
         public bool IsGameClear { get; private set; }
 
-       
+        public int DefeatNumberOfEnemySpwaner { get; set; }//記録
+        public int SumOfEnemySpwaner { get; set; } //記録
+
         protected override void Awake()
         {
             base.Awake();
@@ -40,7 +41,6 @@ namespace Musashi
             }
             configure.gameObject.SetActive(false);//設定画面を隠す
         }
-
         public void ExitGame()
         {
             Debug.Log("a");
@@ -50,28 +50,12 @@ namespace Musashi
             Application.Quit();
 #endif
         }
-
-        public void LockCusor()
-        {
-            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title) return;
-            // Lock cursor
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-
-        public void UnlockCusor()
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-
         public void GameOver()
         {
             Debug.Log("GameOver");
             IsGameClear = false;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
         }
-
         public void GameClear()
         {
             Debug.Log("GameClear");
@@ -79,7 +63,19 @@ namespace Musashi
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
         }
 
-
+        //other setting Method
+        public void LockCusor()
+        {
+            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title) return;
+            // Lock cursor
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        public void UnlockCusor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
         public void SwichConfiguUI()
         {
             if (configure.gameObject.activeSelf)
@@ -87,13 +83,11 @@ namespace Musashi
             else
                 ShowConfigure();
         }
-
         public void ShowConfigure()
         {
             UnlockCusor();
             configure.gameObject.SetActive(true);
         }
-
         public void CloseConfigure()
         {
             if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.MainGame)

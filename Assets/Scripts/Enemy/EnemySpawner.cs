@@ -22,18 +22,19 @@ namespace Musashi
             if (dropItems.Length > 0)
             {
                 int random = Random.Range(0, dropItems.Length);
-                dropItem = Instantiate(dropItems[random],transform.position,Quaternion.identity);
+                if(dropItems[random])
+                    dropItem = Instantiate(dropItems[random], transform.position, Quaternion.identity);
             }
             InitializePoolObject(poolSize);
         }
-     
+
         public void InitializePoolObject(int poolSize = 1)
         {
             poolObjectManager = new PoolObjectManager();
             for (int i = 0; i < poolSize; i++)
             {
                 SetPoolObj();
-            }            
+            }
         }
 
         public PoolObjectManager.PoolObject SetPoolObj()
@@ -41,11 +42,12 @@ namespace Musashi
             var poolObj = poolObjectManager.InstantiatePoolObj();
             for (int i = 0; i < enemies.Length; i++)
             {
+                if (enemies[i] == null) continue;
                 var go = Instantiate(enemies[i], transform);
                 poolObj.AddObj(go);
                 go.SetActive(false);
             }
-            return poolObj;            
+            return poolObj;
         }
 
         /// <summary>
@@ -62,13 +64,17 @@ namespace Musashi
             Debug.Log("生成スタート");
             int length = enemies.Length;
 
-            if (length == 0) IsGenerating = false; 
+            if (length == 0) IsGenerating = false;
 
             while (IsGenerating)
             {
                 //generate
-                int random = Random.Range(0, length);
-                poolObjectManager.UsePoolObject(enemies[random], spwanPos.position, Quaternion.identity, SetPoolObj);
+                if (length > 0)
+                {
+                    int random = Random.Range(0, length);
+                    if(enemies[random])
+                        poolObjectManager.UsePoolObject(enemies[random], spwanPos.position, Quaternion.identity, SetPoolObj);
+                }
                 Debug.Log("Generate");
                 yield return new WaitForSeconds(interval);
             }
@@ -77,10 +83,17 @@ namespace Musashi
 
         protected override void OnDie()
         {
+            IsDead = true;
             IsGenerating = false;
-            dropItem.SetActive(true); 
             GameEventManeger.Instance.Excute(GameEventType.SpawnDie);
-            base.OnDie();
+
+            if (healthBarFillImage)
+                healthBarFillImage.transform.parent.gameObject.SetActive(false);
+
+            if (dropItem != null)  
+                dropItem.SetActive(true);
+
+            gameObject.SetActive(false);
         }
     }
 }

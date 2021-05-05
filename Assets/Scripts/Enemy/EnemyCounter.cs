@@ -7,42 +7,66 @@ namespace Musashi
 {
     public class EnemyCounter : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI countText;
-        const string baseText = "ENEMY LEFT :";
+        [SerializeField] TextMeshProUGUI enemyDefeatText;
+        [SerializeField] TextMeshProUGUI enemySpwanerText;
+        const string defeatText = "ENEMY DEFEAT :";
+        const string spwanerText = "Left Spwaner :";
 
-        int totalEnemyNumber;
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            totalEnemyNumber = GameObject.FindGameObjectsWithTag("Enemy").Length;
-            countText.text = baseText + totalEnemyNumber.ToString();
-        }
-
-        /// <summary>
-        /// 敵がやられたら呼ばれる
-        /// </summary>
-        public void UpdateEnemyCounter()
-        {
-            totalEnemyNumber--;
-            if (totalEnemyNumber < 1)
-            {
-                totalEnemyNumber = 0;
-                //GameClear!!
-                GameManager.Instance.GameClear();
+        private int defeatEnemyOfNumber;
+        private int leftSpwanerOfNumber;
+        public int DefeatEnemyOfNumber {
+            get { return defeatEnemyOfNumber; }
+            private set {
+                defeatEnemyOfNumber = value;
+                if(enemyDefeatText)
+                    enemyDefeatText.text = defeatText + DefeatEnemyOfNumber.ToString();
             }
-
-            countText.text = baseText + totalEnemyNumber.ToString();
         }
+        public int LeftSpwanerOfNumber {
+            get {return leftSpwanerOfNumber; }
+            private set { 
+                leftSpwanerOfNumber = value;
+                if (enemySpwanerText)
+                    enemySpwanerText.text = spwanerText + LeftSpwanerOfNumber.ToString();
+            }
+        }
+
+        bool hasEndGame = false;
+
+        private void Start()
+        {
+            DefeatEnemyOfNumber = 0;
+            LeftSpwanerOfNumber = GameManager.Instance.SumOfEnemySpwaner;
+        }
+
+        private void UpdateEnemyCounter()
+        {
+            if (hasEndGame) return;
+            DefeatEnemyOfNumber++;
+        }
+
+        private void UpdateSpwanerCounter()
+        {
+            if (hasEndGame) return;
+            LeftSpwanerOfNumber--;
+            if (LeftSpwanerOfNumber == 0)
+            {
+                GameManager.Instance.GameClear();
+                hasEndGame = true;
+            }
+        }
+
 
         private void OnEnable()
         {
             GameEventManeger.Instance.Subscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
+            GameEventManeger.Instance.Subscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
         }
 
         private void OnDisable()
         {
-            GameEventManeger.Instance.UnSubscribe(GameEventType.EnemyDie, UpdateEnemyCounter); 
+            GameEventManeger.Instance.UnSubscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
+            GameEventManeger.Instance.UnSubscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
         }
     }
 }

@@ -61,6 +61,8 @@ namespace Musashi
     {
         EnemyDie,
         SpawnDie,
+        StartGame,
+        EndGame
     }
 }
 
