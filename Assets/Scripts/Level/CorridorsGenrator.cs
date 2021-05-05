@@ -6,9 +6,9 @@ namespace Musashi.Level
 {
     public class CorridorsGenrator
     {
-        public List<Node> CreateCorridor(List<RoomNode> allNodesCollection, int corridorWidth)
+        public List<CorridorNode> CreateCorridor(List<RoomNode> allNodesCollection, int corridorWidth)
         {
-            List<Node> corridorList = new List<Node>();
+            List<CorridorNode> corridorList = new List<CorridorNode>();
             Queue<RoomNode> structuresToCheck = new Queue<RoomNode>(
                 allNodesCollection.OrderByDescending(node => node.TreeLayerIndex).ToList());
 

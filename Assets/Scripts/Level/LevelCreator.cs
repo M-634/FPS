@@ -12,8 +12,9 @@ namespace Musashi.Level
     /// </summary>
     public class LevelCreator : MonoBehaviour
     {
-        [SerializeField] NavMeshSurface surface; 
-
+        [SerializeField] NavMeshSurface surface;
+        [SerializeField] GameObject player;
+    
         /// <summary>最初に定義する空間の幅</summary>
         [SerializeField] int dungeonwidth;
         /// <summary>最初に定義する空間の奥行</summary>
@@ -28,7 +29,7 @@ namespace Musashi.Level
         /// <summary>生成される廊下の幅</summary>
         [SerializeField] int corridorWidth;
         /// <summary>ステージのマテリアル</summary>
-        [SerializeField] Material material;
+        [SerializeField] Material levelFloorMaterial;
 
         [Range(0.0f, 0.3f)]
         [SerializeField] float roomBottomCornerModifier;
@@ -54,7 +55,7 @@ namespace Musashi.Level
             CreateDungeon();
         }
 
-        public void CreateDungeon()
+        public async void CreateDungeon()
         {
             if (levelObjectList != null && levelObjectList.Count > 0)
                 DeletDungeon();
@@ -74,14 +75,46 @@ namespace Musashi.Level
             for(int i = 0; i < listOfDungeonFloors.Count; i++)
             {
                 CreateMesh(listOfDungeonFloors[i].BottomLeftAreaCorner, listOfDungeonFloors[i].TopRightAreaCorner);
-                //await Task.Delay(1000 * 1);
+                await Task.Delay(1);
             }
-
-            if(doCreatWall)
+            CombineFloorMesh();
+           
+            if (doCreatWall)
                 CreateWalls(levelParent);
 
             if (surface)
                 surface.BuildNavMesh();//bake NavMesh;
+
+            //Spwan player and enemy
+            if (player)
+            {
+                var midPoint = StructureHelper.CalculateMiddlePoint(listOfDungeonFloors[0].BottomLeftAreaCorner, listOfDungeonFloors[0].TopRightAreaCorner);
+                var p = Instantiate(player, new Vector3(midPoint.x, 2, midPoint.y), Quaternion.identity);
+                levelObjectList.Add(p);
+            }
+        }
+
+        private void CombineFloorMesh()
+        {
+            MeshFilter[] meshFilters = levelParent.GetComponentsInChildren<MeshFilter>();
+            CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+
+            for (int i = 0; i < meshFilters.Length; i++)
+            {
+                combine[i].mesh = meshFilters[i].sharedMesh;
+                combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+                DestroyImmediate(meshFilters[i].gameObject);
+            }
+
+            GameObject newObj = new GameObject("CombineMeshFloor", typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
+            var mesh = newObj.GetComponent<MeshFilter>().sharedMesh = new Mesh();
+            newObj.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
+            newObj.GetComponent<MeshCollider>().sharedMesh = mesh;
+            newObj.GetComponent<MeshRenderer>().material = levelFloorMaterial;
+            newObj.transform.parent = levelParent;
+
+            levelObjectList.Clear();
+            levelObjectList.Add(newObj);
         }
 
         private void CreateWalls(Transform wallParent)
@@ -137,12 +170,12 @@ namespace Musashi.Level
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
-            GameObject levelFloor = new GameObject("Mesh" + bottomLeftCorner + topRightCorner, typeof(MeshFilter), typeof(MeshRenderer));
-
+            GameObject levelFloor = new GameObject("Floor" + bottomLeftCorner + topRightCorner, typeof(MeshFilter), typeof(MeshRenderer),typeof(MeshCollider));
+     
             levelFloor.transform.position = Vector3.zero;
             levelFloor.transform.localScale = Vector3.one;
             levelFloor.GetComponent<MeshFilter>().mesh = mesh;
-            levelFloor.GetComponent<MeshRenderer>().material = material;
+            levelFloor.GetComponent<MeshRenderer>().material = levelFloorMaterial;
             levelFloor.transform.parent = levelParent;
             levelObjectList.Add(levelFloor);
 
@@ -181,7 +214,6 @@ namespace Musashi.Level
                 wallList.Add(point);
             }
         }
-
 
         public void DeletDungeon()
         {

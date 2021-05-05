@@ -39,11 +39,11 @@ namespace Musashi.Level
             RoomGenerator roomGenerator = new RoomGenerator(maxIterations, roomLengthMin, roomWidthMin);
             List<RoomNode> roomList = roomGenerator.GenerateRoomsInGivienSpaces(roomSpaces, roomBottomCornerModifier, roomTopCornerModifier, roomOffset);
 
+            //通路を定義してリスト化する
             CorridorsGenrator corridorsGenrator = new CorridorsGenrator();
             var corridorList = corridorsGenrator.CreateCorridor(allNodesCollection, corridorWidth);
 
-
-            return new List<Node>(roomList).Concat(corridorList).ToList();
+            return new List<Node>(roomList).Concat(corridorList).ToList();//合体
         }
     }
 }
