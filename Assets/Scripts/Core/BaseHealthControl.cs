@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace Musashi
 {
@@ -11,11 +12,14 @@ namespace Musashi
     {
         [SerializeField] protected float maxHp;
         [SerializeField] protected Image healthBarFillImage = default;
-
-        protected bool isDead;
+        [SerializeField] float healthBarHightOffset;
+        [SerializeField] bool useBillBord;
         protected float currentHp;
 
-        protected virtual float CurrentHp 
+
+        public bool IsDead { get; protected set; }
+        public bool UseBillBord => useBillBord;
+        protected virtual float CurrentHp
         {
             get => currentHp;
             set
@@ -24,20 +28,40 @@ namespace Musashi
                 currentHp = value;
                 if (healthBarFillImage)
                     healthBarFillImage.fillAmount = currentHp / maxHp;
-            } 
+            }
         }
 
         protected virtual void Start()
         {
             CurrentHp = maxHp;
+
+            if (healthBarFillImage && useBillBord)
+                StartCoroutine(BillBoard());
+        }
+
+        IEnumerator BillBoard()
+        {
+            while (!IsDead)
+            {
+                healthBarFillImage.transform.parent.position = transform.position + Vector3.up * healthBarHightOffset;
+                healthBarFillImage.transform.parent.LookAt(Camera.main.transform.position);
+                yield return null;
+            }
         }
 
         public virtual void OnDamage(float damage)
         {
+            if (IsDead) return;
+
             CurrentHp -= damage;
             if (CurrentHp <= 0) OnDie();
         }
 
-        protected abstract void OnDie();
+        protected virtual void OnDie()
+        {
+            IsDead = true;
+            healthBarFillImage.transform.parent.gameObject.SetActive(false);
+            gameObject.SetActive(false);
+        }
     }
 }

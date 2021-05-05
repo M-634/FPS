@@ -35,26 +35,22 @@ namespace Musashi
                 eventTable[eventType] += action;
             else
                 eventTable.Add(eventType, action);
-         
-            Debug.Log($"{eventType}イベントに{action.Method.Name}が追加された");
         }
 
         public void UnSubscribe(GameEventType eventType, Action action)
         {
-            Debug.Log($"{eventType}イベントの{action.Method.Name}が解除されたよ");
             eventTable[eventType] -= action;
         }
 
         public void Excute(GameEventType eventType)
         {
-            eventTable[eventType]?.Invoke();
-            Debug.Log($"{eventType}イベントが実行された");
+            if(eventTable.ContainsKey(eventType))
+                eventTable[eventType]?.Invoke();
         }
 
         public void Dispose()
         {
             eventTable.Clear();
-            Debug.Log("イベントテーブルを全て削除した");
         }
     }
 
@@ -64,6 +60,7 @@ namespace Musashi
     public enum GameEventType
     {
         EnemyDie,
+        SpawnDie,
     }
 }
 

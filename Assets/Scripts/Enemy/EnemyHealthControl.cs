@@ -8,8 +8,6 @@ namespace Musashi
     {
         [Header("RagDoll")]
         [SerializeField] GameObject dethEffect;
-        [SerializeField] float healthBarHightOffset;
-
         EnemyAI owner;
 
         protected override void Start()
@@ -22,36 +20,17 @@ namespace Musashi
                 dethEffect.SetActive(false);
         }
 
-
-        void Update()
-        {
-            //BillBord
-            if (healthBarFillImage)
-            {
-                healthBarFillImage.transform.parent.position = transform.position + Vector3.up * healthBarHightOffset;
-                healthBarFillImage.transform.parent.LookAt(Camera.main.transform.position);
-            }
-        }
-
         public override void OnDamage(float damage)
         {
-            if (isDead) return;
+            base.OnDamage(damage);
 
-            CurrentHp -= damage;
-            if (CurrentHp <= 0)
-            {
-                OnDie();
-            }
-            else
-            {
-                if (owner)
-                    owner.ChangeState(owner.EnemyOnDamage);
-            }
+            if (owner)
+                owner.ChangeState(owner.EnemyOnDamage);
         }
 
         protected override void OnDie()
         {
-            isDead = true;
+            IsDead = true;
 
             //Active ragdoll
             if (dethEffect)

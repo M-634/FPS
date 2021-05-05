@@ -4298,7 +4298,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4188968124545071894}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.065, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4188968125795923295}
@@ -4448,6 +4448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 200
   healthBarFillImage: {fileID: 7192153008260627947}
+  healthBarHightOffset: 0
+  useBillBord: 0
   damageEffectImage: {fileID: 9058779438895886940}
 --- !u!114 &4188968124545071903
 MonoBehaviour:
@@ -4649,7 +4651,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4188968124950863478
 Transform:
   m_ObjectHideFlags: 0
@@ -4727,7 +4729,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4188968125416222654
 Transform:
   m_ObjectHideFlags: 0
@@ -7436,7 +7438,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7192153008465399383
 RectTransform:
   m_ObjectHideFlags: 0

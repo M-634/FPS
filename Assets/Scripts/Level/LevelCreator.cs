@@ -4,17 +4,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 namespace Musashi.Level
 {
     /// <summary>
-    /// バイナリー空間分割アルゴリズム(BSP)を使った、ダンジョン自動生成を実行するクラス
+    /// ダンジョン自動生成を実行するクラス
     /// </summary>
     public class LevelCreator : MonoBehaviour
     {
         [SerializeField] NavMeshSurface surface;
         [SerializeField] GameObject player;
-    
+        [SerializeField] GameObject enemySpwaner;
+
         /// <summary>最初に定義する空間の幅</summary>
         [SerializeField] int dungeonwidth;
         /// <summary>最初に定義する空間の奥行</summary>
@@ -70,28 +72,46 @@ namespace Musashi.Level
             possibleWallVerticalPosition = new List<Vector3Int>();
 
             LevelGenerator generator = new LevelGenerator(dungeonwidth, dungeonLength);
-            var listOfDungeonFloors = generator.CalculateDungeon(maxIterations, roomWidthMin, roomLengthMin,roomBottomCornerModifier,roomTopCornerModifier,roomOffset,corridorWidth);
+            var listOfRoomFloors = generator.CalculateRooms(maxIterations, roomWidthMin, roomLengthMin, roomBottomCornerModifier, roomTopCornerModifier, roomOffset);
+            var listOfCorridors = generator.CalculateCorridor(corridorWidth);
+            var listOfDungeonFloors = new List<Node>(listOfRoomFloors).Concat(listOfCorridors).ToList();
 
-            for(int i = 0; i < listOfDungeonFloors.Count; i++)
+            for (int i = 0; i < listOfDungeonFloors.Count; i++)
             {
                 CreateMesh(listOfDungeonFloors[i].BottomLeftAreaCorner, listOfDungeonFloors[i].TopRightAreaCorner);
                 await Task.Delay(1);
             }
             CombineFloorMesh();
-           
+
             if (doCreatWall)
                 CreateWalls(levelParent);
 
+            //bake NavMesh;
             if (surface)
-                surface.BuildNavMesh();//bake NavMesh;
+                surface.BuildNavMesh();
 
-            //Spwan player and enemy
+
+            //Instanciate enemy spwaner in room of midpoint
+            if (enemySpwaner)
+            {
+                for (int i = 1; i < listOfRoomFloors.Count; i++)
+                {
+                    SpwanObjectInRoom(enemySpwaner, listOfRoomFloors[i], 1.5f);
+                }
+            }
+
+            //Spwan player
             if (player)
             {
-                var midPoint = StructureHelper.CalculateMiddlePoint(listOfDungeonFloors[0].BottomLeftAreaCorner, listOfDungeonFloors[0].TopRightAreaCorner);
-                var p = Instantiate(player, new Vector3(midPoint.x, 2, midPoint.y), Quaternion.identity);
-                levelObjectList.Add(p);
+                SpwanObjectInRoom(player, listOfRoomFloors[0], 2f);
             }
+        }
+
+        private void SpwanObjectInRoom(GameObject spwanObject, Node node, float heightOffset)
+        {
+            var midPoint = StructureHelper.CalculateMiddlePoint(node.BottomLeftAreaCorner, node.TopRightAreaCorner);
+            var go = Instantiate(spwanObject, new Vector3(midPoint.x, heightOffset, midPoint.y), Quaternion.identity);
+            levelObjectList.Add(go);
         }
 
         private void CombineFloorMesh()
@@ -126,17 +146,17 @@ namespace Musashi.Level
 
             foreach (var wallPosition in possibleWallVerticalPosition)
             {
-                CreateWall(wallParent, wallPosition,wallVertical);
+                CreateWall(wallParent, wallPosition, wallVertical);
             }
         }
 
-        private void CreateWall(Transform wallParent, Vector3Int wallPosition,GameObject wallPrefab)
+        private void CreateWall(Transform wallParent, Vector3Int wallPosition, GameObject wallPrefab)
         {
             var go = Instantiate(wallPrefab, wallPosition, Quaternion.identity, wallParent);
             levelObjectList.Add(go);
         }
 
-        private void CreateMesh(Vector2 bottomLeftCorner,Vector2 topRightCorner)
+        private void CreateMesh(Vector2 bottomLeftCorner, Vector2 topRightCorner)
         {
             Vector3 bottomLeftVector = new Vector3(bottomLeftCorner.x, 0, bottomLeftCorner.y);
             Vector3 bottomRightVector = new Vector3(topRightCorner.x, 0, bottomLeftCorner.y);
@@ -157,7 +177,7 @@ namespace Musashi.Level
                 uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
             }
 
-            
+
             int[] triangles = new int[]
             {
                 //三角形の頂点番号
@@ -170,8 +190,8 @@ namespace Musashi.Level
             mesh.uv = uvs;
             mesh.triangles = triangles;
 
-            GameObject levelFloor = new GameObject("Floor" + bottomLeftCorner + topRightCorner, typeof(MeshFilter), typeof(MeshRenderer),typeof(MeshCollider));
-     
+            GameObject levelFloor = new GameObject("Floor" + bottomLeftCorner + topRightCorner, typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
+
             levelFloor.transform.position = Vector3.zero;
             levelFloor.transform.localScale = Vector3.one;
             levelFloor.GetComponent<MeshFilter>().mesh = mesh;
@@ -217,7 +237,7 @@ namespace Musashi.Level
 
         public void DeletDungeon()
         {
-            if(Application.isPlaying)
+            if (Application.isPlaying)
                 levelObjectList.ForEach(obj => Destroy(obj));
             else
                 levelObjectList.ForEach(obj => DestroyImmediate(obj));
