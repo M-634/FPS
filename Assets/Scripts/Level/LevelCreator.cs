@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Musashi.Level
 {
@@ -11,6 +12,8 @@ namespace Musashi.Level
     /// </summary>
     public class LevelCreator : MonoBehaviour
     {
+        [SerializeField] NavMeshSurface surface; 
+
         /// <summary>最初に定義する空間の幅</summary>
         [SerializeField] int dungeonwidth;
         /// <summary>最初に定義する空間の奥行</summary>
@@ -76,6 +79,9 @@ namespace Musashi.Level
 
             if(doCreatWall)
                 CreateWalls(levelParent);
+
+            if (surface)
+                surface.BuildNavMesh();//bake NavMesh;
         }
 
         private void CreateWalls(Transform wallParent)
