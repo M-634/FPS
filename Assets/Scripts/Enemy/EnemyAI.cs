@@ -20,7 +20,7 @@ namespace Musashi
     public class EnemyAI : MonoBehaviour
     {
         #region Field
-        [SerializeField] Transform target;
+        [SerializeField] Transform player;
 
         [Header("各状態のスピード")]
         [SerializeField] float patrolSpeed = 2f;
@@ -51,7 +51,7 @@ namespace Musashi
         #endregion
 
         #region Field's property
-        public Transform Target => target;
+        public Transform Player => player;
         public float PatrolSpeed => patrolSpeed;
         public float PursueSpeed => pursueSpeed;
 
@@ -86,8 +86,8 @@ namespace Musashi
 
             agent.autoBraking = false;
 
-            if (!target)
-                target = GameObject.FindGameObjectWithTag("Player").transform;
+            if (!player)
+                player = GameObject.FindGameObjectWithTag("Player").transform;
 
             if (!enemyEye)
                 enemyEye = this.transform;
@@ -111,15 +111,15 @@ namespace Musashi
 
         public bool CanSeePlayer()
         {
-            Vector3 dir = target.position - transform.position;
+            Vector3 dir = player.position - transform.position;
             float angle = Vector3.Angle(dir, transform.forward);
 
             if (dir.magnitude < visitDistance && angle < viewingAngle)
             {
                 //Playerと敵の間に障害物があるかどうかRayを飛ばして確かめる
-                if (Physics.Linecast(enemyEye.position, target.position, out RaycastHit hit))
+                if (Physics.Linecast(enemyEye.position, player.position, out RaycastHit hit))
                 {
-                    Debug.DrawLine(enemyEye.position, target.position, Color.white);
+                    Debug.DrawLine(enemyEye.position, player.position, Color.white);
                     if (hit.collider.gameObject.CompareTag("Player"))
                     {
                         return true;
@@ -134,7 +134,7 @@ namespace Musashi
 
         public bool CanAttackPlayer()
         {
-            Vector3 dir = target.position - transform.position;
+            Vector3 dir = player.position - transform.position;
             if (dir.magnitude < attackRange)
             {
                 return true;
@@ -142,9 +142,9 @@ namespace Musashi
             return false;
         }
 
-        public void LookAtPlayer()
+        public void LookAtTarget(Vector3 position)
         {
-            var aim = target.position - transform.position;
+            var aim = position - transform.position;
             aim.y = 0;
             var look = Quaternion.LookRotation(aim);
             transform.rotation = Quaternion.Slerp(transform.rotation, look, turnAroundInterpolationSpeed);
@@ -228,14 +228,16 @@ namespace Musashi
             {
                 StopPoint(owner);
             }
-
+      
             if (owner.CanSeePlayer())
             {
                 owner.ChangeState(owner.EnemyPursue);
             }
+            owner.LookAtTarget(nextPoint);
         }
 
         float waitTime;
+        Vector3 nextPoint;
         private void GoToNextPoint(EnemyAI owner)
         {
             waitTime = 0;
@@ -243,7 +245,8 @@ namespace Musashi
             if (owner.PatrolPoints.Length == 0) return;
 
             owner.PatrolPointsIndex = (owner.PatrolPointsIndex + 1) % owner.PatrolPoints.Length;
-            owner.Agent.destination = owner.PatrolPoints[owner.PatrolPointsIndex].position;
+            nextPoint = owner.PatrolPoints[owner.PatrolPointsIndex].position;
+            owner.Agent.destination = nextPoint;
             owner.Agent.speed = owner.PatrolSpeed;
             owner.Agent.isStopped = false;
             owner.Animator.Play("Walk");
@@ -252,9 +255,9 @@ namespace Musashi
         private void StopPoint(EnemyAI owner)
         {
             owner.Agent.isStopped = true;
-            owner.Animator.Play("Idle");
+            owner.Animator.Play("Idle");//周りを見るようにする
             waitTime += Time.deltaTime;
-
+ 
             if (waitTime > owner.BreakTime)
             {
                 GoToNextPoint(owner);
@@ -280,8 +283,8 @@ namespace Musashi
 
         void IEnemyState.OnUpdate(EnemyAI owner)
         {
-            owner.LookAtPlayer();
-            owner.Agent.SetDestination(owner.Target.position);
+            owner.LookAtTarget(owner.Player.position);
+            owner.Agent.SetDestination(owner.Player.position);
 
             if (isAngry)
             {
@@ -346,7 +349,7 @@ namespace Musashi
             if (onTimer)
             {
                 timer += Time.deltaTime;
-                owner.LookAtPlayer();
+                owner.LookAtTarget(owner.Player.position);
             }
 
             if(timer > 1f)
