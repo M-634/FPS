@@ -14,11 +14,15 @@ namespace Musashi
         private IEnumerator currutine;
         bool onTime;
 
+        private void StartTimer()
+        {
+            currutine = TimerCorutine();
+            StartCoroutine(currutine);
+        }
+
         IEnumerator TimerCorutine()
         {
             float timer = 0;
-            timerText.text = "";
-            timerText.enabled = true;
             onTime = true;
 
             while (onTime)
@@ -29,32 +33,21 @@ namespace Musashi
                 timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
                 yield return null;
             }
-
-            timerText.enabled = false;
         }
 
         private void OnEnable()
         {
             if (!timerText) return;
-            currutine = TimerCorutine();
-            GameEventManeger.Instance.Subscribe(GameEventType.StartGame, () => StartCoroutine(currutine));//error
+            GameEventManeger.Instance.Subscribe(GameEventType.StartGame,StartTimer);
             GameEventManeger.Instance.Subscribe(GameEventType.EndGame, () => onTime = false);
         }
 
         private void OnDisable()
         {
             if (!timerText) return;
-            //GameEventManeger.Instance.UnSubscribe(GameEventType.StartGame, () => StartCoroutine(TimerCorutine()));
-            //GameEventManeger.Instance.UnSubscribe(GameEventType.EndGame, () => onTime = false);
+            GameEventManeger.Instance.UnSubscribe(GameEventType.StartGame,StartTimer);
+            GameEventManeger.Instance.UnSubscribe(GameEventType.EndGame, () => onTime = false);
+            currutine = null;
         }
-
-        ////タイムリミット
-        //m_timeLimit -= Time.deltaTime;
-        //    //分と秒とミリ秒を設定
-        //    int minutes = (int)m_timeLimit / 60;
-        //float seconds = m_timeLimit - minutes * 60;
-        //float mseconds = m_timeLimit * 1000 % 1000;
-        //m_UISetActiveControl.TimerText.text = string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, mseconds);
-        ////m_UISetActiveControl.TimerText.TimerInfo(m_timeLimit);
     }
 }

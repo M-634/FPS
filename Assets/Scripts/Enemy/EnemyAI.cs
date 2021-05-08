@@ -141,9 +141,9 @@ namespace Musashi
             return false;
         }
 
-        public void LookAtTarget(Vector3 position)
+        public void LookAtTarget(Vector3 targetPos)
         {
-            var aim = position - transform.position;
+            var aim = targetPos - transform.position;
             aim.y = 0;
             var look = Quaternion.LookRotation(aim);
             transform.rotation = Quaternion.Slerp(transform.rotation, look, turnAroundInterpolationSpeed);
@@ -232,11 +232,9 @@ namespace Musashi
             {
                 owner.ChangeState(owner.EnemyPursue);
             }
-            owner.LookAtTarget(nextPoint);
         }
 
         float waitTime;
-        Vector3 nextPoint;
         private void GoToNextPoint(EnemyAI owner)
         {
             waitTime = 0;
@@ -244,8 +242,7 @@ namespace Musashi
             if (owner.PatrolPoints.Length == 0) return;
 
             owner.PatrolPointsIndex = (owner.PatrolPointsIndex + 1) % owner.PatrolPoints.Length;
-            nextPoint = owner.PatrolPoints[owner.PatrolPointsIndex].position;
-            owner.Agent.destination = nextPoint;
+            owner.Agent.destination = owner.PatrolPoints[owner.PatrolPointsIndex].position;
             owner.Agent.speed = owner.PatrolSpeed;
             owner.Agent.isStopped = false;
             owner.Animator.Play("Walk");
