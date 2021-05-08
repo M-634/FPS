@@ -44,7 +44,6 @@ namespace Musashi
         [Header("Gizoms表示色")]
         [SerializeField] Color visitDistanceColor;
         [SerializeField] Color attackRangeColor;
-        [SerializeField] Color patrolPathColor;
 
         NavMeshAgent agent;
         Animator animator;
@@ -336,7 +335,7 @@ namespace Musashi
                 //攻撃アニメーションが終了時の処理
                 if (owner.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 {
-                    owner.Animator.Play("Idle");
+                    //owner.Animator.Play("Idle");
                     onTimer = true;
                 }
 

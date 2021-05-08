@@ -9,20 +9,20 @@ namespace Musashi
 
         private void OnTriggerEnter(Collider other)
         {
-            if (enemySpawner == null) return;
-            if (enemySpawner.IsGenerating || enemySpawner.IsDead) return;
+            if (!other.transform.CompareTag("Player")) return;
+  
+            if (enemySpawner == null || enemySpawner.IsGenerating || enemySpawner.IsDead) return;
 
-            if (other.transform.CompareTag("Player"))
-                enemySpawner.SpwanEnemy();
+            enemySpawner.SpwanEnemy();
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (enemySpawner == null) return;
-            if (!enemySpawner.IsGenerating || enemySpawner.IsDead) return;
+            if (!other.transform.CompareTag("Player")) return;
+     
+            if (enemySpawner == null || !enemySpawner.IsGenerating || enemySpawner.IsDead) return;
 
-            if (other.transform.CompareTag("Player"))
-                enemySpawner.IsGenerating = false;
+            enemySpawner.IsGenerating = false;
         }
     }
 }

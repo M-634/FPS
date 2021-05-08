@@ -14,12 +14,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: da2137e1ea8b97745b81033370b15cdd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/HorrorScene.unity
     guid: 0853406b38fc80b41a0dc1dcf50f6d38
   - enabled: 0
     path: Assets/Scenes/Test/Test_Enemy.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
+  - enabled: 1
+    path: Assets/Scenes/Test/Test_Level.unity
+    guid: f6af9a48a0147e34c90b067e0e011918
   - enabled: 1
     path: Assets/Scenes/Result.unity
     guid: 6d48ab2fcc4c2a640a495b167f35b5bc

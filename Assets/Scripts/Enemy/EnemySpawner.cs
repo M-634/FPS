@@ -13,7 +13,7 @@ namespace Musashi
         [SerializeField] GameObject[] dropItems;
         GameObject dropItem;
 
-        public bool IsGenerating { get; set; }
+        public bool IsGenerating { get; set; } = false;
         PoolObjectManager poolObjectManager;
 
         protected override void Start()
@@ -71,9 +71,10 @@ namespace Musashi
                 //generate
                 if (length > 0)
                 {
-                    int random = Random.Range(0, length);
-                    if(enemies[random])
-                        poolObjectManager.UsePoolObject(enemies[random], spwanPos.position, Quaternion.identity, SetPoolObj);
+                    int i = Random.Range(0, length);
+                    if (enemies[i])
+                       poolObjectManager.UsePoolObject(enemies[i], spwanPos.position, Quaternion.identity, SetPoolObj);
+                    
                 }
                 Debug.Log("Generate");
                 yield return new WaitForSeconds(interval);

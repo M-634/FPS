@@ -17,7 +17,7 @@ namespace Musashi
         protected float currentHp;
 
 
-        public bool IsDead { get; protected set; }
+        public bool IsDead { get; protected set; } = false;
         public bool UseBillBord => useBillBord;
         protected virtual float CurrentHp
         {
