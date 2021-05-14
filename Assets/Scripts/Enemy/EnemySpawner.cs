@@ -8,7 +8,7 @@ namespace Musashi
     {
         [SerializeField] Transform spwanPos;
         [SerializeField] float interval = 1f;
-        [SerializeField, Range(1, 10)] int poolSize;
+        [SerializeField, Range(1, 100)] int poolSize;
         [SerializeField] GameObject[] enemies;
         [SerializeField] GameObject[] dropItems;
         GameObject dropItem;
@@ -23,7 +23,9 @@ namespace Musashi
             {
                 int random = Random.Range(0, dropItems.Length);
                 if(dropItems[random])
+                {
                     dropItem = Instantiate(dropItems[random], transform.position, Quaternion.identity);
+                }
             }
             InitializePoolObject(poolSize);
         }
@@ -73,13 +75,12 @@ namespace Musashi
                 {
                     int i = Random.Range(0, length);
                     if (enemies[i])
+                    {
                        poolObjectManager.UsePoolObject(enemies[i], spwanPos.position, Quaternion.identity, SetPoolObj);
-                    
+                    }
                 }
-                Debug.Log("Generate");
                 yield return new WaitForSeconds(interval);
             }
-            Debug.Log("Stop generate");
         }
 
         protected override void OnDie()

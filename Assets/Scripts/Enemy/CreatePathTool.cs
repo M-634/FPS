@@ -19,34 +19,35 @@ namespace Musashi
 
         public List<Transform> Pathes { get; set; }
 
-        private void OnEnable()
-        {
-            if (pathes.Count > 0) return;
-
-            var node = Instantiate(nodePrefab, this.transform.position, Quaternion.identity);
-            node.transform.parent = this.transform;
-            pathes.Add(node);
-        }
-
+    
         public void DuplicateNode(Transform node)
         {
             if (pathes.Contains(node))
+            {
                 return;
+            }
+
             pathes.Add(node);
 
             if (owner)
+            {
                 owner.SetPatrolPoints(pathes.ToArray());
+            }
         }
 
         public void DeleteNode(Transform node)
         {
             if (!pathes.Contains(node))
+            {
                 return;
+            }
 
             pathes.Remove(node);
 
             if (owner)
+            {
                 owner.SetPatrolPoints(pathes.ToArray());
+            }
         }
 
         void OnDrawGizmos()
