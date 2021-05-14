@@ -45,6 +45,9 @@ namespace Musashi
         [SerializeField] Color visitDistanceColor;
         [SerializeField] Color attackRangeColor;
 
+        [Tooltip("アタッチしたNPCオブジェットがパトロールするか判定する変数")]
+        [SerializeField] bool doPatrolNPC;
+
         NavMeshAgent agent;
         Animator animator;
         #endregion
@@ -62,6 +65,8 @@ namespace Musashi
         public NavMeshAgent Agent => agent;
         public Animator Animator => animator;
         public IEnemyAttack Attack => attack;
+
+        public bool DoPatrolNPC => doPatrolNPC;
         #endregion
 
         #region State's Instance and property
@@ -92,8 +97,18 @@ namespace Musashi
                 enemyEye = this.transform;
 
             //Init state
-            CurrentState = EnemyIdle;
-            CurrentState.OnEnter(this);
+            if (doPatrolNPC)
+            {
+                //パトロールする時は、周りをを徘徊する
+                CurrentState = EnemyIdle;
+                CurrentState.OnEnter(this);
+            }
+            else
+            {
+                //パトロールしない時は、playerに直接向かう
+                CurrentState = EnemyPursue;
+                CurrentState.OnEnter(this);
+            }
         }
 
         private void Update()
@@ -227,7 +242,7 @@ namespace Musashi
             {
                 StopPoint(owner);
             }
-      
+
             if (owner.CanSeePlayer())
             {
                 owner.ChangeState(owner.EnemyPursue);
@@ -253,7 +268,7 @@ namespace Musashi
             owner.Agent.isStopped = true;
             owner.Animator.Play("Idle");//周りを見るようにする
             waitTime += Time.deltaTime;
- 
+
             if (waitTime > owner.BreakTime)
             {
                 GoToNextPoint(owner);
@@ -299,7 +314,10 @@ namespace Musashi
 
                 if (!owner.CanSeePlayer())
                 {
-                    owner.ChangeState(owner.EnemyPatrol);
+                    if (owner.DoPatrolNPC)
+                    {
+                        owner.ChangeState(owner.EnemyPatrol);
+                    }
                 }
             }
         }
@@ -348,7 +366,7 @@ namespace Musashi
                 owner.LookAtTarget(owner.Player.position);
             }
 
-            if(timer > 1f)
+            if (timer > 1f)
             {
                 timer = 0;
                 onTimer = false;
