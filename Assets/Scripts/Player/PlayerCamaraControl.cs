@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace Musashi
@@ -6,14 +7,14 @@ namespace Musashi
     [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerCamaraControl : MonoBehaviour
     {
-        [Header("Camera Setting")]
+        [Header("Camera base settings")]
         [SerializeField] Camera playerCamera;
         [SerializeField] float mouseSensitivity = 1f;
         [SerializeField] float controllerSensitivity = 50f;
 
-        [Header("Field Of View")]
+        [Header("Field of view")]
         [SerializeField] const float NOMAL_FOV = 60f;
-
+     
         [Header("PostProcess")]
         [SerializeField] PostProcessVolume volume;
         [SerializeField] PostProcessProfile standard;
@@ -46,13 +47,12 @@ namespace Musashi
             if (LockCamera) return;
 
             Look();
-            //if (Input.GetKeyDown(KeyCode.N))
-            //    ChangePostProcess();
-
+          
             fov = Mathf.Lerp(fov, targetFov, Time.deltaTime * fovSpeed);
             playerCamera.fieldOfView = fov;
         }
 
+   
         /// <summary>
         /// デフォルト時のカメラのFOVにもどす関数
         /// </summary>
@@ -80,7 +80,6 @@ namespace Musashi
         {
             float mouseX;
             float mouseY;
-
 
             //マウス と コントロール でsensitivityを変えること
             float sensitivity = playerInputManager.IsGamepad ? controllerSensitivity : mouseSensitivity;
@@ -118,9 +117,13 @@ namespace Musashi
         public void ChangePostProcess()
         {
             if (volume.profile == standard)
+            {
                 SwitchNightVision();
+            }
             else
+            {
                 InitPlayerPostProcessSettings();
+            }
         }
 
         public void InitPlayerPostProcessSettings()
@@ -136,7 +139,9 @@ namespace Musashi
             volume.profile = nightVision;
             nightVisionOverlay.SetActive(true);
             if (nightVisionOverlay.activeSelf)//バッテリーの充電がないならライトも消える
+            {
                 flashLight.SetActive(true);
+            }
         }
 
 

@@ -19,8 +19,10 @@ namespace Musashi
         [SerializeField] protected Image icon;
         [SerializeField] protected Image Outline;
         [SerializeField] protected TextMeshProUGUI keyCode;
-        [SerializeField] protected Color highLightColor;
         [SerializeField] protected TextMeshProUGUI stackSize;
+        [SerializeField] protected Color highLightColor;
+        [SerializeField] protected Color defultIcocnBackColor;
+        [SerializeField] protected Color itemInSlotIconColor;
 
         public Queue<Item> itemsInSlot;//アイテムスロットのみ
         public Item currentItemInSlot;//次の使用時に使うアイテム
@@ -43,7 +45,9 @@ namespace Musashi
                 else
                 {
                     if(currentItemInSlot.ItemType != ItemType.Rifle)
+                    {
                         ResetInfo();
+                    }
                 }
             }
         }
@@ -81,6 +85,7 @@ namespace Musashi
         {
             currentItemInSlot = getItem;
             icon.sprite = getItem.Icon;
+            icon.color = itemInSlotIconColor;
             maxStacSizeInSlot = getItem.MaxStacSize;
             StacSizeInSlot = getItem.StacSize;
             itemsInSlot.Enqueue(getItem);
@@ -120,9 +125,13 @@ namespace Musashi
             }
 
             if (currentItemInSlot.ItemType == ItemType.Rifle)
+            {
                 ResetInfo();
+            }
             else
+            {
                 StacSizeInSlot--;
+            }
         }
 
         /// <summary>
@@ -131,6 +140,7 @@ namespace Musashi
         public virtual void ResetInfo()
         {
             icon.sprite = null;
+            icon.color = defultIcocnBackColor;
             stackSizeInSlot = 0;
             maxStacSizeInSlot = 0;
             stackSize.text = "";
@@ -170,9 +180,13 @@ namespace Musashi
             while (isSelected && !IsEmpty)
             {
                 if (playerInput.UseItem)
+                {
                     UseItem();
+                }
                 if (playerInput.DropItem)
+                {
                     DropItem();
+                }
                 
                 yield return null;
             }

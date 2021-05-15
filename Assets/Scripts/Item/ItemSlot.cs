@@ -13,7 +13,9 @@ namespace Musashi
             int temp = StacSizeInSlot + getItem.StacSize;
 
             if (temp > maxStacSizeInSlot)
+            {
                 temp = maxStacSizeInSlot;
+            }
 
             StacSizeInSlot = temp;
             itemsInSlot.Enqueue(getItem);
