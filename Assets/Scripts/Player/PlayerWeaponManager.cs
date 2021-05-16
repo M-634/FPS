@@ -16,7 +16,7 @@ namespace Musashi
 
         bool canInputAction = true;
 
-        PlayerInputManager playerInput; 
+        InputProvider inputProvider; 
         WeaponActiveControl currentActiveWeapon;
         WeaponSlot currentActiveSlot;
 
@@ -24,7 +24,7 @@ namespace Musashi
 
         private void Start()
         {
-            playerInput = GetComponent<PlayerInputManager>();
+            inputProvider = GetComponentInParent<InputProvider>();
     
             foreach (var item in activeControls)
             {
@@ -33,7 +33,7 @@ namespace Musashi
 
             for (int i = 0; i < weaponSlots.Length; i++)
             {
-                weaponSlots[i].SetInput(playerInput);
+                weaponSlots[i].SetInput(inputProvider);
                 weaponSlots[i].SetWeaponSlot(i, this);
             }
         }
@@ -43,7 +43,7 @@ namespace Musashi
         {
             if (!canInputAction) return;
 
-            var i = playerInput.SwichWeaponID;
+            var i = inputProvider.SwichWeaponID;
             if (i == -1) return;
             if (HaveWeapon && i == currentActiveSlot.slotNumber) return;
             EquipWeapon(i);
@@ -167,23 +167,38 @@ namespace Musashi
         }
 
 
-        PlayerEventManager playerEvent;
+        //PlayerEventManager playerEvent;
+        ItemInventory inventory;
         private void OnEnable()
         {
-            playerEvent = GetComponent<PlayerEventManager>();
-            if (playerEvent)
+            //playerEvent = GetComponent<PlayerEventManager>();
+            //if (playerEvent)
+            //{
+            //    playerEvent.Subscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
+            //    playerEvent.Subscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+            //}
+
+            inventory = GetComponentInChildren<ItemInventory>();
+
+            if (inventory)
             {
-                playerEvent.Subscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
-                playerEvent.Subscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+                inventory.OpenInventory += () => ReciveInventoryEvent(false);
+                inventory.CloseInventory += () => ReciveInventoryEvent(true);
             }
         }
 
         private void OnDisable()
         {
-            if (playerEvent)
+            //if (playerEvent)
+            //{
+            //    playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
+            //    playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+            //}
+
+            if (inventory)
             {
-                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => ReciveInventoryEvent(false));
-                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => ReciveInventoryEvent(true));
+                inventory.OpenInventory -= () => ReciveInventoryEvent(false);
+                inventory.CloseInventory -= () => ReciveInventoryEvent(true);
             }
         }
     }

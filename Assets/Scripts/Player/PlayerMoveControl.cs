@@ -4,7 +4,6 @@ using TMPro;
 
 namespace Musashi
 {
-    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerMoveControl : MonoBehaviour
     {
         private enum State { IsGround, Jumping, Falling, }
@@ -42,14 +41,12 @@ namespace Musashi
         [SerializeField] AudioClip landSFX;
         AudioSource audioSource;
 
-        //PlayerAnimationController animationController;
-        PlayerInputManager playerInput;
+        InputProvider playerInput;
         CharacterController characterController;
 
         private void Start()
         {
-            //animationController = GetComponent<PlayerAnimationController>();
-            playerInput = GetComponent<PlayerInputManager>();
+            playerInput = GetComponentInParent<InputProvider>();
             characterController = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
 

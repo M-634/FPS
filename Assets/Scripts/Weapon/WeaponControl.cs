@@ -47,7 +47,7 @@ namespace Musashi
         [SerializeField] Transform muzzle;
         [SerializeField] Transform poolObjectParent;
         [Header("Require Component")]
-        [SerializeField] AmmoCounter ammoCounter;
+        [SerializeField] AmmoControlInInventory ammoControl;
         [SerializeField] CurrentWeaponAmmoCounter currentWeaponAmmoCounter;
         [SerializeField] ReticleAnimation reticle;
         [SerializeField] HitVFXManager hitVFXManager;
@@ -58,9 +58,9 @@ namespace Musashi
         bool isAiming = false;
 
         PoolObjectManager poolObjectManager;
-        PlayerInputManager playerInput;
+        InputProvider playerInput;
         PlayerCamaraControl playerCamara;
-        PlayerEventManager playerEvent;
+        //PlayerEventManager playerEvent;
         Animator animator;
         AudioSource audioSource;
         #endregion
@@ -76,10 +76,7 @@ namespace Musashi
                 {
                     currentAmmo = maxAmmo;
                 }
-                if (ammoCounter)
-                {
-                    ammoCounter.Display(currentAmmo);
-                }
+
                 if (currentWeaponAmmoCounter)
                 {
                     currentWeaponAmmoCounter.AmmoCounterText.text = CurrentAmmo.ToString();
@@ -93,7 +90,7 @@ namespace Musashi
         private void Awake()
         {
             SetDataFromWeaponSettingSOData();
-            playerInput = transform.GetComponentInParent<PlayerInputManager>();
+            playerInput = transform.GetComponentInParent<InputProvider>();
             playerCamara = transform.GetComponentInParent<PlayerCamaraControl>();
 
             animator = GetComponent<Animator>();
@@ -180,7 +177,7 @@ namespace Musashi
         /// </summary>
         private void CanReload()
         {
-            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            bool canReload = ammoControl ? ammoControl.CanReloadAmmo(maxAmmo, currentAmmo) : true;
             if (canReload)
             {
                 if (animator)
@@ -204,9 +201,9 @@ namespace Musashi
         /// </summary>
         public void EndReload()
         {
-            if (ammoCounter)
+            if (ammoControl)
             {
-                CurrentAmmo = ammoCounter.ReloadAmmoNumber(maxAmmo, currentAmmo);
+                CurrentAmmo = ammoControl.ReloadAmmoNumber(maxAmmo, currentAmmo);
             }
             else
             {
@@ -215,12 +212,12 @@ namespace Musashi
         }
         public void ShutGunCycleReload()
         {
-            bool canReload = ammoCounter ? ammoCounter.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            bool canReload = ammoControl ? ammoControl.CanReloadAmmo(maxAmmo, currentAmmo) : true;
             if (canReload)
             {
-                if (ammoCounter)
+                if (ammoControl)
                 {
-                    CurrentAmmo += ammoCounter.ReloadAmmNumber();
+                    CurrentAmmo += ammoControl.ReloadAmmNumber();
                 }
                 else
                 {
@@ -310,7 +307,11 @@ namespace Musashi
 
             if (isAiming)
             {
-                playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);
+                if (playerCamara)
+                {
+                    playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);
+                }
+
                 if (reticle)
                 {
                     reticle.gameObject.SetActive(false);
@@ -318,7 +319,11 @@ namespace Musashi
             }
             else
             {
-                playerCamara.SetNormalFovOfCamera(aimSpeed);
+                if (playerCamara)
+                {
+                    playerCamara.SetNormalFovOfCamera(aimSpeed);
+                }
+
                 if (reticle)
                 {
                     reticle.gameObject.SetActive(true);
@@ -363,9 +368,6 @@ namespace Musashi
 
             CurrentAmmo--;
 
-            //if (ammoCounter)
-            //    ammoCounter.Display(currentAmmo);
-
             if (reticle)
             {
                 reticle.IsShot = true;
@@ -382,13 +384,10 @@ namespace Musashi
 
         }
 
+
+        ItemInventory inventory;
         public void OnEnable()
         {
-            if (ammoCounter)
-            {
-                ammoCounter.Display(currentAmmo);
-            }
-
             if (currentWeaponAmmoCounter)
             {
                 currentWeaponAmmoCounter.AmmoCounterText.text = CurrentAmmo.ToString();
@@ -400,30 +399,42 @@ namespace Musashi
                 reticle.IsDefult = false;
             }
 
-            playerEvent = transform.GetComponentInParent<PlayerEventManager>();
-            if (playerEvent)
+            inventory = FindObjectOfType<ItemInventory>();
+
+            if (inventory)
             {
-                playerEvent.Subscribe(PlayerEventType.OpenInventory, () =>
+                inventory.OpenInventory += () =>
                 {
                     canAction = false;
                     reticle.gameObject.SetActive(false);
-                });
+                };
 
-                playerEvent.Subscribe(PlayerEventType.CloseInventory, () =>
+                inventory.CloseInventory += () =>
                 {
                     canAction = true;
                     reticle.gameObject.SetActive(true);
-                });
+                };
             }
+
+            //playerEvent = transform.GetComponentInParent<PlayerEventManager>();
+            //if (playerEvent)
+            //{
+            //    playerEvent.Subscribe(PlayerEventType.OpenInventory, () =>
+            //    {
+            //        canAction = false;
+            //        reticle.gameObject.SetActive(false);
+            //    });
+
+            //    playerEvent.Subscribe(PlayerEventType.CloseInventory, () =>
+            //    {
+            //        canAction = true;
+            //        reticle.gameObject.SetActive(true);
+            //    });
+            //}
         }
 
         public void OnDisable()
         {
-            if (ammoCounter)
-            {
-                ammoCounter.Text.enabled = false;
-            }
-
             if (currentWeaponAmmoCounter)
             {
                 currentWeaponAmmoCounter.Init();
@@ -434,20 +445,35 @@ namespace Musashi
                 reticle.IsDefult = true;
             }
 
-            if (playerEvent)
+            if (inventory)
             {
-                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () =>
+                inventory.OpenInventory -= () =>
                 {
                     canAction = false;
                     reticle.gameObject.SetActive(false);
-                });
+                };
 
-                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () =>
+                inventory.CloseInventory -= () =>
                 {
                     canAction = true;
                     reticle.gameObject.SetActive(true);
-                });
+                };
             }
+
+            //if (playerEvent)
+            //{
+            //    playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () =>
+            //    {
+            //        canAction = false;
+            //        reticle.gameObject.SetActive(false);
+            //    });
+
+            //    playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () =>
+            //    {
+            //        canAction = true;
+            //        reticle.gameObject.SetActive(true);
+            //    });
+            //}
         }
         #endregion
     }

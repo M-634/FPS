@@ -7,25 +7,24 @@ using TMPro;
 namespace Musashi
 {
     /// <summary>
-    /// 銃を持った時に弾薬の数を表示する。
-    /// 所持している銃の装填数 | インベントリに持っている銃弾の数
+    /// インベントリ内の弾薬を管理するクラス
     /// </summary>
-    public class AmmoCounter : MonoBehaviour
+    public class AmmoControlInInventory : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI text;
-        public TextMeshProUGUI Text => text;
-        public int sumNumberOfAmmoInInventory = 0;//publicはテスト用
+        //[SerializeField] TextMeshProUGUI text;
+        //public TextMeshProUGUI Text => text;
+        public int sumNumberOfAmmoInInventory = 0;
 
-        private void Awake()
-        {
-            text.enabled = false;
-        }
+        //private void Awake()
+        //{
+        //    text.enabled = false;
+        //}
 
-        public void Display(int ammoNum)
-        {
-            text.enabled = true;
-            text.text = ammoNum.ToString() + " | " + sumNumberOfAmmoInInventory.ToString();
-        }
+        //public void Display(int ammoNum)
+        //{
+        //    text.enabled = true;
+        //    text.text = ammoNum.ToString() + " | " + sumNumberOfAmmoInInventory.ToString();
+        //}
 
         /// <summary>
         /// 弾薬ボックスを拾ったか、銃を拾ったら弾薬所持数を更新する。

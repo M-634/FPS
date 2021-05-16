@@ -1,42 +1,44 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Musashi
 {
-    [RequireComponent(typeof(PlayerInputManager))]
-    public class PlayerItemInventory : MonoBehaviour
+    public class ItemInventory : MonoBehaviour
     {
+        public Action OpenInventory;
+        public Action CloseInventory;
+
         [SerializeField] ItemDataBase itemDataBase;
         [SerializeField] CanvasGroup inventoryCanvasGroup;
         [SerializeField] ItemSlot[] itemSlots;
-        [SerializeField] AmmoCounter ammoCounter;
+        [SerializeField] AmmoControlInInventory ammoControl;
 
         bool isOpenInventory = false;
+        InputProvider inputProvider;
+    
         public bool IsSlotSelected { get => SelectedSlot != null; }
         public SlotBase SelectedSlot { get; private set; }
-
-        PlayerInputManager playerInput;
-        PlayerEventManager playerEvent;
 
         private void Start()
         {
             inventoryCanvasGroup.HideUIWithCanvasGroup();
-            playerInput = GetComponent<PlayerInputManager>();
-            playerEvent = GetComponent<PlayerEventManager>();
-            if (playerInput)
+            inputProvider = GetComponentInParent<InputProvider>();
+
+            if (inputProvider)
             {
                 foreach (var slot in itemSlots)
                 {
-                    slot.SetInput(playerInput);
+                    slot.SetInput(inputProvider);
                 }
             }
         }
 
         private void Update()
         {
-            if (playerInput.Inventory)
+            if (inputProvider.Inventory)
             {
                 OpenAndCloseInventory();
             }
@@ -81,9 +83,9 @@ namespace Musashi
                 if (!itemSlots[i].IsEmpty && itemSlots[i].currentItemInSlot.ItemName == getItem.ItemName && !itemSlots[i].IsFilled)
                 {
                     itemSlots[i].AddItemInSlot(getItem);
-                    if(getItem.ItemType == ItemType.AmmoBox)
+                    if (getItem.ItemType == ItemType.AmmoBox)
                     {
-                        ammoCounter.AddSumOfAmmo(getItem.StacSize);
+                        ammoControl.AddSumOfAmmo(getItem.StacSize);
                     }
                     return true;
                 }
@@ -94,7 +96,7 @@ namespace Musashi
                     itemSlots[i].SetInfo(getItem);
                     if (getItem.ItemType == ItemType.AmmoBox)
                     {
-                        ammoCounter.AddSumOfAmmo(getItem.StacSize);
+                        ammoControl.AddSumOfAmmo(getItem.StacSize);
                     }
                     return true;
                 }
@@ -108,15 +110,21 @@ namespace Musashi
 
             if (isOpenInventory)
             {
-                inventoryCanvasGroup.HideUIWithCanvasGroup();
-                GameManager.Instance.LockCusor();
-                playerEvent.Excute(PlayerEventType.CloseInventory);
+                if (CloseInventory != null)
+                {
+                    inventoryCanvasGroup.HideUIWithCanvasGroup();
+                    GameManager.Instance.LockCusor();
+                    CloseInventory.Invoke();
+                }
             }
             else
             {
-                inventoryCanvasGroup.ShowUIWithCanvasGroup();
-                GameManager.Instance.UnlockCusor();
-                playerEvent.Excute(PlayerEventType.OpenInventory);
+                if (OpenInventory != null)
+                {
+                    inventoryCanvasGroup.ShowUIWithCanvasGroup();
+                    GameManager.Instance.UnlockCusor();
+                    OpenInventory.Invoke();
+                }
             }
             isOpenInventory = !isOpenInventory;
         }

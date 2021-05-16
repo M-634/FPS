@@ -57,7 +57,7 @@ namespace Musashi
         public virtual bool IsEmpty => stackSizeInSlot == 0;
         public virtual bool IsFilled => stackSizeInSlot != 0 && stackSizeInSlot == maxStacSizeInSlot;
 
-        protected PlayerInputManager playerInput;
+        protected InputProvider inputProvider;
         protected Transform playerCamera;
 
         protected virtual void Start()
@@ -66,15 +66,9 @@ namespace Musashi
             itemsInSlot = new Queue<Item>();
         }
 
-        /// <summary>
-        /// 初期化時に PlayerItemInventoryクラスから呼ばれる。
-        /// 必要なコンポーネントを設定する。
-        /// </summary>
-        /// <param name="_playerInput"></param>
-        /// <param name="_itemInventory"></param>
-        public void SetInput(PlayerInputManager _playerInput)
+        public void SetInput(InputProvider _playerInput)
         {
-            playerInput = _playerInput;
+            inputProvider = _playerInput;
         }
 
         /// <summary>
@@ -98,7 +92,7 @@ namespace Musashi
         /// </summary>
         public virtual void UseItem()
         {
-            currentItemInSlot.OnUseEvent?.Invoke(playerInput.transform.gameObject);
+            currentItemInSlot.OnUseEvent?.Invoke(inputProvider.transform.gameObject);
 
             if (currentItemInSlot.CanUseItem)
             {
@@ -179,11 +173,11 @@ namespace Musashi
         {
             while (isSelected && !IsEmpty)
             {
-                if (playerInput.UseItem)
+                if (inputProvider.UseItem)
                 {
                     UseItem();
                 }
-                if (playerInput.DropItem)
+                if (inputProvider.DropItem)
                 {
                     DropItem();
                 }

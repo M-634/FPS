@@ -7,23 +7,22 @@ namespace Musashi
     /// <summary>
     /// プレイヤーが武器やアイテム、ステージギミックとのインタラクティブを管理するクラス
     /// </summary>
-    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerInteractive : MonoBehaviour
     {
         [SerializeField] LayerMask interactiveLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
-        PlayerInputManager playerInputManager;
+        InputProvider inputProvider;
         RaycastHit hit;
 
         private void Start()
         {
-            playerInputManager = GetComponent<PlayerInputManager>();
+            inputProvider = GetComponentInParent<InputProvider>();
         }
 
         private void Update()
         {
-            if (CheakInteractiveObj() && playerInputManager.Interactive)
+            if (CheakInteractiveObj() && inputProvider.Interactive)
             {
                 if (hit.collider.TryGetComponent(out IInteractable obj))
                 {

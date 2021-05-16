@@ -43,7 +43,7 @@ namespace Musashi
                 }
                 else
                 {
-                    player.GetComponent<PlayerItemInventory>().CanGetItem(this);
+                    player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
                 }
             };
 

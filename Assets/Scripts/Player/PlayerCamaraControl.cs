@@ -4,7 +4,6 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace Musashi
 {
-    [RequireComponent(typeof(PlayerInputManager))]
     public class PlayerCamaraControl : MonoBehaviour
     {
         [Header("Camera base settings")]
@@ -27,12 +26,12 @@ namespace Musashi
         float fovSpeed;
         private float xRotation;
 
-        PlayerInputManager playerInputManager;
+        InputProvider inputProvider;
         public bool LockCamera { get; set; } = false;
 
         private void Start()
         {
-            playerInputManager = GetComponent<PlayerInputManager>();
+            inputProvider = GetComponentInParent<InputProvider>();
 
             playerCamera.fieldOfView = NOMAL_FOV;
             targetFov = playerCamera.fieldOfView;
@@ -82,10 +81,10 @@ namespace Musashi
             float mouseY;
 
             //マウス と コントロール でsensitivityを変えること
-            float sensitivity = playerInputManager.IsGamepad ? controllerSensitivity : mouseSensitivity;
+            float sensitivity = inputProvider.IsGamepad ? controllerSensitivity : mouseSensitivity;
 
-            mouseX = Mathf.Round(playerInputManager.Look.x) * sensitivity * Time.fixedDeltaTime;
-            mouseY = Mathf.Round(playerInputManager.Look.y) * sensitivity * Time.fixedDeltaTime;
+            mouseX = Mathf.Round(inputProvider.Look.x) * sensitivity * Time.fixedDeltaTime;
+            mouseY = Mathf.Round(inputProvider.Look.y) * sensitivity * Time.fixedDeltaTime;
 
 
             xRotation += mouseY;
@@ -146,23 +145,39 @@ namespace Musashi
 
 
 
-        PlayerEventManager playerEvent;
+        //PlayerEventManager playerEvent;
+        ItemInventory inventory;
+
         public void OnEnable()
         {
-            playerEvent = GetComponent<PlayerEventManager>();
-            if (playerEvent)
+            //playerEvent = GetComponent<PlayerEventManager>();
+            //if (playerEvent)
+            //{
+            //    playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
+            //    playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            //}
+
+            inventory = GetComponentInChildren<ItemInventory>();
+
+            if (inventory)
             {
-                playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
-                playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+                inventory.OpenInventory += () => LockCamera = true;
+                inventory.CloseInventory += () => LockCamera = false;
             }
         }
 
         public void OnDisable()
         {
-            if (playerEvent)
+            //if (playerEvent)
+            //{
+            //    playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
+            //    playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+            //}
+
+            if (inventory)
             {
-                playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
-                playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
+                inventory.OpenInventory -= () => LockCamera = true;
+                inventory.CloseInventory -= () => LockCamera = false;
             }
         }
     }
