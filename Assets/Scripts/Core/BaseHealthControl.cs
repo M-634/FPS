@@ -27,7 +27,9 @@ namespace Musashi
                 if (value < 0) value = 0;
                 currentHp = value;
                 if (healthBarFillImage)
+                {
                     healthBarFillImage.fillAmount = currentHp / maxHp;
+                }
             }
         }
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Musashi
 {
@@ -8,17 +10,16 @@ namespace Musashi
     public class PlayerWeaponManager : MonoBehaviour
     {
         [SerializeField] WeaponDataBase weaponDataBase;
-        /// <summary>playerの子どもに存在する武器。使用時にアクティブを切り替える</summary>
         [SerializeField] WeaponActiveControl[] activeControls;
         [SerializeField] WeaponSlot[] weaponSlots;
+        [SerializeField] CurrentWeaponAmmoCounter currentWeaponAmmoCounter;
 
         bool canInputAction = true;
 
-        PlayerInputManager playerInput;
+        PlayerInputManager playerInput; 
+        WeaponActiveControl currentActiveWeapon;
+        WeaponSlot currentActiveSlot;
 
-        //cheack 
-        public WeaponActiveControl currentActiveWeapon;
-        public WeaponSlot currentActiveSlot;
         public bool HaveWeapon => currentActiveWeapon != null && currentActiveSlot != null;
 
         private void Start()
@@ -120,6 +121,9 @@ namespace Musashi
 
                     currentActiveWeapon.Control.CurrentAmmo = weaponSlots[index].currentItemInSlot.StacSize;
                     currentActiveSlot.StacSizeInSlot = weaponSlots[index].currentItemInSlot.StacSize;
+
+                    currentWeaponAmmoCounter.UIContents.SetActive(true);
+                    currentWeaponAmmoCounter.WeaponIcon.sprite = weaponSlots[index].currentItemInSlot.Icon;
                     return;
                 }
             }
@@ -131,12 +135,16 @@ namespace Musashi
         public void PutAwayCurrentWeapon()
         {
             if (!HaveWeapon) return;
+
             currentActiveSlot.currentItemInSlot.StacSize = currentActiveWeapon.Control.CurrentAmmo;
        
             currentActiveWeapon.Control.CancelAnimation();
             currentActiveWeapon.SetActive(false);
             currentActiveWeapon = null;
             currentActiveSlot = null;
+
+            currentWeaponAmmoCounter.Init();
+            currentWeaponAmmoCounter.UIContents.SetActive(false);
         }
 
         /// <summary>

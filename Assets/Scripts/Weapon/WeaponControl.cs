@@ -48,6 +48,7 @@ namespace Musashi
         [SerializeField] Transform poolObjectParent;
         [Header("Require Component")]
         [SerializeField] AmmoCounter ammoCounter;
+        [SerializeField] CurrentWeaponAmmoCounter currentWeaponAmmoCounter;
         [SerializeField] ReticleAnimation reticle;
         [SerializeField] HitVFXManager hitVFXManager;
 
@@ -55,7 +56,7 @@ namespace Musashi
         float lastTimeShot = Mathf.NegativeInfinity;
         bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
         bool isAiming = false;
-     
+
         PoolObjectManager poolObjectManager;
         PlayerInputManager playerInput;
         PlayerCamaraControl playerCamara;
@@ -72,9 +73,18 @@ namespace Musashi
             {
                 currentAmmo = value;
                 if (currentAmmo > maxAmmo)
+                {
                     currentAmmo = maxAmmo;
+                }
                 if (ammoCounter)
+                {
                     ammoCounter.Display(currentAmmo);
+                }
+                if (currentWeaponAmmoCounter)
+                {
+                    currentWeaponAmmoCounter.AmmoCounterText.text = CurrentAmmo.ToString();
+                    currentWeaponAmmoCounter.AmmoCounterSllider.fillAmount = (float)currentAmmo / maxAmmo;
+                }
             }
         }
         #endregion
@@ -90,9 +100,14 @@ namespace Musashi
             audioSource = GetComponent<AudioSource>();
 
             if (!muzzle)
+            {
                 muzzle = this.transform;
+            }
+
             if (!poolObjectParent)
+            {
                 poolObjectParent = this.transform;
+            }
 
             currentAmmo = maxAmmo;
 
@@ -155,7 +170,7 @@ namespace Musashi
             poolObj.AddObj(b.gameObject);
             poolObj.AddObj(mF.gameObject);
 
-            b.SetInfo(shotPower, shotDamage,hitVFXManager);
+            b.SetInfo(shotPower, shotDamage, hitVFXManager);
             poolObj.SetActiveAll(false);
             return poolObj;
         }
@@ -204,16 +219,23 @@ namespace Musashi
             if (canReload)
             {
                 if (ammoCounter)
+                {
                     CurrentAmmo += ammoCounter.ReloadAmmNumber();
+                }
                 else
+                {
                     CurrentAmmo++;
+                }
 
                 if (audioSource)
+                {
                     audioSource.Play(reloadSFX, audioSource.volume);
+                }
 
                 if (CurrentAmmo == maxAmmo)
+                {
                     animator.SetBool("ReloadCycleEnd", true);
-
+                }
             }
             else
             {
@@ -246,41 +268,61 @@ namespace Musashi
         {
             if (!canAction) return;
 
-            if (playerInput.Reload) CanReload();
+            if (playerInput.Reload)
+            {
+                CanReload();
+            }
 
             if (playerInput.Aim)
+            {
                 isAiming = true;
+            }
             else
+            {
                 isAiming = false;
+            }
 
             SetAim();
 
             switch (weaponShootType)
             {
                 case WeaponShootType.Manual:
-                    if (playerInput.Fire) TryShot();
+                    if (playerInput.Fire)
+                    {
+                        TryShot();
+                    }
                     break;
                 case WeaponShootType.Automatic:
-                    if (playerInput.HeldFire) TryShot();
+                    if (playerInput.HeldFire)
+                    {
+                        TryShot();
+                    }
                     break;
             }
         }
 
         void SetAim()
         {
-            if(animator)
-                 animator.SetBool("Aim", isAiming);
+            if (animator)
+            {
+                animator.SetBool("Aim", isAiming);
+            }
+
             if (isAiming)
             {
                 playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);
                 if (reticle)
+                {
                     reticle.gameObject.SetActive(false);
+                }
             }
             else
             {
                 playerCamara.SetNormalFovOfCamera(aimSpeed);
                 if (reticle)
+                {
                     reticle.gameObject.SetActive(true);
+                }
             }
         }
 
@@ -296,9 +338,13 @@ namespace Musashi
             if (Time.time > lastTimeShot + fireRate)
             {
                 if (animator)
+                {
                     animator.Play("Shot");
+                }
                 else
+                {
                     Shot();
+                }
             }
         }
 
@@ -311,7 +357,9 @@ namespace Musashi
             poolObjectManager.UsePoolObject(muzzle.position, muzzle.rotation, SetPoolObj);
 
             if (audioSource)
+            {
                 audioSource.Play(shotSFX, audioSource.volume);
+            }
 
             CurrentAmmo--;
 
@@ -319,7 +367,9 @@ namespace Musashi
             //    ammoCounter.Display(currentAmmo);
 
             if (reticle)
+            {
                 reticle.IsShot = true;
+            }
 
             lastTimeShot = Time.time;
         }
@@ -335,11 +385,21 @@ namespace Musashi
         public void OnEnable()
         {
             if (ammoCounter)
+            {
                 ammoCounter.Display(currentAmmo);
+            }
+
+            if (currentWeaponAmmoCounter)
+            {
+                currentWeaponAmmoCounter.AmmoCounterText.text = CurrentAmmo.ToString();
+                currentWeaponAmmoCounter.AmmoCounterSllider.fillAmount = currentAmmo / maxAmmo;
+            }
 
             if (reticle)
+            {
                 reticle.IsDefult = false;
-      
+            }
+
             playerEvent = transform.GetComponentInParent<PlayerEventManager>();
             if (playerEvent)
             {
@@ -360,10 +420,19 @@ namespace Musashi
         public void OnDisable()
         {
             if (ammoCounter)
+            {
                 ammoCounter.Text.enabled = false;
+            }
+
+            if (currentWeaponAmmoCounter)
+            {
+                currentWeaponAmmoCounter.Init();
+            }
 
             if (reticle)
-                reticle.IsDefult = true;           
+            {
+                reticle.IsDefult = true;
+            }
 
             if (playerEvent)
             {
