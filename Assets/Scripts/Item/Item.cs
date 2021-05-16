@@ -11,11 +11,13 @@ namespace Musashi
         public Action<GameObject> OnPickUpEvent;
         public Action<GameObject> OnUseEvent;
         public Action OnDropEvent;
-       
+
         [SerializeField] ItemSettingSOData itemSetting;
 
         [SerializeField] int id;//識別id (ランダム生成)
+        [Tooltip("If item type is Ammo box, maxStackSize is MaxAmmoNumber ")]
         [SerializeField,Range(1, 100)] int maxStackSize = 1;
+        [Tooltip("If item type is Ammo box, stackSize is  adding ammoNumber ")]
         [SerializeField,Range(1, 100)] int stackSize = 1;
         [SerializeField] float dropPosOffset = 1f;
         public string ItemName { get; private set; }
@@ -36,9 +38,13 @@ namespace Musashi
             OnPickUpEvent += (GameObject player) =>
             {
                 if (ItemType == ItemType.Rifle)
+                {
                     player.GetComponent<PlayerWeaponManager>().CanGetItem(this);
+                }
                 else
+                {
                     player.GetComponent<PlayerItemInventory>().CanGetItem(this);
+                }
             };
 
             OnDropEvent += () =>
@@ -65,8 +71,6 @@ namespace Musashi
             ItemType = itemSetting.itemType;
             Icon = itemSetting.icon;
             Stackable = itemSetting.stackable;
-            //MaxStacSize = itemSetting.maxStackSize;
-            //StacSize = itemSetting.stackSize;
         }
 
         public void Excute(GameObject player)

@@ -29,7 +29,6 @@ namespace Musashi
 
         /// <summary>
         /// 弾薬ボックスを拾ったか、銃を拾ったら弾薬所持数を更新する。
-        /// イベントから呼ばれる
         /// </summary>
         public void AddSumOfAmmo(int getAmmoNumber)
         {
@@ -86,7 +85,9 @@ namespace Musashi
         {
             sumNumberOfAmmoInInventory--;
             if (sumNumberOfAmmoInInventory < 0)
+            {
                 sumNumberOfAmmoInInventory = 0;
+            }
             return 1;
         }
     }

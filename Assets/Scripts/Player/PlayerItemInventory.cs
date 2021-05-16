@@ -11,6 +11,7 @@ namespace Musashi
         [SerializeField] ItemDataBase itemDataBase;
         [SerializeField] CanvasGroup inventoryCanvasGroup;
         [SerializeField] ItemSlot[] itemSlots;
+        [SerializeField] AmmoCounter ammoCounter;
 
         bool isOpenInventory = false;
         public bool IsSlotSelected { get => SelectedSlot != null; }
@@ -80,6 +81,10 @@ namespace Musashi
                 if (!itemSlots[i].IsEmpty && itemSlots[i].currentItemInSlot.ItemName == getItem.ItemName && !itemSlots[i].IsFilled)
                 {
                     itemSlots[i].AddItemInSlot(getItem);
+                    if(getItem.ItemType == ItemType.AmmoBox)
+                    {
+                        ammoCounter.AddSumOfAmmo(getItem.StacSize);
+                    }
                     return true;
                 }
 
@@ -87,6 +92,10 @@ namespace Musashi
                 if (itemSlots[i].IsEmpty)
                 {
                     itemSlots[i].SetInfo(getItem);
+                    if (getItem.ItemType == ItemType.AmmoBox)
+                    {
+                        ammoCounter.AddSumOfAmmo(getItem.StacSize);
+                    }
                     return true;
                 }
             }
