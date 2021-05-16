@@ -435,10 +435,6 @@ namespace Musashi
 
         public void OnDisable()
         {
-            if (currentWeaponAmmoCounter)
-            {
-                currentWeaponAmmoCounter.Init();
-            }
 
             if (reticle)
             {
