@@ -15,33 +15,48 @@ namespace Musashi
             OnUseEvent += Heal;
         }
 
-        public void Heal(GameObject player)
+        public void Heal(GameObject main)
         {
-            if (player.TryGetComponent(out PlayerHealthControl healthControl))
+            PlayerHealthControl healthControl = main.GetComponentInChildren<PlayerHealthControl>();
+
+            if (healthControl)
             {
-                if (healthControl.enabled)
+                if (healthControl.IsMaxHP)
                 {
-                    if (healthControl.IsMaxHP)
-                    {
-                        InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
-                    }
-                    else
-                    {
-                        healthControl.Heal(healPoint, healtime);//回復時間を実装する
-                        CanUseItem = true;
-                        return;
-                    }
+                    InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
                 }
                 else
                 {
-                    Debug.LogWarning($"PlayerHealthControlコンポーネントのアクティブがoffになっています");
+                    healthControl.Heal(healPoint, healtime);//回復時間を実装する
+                    CanUseItem = true;
+                    return;
                 }
             }
-            else
-            {
-                Debug.LogWarning($"PlayerHealthControlコンポーネントがPlayerにアタッチされていません");
-            }
-            CanUseItem = false;
+            //if (player.TryGetComponent(out PlayerHealthControl healthControl))
+            //{
+            //    if (healthControl.enabled)
+            //    {
+            //        if (healthControl.IsMaxHP)
+            //        {
+            //            InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
+            //        }
+            //        else
+            //        {
+            //            healthControl.Heal(healPoint, healtime);//回復時間を実装する
+            //            CanUseItem = true;
+            //            return;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Debug.LogWarning($"PlayerHealthControlコンポーネントのアクティブがoffになっています");
+            //    }
+            //}
+            //else
+            //{
+            //    Debug.LogWarning($"PlayerHealthControlコンポーネントがPlayerにアタッチされていません");
+            //}
+            //CanUseItem = false;
         }
     }
 }
