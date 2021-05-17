@@ -55,12 +55,14 @@ namespace Musashi
             Debug.Log("GameOver");
             IsGameClear = false;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
+            GameEventManeger.Instance.Excute(GameEventType.EndGame);
         }
         public void GameClear()
         {
             Debug.Log("GameClear");
             IsGameClear = true;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
+            GameEventManeger.Instance.Excute(GameEventType.EndGame);
         }
 
         //other setting Method
