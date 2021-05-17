@@ -10,10 +10,11 @@ namespace Musashi
     /// </summary>
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
     {
+        [SerializeField] TargetType targetType;
         [SerializeField] protected float maxHp;
         [SerializeField] protected Image healthBarFillImage = default;
-        [SerializeField] float healthBarHightOffset;
         [SerializeField] bool useBillBord;
+        [SerializeField] float healthBarHightOffset;
         protected float currentHp;
 
 
@@ -38,7 +39,9 @@ namespace Musashi
             CurrentHp = maxHp;
 
             if (healthBarFillImage && useBillBord)
+            {
                 StartCoroutine(BillBoard());
+            }
         }
 
         IEnumerator BillBoard()
@@ -56,7 +59,10 @@ namespace Musashi
             if (IsDead) return;
 
             CurrentHp -= damage;
-            if (CurrentHp <= 0) OnDie();
+            if (CurrentHp <= 0)
+            {
+                OnDie();
+            }
         }
 
         protected virtual void OnDie()
@@ -64,8 +70,15 @@ namespace Musashi
             IsDead = true;
 
             if(healthBarFillImage)
+            {
                 healthBarFillImage.transform.parent.gameObject.SetActive(false);
+            }
             gameObject.SetActive(false);
+        }
+
+        public TargetType GetTargetType()
+        {
+            return targetType;
         }
     }
 }

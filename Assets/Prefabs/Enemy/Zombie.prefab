@@ -2678,10 +2678,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1150190bc197e8841ae45f7a24ad2bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 200
+  targetType: 1
+  maxHp: 100
   healthBarFillImage: {fileID: 8816496100648991307}
-  healthBarHightOffset: 1.881
   useBillBord: 1
+  healthBarHightOffset: 1.881
   dethEffect: {fileID: 0}
 --- !u!114 &8406177044936173292
 MonoBehaviour:

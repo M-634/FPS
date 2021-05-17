@@ -10,7 +10,7 @@ namespace Musashi
     {
         #region field
         [Header("Set VFX")]
-        [SerializeField] GameObject decalVFX;
+        [SerializeField] GameObject decalVFX;//デフォルトのエフェクト
         [SerializeField] GameObject bloodVFX;
 
         [Header("Set pool Parent Object")]
@@ -63,6 +63,15 @@ namespace Musashi
 
             poolObject.SetActiveAll(false);
             return poolObject;
+        }
+
+        public GameObject SelectVFX(TargetType targetType)
+        {
+            if(targetType == TargetType.Humanoid)
+            {
+                return bloodVFX;
+            }
+            return decalVFX;//とりあえず、当たったらこのエフェクトが出るようにする。後々、当たったオブジェット後にエフェクトを分ける予定
         }
     }
 }
