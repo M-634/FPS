@@ -11,10 +11,10 @@ namespace Musashi
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
     {
         [SerializeField] TargetType targetType;
-        [SerializeField] protected float maxHp;
-        [SerializeField] protected Image healthBarFillImage = default;
         [SerializeField] bool useBillBord;
         [SerializeField] float healthBarHightOffset;
+        [SerializeField] protected float maxHp;
+        [SerializeField] protected Image healthBarFillImage;
         protected float currentHp;
 
 
