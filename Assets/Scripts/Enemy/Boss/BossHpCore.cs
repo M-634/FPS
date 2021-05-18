@@ -15,18 +15,24 @@ namespace Musashi
         [SerializeField] float backBarToFillBarDuration;
         [SerializeField] UnityEvent bossDeadEvent;
 
+        public bool invincible = true;//無敵モードフラグ(ダメージ受けない)
+         
         protected override void Start()
         {
             //（fullHpDuration）秒かけて㏋ゲージを上昇させる
             DOTween.To(() => CurrentHp, (x) => CurrentHp = x, maxHp, fullHpDuration)
                    .SetEase(Ease.Linear)
-                   .OnComplete(() => healthBarRed.fillAmount = 1f);
+                   .OnComplete(() => 
+                   {
+                       healthBarRed.fillAmount = 1f;
+                       invincible = false;
+                   });
         }
 
 
         public override void OnDamage(float damage)
         {
-            if (IsDead) return;
+            if (IsDead || invincible) return;
 
             CurrentHp -= damage;
 

@@ -2774,6 +2774,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  invincible: 1
 --- !u!135 &7207355144049851702
 SphereCollider:
   m_ObjectHideFlags: 0
