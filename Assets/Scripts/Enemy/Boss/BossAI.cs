@@ -71,7 +71,7 @@ namespace Musashi
             if (haveDead) return;
 
             //死亡アニメーションが終わったら
-            if (owner.BossAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+            if (owner.BossAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)//error : GetCurrentAnimatorStateInfo(0).normalizedTime  = -1
             {
                 //GameManager.Instance.GameClear();
                 Debug.Log("a");
