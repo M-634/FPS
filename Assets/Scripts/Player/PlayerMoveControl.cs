@@ -44,6 +44,8 @@ namespace Musashi
         InputProvider playerInput;
         CharacterController characterController;
 
+       
+
         private void Start()
         {
             playerInput = GetComponentInParent<InputProvider>();

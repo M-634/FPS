@@ -10,18 +10,22 @@ namespace Musashi
     /// </summary>
     public class BossRoom : MonoBehaviour
     {
+        [SerializeField] GameObject movieCamera;
         /// <summary>実際にプレイヤーと戦うボスプレハブ</summary>
         [SerializeField] GameObject bossAIPrefab;
         [SerializeField] GameObject bossCutSceneObj;
-       
+        [SerializeField] Transform playerStartPos;
         [SerializeField] PlayableDirector director;
 
+        GameObject player;
         Vector3 spwanPosition;
         bool hasEntered;//プレイヤーがボス部屋に入ったら、フラグを立てる
 
         private void MovieStartAction(PlayableDirector playable)
         {
             bossCutSceneObj.SetActive(true);
+            player.gameObject.SetActive(false);
+            movieCamera.SetActive(true);
             Debug.Log("movie start");
         }
 
@@ -29,7 +33,17 @@ namespace Musashi
         {
             spwanPosition = bossCutSceneObj.transform.position;
             Destroy(bossCutSceneObj);
-            Instantiate(bossAIPrefab,spwanPosition,Quaternion.identity);
+
+            Instantiate(bossAIPrefab, spwanPosition, Quaternion.identity);
+
+            movieCamera.SetActive(false);
+
+            player.gameObject.SetActive(true);
+            if (playerStartPos)
+            {
+                player.transform.position = playerStartPos.position;
+            }
+
             Debug.Log("movie end");
         }
 
@@ -39,11 +53,18 @@ namespace Musashi
 
             if (other.CompareTag("Player"))
             {
-                if (director)
-                {
-                    director.Play();
-                }
-                hasEntered = true;
+                player = other.transform.parent.gameObject;
+             
+                GameManager.Instance.SceneLoder.FadeScreen(FadeType.Out, 2f,
+                    () =>
+                    {
+                        if (director)
+                        {
+                            player.gameObject.SetActive(false);
+                            director.Play();
+                        }
+                        hasEntered = true;
+                    });
             }
         }
 
