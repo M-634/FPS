@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.28502586, g: 0.37139237, b: 0.4960093, a: 1}
+  m_IndirectSpecularColor: {r: 0.2850269, g: 0.3713935, b: 0.49601045, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -485,11 +485,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movieCamera: {fileID: 1198971743}
+  director: {fileID: 1130541726}
   bossAIPrefab: {fileID: 8612697287673763374, guid: cf4b62ed1077cc54aab07bba9a9d022c,
     type: 3}
   bossCutSceneObj: {fileID: 7207355143141623587}
   playerStartPos: {fileID: 1966264580}
-  director: {fileID: 1130541726}
 --- !u!320 &1130541726
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -564,7 +564,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1198971744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3131,6 +3131,7 @@ MonoBehaviour:
   healthBarRed: {fileID: 0}
   fullHpDuration: 0
   backBarToFillBarDuration: 0
+  invincible: 1
   bossDeadEvent:
     m_PersistentCalls:
       m_Calls:
@@ -3145,7 +3146,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  invincible: 1
 --- !u!135 &7207355144049851702
 SphereCollider:
   m_ObjectHideFlags: 0

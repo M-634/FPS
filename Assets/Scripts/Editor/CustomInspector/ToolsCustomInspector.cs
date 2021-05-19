@@ -27,4 +27,19 @@ namespace Musashi
     }
 
 
+    [CustomEditor(typeof(SkinMeshRendererToMeshRenderer))]
+    public class SkinMeshRendererToMeshRendererCustomInspector : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            var t = target as SkinMeshRendererToMeshRenderer;
+            if (GUILayout.Button("Apply"))
+            {
+                t.Excute();
+            }
+        }
+    }
+
 }

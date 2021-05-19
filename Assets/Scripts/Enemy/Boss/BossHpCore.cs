@@ -11,12 +11,14 @@ namespace Musashi
     public sealed class BossHpCore : BaseHealthControl
     {
         [SerializeField] Image healthBarRed;
+
         [SerializeField] float fullHpDuration = 1f;
         [SerializeField] float backBarToFillBarDuration;
-        [SerializeField] UnityEvent bossDeadEvent;
 
         public bool invincible = true;//無敵モードフラグ(ダメージ受けない)
-         
+
+        [SerializeField] UnityEvent bossDeadEvent;
+ 
         protected override void Start()
         {
             //（fullHpDuration）秒かけて㏋ゲージを上昇させる
