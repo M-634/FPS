@@ -10,7 +10,7 @@ namespace Musashi
     public class SceneLoder : MonoBehaviour
     {
         [SerializeField] Image fadeImage;
-        [SerializeField] float fadeTime = 120f;
+        [SerializeField] float fadeSceneTime = 120f;
 
         public int GetActiveSceneBuildIndex
         {
@@ -54,7 +54,7 @@ namespace Musashi
             //FadeOutImage
             while (true)
             {
-                timer += Time.deltaTime / fadeTime;
+                timer += Time.deltaTime / fadeSceneTime;
                 fadeImage.color = Color.Lerp(fadeImage.color, Color.black, timer);
                 if (fadeImage.color.a > 0.99f)
                 {
@@ -62,7 +62,6 @@ namespace Musashi
                 }
                 yield return null;
             }
-
 
             //LoadScene
             AsyncOperation async = SceneManager.LoadSceneAsync(buildIndex);
@@ -85,5 +84,18 @@ namespace Musashi
         {
             SceneManager.UnloadSceneAsync((int)buildIndex);
         }
+
+
+        /// <summary>
+        /// シーンをただ、フェードイン、フェードアウトするクラス。シーンはロードしない
+        /// </summary>
+        /// <param name="fadetype"></param>
+        /// <param name="duration"></param>
+        /// <param name="callback"></param>
+        public void FadeScreen(FadeType fadetype, float duration, UnityAction callback = null)
+        {
+            fadeImage.FadeImage(fadetype, duration, callback);
+        }
+        
     }
 }

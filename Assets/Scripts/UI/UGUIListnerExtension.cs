@@ -27,5 +27,32 @@ namespace Musashi
             canvasGroup.alpha = 0f;
             canvasGroup.blocksRaycasts = false;
         }
+
+        public static void FadeImage(this Image image, FadeType type,float duration,UnityAction callback = null)
+        {
+            image.enabled = true;
+          
+            Color endValue;
+            if (type == FadeType.In)
+            {
+                endValue = Color.clear;
+            }
+            else
+            {
+                endValue = Color.black;
+            }
+
+            DOTween.To(() => image.color, (x) => image.color = x, endValue, duration)
+                   .OnComplete(() =>
+                   {
+                       callback?.Invoke();
+                       image.enabled = false;
+                   });
+        }
+    }
+
+    public enum FadeType
+    {
+        In,Out
     }
 }

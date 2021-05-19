@@ -325,6 +325,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4188968124545071891}
+  - {fileID: 7192153009526686167}
   - {fileID: 154017470342540569}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -517,7 +518,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 154017469317887536}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &240416602061444399
 GameObject:
@@ -5002,7 +5003,6 @@ Transform:
   - {fileID: 4188968125795923295}
   - {fileID: 4188968125416222654}
   - {fileID: 4188968124950863478}
-  - {fileID: 7192153009526686167}
   m_Father: {fileID: 154017469317887536}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5144,10 +5144,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd7dabbea2ba04a42ae136344fd779ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetType: 0
   maxHp: 200
   healthBarFillImage: {fileID: 7192153008260627947}
-  healthBarHightOffset: 0
   useBillBord: 0
+  healthBarHightOffset: 0
   damageEffectImage: {fileID: 9058779438895886940}
 --- !u!114 &4188968124545071903
 MonoBehaviour:
@@ -8826,8 +8827,8 @@ RectTransform:
   - {fileID: 6800823257190577892}
   - {fileID: 3438789235530975631}
   - {fileID: 6321258752531947604}
-  m_Father: {fileID: 4188968124545071891}
-  m_RootOrder: 3
+  m_Father: {fileID: 154017469317887536}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -0.36900002, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
