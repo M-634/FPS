@@ -6,7 +6,7 @@ namespace Musashi
 {
     public class EnemyHealthControl : BaseHealthControl
     {
-        [Header("RagDoll")]
+        [Header("DeadVFX")]
         [SerializeField] GameObject dethEffect;
         EnemyAI owner;
 
@@ -17,7 +17,9 @@ namespace Musashi
             owner = GetComponent<EnemyAI>();
 
             if (dethEffect)
+            {
                 dethEffect.SetActive(false);
+            }
         }
 
         public override void OnDamage(float damage)
@@ -25,7 +27,9 @@ namespace Musashi
             base.OnDamage(damage);
 
             if (owner)
+            {
                 owner.ChangeState(owner.EnemyOnDamage);
+            }
         }
 
         protected override void OnDie()
@@ -42,7 +46,9 @@ namespace Musashi
 
             //hide helth bar
             if (healthBarFillImage)
+            {
                 healthBarFillImage.transform.parent.gameObject.SetActive(false);
+            }
 
             //hide enemy object
             transform.gameObject.SetActive(false);
