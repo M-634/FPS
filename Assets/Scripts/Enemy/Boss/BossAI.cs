@@ -1,25 +1,41 @@
 ﻿using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Musashi
 {
 
-    public enum BossAttackType
-    {
-        Melee,//近接
-        Range,//遠距離
-        Whole//全体
-    }
-
     /// <summary>
     /// プレイヤーとの距離、ボスの残り体力に応じて攻撃パターンを変化す
     /// </summary>
     public class BossAI : MonoBehaviour
     {
+        public enum BossAttackType
+        {
+            Melee,//近接
+            Long,//遠距離
+            Whole//全体
+        }
+
         #region field
         [SerializeField] float normalSpeed;
         [SerializeField] float pursueSpeed;
+
+        [SerializeField] Transform eye;
+        [SerializeField] float visitDistance = 10.0f;
+        [SerializeField] float viewingAngle = 30.0f;
+     
+        [SerializeField] float meleeRange = 5.0f;
+        [SerializeField] float longRange = 10.0f;
+        [SerializeField] float wholeRange = 12.0f;
+
+        [SerializeField, Range(0, 1f)] float turnAroundInterpolationSpeed = 0.1f;
+
+        [SerializeField] Color meleeRangeColor;
+        [SerializeField] Color longRangeColor;
+        [SerializeField] Color wholeRangeColor;
+
         Transform target;
         NavMeshAgent agent;
         Animator animator;
@@ -28,14 +44,21 @@ namespace Musashi
         #endregion
 
         #region property
+        public float NormalSpeed => normalSpeed;
         public float PursueSpeed => pursueSpeed;
+        public float VisitDistance => visitDistance;
+        public float ViewingAngle => viewingAngle;
+        public float TurnAroundInterpolationSpeed => turnAroundInterpolationSpeed;
+        public Transform Eye => eye;
         public Transform Target => target;
         public NavMeshAgent Agent => agent;
         public Animator BossAnim => animator;
+        public BossAttackType AttackType { get => attackType; set => attackType = value; }
         public StateMacnie<BossAI> StateMacnie => stateMacnie;
         #region State
         public IState<BossAI> Idle { get; set; } = new BossIdle();
         public IState<BossAI> Pursure { get; set; } = new BossPursuePlayer();
+        public IState<BossAI> Attack { get; set; } = new BossAttack();
         public IState<BossAI> Dead { get; set; } = new BossDead();
         #endregion
 
@@ -43,10 +66,15 @@ namespace Musashi
 
         void Start()
         {
+            if (eye == null)
+            {
+                eye = this.transform;
+            }
             target = GameObject.FindGameObjectWithTag("Player").transform;
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             stateMacnie = new StateMacnie<BossAI>(this, Idle);
+            attackType = BossAttackType.Melee;
         }
 
         void Update()
@@ -58,6 +86,54 @@ namespace Musashi
         {
             stateMacnie.ChangeState(Dead);
         }
+
+        /// <summary>
+        /// プレイヤーとの距離とHPの状況に応じて攻撃タイプを変える。
+        /// 攻撃条件を満たせばTrueを返す。
+        /// </summary>
+        /// <returns></returns>
+        public bool SelectAttackType()
+        {
+            if (AIHelper.CanAttackPlayer(target, this.transform, meleeRange))
+            {
+                attackType = BossAttackType.Melee;
+                return true;
+            }
+
+            if (AIHelper.CanAttackPlayer(target, this.transform, longRange))
+            {
+                attackType = BossAttackType.Long;
+                return true;
+            }
+
+            if (AIHelper.CanAttackPlayer(target, this.transform, wholeRange))
+            {
+                attackType = BossAttackType.Whole;
+                return true;
+            }
+            return false;
+        }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            //if (CurrentState is EnemyAttack)
+            //{
+            //    Handles.color = attackRangeColor;
+            //    Handles.DrawSolidDisc(transform.position, Vector3.up, attackRange);
+            //}
+            //else
+            //{
+            //    Handles.color = visitDistanceColor;
+            //    Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0, -viewingAngle, 0) * transform.forward, viewingAngle * 2, visitDistance);
+
+            //    Handles.color = attackRangeColor;
+            //    Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0, -viewingAngle, 0) * transform.forward, viewingAngle * 2, attackRange);
+            //}
+            Handles.color = meleeRangeColor;
+            Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0, -viewingAngle, 0) * transform.forward, viewingAngle * 2, meleeRange);
+        }
+#endif
     }
 
     public class BossIdle : IState<BossAI>
@@ -91,15 +167,53 @@ namespace Musashi
 
         public void OnExit(BossAI owner, IState<BossAI> nextState = null)
         {
-    
+
         }
 
         public void OnUpdate(BossAI owner)
         {
             owner.Agent.SetDestination(owner.Target.position);
+
+            if (owner.SelectAttackType())
+            {
+                owner.StateMacnie.ChangeState(owner.Attack);
+            }
         }
     }
 
+    public class BossAttack : IState<BossAI>
+    {
+        public void OnEnter(BossAI owner, IState<BossAI> prevState = null)
+        {
+            if(owner.AttackType == BossAI.BossAttackType.Melee)
+            {
+                //近接 
+            }
+
+            if(owner.AttackType == BossAI.BossAttackType.Long)
+            {
+                //遠距離
+            }
+
+            if(owner.AttackType == BossAI.BossAttackType.Whole)
+            {
+                //全体
+            }
+        }
+
+        public void OnExit(BossAI owner, IState<BossAI> nextState = null)
+        {
+         
+        }
+
+        public void OnUpdate(BossAI owner)
+        {
+            if(owner.BossAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+            {
+                owner.StateMacnie.ChangeState(owner.Idle);
+            }
+        }
+    }
 
     public class BossDead : IState<BossAI>
     {
