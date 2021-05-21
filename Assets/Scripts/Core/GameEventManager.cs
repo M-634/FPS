@@ -8,18 +8,18 @@ namespace Musashi
     /// <summary>
     /// ゲーム全体に関わるイベントを通知するクラス
     /// </summary>
-    public class GameEventManeger : IDisposable
+    public class GameEventManager : IDisposable
     {
         public Dictionary<GameEventType, Action> eventTable;
 
-        private static GameEventManeger instance;
-        public static GameEventManeger Instance
+        private static GameEventManager instance;
+        public static GameEventManager Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new GameEventManeger
+                    instance = new GameEventManager
                     {
                         eventTable = new Dictionary<GameEventType, Action>(),
                     };

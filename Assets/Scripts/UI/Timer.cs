@@ -38,15 +38,15 @@ namespace Musashi
         private void OnEnable()
         {
             if (!timerText) return;
-            GameEventManeger.Instance.Subscribe(GameEventType.StartGame,StartTimer);
-            GameEventManeger.Instance.Subscribe(GameEventType.EndGame, () => onTime = false);
+            GameEventManager.Instance.Subscribe(GameEventType.StartGame,StartTimer);
+            GameEventManager.Instance.Subscribe(GameEventType.EndGame, () => onTime = false);
         }
 
         private void OnDisable()
         {
             if (!timerText) return;
-            GameEventManeger.Instance.UnSubscribe(GameEventType.StartGame,StartTimer);
-            GameEventManeger.Instance.UnSubscribe(GameEventType.EndGame, () => onTime = false);
+            GameEventManager.Instance.UnSubscribe(GameEventType.StartGame,StartTimer);
+            GameEventManager.Instance.UnSubscribe(GameEventType.EndGame, () => onTime = false);
             currutine = null;
         }
     }

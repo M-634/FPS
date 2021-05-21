@@ -7,7 +7,7 @@ namespace Musashi
     public class EnemyHealthControl : BaseHealthControl
     {
         [Header("DeadVFX")]
-        [SerializeField] GameObject dethEffect;
+        [SerializeField] GameObject deathEffect;
         EnemyAI owner;
 
         protected override void Start()
@@ -16,9 +16,9 @@ namespace Musashi
 
             owner = GetComponent<EnemyAI>();
 
-            if (dethEffect)
+            if (deathEffect)
             {
-                dethEffect.SetActive(false);
+                deathEffect.SetActive(false);
             }
         }
 
@@ -37,10 +37,10 @@ namespace Musashi
             IsDead = true;
 
             //Active ragdoll
-            if (dethEffect)
+            if (deathEffect)
             {
-                dethEffect.transform.position = transform.position;
-                dethEffect.SetActive(true);
+                deathEffect.transform.position = transform.position;
+                deathEffect.SetActive(true);
             }
 
 

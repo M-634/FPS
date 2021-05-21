@@ -2,12 +2,12 @@
 
 namespace Musashi
 {
-    public class StateMacnie<T> where T : MonoBehaviour
+    public class StateMachine<T> where T : MonoBehaviour
     {
         public IState<T> CurrentState { get; set; }
         public T owner;
 
-        public StateMacnie(T owner, IState<T> state)
+        public StateMachine(T owner, IState<T> state)
         {
             this.owner = owner;
             CurrentState = state;

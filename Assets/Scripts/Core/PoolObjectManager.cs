@@ -22,7 +22,7 @@ namespace Musashi
                 poolObjects = new List<GameObject>();
             }
 
-            public bool ActiveSlef
+            public bool ActiveSelf
             {
                 get
                 {
@@ -103,7 +103,7 @@ namespace Musashi
         {
             foreach (var item in poolTable)
             {
-                if (item.ActiveSlef) continue;
+                if (item.ActiveSelf) continue;
 
                 item.SetPositionAndRotation(pos, quaternion);
                 item.SetActiveAll(true);
@@ -126,7 +126,7 @@ namespace Musashi
         {
             foreach (var item in poolTable)
             {
-                if (item.ActiveSlef) continue;
+                if (item.ActiveSelf) continue;
 
                 item.SetPositionAndRotation(pos, quaternion);
                 item.SetActive(gameObject, true);

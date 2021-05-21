@@ -39,7 +39,7 @@ namespace Musashi
         Transform target;
         NavMeshAgent agent;
         Animator animator;
-        StateMacnie<BossAI> stateMacnie;
+        StateMachine<BossAI> stateMacnie;
         BossAttackType attackType;
         #endregion
 
@@ -54,7 +54,7 @@ namespace Musashi
         public NavMeshAgent Agent => agent;
         public Animator BossAnim => animator;
         public BossAttackType AttackType { get => attackType; set => attackType = value; }
-        public StateMacnie<BossAI> StateMacnie => stateMacnie;
+        public StateMachine<BossAI> StateMacnie => stateMacnie;
         #region State
         public IState<BossAI> Idle { get; set; } = new BossIdle();
         public IState<BossAI> Pursure { get; set; } = new BossPursuePlayer();
@@ -73,7 +73,7 @@ namespace Musashi
             target = GameObject.FindGameObjectWithTag("Player").transform;
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
-            stateMacnie = new StateMacnie<BossAI>(this, Idle);
+            stateMacnie = new StateMachine<BossAI>(this, Idle);
             attackType = BossAttackType.Melee;
         }
 

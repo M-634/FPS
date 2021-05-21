@@ -59,14 +59,20 @@ namespace Musashi
 
         private void OnEnable()
         {
-            GameEventManeger.Instance.Subscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
-            GameEventManeger.Instance.Subscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
+            GameEventManager.Instance.Subscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
+            GameEventManager.Instance.Subscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
         }
 
         private void OnDisable()
         {
-            GameEventManeger.Instance.UnSubscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
-            GameEventManeger.Instance.UnSubscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
+            GameEventManager.Instance.UnSubscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
+            GameEventManager.Instance.UnSubscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
+        }
+
+        private void OnDestroy()
+        {
+            GameEventManager.Instance.UnSubscribe(GameEventType.EnemyDie, UpdateEnemyCounter);
+            GameEventManager.Instance.UnSubscribe(GameEventType.SpawnDie, UpdateSpwanerCounter);
         }
     }
 }

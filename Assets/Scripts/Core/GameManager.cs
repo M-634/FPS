@@ -12,10 +12,10 @@ namespace Musashi
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         [SerializeField] SoundManager soundManager;
-        [SerializeField] SceneLoder sceneLoder;
+        [SerializeField] SceneLoader sceneLoder;
         [SerializeField] Configure configure;
         public SoundManager SoundManager => soundManager;
-        public SceneLoder SceneLoder => sceneLoder;
+        public SceneLoader SceneLoder => sceneLoder;
         public bool HaveShowConfigure => configure.gameObject.activeSelf;
         public bool IsGameClear { get; private set; }
 
@@ -55,14 +55,14 @@ namespace Musashi
             Debug.Log("GameOver");
             IsGameClear = false;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
-            GameEventManeger.Instance.Excute(GameEventType.EndGame);
+            GameEventManager.Instance.Excute(GameEventType.EndGame);
         }
         public void GameClear()
         {
             Debug.Log("GameClear");
             IsGameClear = true;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
-            GameEventManeger.Instance.Excute(GameEventType.EndGame);
+            GameEventManager.Instance.Excute(GameEventType.EndGame);
         }
 
         //other setting Method

@@ -108,7 +108,7 @@ namespace Musashi.Level
             if (player)
             {
                 SpwanObjectInRoom(player, listOfRoomFloors[0], playerSpwanOffset);
-                GameEventManeger.Instance.Excute(GameEventType.StartGame);
+                GameEventManager.Instance.Excute(GameEventType.StartGame);
             }
         }
 

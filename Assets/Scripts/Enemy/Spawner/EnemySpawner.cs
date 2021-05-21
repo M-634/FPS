@@ -98,7 +98,7 @@ namespace Musashi
         {
             IsDead = true;
             IsGenerating = false;
-            GameEventManeger.Instance.Excute(GameEventType.SpawnDie);
+            GameEventManager.Instance.Excute(GameEventType.SpawnDie);
 
             if (healthBarFillImage)
             {

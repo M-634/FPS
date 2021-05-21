@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Musashi
 {
-    public class SceneLoder : MonoBehaviour
+    public class SceneLoader : MonoBehaviour
     {
         [SerializeField] Image fadeImage;
         [SerializeField] float fadeSceneTime = 120f;
@@ -75,6 +75,7 @@ namespace Musashi
             callback?.Invoke();
         }
 
+  
         public void LoadAddtiveScene(SceneInBuildIndex buildIndex)
         {
             SceneManager.LoadScene((int)buildIndex, LoadSceneMode.Additive);

@@ -1377,5 +1377,65 @@ PrefabInstance:
       propertyPath: pursueSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: longRangeColor.a
+      value: 0.2627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: longRangeColor.b
+      value: 0.9339623
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: longRangeColor.g
+      value: 0.04366191
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: longRangeColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: meleeRangeColor.a
+      value: 0.27058825
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: meleeRangeColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: meleeRangeColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: meleeRangeColor.r
+      value: 0.25833046
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: wholeRangeColor.a
+      value: 0.30588236
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: wholeRangeColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: wholeRangeColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8612697288889109375, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: wholeRangeColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf4b62ed1077cc54aab07bba9a9d022c, type: 3}
