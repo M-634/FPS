@@ -10,12 +10,16 @@ namespace Musashi
     /// </summary>
     public class BossRoom : MonoBehaviour
     {
+        /// <summary>カットシーンに使用するカメラ </summary>
         [SerializeField] GameObject movieCamera;
+        /// <summary>カットシーンで使用するタイムライン </summary>
+        [SerializeField] PlayableDirector director;
         /// <summary>実際にプレイヤーと戦うボスプレハブ</summary>
         [SerializeField] GameObject bossAIPrefab;
+        /// <summary>カットシーンで使用するボスオブジェクト</summary>
         [SerializeField] GameObject bossCutSceneObj;
+        /// <summary>戦闘時のプレイヤーの初期位置</summary>
         [SerializeField] Transform playerStartPos;
-        [SerializeField] PlayableDirector director;
 
         GameObject player;
         Vector3 spwanPosition;

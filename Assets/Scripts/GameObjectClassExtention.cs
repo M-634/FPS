@@ -12,8 +12,18 @@ namespace Musashi
         public static async void SetActive(this GameObject gameObject, bool value, int lifeTime = 0)
         {
             await Task.Delay(1000 * lifeTime);// lifeTime 秒待つ
-            if(gameObject)
+
+            if (Application.isPlaying == false) return;
+
+            if (gameObject)
+            {
                 gameObject.SetActive(value);
+            }
+        }
+
+        public static void Test(this GameObject gameObject)
+        {
+            
         }
     }
 }

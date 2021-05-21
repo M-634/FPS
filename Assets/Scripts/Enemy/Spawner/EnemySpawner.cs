@@ -11,6 +11,8 @@ namespace Musashi
         [SerializeField, Range(1, 100)] int poolSize;
         [SerializeField] GameObject[] enemies;
         [SerializeField] GameObject[] dropItems;
+
+        [SerializeField] bool debug = false;
         GameObject dropItem;
 
         public bool IsGenerating { get; set; } = false;
@@ -83,6 +85,15 @@ namespace Musashi
             }
         }
 
+
+        public override void OnDamage(float damage)
+        {
+            if (debug) return;
+
+            base.OnDamage(damage);
+        }
+
+
         protected override void OnDie()
         {
             IsDead = true;
@@ -90,10 +101,14 @@ namespace Musashi
             GameEventManeger.Instance.Excute(GameEventType.SpawnDie);
 
             if (healthBarFillImage)
+            {
                 healthBarFillImage.transform.parent.gameObject.SetActive(false);
+            }
 
-            if (dropItem != null)  
+            if (dropItem != null)
+            {
                 dropItem.SetActive(true);
+            }
 
             gameObject.SetActive(false);
         }
