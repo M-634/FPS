@@ -188,6 +188,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7197702161593008378, guid: b26eebe75fdcbc84a8f80d3de06bcb6a,
+        type: 3}
+      propertyPath: fadeSceneTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7197702162286609497, guid: b26eebe75fdcbc84a8f80d3de06bcb6a,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -227,6 +232,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197702162586829993, guid: b26eebe75fdcbc84a8f80d3de06bcb6a,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197702162586829993, guid: b26eebe75fdcbc84a8f80d3de06bcb6a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8066022021021695626, guid: b26eebe75fdcbc84a8f80d3de06bcb6a,
         type: 3}

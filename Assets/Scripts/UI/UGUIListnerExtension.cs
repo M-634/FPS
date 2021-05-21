@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 namespace Musashi
 {
@@ -35,14 +36,16 @@ namespace Musashi
             Color endValue;
             if (type == FadeType.In)
             {
+                image.color = Color.black;
                 endValue = Color.clear;
             }
             else
             {
+                image.color = Color.clear;
                 endValue = Color.black;
             }
 
-            DOTween.To(() => image.color, (x) => image.color = x, endValue, duration)
+             DOTween.To(() => image.color, (x) => image.color = x, endValue, duration)
                    .OnComplete(() =>
                    {
                        callback?.Invoke();

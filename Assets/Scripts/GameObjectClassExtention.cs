@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Threading.Tasks;//async/awaitを使うため 
+using Cysharp.Threading.Tasks;
+using System;
 
 namespace Musashi
 {
@@ -11,7 +12,7 @@ namespace Musashi
         /// </summary>
         public static async void SetActive(this GameObject gameObject, bool value, int lifeTime = 0)
         {
-            await Task.Delay(1000 * lifeTime);// lifeTime 秒待つ
+            await UniTask.Delay(TimeSpan.FromSeconds(lifeTime),ignoreTimeScale: false);//lifeTime秒待つ
 
             if (Application.isPlaying == false) return;
 
@@ -19,11 +20,6 @@ namespace Musashi
             {
                 gameObject.SetActive(value);
             }
-        }
-
-        public static void Test(this GameObject gameObject)
-        {
-            
         }
     }
 }
