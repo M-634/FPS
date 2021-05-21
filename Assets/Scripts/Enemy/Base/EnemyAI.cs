@@ -71,8 +71,6 @@ namespace Musashi
 
         #region State's Instance and property
 
-
-
         public IEnemyState CurrentState { get; set; }
         public EnemyIdle EnemyIdle { get; } = new EnemyIdle();
         public EnemyPatrol EnemyPatrol { get; } = new EnemyPatrol();
