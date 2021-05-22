@@ -358,7 +358,6 @@ namespace Musashi
         /// </summary>
         public void Shot()
         {
-
             poolObjectManager.UsePoolObject(muzzle.position, muzzle.rotation, SetPoolObj);
 
             if (audioSource)
