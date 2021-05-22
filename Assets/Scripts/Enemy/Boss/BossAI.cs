@@ -7,7 +7,7 @@ namespace Musashi
 {
 
     /// <summary>
-    /// プレイヤーとの距離、ボスの残り体力に応じて攻撃パターンを変化す
+    /// プレイヤーとの距離、ボスの残り体力に応じて攻撃パターンを変化する
     /// </summary>
     public class BossAI : MonoBehaviour
     {
@@ -29,6 +29,7 @@ namespace Musashi
         [SerializeField] float meleeRange = 5.0f;
         [SerializeField] float longRange = 10.0f;
         [SerializeField] float wholeRange = 12.0f;
+        [SerializeField] float restTime = 2.0f;//攻撃してから次の攻撃までの休憩時間
 
         [SerializeField, Range(0, 1f)] float turnAroundInterpolationSpeed = 0.1f;
 
@@ -41,6 +42,8 @@ namespace Musashi
         Animator animator;
         StateMachine<BossAI> stateMacnie;
         BossAttackType attackType;
+
+        private float coolAttackTimer = 0;
         #endregion
 
         #region property
@@ -49,6 +52,7 @@ namespace Musashi
         public float VisitDistance => visitDistance;
         public float ViewingAngle => viewingAngle;
         public float TurnAroundInterpolationSpeed => turnAroundInterpolationSpeed;
+        public bool CoolTime { get; set; } = false;
         public Transform Eye => eye;
         public Transform Target => target;
         public NavMeshAgent Agent => agent;
@@ -80,6 +84,16 @@ namespace Musashi
         void Update()
         {
             stateMacnie.ExcuteOnUpdate();
+
+            if (CoolTime)
+            {
+                coolAttackTimer += Time.deltaTime;
+                if(coolAttackTimer > restTime)
+                {
+                    coolAttackTimer = 0f;
+                    CoolTime = false;
+                }
+            }
         }
 
         public void BossDie()
@@ -96,21 +110,26 @@ namespace Musashi
         {
             if (AIHelper.CanAttackPlayer(target, this.transform, meleeRange))
             {
+                if (CoolTime)
+                {
+                    agent.isStopped = true;
+                    return false;
+                }
                 attackType = BossAttackType.Melee;
                 return true;
             }
 
-            if (AIHelper.CanAttackPlayer(target, this.transform, longRange))
-            {
-                attackType = BossAttackType.Long;
-                return true;
-            }
+            //if (AIHelper.CanAttackPlayer(target, this.transform, longRange))
+            //{
+            //    attackType = BossAttackType.Long;
+            //    return true;
+            //}
 
-            if (AIHelper.CanAttackPlayer(target, this.transform, wholeRange))
-            {
-                attackType = BossAttackType.Whole;
-                return true;
-            }
+            //if (AIHelper.CanAttackPlayer(target, this.transform, wholeRange))
+            //{
+            //    attackType = BossAttackType.Whole;
+            //    return true;
+            //}
             return false;
         }
 
@@ -132,6 +151,8 @@ namespace Musashi
             //}
             Handles.color = meleeRangeColor;
             Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.Euler(0, -viewingAngle, 0) * transform.forward, viewingAngle * 2, meleeRange);
+
+            Gizmos.color = Color.red;
         }
 #endif
     }
@@ -141,6 +162,7 @@ namespace Musashi
         public void OnEnter(BossAI owner, IState<BossAI> prevState = null)
         {
             Debug.Log("Idle");
+            owner.Agent.isStopped = true;
             owner.BossAnim.Play("Idle");
         }
 
@@ -172,7 +194,9 @@ namespace Musashi
 
         public void OnUpdate(BossAI owner)
         {
+            AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
             owner.Agent.SetDestination(owner.Target.position);
+            Debug.Log(owner.Target.position);
 
             if (owner.SelectAttackType())
             {
@@ -185,9 +209,11 @@ namespace Musashi
     {
         public void OnEnter(BossAI owner, IState<BossAI> prevState = null)
         {
+            owner.Agent.isStopped = true;
             if(owner.AttackType == BossAI.BossAttackType.Melee)
             {
                 //近接 
+                owner.BossAnim.Play("Melee");
             }
 
             if(owner.AttackType == BossAI.BossAttackType.Long)
@@ -203,13 +229,14 @@ namespace Musashi
 
         public void OnExit(BossAI owner, IState<BossAI> nextState = null)
         {
-         
+            owner.CoolTime = true;
         }
 
         public void OnUpdate(BossAI owner)
         {
-            if(owner.BossAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+            if(owner.BossAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
             {
+                Debug.Log("a");
                 owner.StateMacnie.ChangeState(owner.Idle);
             }
         }

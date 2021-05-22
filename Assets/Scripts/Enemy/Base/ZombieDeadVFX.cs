@@ -16,9 +16,9 @@ namespace Musashi
         [SerializeField] int lifeTime = 2;
 
         Rigidbody[] rigidbodies;
-  
+
         // Start is called before the first frame update
-        void Start()
+        private void OnEnable()
         {
             rigidbodies = gameObject.GetComponentsInChildren<Rigidbody>();
 

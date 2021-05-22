@@ -36,7 +36,7 @@ namespace Musashi
         {
             IsDead = true;
 
-            //Active ragdoll
+
             if (deathEffect)
             {
                 deathEffect.transform.position = transform.position;

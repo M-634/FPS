@@ -2683,7 +2683,7 @@ MonoBehaviour:
   healthBarHightOffset: 1.881
   maxHp: 100
   healthBarFillImage: {fileID: 8816496100648991307}
-  dethEffect: {fileID: 2891397140563445201}
+  deathEffect: {fileID: 2891397140563445201}
 --- !u!114 &8406177044936173292
 MonoBehaviour:
   m_ObjectHideFlags: 0
