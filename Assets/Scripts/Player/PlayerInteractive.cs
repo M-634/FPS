@@ -26,7 +26,7 @@ namespace Musashi
             {
                 if (hit.collider.TryGetComponent(out IInteractable obj))
                 {
-                    obj.Excute(gameObject);
+                    obj.Excute(transform.parent);
                 }
             }
         }

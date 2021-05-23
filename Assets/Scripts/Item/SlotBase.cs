@@ -92,7 +92,7 @@ namespace Musashi
         /// </summary>
         public virtual void UseItem()
         {
-            currentItemInSlot.OnUseEvent?.Invoke(inputProvider.transform.gameObject);
+            currentItemInSlot.OnUseEvent?.Invoke(inputProvider.transform);
 
             if (currentItemInSlot.CanUseItem)
             {

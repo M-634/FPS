@@ -62,7 +62,6 @@ namespace Musashi
             if (state == State.Jumping)
             {
                 characterVelocity +=  Vector3.up * jumpPower * Time.deltaTime;
-                //characterVelocity += inputDirect.normalized * inputSensitivityInAirModifier;
                 if (Mathf.Abs(characterVelocity.y) >= maxVelocity)
                 {
                     state = State.Falling;
@@ -70,7 +69,6 @@ namespace Musashi
             }
             if (state == State.Falling)
             {
-                characterVelocity += inputDirect.normalized * inputSensitivityInAirModifier;
                 CalculationGravity();
                 if (isGround)
                 {

@@ -15,7 +15,7 @@ namespace Musashi
             OnUseEvent += Heal;
         }
 
-        public void Heal(GameObject main)
+        public void Heal(Transform main)
         {
             PlayerHealthControl healthControl = main.GetComponentInChildren<PlayerHealthControl>();
 

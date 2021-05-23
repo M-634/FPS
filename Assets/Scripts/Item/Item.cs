@@ -8,8 +8,8 @@ namespace Musashi
     [RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public class Item : MonoBehaviour, IInteractable
     {
-        public Action<GameObject> OnPickUpEvent;
-        public Action<GameObject> OnUseEvent;
+        public Action<Transform> OnPickUpEvent;
+        public Action<Transform> OnUseEvent;
         public Action OnDropEvent;
 
         [SerializeField] ItemSettingSOData itemSetting;
@@ -35,11 +35,11 @@ namespace Musashi
         {
             SetItemDataFromScriptableObject();
 
-            OnPickUpEvent += (GameObject player) =>
+            OnPickUpEvent += (Transform player) =>
             {
                 if (ItemType == ItemType.Rifle)
                 {
-                    player.GetComponent<PlayerWeaponManager>().CanGetItem(this);
+                    player.GetComponentInChildren<PlayerWeaponManager>().CanGetItem(this);
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace Musashi
             Stackable = itemSetting.stackable;
         }
 
-        public void Excute(GameObject player)
+        public void Excute(Transform player)
         {
             OnPickUpEvent?.Invoke(player);
         }

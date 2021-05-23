@@ -6,6 +6,6 @@ namespace Musashi
     /// </summary>
     public interface IInteractable
     {
-        void Excute(GameObject player);
+        void Excute(Transform player);
     }
 }
