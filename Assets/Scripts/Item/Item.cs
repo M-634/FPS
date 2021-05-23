@@ -5,21 +5,23 @@ using System;
 
 namespace Musashi
 {
-    [RequireComponent(typeof(Rigidbody), typeof(Collider))]
+    //[RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public class Item : MonoBehaviour, IInteractable
     {
         public Action<Transform> OnPickUpEvent;
+        public Func<bool> OnUseFunc;
         public Action<Transform> OnUseEvent;
-        public Action OnDropEvent;
+        //public Action OnDropEvent;
 
-        [SerializeField] ItemSettingSOData itemSetting;
+        [SerializeField] protected ItemSettingSOData itemSetting;
+        [SerializeField] bool canUseItem;
 
-        [SerializeField] int id;//識別id (ランダム生成)
+        //[SerializeField] int id;//識別id (ランダム生成)
         [Tooltip("If item type is Ammo box, maxStackSize is MaxAmmoNumber ")]
-        [SerializeField,Range(1, 100)] int maxStackSize = 1;
+        [SerializeField, Range(1, 999)] int maxStackSize = 1;
         [Tooltip("If item type is Ammo box, stackSize is  adding ammoNumber ")]
-        [SerializeField,Range(1, 100)] int stackSize = 1;
-        [SerializeField] float dropPosOffset = 1f;
+        [SerializeField, Range(1, 100)] int stackSize = 1;
+        // [SerializeField] float dropPosOffset = 1f;
         public string ItemName { get; private set; }
         public ItemType ItemType { get; private set; }
         public Sprite Icon { get; private set; }
@@ -28,8 +30,8 @@ namespace Musashi
         public int StacSize { get => stackSize; set => stackSize = value; }
         public bool CanUseItem { get; set; } //アイテムを使用できたかどうか判定する
 
-        Rigidbody rb;
-        new Collider collider;
+        //Rigidbody rb;
+        //new Collider collider;
 
         protected virtual void Start()
         {
@@ -37,27 +39,41 @@ namespace Musashi
 
             OnPickUpEvent += (Transform player) =>
             {
-                if (ItemType == ItemType.Rifle)
+                var canGet = player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
+
+                if (canGet)
                 {
-                    player.GetComponentInChildren<PlayerWeaponManager>().CanGetItem(this);
+                    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+                    if(canUseItem)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
                 }
-                else
-                {
-                    player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
-                }
+                //if (ItemType == ItemType.Rifle)
+                //{
+                //    player.GetComponentInChildren<PlayerWeaponManager>().CanGetItem(this);
+                //}
+                //else
+                //{
+                //    player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
+                //}
             };
 
-            OnDropEvent += () =>
-            {
-                Transform playerCamera = Camera.main.transform;
-                transform.position = playerCamera.position + playerCamera.forward * dropPosOffset;
-                if (ItemType == ItemType.Rifle)
-                    transform.rotation = Quaternion.Euler(0, 0, 90f);
-                else
-                    transform.rotation = playerCamera.rotation;
-                gameObject.SetActive(true);
-                Drop(playerCamera);
-            };
+            //OnDropEvent += () =>
+            //{
+            //    Transform playerCamera = Camera.main.transform;
+            //    transform.position = playerCamera.position + playerCamera.forward * dropPosOffset;
+            //    if (ItemType == ItemType.Rifle)
+            //        transform.rotation = Quaternion.Euler(0, 0, 90f);
+            //    else
+            //        transform.rotation = playerCamera.rotation;
+            //    gameObject.SetActive(true);
+            //    Drop(playerCamera);
+            //};
         }
 
         private void SetItemDataFromScriptableObject()
@@ -84,49 +100,49 @@ namespace Musashi
         /// </summary>
         private void Reset()
         {
-            SetRigdBodyAndColliderProperty(true, false, CollisionDetectionMode.Discrete, true);
+            //SetRigdBodyAndColliderProperty(true, false, CollisionDetectionMode.Discrete, true);
             this.gameObject.layer = LayerMask.NameToLayer("Interactable");
         }
 
-        /// <summary>
-        /// インベントリからアイテムを捨てる時に呼ばれる関数
-        /// </summary>
-        public void Drop(Transform playerCamera)
-        {
-            SetRigdBodyAndColliderProperty(false, true, CollisionDetectionMode.Continuous, false);
-            rb.AddForce(playerCamera.forward * 100f);
-        }
+        ///// <summary>
+        ///// インベントリからアイテムを捨てる時に呼ばれる関数
+        ///// </summary>
+        //public void Drop(Transform playerCamera)
+        //{
+        //    SetRigdBodyAndColliderProperty(false, true, CollisionDetectionMode.Continuous, false);
+        //    rb.AddForce(playerCamera.forward * 100f);
+        //}
 
-        /// <summary>
-        /// 地面に付いたら物理挙動を辞める
-        /// </summary>
-        /// <param name="collision"></param>
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.collider.CompareTag("Ground"))
-            {
-                SetRigdBodyAndColliderProperty(true, false, CollisionDetectionMode.Discrete, true);
-            }
-        }
+        ///// <summary>
+        ///// 地面に付いたら物理挙動を辞める
+        ///// </summary>
+        ///// <param name="collision"></param>
+        //private void OnCollisionEnter(Collision collision)
+        //{
+        //    if (collision.collider.CompareTag("Ground"))
+        //    {
+        //        SetRigdBodyAndColliderProperty(true, false, CollisionDetectionMode.Discrete, true);
+        //    }
+        //}
 
-        /// <summary>
-        /// RibidBodyとCollierの各種設定
-        /// </summary>
-        /// <param name="isKinematic"></param>
-        /// <param name="useGravity"></param>
-        /// <param name="mode"></param>
-        /// <param name="isTrigger"></param>
-        private void SetRigdBodyAndColliderProperty(bool isKinematic, bool useGravity, CollisionDetectionMode mode, bool isTrigger)
-        {
-            if (!rb)
-                rb = GetComponent<Rigidbody>();
-            if (!collider)
-                collider = GetComponent<Collider>();
+        ///// <summary>
+        ///// RibidBodyとCollierの各種設定
+        ///// </summary>
+        ///// <param name="isKinematic"></param>
+        ///// <param name="useGravity"></param>
+        ///// <param name="mode"></param>
+        ///// <param name="isTrigger"></param>
+        //private void SetRigdBodyAndColliderProperty(bool isKinematic, bool useGravity, CollisionDetectionMode mode, bool isTrigger)
+        //{
+        //    if (!rb)
+        //        rb = GetComponent<Rigidbody>();
+        //    if (!collider)
+        //        collider = GetComponent<Collider>();
 
-            rb.useGravity = useGravity;
-            rb.isKinematic = isKinematic;
-            rb.collisionDetectionMode = mode;
-            collider.isTrigger = isTrigger;
-        }
+        //    rb.useGravity = useGravity;
+        //    rb.isKinematic = isKinematic;
+        //    rb.collisionDetectionMode = mode;
+        //    collider.isTrigger = isTrigger;
+        //}
     }
 }

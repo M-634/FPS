@@ -31,11 +31,11 @@ namespace Musashi
                 item.SetActive(false);
             }
 
-            for (int i = 0; i < weaponSlots.Length; i++)
-            {
-                weaponSlots[i].SetInput(inputProvider);
-                weaponSlots[i].SetWeaponSlot(i, this);
-            }
+            //for (int i = 0; i < weaponSlots.Length; i++)
+            //{
+            //    weaponSlots[i].SetInput(inputProvider);
+            //    weaponSlots[i].SetWeaponSlot(i, this);
+            //}
         }
 
 
@@ -91,7 +91,7 @@ namespace Musashi
             {
                 int i = currentActiveSlot.slotNumber;
                 currentActiveWeapon.SetActive(false);
-                currentActiveSlot.DropItem();
+                //currentActiveSlot.DropItem();
 
                 weaponSlots[i].SetInfo(getWeapon);
                 EquipWeapon(i);

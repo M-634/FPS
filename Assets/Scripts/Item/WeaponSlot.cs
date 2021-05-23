@@ -15,10 +15,10 @@ namespace Musashi
             this.weaponManager = weaponManager;
         }
 
-        public override void DropItem()
-        {
-            weaponManager.PutAwayCurrentWeapon();
-            base.DropItem();
-        }
+        //public override void DropItem()
+        //{
+        //    weaponManager.PutAwayCurrentWeapon();
+        //    base.DropItem();
+        //}
     }
 }

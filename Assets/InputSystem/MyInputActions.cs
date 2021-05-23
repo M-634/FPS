@@ -1119,6 +1119,44 @@ namespace Musashi
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Inventory"",
+            ""id"": ""14075c9c-0672-4664-82fe-96cc45c62f8a"",
+            ""actions"": [
+                {
+                    ""name"": ""UseHealItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""0dc3d9cf-1e02-44ef-9da0-413ef76a978f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1499bfb4-6bdf-4ffd-a454-38d356cbb7ff"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UseHealItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0d3ffe96-2f96-490c-ba5a-c7fabfb86a38"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseHealItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1214,6 +1252,9 @@ namespace Musashi
             m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+            // Inventory
+            m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
+            m_Inventory_UseHealItem = m_Inventory.FindAction("UseHealItem", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1517,6 +1558,39 @@ namespace Musashi
             }
         }
         public UIActions @UI => new UIActions(this);
+
+        // Inventory
+        private readonly InputActionMap m_Inventory;
+        private IInventoryActions m_InventoryActionsCallbackInterface;
+        private readonly InputAction m_Inventory_UseHealItem;
+        public struct InventoryActions
+        {
+            private @MyInputActions m_Wrapper;
+            public InventoryActions(@MyInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @UseHealItem => m_Wrapper.m_Inventory_UseHealItem;
+            public InputActionMap Get() { return m_Wrapper.m_Inventory; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(InventoryActions set) { return set.Get(); }
+            public void SetCallbacks(IInventoryActions instance)
+            {
+                if (m_Wrapper.m_InventoryActionsCallbackInterface != null)
+                {
+                    @UseHealItem.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnUseHealItem;
+                    @UseHealItem.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnUseHealItem;
+                    @UseHealItem.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnUseHealItem;
+                }
+                m_Wrapper.m_InventoryActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @UseHealItem.started += instance.OnUseHealItem;
+                    @UseHealItem.performed += instance.OnUseHealItem;
+                    @UseHealItem.canceled += instance.OnUseHealItem;
+                }
+            }
+        }
+        public InventoryActions @Inventory => new InventoryActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -1593,6 +1667,10 @@ namespace Musashi
             void OnRightClick(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        }
+        public interface IInventoryActions
+        {
+            void OnUseHealItem(InputAction.CallbackContext context);
         }
     }
 }

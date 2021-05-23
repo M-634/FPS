@@ -13,6 +13,25 @@ namespace Musashi
         {
             base.Start();
             OnUseEvent += Heal;
+            OnUseFunc += CanHealPlayer;
+        }
+
+        public bool CanHealPlayer()
+        {
+            PlayerHealthControl healthControl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
+
+            if (healthControl)
+            {
+                if (healthControl.IsMaxHP)
+                {
+                    InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
+                }
+                else
+                {
+                    return healthControl.Heal(healPoint, healtime);//回復時間を実装する
+                }
+            }
+            return false;
         }
 
         public void Heal(Transform main)

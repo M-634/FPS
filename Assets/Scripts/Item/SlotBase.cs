@@ -109,24 +109,24 @@ namespace Musashi
         /// <summary>
         /// スロットないのアイテムを捨てる関数
         /// </summary>
-        public virtual void DropItem() 
-        {
-            currentItemInSlot.OnDropEvent?.Invoke();
-            itemsInSlot.Dequeue();
-            if (itemsInSlot.Count > 0)
-            {
-                currentItemInSlot = itemsInSlot.Peek();
-            }
+        //public virtual void DropItem() 
+        //{
+        //    currentItemInSlot.OnDropEvent?.Invoke();
+        //    itemsInSlot.Dequeue();
+        //    if (itemsInSlot.Count > 0)
+        //    {
+        //        currentItemInSlot = itemsInSlot.Peek();
+        //    }
 
-            if (currentItemInSlot.ItemType == ItemType.Rifle)
-            {
-                ResetInfo();
-            }
-            else
-            {
-                StacSizeInSlot--;
-            }
-        }
+        //    if (currentItemInSlot.ItemType == ItemType.Rifle)
+        //    {
+        //        ResetInfo();
+        //    }
+        //    else
+        //    {
+        //        StacSizeInSlot--;
+        //    }
+        //}
 
         /// <summary>
         /// スロット内のデータを空にする
@@ -177,10 +177,10 @@ namespace Musashi
                 {
                     UseItem();
                 }
-                if (inputProvider.DropItem)
-                {
-                    DropItem();
-                }
+                //if (inputProvider.DropItem)
+                //{
+                //    DropItem();
+                //}
                 
                 yield return null;
             }

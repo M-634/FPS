@@ -1104,6 +1104,44 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Inventory",
+            "id": "14075c9c-0672-4664-82fe-96cc45c62f8a",
+            "actions": [
+                {
+                    "name": "UseHealItem",
+                    "type": "Button",
+                    "id": "0dc3d9cf-1e02-44ef-9da0-413ef76a978f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1499bfb4-6bdf-4ffd-a454-38d356cbb7ff",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseHealItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0d3ffe96-2f96-490c-ba5a-c7fabfb86a38",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "UseHealItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

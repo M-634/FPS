@@ -27,9 +27,10 @@ namespace Musashi
             GameManager.Instance.GameOver();
         }
 
-        public void Heal(float healPoint,float healtime)
+        public bool Heal(float healPoint,float healtime)
         {
             CurrentHp += healPoint;
+            return true;
             //memo 回復タイムの実装は後回しにする
             Debug.Log($"{healPoint}を{healtime}かけて回復した");
         }
