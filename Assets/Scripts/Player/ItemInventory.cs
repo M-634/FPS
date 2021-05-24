@@ -7,52 +7,67 @@ using TMPro;
 using UnityEngine.InputSystem;
 
 //memo :5/23 アイテムはとりあえず、回復キットと弾薬の２種類のみとする。
-//To Do :AmmoControllerとこのクラスを結合させる
+//To Do :AmmoControllerとCurrentWeaponAmmoCounterをこのクラスと結合させる
 namespace Musashi
 {
-    public class ItemInventory : MonoBehaviour
+    /// <summary>
+    /// ゲームシーンUIに表示しているアイテム(Ammo, HealKit, Weapon)を管理するクラス
+    /// </summary>
+    public class ItemInventory : SingletonMonoBehaviour<ItemInventory>
     {
-        public Action OpenInventory;
-        public Action CloseInventory;
-
+        [Header("item settings")]
         [SerializeField] ItemDataBase itemDataBase;
-        [SerializeField] CanvasGroup inventoryCanvasGroup;
-        [SerializeField] ItemSlot[] itemSlots;
 
-
-        [SerializeField] AmmoControlInInventory ammoControl;
-        [SerializeField] TextMeshProUGUI ammoStackNumberText;
+        [Header("Heal item")]
+        [SerializeField] int maxHealKitNumberInInventory = 10;
         [SerializeField] TextMeshProUGUI healItemStackNumberText;
-
-        private int healItemNumber;
         Queue<HealItem> stockHealItems;
+        private int healItemNumber;
 
-        bool isOpenInventory = false;
+        [Header("Weapons")]
+        [Header("0:hundGun 1:shutGun 2: Rifle")]
+        [SerializeField] Slot[] weaponSlots;
+        [Header("0:hundGun 1:shutGun 2: Rifle")]
+        [SerializeField] WeaponActiveControl[] weaponActive;
 
-        public bool IsSlotSelected { get => SelectedSlot != null; }
-        public SlotBase SelectedSlot { get; private set; }
+        [Header("Equipmet weapon info")]
+        [SerializeField] GameObject equipmentWeaponInfo;
+        [SerializeField] Image ammoCounterSllider;
+        [SerializeField] Image equipmentWeaponIcon;
+        [SerializeField] TextMeshProUGUI ammoCounterText;
 
-     
+        int currentWeaponEquipmentIndex = -1;
+
+        [Header("Ammo in inventory")]
+        [SerializeField] int maxAmmoInInventory = 999;
+        [SerializeField] TextMeshProUGUI ammoStackNumberInInventoryText;
+        private int sumNumberOfAmmoInInventory;
+        public int SumNumberOfAmmoInInventory
+        {
+            get => sumNumberOfAmmoInInventory;
+            private set
+            {
+                sumNumberOfAmmoInInventory = value;
+                if (ammoStackNumberInInventoryText)
+                {
+                    ammoStackNumberInInventoryText.text = sumNumberOfAmmoInInventory.ToString() + "/" + maxAmmoInInventory.ToString();
+                }
+            }
+        }
+
+        InputProvider input;
+
         private void Start()
         {
             stockHealItems = new Queue<HealItem>();
-           // inventoryCanvasGroup.HideUIWithCanvasGroup();
-            //if (inputProvider)
-            //{
-            //    foreach (var slot in itemSlots)
-            //    {
-            //        slot.SetInput(inputProvider);
-            //    }
-            //}
-        }
+            input = GetComponentInParent<InputProvider>();
 
-        //private void Update()
-        //{
-        //    if (inputProvider.Inventory)
-        //    {
-        //        OpenAndCloseInventory();
-        //    }
-        //}
+            SumNumberOfAmmoInInventory = 0;
+            for (int i = 0; i < weaponSlots.Length; i++)
+            {
+                weaponSlots[i].StackSize.text = weaponActive[i].Control.CurrentAmmo.ToString() + " / " + weaponActive[i].Control.MaxAmmo.ToString();
+            }
+        }
 
         /// <summary>
         /// 取得したアイテムがデータベースに存在するか確認する。
@@ -81,7 +96,7 @@ namespace Musashi
         {
             if (getItem.ItemType == ItemType.HealthKit)
             {
-                if(CanStackItem(getItem, ref healItemNumber, healItemStackNumberText))
+                if (CanStackItem(getItem, ref healItemNumber, healItemStackNumberText))
                 {
                     stockHealItems.Enqueue(getItem as HealItem);
                     return true;
@@ -89,11 +104,10 @@ namespace Musashi
             }
             if (getItem.ItemType == ItemType.AmmoBox)
             {
-                return CanStackItem(getItem, ref ammoControl.sumNumberOfAmmoInInventory, ammoStackNumberText);
-            } 
+                return CanStackItem(getItem, ref sumNumberOfAmmoInInventory, ammoStackNumberInInventoryText);
+            }
             return false;
         }
-
 
         /// <summary>
         /// 取得アイテムが最大取得数を超えていないかチェックし、アイテムごとのスタック数を更新する
@@ -112,97 +126,134 @@ namespace Musashi
 
             if (displayText)
             {
-                displayText.text = stackNumInInventory.ToString();
+                displayText.text = stackNumInInventory.ToString() + " / " + getItem.MaxStacSize.ToString();
             }
             return res;
         }
 
-             
+        private void Update()
+        {
+            if (input.UseHealItem)
+            {
+                UseHealthItem();
+            }
+
+            ChangeWeapon(input.SwichWeaponID) ;
+        }
+
+        private void ChangeWeapon(int index)
+        {
+            if (index == -1) return;
+            
+            //remove equipment 
+            if (currentWeaponEquipmentIndex != -1)
+            {
+                weaponActive[currentWeaponEquipmentIndex].SetActive(false);
+                weaponSlots[currentWeaponEquipmentIndex].MissingSelection();
+            }
+            currentWeaponEquipmentIndex = index;
+
+            weaponActive[currentWeaponEquipmentIndex].SetActive(true);
+            weaponSlots[currentWeaponEquipmentIndex].OnSelected();
+            equipmentWeaponIcon.sprite = weaponSlots[currentWeaponEquipmentIndex].Icon.sprite;
+        }
+
         public void UseHealthItem()
         {
-        
             if (stockHealItems.Count == 0) return;
 
             var item = stockHealItems.Peek();
+            var canUseItme = item.OnUseEvent.Invoke();
 
-            item.CanHealPlayer();
-            Debug.Log(item.name);
+            if (canUseItme)
+            {
+                healItemNumber--;
+                if (healItemStackNumberText)
+                {
+                    healItemStackNumberText.text = healItemNumber.ToString() + " / " + item.MaxStacSize.ToString();
+                }
 
-            //if (canUseItme)
-            //{
-            //    healItemNumber--;
-            //    item.StacSize--;
-            //    if (item.StacSize == 0)
-            //    {
-            //        item = stockHealItems.Dequeue();
-            //        Destroy(item.gameObject);
-            //    }
-            //}
+                item.StacSize--;
+                if (item.StacSize == 0)
+                {
+                    item = stockHealItems.Dequeue();
+                    Destroy(item.gameObject);
+                }
+            }
         }
 
-        ///// <summary>
-        ///// 既にスロット内にアイテムが存在するか調べる。
-        ///// ないなら左側から順番に埋めていく。
-        ///// </summary>
-        ///// <returns></returns>
-        //private bool SearchItemSlot(Item getItem)
-        //{
-        //    for (int i = 0; i < itemSlots.Length; i++)
-        //    {
-        //        //スタック数が満タンの時は次のスロットを調べる
-        //        if (itemSlots[i].IsFilled)
-        //        {
-        //            continue;
-        //        }
+        #region Ammo Management
+        /// <summary>
+        /// リロードできるかどうか判定する関数
+        /// </summary>
+        /// <param name="maxAmmo">各銃の最大装填数</param>
+        /// <param name="currentAmmo">現在の弾の装填数</param>
+        public bool CanReloadAmmo(int maxAmmo, int currentAmmo)
+        {
+            int diff = maxAmmo - currentAmmo;
+            if (diff <= 0) return false;
 
-        //        //同一アイテムがスロット内にあり,かつスタック数が満タンではない時はスタック数を足していく
-        //        if (!itemSlots[i].IsEmpty && itemSlots[i].currentItemInSlot.ItemName == getItem.ItemName && !itemSlots[i].IsFilled)
-        //        {
-        //            itemSlots[i].AddItemInSlot(getItem);
-        //            if (getItem.ItemType == ItemType.AmmoBox)
-        //            {
-        //                ammoControl.AddSumOfAmmo(getItem.StacSize);
-        //            }
-        //            return true;
-        //        }
+            if (SumNumberOfAmmoInInventory - diff >= 0)
+            {
+                return true;
+            }
 
-        //        //スロットが空なら、アイテムデータをセットする
-        //        if (itemSlots[i].IsEmpty)
-        //        {
-        //            itemSlots[i].SetInfo(getItem);
-        //            if (getItem.ItemType == ItemType.AmmoBox)
-        //            {
-        //                ammoControl.AddSumOfAmmo(getItem.StacSize);
-        //            }
-        //            return true;
-        //        }
-        //    }
-        //    return false;//全てのスロットが埋まっている
-        //}
+            if (SumNumberOfAmmoInInventory > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
-        //public void OpenAndCloseInventory()
-        //{
-        //    if (GameManager.Instance.HaveShowConfigure) return;
+        /// <summary>
+        /// 実際にリロード出来る弾数
+        /// </summary>
+        /// <returns></returns>
+        public int ReloadAmmoNumber(int maxAmmo, int currentAmmo)
+        {
+            int diff = maxAmmo - currentAmmo;
 
-        //    if (isOpenInventory)
-        //    {
-        //        if (CloseInventory != null)
-        //        {
-        //            inventoryCanvasGroup.HideUIWithCanvasGroup();
-        //            GameManager.Instance.LockCusor();
-        //            CloseInventory.Invoke();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (OpenInventory != null)
-        //        {
-        //            inventoryCanvasGroup.ShowUIWithCanvasGroup();
-        //            GameManager.Instance.UnlockCusor();
-        //            OpenInventory.Invoke();
-        //        }
-        //    }
-        //    isOpenInventory = !isOpenInventory;
-        //}
+            if (SumNumberOfAmmoInInventory - diff >= 0)
+            {
+                SumNumberOfAmmoInInventory -= diff;
+                return maxAmmo;
+            }
+
+            int temp = currentAmmo + SumNumberOfAmmoInInventory;
+            SumNumberOfAmmoInInventory = 0;
+            return temp;
+        }
+
+        /// <summary>
+        /// ショットガンのリロード。一発ずつ行う
+        /// </summary>
+        /// <returns></returns>
+        public int ReloadAmmNumber()
+        {
+            SumNumberOfAmmoInInventory--;
+            if (SumNumberOfAmmoInInventory < 0)
+            {
+                SumNumberOfAmmoInInventory = 0;
+            }
+            return 1;
+        }
+
+        /// <summary>
+        /// 装備中の残弾数を表示する
+        /// </summary>
+        /// <param name="currentAmmo"></param>
+        /// <param name="maxAmmo"></param>
+        public void DisplayEquipmentWeaponInfo(int currentAmmo, int maxAmmo)
+        {
+            equipmentWeaponInfo.SetActive(true);
+            ammoCounterText.text = currentAmmo.ToString();
+            ammoCounterSllider.fillAmount = (float)currentAmmo / maxAmmo;
+            if (currentWeaponEquipmentIndex != -1)
+            {
+                weaponSlots[currentWeaponEquipmentIndex].StackSize.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
+            }
+        }
+        #endregion
+
     }
 }

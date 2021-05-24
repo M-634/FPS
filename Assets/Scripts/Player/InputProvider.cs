@@ -39,6 +39,7 @@ namespace Musashi
         public bool Interactive => PlayerInputActions.Interactive.triggered;
         public bool Inventory => PlayerInputActions.Inventory.triggered;
         public bool UseItem => PlayerInputActions.UseItem.triggered;
+        public bool UseHealItem => PlayerInputActions.UseHealItem.triggered;
         public bool DropItem => PlayerInputActions.DropItem.triggered;
 
         private bool aim;
@@ -49,7 +50,7 @@ namespace Musashi
 
         private int swichWeaponIDByGamepad = 0;
         /// <summary>
-        ///押してない時は -１。武器チェンジする時は、0か1を返す.
+        ///押してない時は -１。武器チェンジする時は、0か1か２を返す.
         /// </summary>
         public int SwichWeaponID
         {
@@ -57,10 +58,20 @@ namespace Musashi
             {
                 if (PlayerInputActions.SwichWeapon0.triggered) return 0;
                 if (PlayerInputActions.SwichWeapon1.triggered) return 1;
-                if (PlayerInputActions.SwichWeaponByGamePad.triggered)
+                if (PlayerInputActions.SwichWeapon2.triggered) return 2;
+
+                if (IsGamepad)
                 {
-                    //押す度に0と１を切り替える
-                    swichWeaponIDByGamepad =(swichWeaponIDByGamepad + 1) % 2;
+                    if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
+                    {
+                        swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
+                    }
+
+                    if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
+                    {
+                        if (swichWeaponIDByGamepad - 1 < 0) swichWeaponIDByGamepad = 2;
+                        else swichWeaponIDByGamepad -= 1;
+                    }
                     return swichWeaponIDByGamepad;
                 }
                 return -1;

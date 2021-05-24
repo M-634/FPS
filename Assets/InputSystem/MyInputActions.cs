@@ -141,9 +141,33 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""SwichWeaponByGamePad"",
+                    ""name"": ""SwichWeapon2"",
+                    ""type"": ""Button"",
+                    ""id"": ""65f5a77b-f25e-4f5f-9024-f407a4536276"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""SwichWeaponByGamePad_Right"",
                     ""type"": ""Button"",
                     ""id"": ""fe8fd5cf-c31b-48c1-b1a6-fb007b323730"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""SwichWeaponByGamePad_Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""5e6e4659-3bf6-419c-8e08-6dbe946d5b88"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""UseHealItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""b83609db-8391-47ac-af09-00770061d939"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -530,7 +554,7 @@ namespace Musashi
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -604,11 +628,55 @@ namespace Musashi
                 {
                     ""name"": """",
                     ""id"": ""f527ba56-cea7-43c8-8966-3c4f1fb7638e"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""SwichWeaponByGamePad"",
+                    ""action"": ""SwichWeaponByGamePad_Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""59ab20d4-c3af-4cd7-9a70-0e96cb8ae46a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UseHealItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb5cc9a5-438b-438d-be36-6f7ce1d05245"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseHealItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c487516-2744-42f3-9fec-9f088c8e1c63"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwichWeapon2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""31cc066e-56c4-4d63-a04e-c67fa839ced7"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SwichWeaponByGamePad_Left"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1119,44 +1187,6 @@ namespace Musashi
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""Inventory"",
-            ""id"": ""14075c9c-0672-4664-82fe-96cc45c62f8a"",
-            ""actions"": [
-                {
-                    ""name"": ""UseHealItem"",
-                    ""type"": ""Button"",
-                    ""id"": ""0dc3d9cf-1e02-44ef-9da0-413ef76a978f"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""1499bfb4-6bdf-4ffd-a454-38d356cbb7ff"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""UseHealItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0d3ffe96-2f96-490c-ba5a-c7fabfb86a38"",
-                    ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""UseHealItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": [
@@ -1239,7 +1269,10 @@ namespace Musashi
             m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
             m_Player_SwichWeapon0 = m_Player.FindAction("SwichWeapon0", throwIfNotFound: true);
             m_Player_SwichWeapon1 = m_Player.FindAction("SwichWeapon1", throwIfNotFound: true);
-            m_Player_SwichWeaponByGamePad = m_Player.FindAction("SwichWeaponByGamePad", throwIfNotFound: true);
+            m_Player_SwichWeapon2 = m_Player.FindAction("SwichWeapon2", throwIfNotFound: true);
+            m_Player_SwichWeaponByGamePad_Right = m_Player.FindAction("SwichWeaponByGamePad_Right", throwIfNotFound: true);
+            m_Player_SwichWeaponByGamePad_Left = m_Player.FindAction("SwichWeaponByGamePad_Left", throwIfNotFound: true);
+            m_Player_UseHealItem = m_Player.FindAction("UseHealItem", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1252,9 +1285,6 @@ namespace Musashi
             m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-            // Inventory
-            m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
-            m_Inventory_UseHealItem = m_Inventory.FindAction("UseHealItem", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1319,7 +1349,10 @@ namespace Musashi
         private readonly InputAction m_Player_Esc;
         private readonly InputAction m_Player_SwichWeapon0;
         private readonly InputAction m_Player_SwichWeapon1;
-        private readonly InputAction m_Player_SwichWeaponByGamePad;
+        private readonly InputAction m_Player_SwichWeapon2;
+        private readonly InputAction m_Player_SwichWeaponByGamePad_Right;
+        private readonly InputAction m_Player_SwichWeaponByGamePad_Left;
+        private readonly InputAction m_Player_UseHealItem;
         public struct PlayerActions
         {
             private @MyInputActions m_Wrapper;
@@ -1339,7 +1372,10 @@ namespace Musashi
             public InputAction @Esc => m_Wrapper.m_Player_Esc;
             public InputAction @SwichWeapon0 => m_Wrapper.m_Player_SwichWeapon0;
             public InputAction @SwichWeapon1 => m_Wrapper.m_Player_SwichWeapon1;
-            public InputAction @SwichWeaponByGamePad => m_Wrapper.m_Player_SwichWeaponByGamePad;
+            public InputAction @SwichWeapon2 => m_Wrapper.m_Player_SwichWeapon2;
+            public InputAction @SwichWeaponByGamePad_Right => m_Wrapper.m_Player_SwichWeaponByGamePad_Right;
+            public InputAction @SwichWeaponByGamePad_Left => m_Wrapper.m_Player_SwichWeaponByGamePad_Left;
+            public InputAction @UseHealItem => m_Wrapper.m_Player_UseHealItem;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1394,9 +1430,18 @@ namespace Musashi
                     @SwichWeapon1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
                     @SwichWeapon1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
                     @SwichWeapon1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
-                    @SwichWeaponByGamePad.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad;
-                    @SwichWeaponByGamePad.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad;
-                    @SwichWeaponByGamePad.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad;
+                    @SwichWeapon2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon2;
+                    @SwichWeapon2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon2;
+                    @SwichWeapon2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon2;
+                    @SwichWeaponByGamePad_Right.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Right;
+                    @SwichWeaponByGamePad_Right.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Right;
+                    @SwichWeaponByGamePad_Right.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Right;
+                    @SwichWeaponByGamePad_Left.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Left;
+                    @SwichWeaponByGamePad_Left.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Left;
+                    @SwichWeaponByGamePad_Left.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Left;
+                    @UseHealItem.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseHealItem;
+                    @UseHealItem.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseHealItem;
+                    @UseHealItem.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseHealItem;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1446,9 +1491,18 @@ namespace Musashi
                     @SwichWeapon1.started += instance.OnSwichWeapon1;
                     @SwichWeapon1.performed += instance.OnSwichWeapon1;
                     @SwichWeapon1.canceled += instance.OnSwichWeapon1;
-                    @SwichWeaponByGamePad.started += instance.OnSwichWeaponByGamePad;
-                    @SwichWeaponByGamePad.performed += instance.OnSwichWeaponByGamePad;
-                    @SwichWeaponByGamePad.canceled += instance.OnSwichWeaponByGamePad;
+                    @SwichWeapon2.started += instance.OnSwichWeapon2;
+                    @SwichWeapon2.performed += instance.OnSwichWeapon2;
+                    @SwichWeapon2.canceled += instance.OnSwichWeapon2;
+                    @SwichWeaponByGamePad_Right.started += instance.OnSwichWeaponByGamePad_Right;
+                    @SwichWeaponByGamePad_Right.performed += instance.OnSwichWeaponByGamePad_Right;
+                    @SwichWeaponByGamePad_Right.canceled += instance.OnSwichWeaponByGamePad_Right;
+                    @SwichWeaponByGamePad_Left.started += instance.OnSwichWeaponByGamePad_Left;
+                    @SwichWeaponByGamePad_Left.performed += instance.OnSwichWeaponByGamePad_Left;
+                    @SwichWeaponByGamePad_Left.canceled += instance.OnSwichWeaponByGamePad_Left;
+                    @UseHealItem.started += instance.OnUseHealItem;
+                    @UseHealItem.performed += instance.OnUseHealItem;
+                    @UseHealItem.canceled += instance.OnUseHealItem;
                 }
             }
         }
@@ -1558,39 +1612,6 @@ namespace Musashi
             }
         }
         public UIActions @UI => new UIActions(this);
-
-        // Inventory
-        private readonly InputActionMap m_Inventory;
-        private IInventoryActions m_InventoryActionsCallbackInterface;
-        private readonly InputAction m_Inventory_UseHealItem;
-        public struct InventoryActions
-        {
-            private @MyInputActions m_Wrapper;
-            public InventoryActions(@MyInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @UseHealItem => m_Wrapper.m_Inventory_UseHealItem;
-            public InputActionMap Get() { return m_Wrapper.m_Inventory; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(InventoryActions set) { return set.Get(); }
-            public void SetCallbacks(IInventoryActions instance)
-            {
-                if (m_Wrapper.m_InventoryActionsCallbackInterface != null)
-                {
-                    @UseHealItem.started -= m_Wrapper.m_InventoryActionsCallbackInterface.OnUseHealItem;
-                    @UseHealItem.performed -= m_Wrapper.m_InventoryActionsCallbackInterface.OnUseHealItem;
-                    @UseHealItem.canceled -= m_Wrapper.m_InventoryActionsCallbackInterface.OnUseHealItem;
-                }
-                m_Wrapper.m_InventoryActionsCallbackInterface = instance;
-                if (instance != null)
-                {
-                    @UseHealItem.started += instance.OnUseHealItem;
-                    @UseHealItem.performed += instance.OnUseHealItem;
-                    @UseHealItem.canceled += instance.OnUseHealItem;
-                }
-            }
-        }
-        public InventoryActions @Inventory => new InventoryActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -1653,7 +1674,10 @@ namespace Musashi
             void OnEsc(InputAction.CallbackContext context);
             void OnSwichWeapon0(InputAction.CallbackContext context);
             void OnSwichWeapon1(InputAction.CallbackContext context);
-            void OnSwichWeaponByGamePad(InputAction.CallbackContext context);
+            void OnSwichWeapon2(InputAction.CallbackContext context);
+            void OnSwichWeaponByGamePad_Right(InputAction.CallbackContext context);
+            void OnSwichWeaponByGamePad_Left(InputAction.CallbackContext context);
+            void OnUseHealItem(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
@@ -1667,10 +1691,6 @@ namespace Musashi
             void OnRightClick(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-        }
-        public interface IInventoryActions
-        {
-            void OnUseHealItem(InputAction.CallbackContext context);
         }
     }
 }

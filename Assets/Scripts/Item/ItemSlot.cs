@@ -5,22 +5,22 @@ using TMPro;
 
 namespace Musashi
 {
-    public class ItemSlot : SlotBase 
+    public class ItemSlot : Slot 
     {
-        public void AddItemInSlot(Item getItem)
-        {
-            if (IsFilled) return;
-            int temp = StacSizeInSlot + getItem.StacSize;
+        //public void AddItemInSlot(Item getItem)
+        //{
+        //    if (IsFilled) return;
+        //    int temp = StacSizeInSlot + getItem.StacSize;
 
-            if (temp > maxStacSizeInSlot)
-            {
-                temp = maxStacSizeInSlot;
-            }
+        //    if (temp > maxStacSizeInSlot)
+        //    {
+        //        temp = maxStacSizeInSlot;
+        //    }
 
-            StacSizeInSlot = temp;
-            itemsInSlot.Enqueue(getItem);
-            getItem.gameObject.SetActive(false);
-            GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-        }
+        //    StacSizeInSlot = temp;
+        //    itemsInSlot.Enqueue(getItem);
+        //    getItem.gameObject.SetActive(false);
+        //    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+        //}
     }
 }

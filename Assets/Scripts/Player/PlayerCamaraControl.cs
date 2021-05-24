@@ -146,7 +146,7 @@ namespace Musashi
 
 
         //PlayerEventManager playerEvent;
-        ItemInventory inventory;
+        //ItemInventory inventory;
 
         public void OnEnable()
         {
@@ -157,13 +157,13 @@ namespace Musashi
             //    playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
             //}
 
-            inventory = GetComponentInChildren<ItemInventory>();
+            //inventory = GetComponentInChildren<ItemInventory>();
 
-            if (inventory)
-            {
-                inventory.OpenInventory += () => LockCamera = true;
-                inventory.CloseInventory += () => LockCamera = false;
-            }
+            //if (inventory)
+            //{
+            //    inventory.OpenInventory += () => LockCamera = true;
+            //    inventory.CloseInventory += () => LockCamera = false;
+            //}
         }
 
         public void OnDisable()
@@ -174,11 +174,11 @@ namespace Musashi
             //    playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
             //}
 
-            if (inventory)
-            {
-                inventory.OpenInventory -= () => LockCamera = true;
-                inventory.CloseInventory -= () => LockCamera = false;
-            }
+            //if (inventory)
+            //{
+            //    inventory.OpenInventory -= () => LockCamera = true;
+            //    inventory.CloseInventory -= () => LockCamera = false;
+            //}
         }
     }
 }

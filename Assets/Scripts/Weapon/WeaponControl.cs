@@ -47,8 +47,6 @@ namespace Musashi
         [SerializeField] Transform muzzle;
         [SerializeField] Transform poolObjectParent;
         [Header("Require Component")]
-        [SerializeField] AmmoControlInInventory ammoControl;
-        [SerializeField] CurrentWeaponAmmoCounter currentWeaponAmmoCounter;
         [SerializeField] ReticleAnimation reticle;
         [SerializeField] HitVFXManager hitVFXManager;
 
@@ -60,12 +58,12 @@ namespace Musashi
         PoolObjectManager poolObjectManager;
         InputProvider playerInput;
         PlayerCamaraControl playerCamara;
-        //PlayerEventManager playerEvent;
         Animator animator;
         AudioSource audioSource;
         #endregion
 
         #region Property
+        public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
         {
             get => currentAmmo;
@@ -77,10 +75,9 @@ namespace Musashi
                     currentAmmo = maxAmmo;
                 }
 
-                if (currentWeaponAmmoCounter)
+                if (ItemInventory.Instance)
                 {
-                    currentWeaponAmmoCounter.AmmoCounterText.text = CurrentAmmo.ToString();
-                    currentWeaponAmmoCounter.AmmoCounterSllider.fillAmount = (float)currentAmmo / maxAmmo;
+                    ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
                 }
             }
         }
@@ -177,7 +174,7 @@ namespace Musashi
         /// </summary>
         private void CanReload()
         {
-            bool canReload = ammoControl ? ammoControl.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            bool canReload = ItemInventory.Instance ? ItemInventory.Instance.CanReloadAmmo(maxAmmo, currentAmmo) : true;
             if (canReload)
             {
                 if (animator)
@@ -201,23 +198,28 @@ namespace Musashi
         /// </summary>
         public void EndReload()
         {
-            if (ammoControl)
+            if (ItemInventory.Instance)
             {
-                CurrentAmmo = ammoControl.ReloadAmmoNumber(maxAmmo, currentAmmo);
+                CurrentAmmo = ItemInventory.Instance.ReloadAmmoNumber(maxAmmo, currentAmmo);
             }
             else
             {
                 CurrentAmmo = maxAmmo;
             }
         }
+
+        /// <summary>
+        /// ショットガンのリロードアニメーションイベントから呼ばれる関数
+        /// </summary>
         public void ShutGunCycleReload()
         {
-            bool canReload = ammoControl ? ammoControl.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            bool canReload = ItemInventory.Instance ? ItemInventory.Instance.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+
             if (canReload)
             {
-                if (ammoControl)
+                if (ItemInventory.Instance)
                 {
-                    CurrentAmmo += ammoControl.ReloadAmmNumber();
+                    CurrentAmmo += ItemInventory.Instance.ReloadAmmNumber();
                 }
                 else
                 {
@@ -239,10 +241,20 @@ namespace Musashi
                 animator.SetBool("ReloadCycleEnd", true);
             }
         }
+
+
+        /// <summary>
+        /// ショットガンのPullアニメーションイベントから呼ばれる関数
+        /// </summary>
         public void ShutGunPullStart()
         {
             canAction = false;
         }
+
+
+        /// <summary>
+        /// ショットガンのPullアニメーションイベントから呼ばれる関数
+        /// </summary>
         public void ShutGunPullEnd()
         {
             canAction = true;
@@ -383,53 +395,17 @@ namespace Musashi
 
         }
 
-
-        ItemInventory inventory;
         public void OnEnable()
         {
-            if (currentWeaponAmmoCounter)
+            if (ItemInventory.Instance)
             {
-                currentWeaponAmmoCounter.AmmoCounterText.text = CurrentAmmo.ToString();
-                currentWeaponAmmoCounter.AmmoCounterSllider.fillAmount = currentAmmo / maxAmmo;
+                ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
             }
 
             if (reticle)
             {
                 reticle.IsDefult = false;
             }
-
-            inventory = FindObjectOfType<ItemInventory>();
-
-            if (inventory)
-            {
-                inventory.OpenInventory += () =>
-                {
-                    canAction = false;
-                    reticle.gameObject.SetActive(false);
-                };
-
-                inventory.CloseInventory += () =>
-                {
-                    canAction = true;
-                    reticle.gameObject.SetActive(true);
-                };
-            }
-
-            //playerEvent = transform.GetComponentInParent<PlayerEventManager>();
-            //if (playerEvent)
-            //{
-            //    playerEvent.Subscribe(PlayerEventType.OpenInventory, () =>
-            //    {
-            //        canAction = false;
-            //        reticle.gameObject.SetActive(false);
-            //    });
-
-            //    playerEvent.Subscribe(PlayerEventType.CloseInventory, () =>
-            //    {
-            //        canAction = true;
-            //        reticle.gameObject.SetActive(true);
-            //    });
-            //}
         }
 
         public void OnDisable()
@@ -439,36 +415,6 @@ namespace Musashi
             {
                 reticle.IsDefult = true;
             }
-
-            if (inventory)
-            {
-                inventory.OpenInventory -= () =>
-                {
-                    canAction = false;
-                    reticle.gameObject.SetActive(false);
-                };
-
-                inventory.CloseInventory -= () =>
-                {
-                    canAction = true;
-                    reticle.gameObject.SetActive(true);
-                };
-            }
-
-            //if (playerEvent)
-            //{
-            //    playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () =>
-            //    {
-            //        canAction = false;
-            //        reticle.gameObject.SetActive(false);
-            //    });
-
-            //    playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () =>
-            //    {
-            //        canAction = true;
-            //        reticle.gameObject.SetActive(true);
-            //    });
-            //}
         }
         #endregion
     }

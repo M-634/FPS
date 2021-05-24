@@ -12,8 +12,7 @@ namespace Musashi
         protected override void Start()
         {
             base.Start();
-            OnUseEvent += Heal;
-            OnUseFunc += CanHealPlayer;
+            OnUseEvent += CanHealPlayer;
         }
 
         public bool CanHealPlayer()
@@ -32,50 +31,6 @@ namespace Musashi
                 }
             }
             return false;
-        }
-
-        public void Heal(Transform main)
-        {
-            PlayerHealthControl healthControl = main.GetComponentInChildren<PlayerHealthControl>();
-
-            if (healthControl)
-            {
-                if (healthControl.IsMaxHP)
-                {
-                    InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
-                }
-                else
-                {
-                    healthControl.Heal(healPoint, healtime);//回復時間を実装する
-                    CanUseItem = true;
-                    return;
-                }
-            }
-            //if (player.TryGetComponent(out PlayerHealthControl healthControl))
-            //{
-            //    if (healthControl.enabled)
-            //    {
-            //        if (healthControl.IsMaxHP)
-            //        {
-            //            InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
-            //        }
-            //        else
-            //        {
-            //            healthControl.Heal(healPoint, healtime);//回復時間を実装する
-            //            CanUseItem = true;
-            //            return;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Debug.LogWarning($"PlayerHealthControlコンポーネントのアクティブがoffになっています");
-            //    }
-            //}
-            //else
-            //{
-            //    Debug.LogWarning($"PlayerHealthControlコンポーネントがPlayerにアタッチされていません");
-            //}
-            //CanUseItem = false;
         }
     }
 }

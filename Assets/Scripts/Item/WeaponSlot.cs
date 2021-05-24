@@ -5,15 +5,15 @@ using TMPro;
 
 namespace Musashi
 {
-    public class WeaponSlot : SlotBase
+    public class WeaponSlot : Slot
     {
-        public int slotNumber;
-        PlayerWeaponManager weaponManager;
-        public void SetWeaponSlot(int slotNumber,PlayerWeaponManager weaponManager)
-        {
-            this.slotNumber = slotNumber;
-            this.weaponManager = weaponManager;
-        }
+        //public int slotNumber;
+        //PlayerWeaponManager weaponManager;
+        //public void SetWeaponSlot(int slotNumber,PlayerWeaponManager weaponManager)
+        //{
+        //    this.slotNumber = slotNumber;
+        //    this.weaponManager = weaponManager;
+        //}
 
         //public override void DropItem()
         //{

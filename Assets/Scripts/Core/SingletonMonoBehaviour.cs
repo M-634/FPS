@@ -18,7 +18,9 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 
                 instance = (T)FindObjectOfType(t);
                 if (instance == null)
+                {
                     Debug.LogWarning(t + "をアタッチしているGameObjectはありません");
+                }
             }
             return instance;
         }
