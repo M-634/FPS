@@ -48,7 +48,7 @@ namespace Musashi
         private bool sprint;
         public bool Sprint => sprint;
 
-        private int swichWeaponIDByGamepad = 0;
+        private int swichWeaponIDByGamepad = -1;
         /// <summary>
         ///押してない時は -１。武器チェンジする時は、0か1か２を返す.
         /// </summary>
@@ -65,14 +65,22 @@ namespace Musashi
                     if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
                     {
                         swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
+                        return swichWeaponIDByGamepad;
                     }
 
                     if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
                     {
-                        if (swichWeaponIDByGamepad - 1 < 0) swichWeaponIDByGamepad = 2;
-                        else swichWeaponIDByGamepad -= 1;
+                        if (swichWeaponIDByGamepad - 1 < 0)
+                        {
+                            swichWeaponIDByGamepad = 2;
+                        }
+
+                        else
+                        {
+                           swichWeaponIDByGamepad -= 1;
+                        }
+                        return swichWeaponIDByGamepad;
                     }
-                    return swichWeaponIDByGamepad;
                 }
                 return -1;
             }
@@ -93,6 +101,20 @@ namespace Musashi
             PlayerInputActions.Aim.canceled += ctx => aim = false;
 
             PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
+        }
+
+        //test
+        private void Update()
+        {
+            if (Fire)
+            {
+                Debug.Log("fire");
+            }
+
+            if (heldFire)
+            {
+                Debug.Log("heldFire");
+            }
         }
 
         private void OnEnable()
