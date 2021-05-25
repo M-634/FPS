@@ -16,6 +16,7 @@
     {
         Defult,//当たってもエフェクトを出さない
         Humanoid,
+        Zombie,
         Mechanical,
     }
 }

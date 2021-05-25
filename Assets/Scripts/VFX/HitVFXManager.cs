@@ -12,7 +12,7 @@ namespace Musashi
         [Header("Set VFX")]
         [SerializeField] GameObject decalVFX;//デフォルトのエフェクト
         [SerializeField] GameObject bloodVFX;
-
+ 
         [Header("Set pool Parent Object")]
         [SerializeField] Transform poolObjcetParent;
         [Header("Set pool size")]
