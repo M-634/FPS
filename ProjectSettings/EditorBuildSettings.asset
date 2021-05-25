@@ -15,9 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorial.unity
     guid: da2137e1ea8b97745b81033370b15cdd
   - enabled: 0
-    path: Assets/Scenes/HorrorScene.unity
-    guid: 0853406b38fc80b41a0dc1dcf50f6d38
-  - enabled: 0
     path: Assets/Scenes/Test/Test_Enemy.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 1
