@@ -13,13 +13,6 @@ namespace Musashi
 
         [Header("Field of view")]
         [SerializeField] const float NOMAL_FOV = 60f;
-     
-        [Header("PostProcess")]
-        [SerializeField] PostProcessVolume volume;
-        [SerializeField] PostProcessProfile standard;
-        [SerializeField] PostProcessProfile nightVision;
-        [SerializeField] GameObject nightVisionOverlay;
-        [SerializeField] GameObject flashLight;
 
         float targetFov;
         float fov;
@@ -37,8 +30,7 @@ namespace Musashi
             targetFov = playerCamera.fieldOfView;
             fov = targetFov;
 
-            RenderSettings.fog = true;
-            InitPlayerPostProcessSettings();
+           // RenderSettings.fog = true;
         }
 
         private void Update()
@@ -111,75 +103,7 @@ namespace Musashi
             var eulerRotation = playerCamera.transform.eulerAngles;
             eulerRotation.x = value;
             playerCamera.transform.eulerAngles = eulerRotation;
-        }
-
-        public void ChangePostProcess()
-        {
-            if (volume.profile == standard)
-            {
-                SwitchNightVision();
-            }
-            else
-            {
-                InitPlayerPostProcessSettings();
-            }
-        }
-
-        public void InitPlayerPostProcessSettings()
-        {
-            volume.enabled = true;
-            volume.profile = standard;
-            nightVisionOverlay.SetActive(false);
-            flashLight.SetActive(false);
-        }
-
-        public void SwitchNightVision()
-        {
-            volume.profile = nightVision;
-            nightVisionOverlay.SetActive(true);
-            if (nightVisionOverlay.activeSelf)//バッテリーの充電がないならライトも消える
-            {
-                flashLight.SetActive(true);
-            }
-        }
-
-
-
-        //PlayerEventManager playerEvent;
-        //ItemInventory inventory;
-
-        public void OnEnable()
-        {
-            //playerEvent = GetComponent<PlayerEventManager>();
-            //if (playerEvent)
-            //{
-            //    playerEvent.Subscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
-            //    playerEvent.Subscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
-            //}
-
-            //inventory = GetComponentInChildren<ItemInventory>();
-
-            //if (inventory)
-            //{
-            //    inventory.OpenInventory += () => LockCamera = true;
-            //    inventory.CloseInventory += () => LockCamera = false;
-            //}
-        }
-
-        public void OnDisable()
-        {
-            //if (playerEvent)
-            //{
-            //    playerEvent.UnSubscribe(PlayerEventType.OpenInventory, () => LockCamera = true);
-            //    playerEvent.UnSubscribe(PlayerEventType.CloseInventory, () => LockCamera = false);
-            //}
-
-            //if (inventory)
-            //{
-            //    inventory.OpenInventory -= () => LockCamera = true;
-            //    inventory.CloseInventory -= () => LockCamera = false;
-            //}
-        }
+        }     
     }
 }
 
