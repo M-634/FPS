@@ -39,9 +39,10 @@ namespace Musashi
         int currentWeaponEquipmentIndex = -1;
 
         [Header("Ammo in inventory")]
+        [SerializeField] bool testScene;
         [SerializeField] int maxAmmoInInventory = 999;
         [SerializeField] TextMeshProUGUI ammoStackNumberInInventoryText;
-        private int sumNumberOfAmmoInInventory;
+        int sumNumberOfAmmoInInventory;
         public int SumNumberOfAmmoInInventory
         {
             get => sumNumberOfAmmoInInventory;
@@ -62,7 +63,17 @@ namespace Musashi
             stockHealItems = new Queue<HealItem>();
             input = GetComponentInParent<InputProvider>();
 
-            SumNumberOfAmmoInInventory = 0;
+            if (testScene)
+            {
+#if UNITY_EDITOR
+                SumNumberOfAmmoInInventory = maxAmmoInInventory;
+#endif
+            }
+            else
+            {
+                SumNumberOfAmmoInInventory = 0;
+            }
+
             for (int i = 0; i < weaponSlots.Length; i++)
             {
                 weaponSlots[i].StackSize.text = weaponActive[i].Control.CurrentAmmo.ToString() + " / " + weaponActive[i].Control.MaxAmmo.ToString();
@@ -138,13 +149,13 @@ namespace Musashi
                 UseHealthItem();
             }
 
-            ChangeWeapon(input.SwichWeaponID) ;
+            ChangeWeapon(input.SwichWeaponID);
         }
 
         private void ChangeWeapon(int index)
         {
             if (index == -1) return;
-            
+
             //remove equipment 
             if (currentWeaponEquipmentIndex != -1)
             {

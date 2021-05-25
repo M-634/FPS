@@ -103,20 +103,6 @@ namespace Musashi
             PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
         }
 
-        //test
-        private void Update()
-        {
-            if (Fire)
-            {
-                Debug.Log("fire");
-            }
-
-            if (heldFire)
-            {
-                Debug.Log("heldFire");
-            }
-        }
-
         private void OnEnable()
         {
             inputActions.Enable();

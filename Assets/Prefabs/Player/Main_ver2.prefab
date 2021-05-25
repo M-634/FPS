@@ -3410,7 +3410,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4775108881281424821}
   - component: {fileID: 4008011986338085764}
-  - component: {fileID: 7033380437120614009}
   - component: {fileID: 7033380437120614008}
   m_Layer: 5
   m_Name: Inventory
@@ -3448,19 +3447,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2604906851520638287}
   m_CullTransparentMesh: 0
---- !u!114 &7033380437120614009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2604906851520638287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d35baa72aec2e50488b956856a6d4452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sumNumberOfAmmoInInventory: 0
 --- !u!114 &7033380437120614008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3490,6 +3476,7 @@ MonoBehaviour:
   ammoCounterText: {fileID: 6951725358768480748}
   maxAmmoInInventory: 999
   ammoStackNumberInInventoryText: {fileID: 7033380436563596034}
+  sumNumberOfAmmoInInventory: 999
 --- !u!1 &2761213901524125947
 GameObject:
   m_ObjectHideFlags: 0

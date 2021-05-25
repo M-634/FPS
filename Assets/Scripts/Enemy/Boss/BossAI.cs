@@ -161,7 +161,7 @@ namespace Musashi
     {
         public void OnEnter(BossAI owner, IState<BossAI> prevState = null)
         {
-            Debug.Log("Idle");
+            //Debug.Log("Idle");
             owner.Agent.isStopped = true;
             owner.BossAnim.Play("Idle");
         }
@@ -181,7 +181,7 @@ namespace Musashi
     {
         public void OnEnter(BossAI owner, IState<BossAI> prevState = null)
         {
-            Debug.Log("pursue");
+            //Debug.Log("pursue");
             owner.Agent.speed = owner.PursueSpeed;
             owner.Agent.isStopped = false;
             owner.BossAnim.Play("Run");
@@ -196,8 +196,7 @@ namespace Musashi
         {
             AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
             owner.Agent.SetDestination(owner.Target.position);
-            Debug.Log(owner.Target.position);
-
+            
             if (owner.SelectAttackType())
             {
                 owner.StateMacnie.ChangeState(owner.Attack);
@@ -236,7 +235,6 @@ namespace Musashi
         {
             if(owner.BossAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
             {
-                Debug.Log("a");
                 owner.StateMacnie.ChangeState(owner.Idle);
             }
         }

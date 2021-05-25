@@ -52,6 +52,8 @@ namespace Musashi
 
             for (int i = 0; i < hits.Length; i++)
             {
+                if (i > 0) break;//貫通を防ぐため
+
                 if (hits[i].collider.TryGetComponent(out IDamageable target))
                 {
                     var type = target.GetTargetType();
