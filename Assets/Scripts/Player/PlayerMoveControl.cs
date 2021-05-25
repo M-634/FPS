@@ -22,16 +22,13 @@ namespace Musashi
         [Header("Jump")]
         [SerializeReference, Tooltip("maxVelocity = jumpPower / 10 が目安")] float maxVelocity = 10f;//ジャンプ時の最大加速度
         [SerializeField] float jumpPower = 100f;
-        [SerializeField] float inputSensitivityInAirModifier = 0.2f;//空中時に入力から受けるベクトルの大きさを調整する
+        //[SerializeField] float inputSensitivityInAirModifier = 0.2f;//空中時に入力から受けるベクトルの大きさを調整する
 
         [Header("Cheack Ground")]
         [SerializeField] float groundCheckDistance = 1f;
         [SerializeField] LayerMask groundLayer;
         Vector3 groundNormal;
         bool isGround;
-
-        [Header("Camera")]
-        //[SerializeField] PlayerCamaraControl cameraControl;
 
         [Header("Audio")]
         [SerializeField] float footstepSFXFrequency = 0.3f;
@@ -43,8 +40,6 @@ namespace Musashi
 
         InputProvider playerInput;
         CharacterController characterController;
-
-       
 
         private void Start()
         {

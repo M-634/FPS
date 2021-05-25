@@ -5,6 +5,10 @@ using System;
 
 namespace Musashi
 {
+    public enum ItemType
+    {
+        HealthKit, AmmoBox,
+    }
     public class Item : MonoBehaviour, IInteractable
     {
         public Action<Transform> OnPickUpEvent;
@@ -28,7 +32,8 @@ namespace Musashi
 
             OnPickUpEvent += (Transform player) =>
             {
-                var canGet = player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
+                //var canGet = player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
+                var canGet = ItemInventory.Instance.CanGetItem(this);
 
                 if (canGet)
                 {

@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;
 
 //memo :5/23 アイテムはとりあえず、回復キットと弾薬の２種類のみとする。
-//To Do :AmmoControllerとCurrentWeaponAmmoCounterをこのクラスと結合させる
 namespace Musashi
 {
     /// <summary>

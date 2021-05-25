@@ -8,6 +8,7 @@ namespace Musashi
     {
         [SerializeField] Image damageEffectImage;
    
+        public  bool IsMaxHP  => CurrentHp == maxHp;
         protected override float CurrentHp 
         {
             get => base.CurrentHp;
@@ -16,12 +17,16 @@ namespace Musashi
                 currentHp = value;
                 float ratio = currentHp / maxHp;
                 if (healthBarFillImage)
+                {
                     healthBarFillImage.fillAmount = ratio;
+                }
                 if (damageEffectImage)
+                {
                     damageEffectImage.color = new Color(1, 1, 1, 1 - ratio);
+                }
             } 
         }
-        public  bool IsMaxHP  => CurrentHp == maxHp;
+
         protected override void OnDie()
         {
             GameManager.Instance.GameOver();
@@ -32,7 +37,6 @@ namespace Musashi
             CurrentHp += healPoint;
             return true;
             //memo 回復タイムの実装は後回しにする
-            Debug.Log($"{healPoint}を{healtime}かけて回復した");
         }
     }
 }

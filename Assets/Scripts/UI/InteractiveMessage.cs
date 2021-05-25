@@ -4,6 +4,9 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 
+/// <summary>
+/// ゲームシーンで、プレイヤーへのメッセージ表示を管理するクラス
+/// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class InteractiveMessage : MonoBehaviour
 {

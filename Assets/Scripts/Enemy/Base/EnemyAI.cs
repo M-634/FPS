@@ -39,7 +39,7 @@ namespace Musashi
         [Header("攻撃の各種設定")]
         /// <summary>振り向きの補間スピード </summary>
         [SerializeField, Range(0, 1f)] float turnAroundInterpolationSpeed = 0.1f;
-        IEnemyAttack attack;
+        //IEnemyAttack attack;
 
         [Header("Gizoms表示色")]
         [SerializeField] Color visitDistanceColor;
@@ -64,7 +64,7 @@ namespace Musashi
         public float StopOffset => stopOffset;
         public NavMeshAgent Agent => agent;
         public Animator Animator => animator;
-        public IEnemyAttack Attack => attack;
+       // public IEnemyAttack Attack => attack;
 
         public bool DoPatrolNPC => doPatrolNPC;
         #endregion
@@ -84,15 +84,18 @@ namespace Musashi
         {
             animator = GetComponent<Animator>();
             agent = GetComponent<NavMeshAgent>();
-            attack = GetComponent<IEnemyAttack>();
-
+           
             agent.autoBraking = false;
 
             if (!player)
+            {
                 player = GameObject.FindGameObjectWithTag("Player").transform;
+            }
 
             if (!enemyEye)
+            {
                 enemyEye = this.transform;
+            }
 
             //Init state
             if (doPatrolNPC)

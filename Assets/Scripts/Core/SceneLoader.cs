@@ -44,40 +44,8 @@ namespace Musashi
                 GameManager.Instance.CloseConfigure();
                 return;
             }
-            //StartCoroutine(LoadSceneAsync((int)buildIndex, callback));
             LoadSceneAsync((int)buildIndex, callback);
         }
-
-        //IEnumerator LoadSceneAsync(int buildIndex, UnityAction callback = null)
-        //{
-        //    fadeImage.color = Color.clear;
-        //    fadeImage.enabled = true;
-        //    float timer = 0;
-
-        //    //FadeOutImage
-        //    while (true)
-        //    {
-        //        timer += Time.deltaTime / fadeDuration;
-        //        fadeImage.color = Color.Lerp(fadeImage.color, Color.black, timer);
-        //        if (fadeImage.color.a > 0.99f)
-        //        {
-        //            break;
-        //        }
-        //        yield return null;
-        //    }
-
-        //    //LoadScene
-        //    AsyncOperation async = SceneManager.LoadSceneAsync(buildIndex);
-
-        //    while (async.progress < 0.99f)
-        //    {
-        //        yield return null;
-        //    }
-        //    fadeImage.enabled = false;
-        //    async.allowSceneActivation = true;
-        //    callback?.Invoke();
-        //}
-
 
         private void LoadSceneAsync(int buildIndex, UnityAction callback = null)
         {

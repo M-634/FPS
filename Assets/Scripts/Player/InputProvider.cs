@@ -9,7 +9,7 @@ namespace Musashi
     /// プレイヤーの入力を管理するクラス
     /// プレイヤーオブジェット全ての親オブジェットにアタッチすること
     /// </summary>
-    public class InputProvider : MonoBehaviour//このクラスに依存しているクラスが多いので依存関係を解消させること
+    public class InputProvider : MonoBehaviour//AcionBaseでメソッド呼ぶとコールバックでバグるので、とりあえずこのまま
     {
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;

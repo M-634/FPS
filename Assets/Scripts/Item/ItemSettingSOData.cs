@@ -15,7 +15,6 @@ namespace Musashi
         public string description;
         public ItemType itemType;
         public Sprite icon;
-        public BaseItem itemPrefab;
         public bool stackable;
     }
 }

@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace Musashi
 {
+    public enum WeaponType
+    {
+        ShotGun, HandGun, AssaultRifle,
+    }
+
     /// <summary>
     /// プレイヤーの入力処理に応じて武器を制御するクラス
     /// </summary>
