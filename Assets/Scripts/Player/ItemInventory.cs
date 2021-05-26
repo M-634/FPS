@@ -128,6 +128,8 @@ namespace Musashi
         /// </summary>
         private bool CanStackItem(Item getItem, ref int stackNumInInventory, TextMeshProUGUI displayText)
         {
+            if (maxAmmoInInventory == getItem.MaxStacSize) return false;
+
             bool res = true;
             int temp = stackNumInInventory + getItem.StacSize;
             if (temp > getItem.MaxStacSize)

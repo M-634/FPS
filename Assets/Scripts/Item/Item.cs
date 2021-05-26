@@ -13,15 +13,15 @@ namespace Musashi
     {
         public Action<Transform> OnPickUpEvent;
         public Func<bool> OnUseEvent;
-        
+
         [SerializeField] bool canUseItem;
         [SerializeField] protected ItemSettingSOData itemSetting;
         [SerializeField, Range(1, 999)] int maxStackSize = 1;
         [SerializeField, Range(1, 100)] int stackSize = 1;
 
         public string ItemName { get; private set; }
-        public ItemType ItemType { get; private set; }
         public Sprite Icon { get; private set; }
+        public ItemType ItemType { get; private set; }
         public bool Stackable { get; private set; }
         public int MaxStacSize { get => maxStackSize; }
         public int StacSize { get => stackSize; set => stackSize = value; }
