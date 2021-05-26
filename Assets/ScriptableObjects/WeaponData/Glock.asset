@@ -18,7 +18,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 7069840191309764376, guid: b1a9f9bb6d6221940a3b0433b8549edb,
     type: 3}
   shotSFX: {fileID: 8300000, guid: 11a92f8e0363d4144a49462023774ad5, type: 3}
-  reloadSFX: {fileID: 8300000, guid: fee3a21f251a4914cabce25b13e7d2a8, type: 3}
+  reloadSFX: {fileID: 8300000, guid: a6ba3cf655732a64fada52950855e848, type: 3}
   emptySFX: {fileID: 8300000, guid: 2f79ad7952b593347a5b597889ba9be9, type: 3}
   shotDamage: 40
   shotPower: 150

@@ -76,6 +76,11 @@ namespace Musashi
             {
                 weaponSlots[i].StackSize.text = weaponActive[i].Control.CurrentAmmo.ToString() + " / " + weaponActive[i].Control.MaxAmmo.ToString();
             }
+
+            if (equipmentWeaponInfo.activeSelf)
+            {
+                equipmentWeaponInfo.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -161,6 +166,7 @@ namespace Musashi
                 weaponSlots[currentWeaponEquipmentIndex].MissingSelection();
             }
             currentWeaponEquipmentIndex = index;
+            equipmentWeaponInfo.SetActive(true);
 
             weaponActive[currentWeaponEquipmentIndex].SetActive(true);
             weaponSlots[currentWeaponEquipmentIndex].OnSelected();
