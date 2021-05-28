@@ -74,13 +74,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surface: {fileID: 529513415796134751}
+  player: {fileID: 0}
+  playerSpwanOffset: 2
+  enemySpwaner: {fileID: 0}
+  enemySpwanerSpwanOffset: 1.5
   dungeonwidth: 100
   dungeonLength: 100
   roomWidthMin: 5
   roomLengthMin: 5
   maxIterations: 6
   corridorWidth: 2
-  material: {fileID: 2100000, guid: 0c88c868e203d7a4eba72a64112c3a0a, type: 2}
+  levelFloorMaterial: {fileID: 0}
   roomBottomCornerModifier: 0
   roomTopCornerModifier: 0.7
   roomOffset: 2
