@@ -197,7 +197,7 @@ PrefabInstance:
     - target: {fileID: 2784773979222827853, guid: 3db418091e51cef46a1f357c479830de,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2784773980362204001, guid: 3db418091e51cef46a1f357c479830de,
         type: 3}
@@ -460,6 +460,11 @@ PrefabInstance:
       propertyPath: m_TargetTexture
       value: 
       objectReference: {fileID: 8400000, guid: 87db790e9df3be249b40e37963e8bad6, type: 2}
+    - target: {fileID: 6609492524080972098, guid: be35e1d7ee83c434fae95f034f1ace63,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7033380437009762559, guid: be35e1d7ee83c434fae95f034f1ace63,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -677,7 +682,7 @@ PrefabInstance:
     - target: {fileID: 8816496099626256336, guid: 26806a9afc3d1384ea1ce9a7728e0416,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8816496099626256337, guid: 26806a9afc3d1384ea1ce9a7728e0416,
         type: 3}
