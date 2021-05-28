@@ -356,6 +356,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seAudioClipsList:
   - {fileID: 8300000, guid: 95c77b7e87908d34881032f1b0bda03f, type: 3}
+  - {fileID: 8300000, guid: e009e7fd82593334a974d1a64f9b956b, type: 3}
+  - {fileID: 8300000, guid: 210114544a53cb341936ddb958f9c1e3, type: 3}
   audioMixer: {fileID: 24100000, guid: ef0daa2f1ed37e7418abd3d8d5559837, type: 2}
   seAMG: {fileID: -5610975541670450029, guid: ef0daa2f1ed37e7418abd3d8d5559837, type: 2}
 --- !u!1 &7197702161479146469
@@ -673,7 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeImage: {fileID: 7197702162586829993}
-  fadeSceneTime: 120
+  fadeDuration: 2
 --- !u!1 &7197702161597715187
 GameObject:
   m_ObjectHideFlags: 0

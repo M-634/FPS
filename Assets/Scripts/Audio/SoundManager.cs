@@ -55,5 +55,7 @@ namespace Musashi
     public static class SoundName
     {
         public static string PickUP = "PickUp";
+        public static string OnClickButton = "OnClickButton";
+        public static string PointerEnterButton = "PointerEnterButton";
     }
 }
