@@ -58,7 +58,7 @@ namespace Musashi
 
         protected override void OnDie()
         {
-            //IsDead = true;
+            IsDead = true;
 
             if (bossDeadEvent != null)
             {

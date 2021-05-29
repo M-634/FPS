@@ -47,13 +47,11 @@ namespace Musashi
 
         private void Update()
         {
-            //hit check
+            //hit check; 修正どころ：
             RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
 
             for (int i = 0; i < hits.Length; i++)
             {
-                if (i > 0) break;//貫通を防ぐため
-
                 if (hits[i].collider.TryGetComponent(out IDamageable target))
                 {
                     var type = target.GetTargetType();
