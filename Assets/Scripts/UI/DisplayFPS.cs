@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public partial class DisplayFPS : MonoBehaviour
+public class DisplayFPS : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI fpsText;
     int frameCount;
     float elapsedTime;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Application.targetFrameRate = 90;
-    }
 
     // Update is called once per frame
     void Update()
