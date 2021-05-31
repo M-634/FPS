@@ -8,7 +8,7 @@ namespace Musashi
     {
         private enum State { IsGround, Jumping, Falling, }
         private State state;
-     
+
         [Header("Move")]
         [SerializeField] float maxSpeedOnGround = 1f;
         [SerializeField] float sprintSpeedModifier = 2f;
@@ -53,10 +53,11 @@ namespace Musashi
         private void Update()
         {
             GroundCheck();
+            CalculationGravity();
             var inputDirect = transform.right * playerInput.Move.x + transform.forward * playerInput.Move.y;
             if (state == State.Jumping)
             {
-                characterVelocity +=  Vector3.up * jumpPower * Time.deltaTime;
+                characterVelocity += Vector3.up * jumpPower * Time.deltaTime;
                 if (Mathf.Abs(characterVelocity.y) >= maxVelocity)
                 {
                     state = State.Falling;
@@ -64,11 +65,10 @@ namespace Musashi
             }
             if (state == State.Falling)
             {
-                CalculationGravity();
                 if (isGround)
                 {
                     characterVelocity.y = 0;
-                    audioSource.Play(landSFX);
+                    //audioSource.Play(landSFX);
                     state = State.IsGround;
                 }
             }
@@ -89,7 +89,7 @@ namespace Musashi
                 }
 
                 // isSprint?
-                if(playerInput.Move.y < 0.1f) isSprint = false;
+                if (playerInput.Move.y < 0.1f) isSprint = false;
                 if (playerInput.Sprint) isSprint = true;
                 //modify sprint move
                 var speedModifier = isSprint && playerInput.Move.y > 0f ? sprintSpeedModifier : 1f;
@@ -129,10 +129,10 @@ namespace Musashi
                     isGround = true;
 
                     //空中にちょっと浮いていたら、地面まで戻す
-                    if (hit.distance > characterController.skinWidth)
-                    {
-                        characterController.Move(Vector3.down * hit.distance);
-                    }
+                    //if (hit.distance > characterController.skinWidth)
+                    //{
+                    //    characterController.Move(Vector3.down * hit.distance);
+                    //}
                 }
             }
         }
