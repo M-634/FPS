@@ -6,18 +6,36 @@ using TMPro;
 namespace Musashi
 {
     /// <summary>
-    ///ゲーム開始時に00;00 形式でタイマーを表示する
+    ///ゲーム開始時に0:00.00 形式でタイマーを表示する
     /// </summary>
     public class Timer : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI timerText;
+        [SerializeField] TextMeshProUGUI bestTime;
+        [SerializeField] GameObject timerPanel;
+
+
         private IEnumerator currutine;
         bool onTime;
+        float lastTime;
+
+        private void Start()
+        {
+            timerPanel.SetActive(false);
+        }
 
         private void StartTimer()
         {
+            timerPanel.SetActive(true); 
             currutine = TimerCorutine();
             StartCoroutine(currutine);
+        }
+
+        private void EndTimer()
+        {
+            onTime = false;
+            RecordResult.Instance.SetRecordTime(lastTime);
+            timerPanel.SetActive(false, 2);
         }
 
         IEnumerator TimerCorutine()
@@ -28,25 +46,22 @@ namespace Musashi
             while (onTime)
             {
                 timer += Time.deltaTime;
-                int minutes =(int)timer / 60;
-                float seconds = timer - minutes * 60;
-                timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                timerText.ChangeTheTimeDisplayFormat(timer); 
                 yield return null;
             }
+            lastTime = timer;
         }
 
         private void OnEnable()
         {
-            if (!timerText) return;
-            GameEventManager.Instance.Subscribe(GameEventType.StartGame,StartTimer);
-            GameEventManager.Instance.Subscribe(GameEventType.EndGame, () => onTime = false);
+            GameEventManager.Instance.Subscribe(GameEventType.StartGame, StartTimer);
+            GameEventManager.Instance.Subscribe(GameEventType.EndGame, EndTimer);
         }
 
         private void OnDisable()
         {
-            if (!timerText) return;
-            GameEventManager.Instance.UnSubscribe(GameEventType.StartGame,StartTimer);
-            GameEventManager.Instance.UnSubscribe(GameEventType.EndGame, () => onTime = false);
+            GameEventManager.Instance.UnSubscribe(GameEventType.StartGame, StartTimer);
+            GameEventManager.Instance.UnSubscribe(GameEventType.EndGame, EndTimer);
             currutine = null;
         }
     }

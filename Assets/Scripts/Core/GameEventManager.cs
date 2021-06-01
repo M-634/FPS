@@ -32,9 +32,14 @@ namespace Musashi
         {
             //すでにイベントキーが存在するなら、actionのみ追加する
             if (eventTable.ContainsKey(eventType))
+            {
                 eventTable[eventType] += action;
+            }
             else
+            {
                 eventTable.Add(eventType, action);
+            }
+            Debug.Log($"{eventType}:に{action.Method.Name}が追加されました");
         }
 
         public void UnSubscribe(GameEventType eventType, Action action)
@@ -44,8 +49,11 @@ namespace Musashi
 
         public void Excute(GameEventType eventType)
         {
-            if(eventTable.ContainsKey(eventType))
+            if (eventTable.ContainsKey(eventType))
+            {
                 eventTable[eventType]?.Invoke();
+                Debug.Log($"{eventType}イベントが発火しました");
+            }
         }
 
         public void Dispose()
@@ -59,10 +67,10 @@ namespace Musashi
     /// </summary>
     public enum GameEventType
     {
-        EnemyDie,
-        SpawnDie,
-        StartGame,
-        EndGame
+        EnemyDie,//敵の撃破数をカウントする
+        EnemySpwan,//敵、出現時に敵の総数をカウントする
+        StartGame,//タイマー表示、タイマースタート、敵を生成
+        EndGame//タイマーストップ、残った敵を削除、タイマーがベストタイムなら記録
     }
 }
 

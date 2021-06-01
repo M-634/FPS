@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 using Cysharp.Threading.Tasks;
 
 namespace Musashi
@@ -15,6 +16,18 @@ namespace Musashi
     /// </summary>
     public static class UGUIListnerExtension
     {
+        /// <summary>
+        /// 表示タイムを0:00.00形式で表示する
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="timer"></param>
+        public static void ChangeTheTimeDisplayFormat(this TextMeshProUGUI textMeshPro,float timer)
+        {
+            int minutes = (int)timer / 60;
+            float seconds = timer - minutes * 60;
+            textMeshPro.text = string.Format("{0}:{1:00.00}", minutes, seconds);     
+        }
+
         public static void ShowUIWithCanvasGroup(this CanvasGroup canvasGroup)
         {
             canvasGroup.interactable = true;
