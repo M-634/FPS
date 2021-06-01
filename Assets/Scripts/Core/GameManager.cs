@@ -92,11 +92,13 @@ namespace Musashi
             UnlockCusor();
             configure.gameObject.SetActive(true);
         }
+
         public void CloseConfigure()
         {
             if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.MainGame)
+            {
                 LockCusor();
-
+            }
             configure.gameObject.SetActive(false);
         }
     }
