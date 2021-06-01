@@ -11,13 +11,12 @@ namespace Musashi
     public class Timer : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI timerText;
-        [SerializeField] TextMeshProUGUI bestTime;
+        [SerializeField] TextMeshProUGUI bestTimeText;
         [SerializeField] GameObject timerPanel;
 
 
         private IEnumerator currutine;
         bool onTime;
-        float lastTime;
 
         private void Start()
         {
@@ -26,7 +25,8 @@ namespace Musashi
 
         private void StartTimer()
         {
-            timerPanel.SetActive(true); 
+            timerPanel.SetActive(true);
+            RecordResult.Instance.DisplayBestTime(bestTimeText);
             currutine = TimerCorutine();
             StartCoroutine(currutine);
         }
@@ -34,7 +34,6 @@ namespace Musashi
         private void EndTimer()
         {
             onTime = false;
-            RecordResult.Instance.SetRecordTime(lastTime);
             timerPanel.SetActive(false, 2);
         }
 
@@ -49,7 +48,7 @@ namespace Musashi
                 timerText.ChangeTheTimeDisplayFormat(timer); 
                 yield return null;
             }
-            lastTime = timer;
+            RecordResult.Instance.DisplayResult(timer);
         }
 
         private void OnEnable()
