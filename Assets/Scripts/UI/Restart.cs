@@ -27,7 +27,6 @@ namespace Musashi
             {
                 button.interactable = false;
             }
-
         }
 
         public void OnPointerClick(PointerEventData eventData)
