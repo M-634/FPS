@@ -18,7 +18,7 @@ namespace Musashi
             Whole//全体
         }
 
-        #region field
+        #region Field
         [SerializeField] float normalSpeed;
         [SerializeField] float pursueSpeed;
 
