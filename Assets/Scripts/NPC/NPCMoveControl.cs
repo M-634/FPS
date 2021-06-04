@@ -210,7 +210,7 @@ namespace Musashi.NPC
                 StopPoint(owner);
             }
 
-            if (AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            if (NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
             {
                 owner.StateMacnie.ChangeState(owner.PuersueState);
             }
@@ -250,17 +250,17 @@ namespace Musashi.NPC
 
         public void OnUpdate(NPCMoveControl owner)
         {
-            AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
+            NPCAIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
             owner.Agent.SetDestination(owner.Target.position);
 
-            if (AIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
+            if (NPCAIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
             {
                 owner.StateMacnie.ChangeState(owner.AttackState);
             }
 
             if (isAngryState) return;
 
-            if (!AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            if (!NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
             {
                 owner.StateMacnie.ChangeState(owner.IdleState);
             }
@@ -287,14 +287,14 @@ namespace Musashi.NPC
 
         public void OnUpdate(NPCMoveControl owner)
         {
-            AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
+            NPCAIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
 
-            if (!AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            if (!NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
             {
                 owner.StateMacnie.ChangeState(owner.IdleState);
             }
 
-            if (!AIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
+            if (!NPCAIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
             {
                 owner.StateMacnie.ChangeState(owner.PuersueState);
             }

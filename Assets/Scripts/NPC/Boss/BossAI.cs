@@ -107,7 +107,7 @@ namespace Musashi.NPC
         /// <returns></returns>
         public bool SelectAttackType()
         {
-            if (AIHelper.CanAttackPlayer(target, this.transform, meleeRange))
+            if (NPCAIHelper.CanAttackPlayer(target, this.transform, meleeRange))
             {
                 if (CoolTime)
                 {
@@ -193,7 +193,7 @@ namespace Musashi.NPC
 
         public void OnUpdate(BossAI owner)
         {
-            AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
+            NPCAIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
             owner.Agent.SetDestination(owner.Target.position);
             
             if (owner.SelectAttackType())

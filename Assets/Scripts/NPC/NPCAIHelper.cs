@@ -10,7 +10,7 @@ namespace Musashi.NPC
     /// <summary>
     /// 敵AIのヘルパー関数
     /// </summary>
-    public static class AIHelper
+    public static class NPCAIHelper
     {
         public static bool CanSeePlayer(Transform player,Transform self,float visitDistance,float viewingAngle,Transform eye)
         {
