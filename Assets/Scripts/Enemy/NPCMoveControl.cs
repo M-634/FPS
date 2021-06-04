@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Musashi.Enemy
+namespace Musashi.NPC
 {
     public static class AnimatorName
     {
@@ -21,7 +21,7 @@ namespace Musashi.Enemy
     /// プレイヤーを発見したら追いかけ回して弾を放つ。
     /// 平常時は、パスに沿ってパトロールする。
     /// </summary>
-    public class HoverBotController : MonoBehaviour
+    public class NPCMoveControl : MonoBehaviour
     {
         #region Field
         [SerializeField] Transform target;
@@ -50,7 +50,7 @@ namespace Musashi.Enemy
 
         NavMeshAgent agent;
         Animator animator;
-        StateMachine<HoverBotController> stateMachine;
+        StateMachine<NPCMoveControl> stateMachine;
         #endregion
 
         #region Field's property
@@ -68,16 +68,16 @@ namespace Musashi.Enemy
         public Transform Target => target;
         public NavMeshAgent Agent => agent;
         public Animator Anim => animator;
-        public StateMachine<HoverBotController> StateMacnie => stateMachine;
+        public StateMachine<NPCMoveControl> StateMacnie => stateMachine;
         #endregion
 
 
         #region States
-        public IState<HoverBotController> Idle { get; private set; } = new Idle();
-        public IState<HoverBotController> Patrol { get; private set; } = new Patrol();
-        public IState<HoverBotController> Puersue { get; private set; } = new Pursue();
-        public IState<HoverBotController> Attack { get; private set; } = new Attack();
-        public IState<HoverBotController> OnDamage { get; private set; } = new OnDamage();
+        public IState<NPCMoveControl> Idle { get; private set; } = new Idle();
+        public IState<NPCMoveControl> Patrol { get; private set; } = new Patrol();
+        public IState<NPCMoveControl> Puersue { get; private set; } = new Pursue();
+        public IState<NPCMoveControl> Attack { get; private set; } = new Attack();
+        public IState<NPCMoveControl> OnDamage { get; private set; } = new OnDamage();
         #endregion
 
         private void Start()
@@ -96,7 +96,7 @@ namespace Musashi.Enemy
                 eye = this.transform;
             }
 
-            stateMachine = new StateMachine<HoverBotController>(this, Idle);
+            stateMachine = new StateMachine<NPCMoveControl>(this, Idle);
         }
 
         private void Update()
@@ -131,35 +131,35 @@ namespace Musashi.Enemy
 
 
     #region State Classes
-    public class Idle : IState<HoverBotController>
+    public class Idle : IState<NPCMoveControl>
     {
-        public void OnEnter(HoverBotController owner, IState<HoverBotController> prevState = null)
+        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
             owner.Agent.isStopped = true;
             owner.Anim.Play(AnimatorName.Idle);
         }
 
-        public void OnExit(HoverBotController owner, IState<HoverBotController> nextState = null)
+        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
 
         }
 
-        public void OnUpdate(HoverBotController owner)
+        public void OnUpdate(NPCMoveControl owner)
         {
             owner.StateMacnie.ChangeState(owner.Patrol);
         }
     }
 
-    public class Patrol : IState<HoverBotController>
+    public class Patrol : IState<NPCMoveControl>
     {
         float waitTime = 0f;
         bool isStopping = false;
-        public void OnEnter(HoverBotController owner, IState<HoverBotController> prevState = null)
+        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
             GoToNextPoint(owner);
         }
 
-        private void GoToNextPoint(HoverBotController owner)
+        private void GoToNextPoint(NPCMoveControl owner)
         {
             waitTime = 0;
             isStopping = false;
@@ -172,12 +172,12 @@ namespace Musashi.Enemy
             owner.Anim.Play(AnimatorName.Walk);
         }
 
-        public void OnExit(HoverBotController owner, IState<HoverBotController> nextState = null)
+        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
 
         }
 
-        public void OnUpdate(HoverBotController owner)
+        public void OnUpdate(NPCMoveControl owner)
         {
             //Debug.Log(owner.Agent.remainingDistance);
             //いったん0.5f以下になった後remainDistanceが再び0.53fとかになってしまい、想定どうりの動きが出来ないときがある
@@ -198,7 +198,7 @@ namespace Musashi.Enemy
             }
         }
 
-        private void StopPoint(HoverBotController owner)
+        private void StopPoint(NPCMoveControl owner)
         {
             owner.Agent.isStopped = true;
             owner.Anim.Play(AnimatorName.Idle);
@@ -211,56 +211,56 @@ namespace Musashi.Enemy
         }
     }
 
-    public class Pursue : IState<HoverBotController>
+    public class Pursue : IState<NPCMoveControl>
     {
-        public void OnEnter(HoverBotController owner, IState<HoverBotController> prevState = null)
+        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
+        {
+            owner.Agent.destination = owner.Target.position;
+        }
+
+        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
 
         }
 
-        public void OnExit(HoverBotController owner, IState<HoverBotController> nextState = null)
-        {
-
-        }
-
-        public void OnUpdate(HoverBotController owner)
+        public void OnUpdate(NPCMoveControl owner)
         {
 
         }
     }
 
-    public class Attack : IState<HoverBotController>
+    public class Attack : IState<NPCMoveControl>
     {
-        public void OnEnter(HoverBotController owner, IState<HoverBotController> prevState = null)
+        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
 
         }
 
-        public void OnExit(HoverBotController owner, IState<HoverBotController> nextState = null)
+        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
 
         }
 
-        public void OnUpdate(HoverBotController owner)
+        public void OnUpdate(NPCMoveControl owner)
         {
 
         }
     }
 
 
-    public class OnDamage : IState<HoverBotController>
+    public class OnDamage : IState<NPCMoveControl>
     {
-        public void OnEnter(HoverBotController owner, IState<HoverBotController> prevState = null)
+        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
 
         }
 
-        public void OnExit(HoverBotController owner, IState<HoverBotController> nextState = null)
+        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
 
         }
 
-        public void OnUpdate(HoverBotController owner)
+        public void OnUpdate(NPCMoveControl owner)
         {
 
         }

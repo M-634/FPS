@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Musashi
+namespace Musashi.Tool
 {
 #if UNITY_EDITOR
     [ExecuteAlways]

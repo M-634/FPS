@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-
-namespace Musashi
+namespace Musashi.Tool
 {
+#if UNITY_EDITOR
     /// <summary>
     /// 最初にnodeを１つだけ置いておく。
     ///nodeをCtr+Dで複製したら、パスのリストに加える。
@@ -13,13 +14,19 @@ namespace Musashi
     [ExecuteAlways]
     public class CreatePathTool : MonoBehaviour
     {
-        [SerializeField] EnemyAI owner;
-        [SerializeField] Transform nodePrefab;
         [SerializeField] List<Transform> pathes;
+        [SerializeField] AddORDeletNodeEvent addORDeletNodeEvent = default;
 
-        public List<Transform> Pathes { get; set; }
+        private void Reset()
+        {
+            pathes = new List<Transform>();
+            var initNode = new GameObject("Node");
+            initNode.transform.position = this.transform.position;
+            initNode.transform.parent = this.transform;
+            initNode.AddComponent<PathNode>();
+            DuplicateNode(initNode.transform);
+        }
 
-    
         public void DuplicateNode(Transform node)
         {
             if (pathes.Contains(node))
@@ -29,10 +36,7 @@ namespace Musashi
 
             pathes.Add(node);
 
-            if (owner)
-            {
-                owner.SetPatrolPoints(pathes.ToArray());
-            }
+            ExcuteAddORDeleteNodeEvent();
         }
 
         public void DeleteNode(Transform node)
@@ -44,9 +48,14 @@ namespace Musashi
 
             pathes.Remove(node);
 
-            if (owner)
+            ExcuteAddORDeleteNodeEvent();
+        }
+
+        private void ExcuteAddORDeleteNodeEvent()
+        {
+            if (addORDeletNodeEvent != null)
             {
-                owner.SetPatrolPoints(pathes.ToArray());
+                addORDeletNodeEvent.Invoke(pathes.ToArray());
             }
         }
 
@@ -71,4 +80,12 @@ namespace Musashi
             }
         }
     }
+#endif
+
+    /// <summary>
+    /// nodeの追加、削除時のイベント。Inspectorに表示できるよう
+    /// UnityEvnentを継承してラップする
+    /// </summary>
+    [System.Serializable]
+    public class AddORDeletNodeEvent : UnityEvent<Transform[]> { }
 }
