@@ -14,7 +14,7 @@ namespace Musashi.Tool
     [ExecuteAlways]
     public class CreatePathTool : MonoBehaviour
     {
-        [SerializeField] List<Transform> pathes;
+        [SerializeField] List<Transform> pathes;//Bug :時々、pathesのNode順が勝手に変わってしまう。
         [SerializeField] AddORDeletNodeEvent addORDeletNodeEvent = default;
 
         private void Reset()
