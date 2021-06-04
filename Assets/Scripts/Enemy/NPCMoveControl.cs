@@ -7,7 +7,8 @@ using UnityEngine.AI;
 
 namespace Musashi.NPC
 {
-    public static class AnimatorName
+    public static 
+        class AnimatorName
     {
         public const string Idle = "Idle";
         public const string Walk = "Walk";
@@ -34,7 +35,6 @@ namespace Musashi.NPC
         [SerializeField] Transform eye;
         [SerializeField] float visitDistance = 10.0f;
         [SerializeField] float viewingAngle = 30.0f;
-        [SerializeField] float attackRange = 7.0f;
         [SerializeField] Transform[] patrolPoints;
         /// <summary>目標地点に到達してから次の中継地点へ出発するまでの待ち時間</summary>
         [SerializeField] float breakTime = 2f;
@@ -43,6 +43,8 @@ namespace Musashi.NPC
         [Header("攻撃の各種設定")]
         /// <summary>振り向きの補間スピード </summary>
         [SerializeField, Range(0, 1f)] float turnAroundInterpolationSpeed = 0.1f;
+        [SerializeField] float attackRange = 7.0f;
+        [SerializeField] float attackCoolTime = 1.0f;
 
         [Header("Gizoms表示色")]
         [SerializeField] Color visitDistanceColor;
@@ -62,6 +64,8 @@ namespace Musashi.NPC
         public float StopOffset => stopOffset;
         public float VisitDistance => visitDistance;
         public float ViewingAngle => viewingAngle;
+        public float AttackRange => attackRange;
+        public float AttackCoolTime => attackCoolTime;
         public float TurnAroundInterpolationSpeed => turnAroundInterpolationSpeed;
 
         public Transform Eye => eye;
@@ -73,11 +77,11 @@ namespace Musashi.NPC
 
 
         #region States
-        public IState<NPCMoveControl> Idle { get; private set; } = new Idle();
-        public IState<NPCMoveControl> Patrol { get; private set; } = new Patrol();
-        public IState<NPCMoveControl> Puersue { get; private set; } = new Pursue();
-        public IState<NPCMoveControl> Attack { get; private set; } = new Attack();
-        public IState<NPCMoveControl> OnDamage { get; private set; } = new OnDamage();
+        public IState<NPCMoveControl> IdleState { get; private set; } = new Idle();
+        public IState<NPCMoveControl> PatrolState { get; private set; } = new Patrol();
+        public IState<NPCMoveControl> PuersueState { get; private set; } = new Pursue();
+        public IState<NPCMoveControl> AttackState { get; private set; } = new Attack();
+        public IState<NPCMoveControl> OnDamageState { get; private set; } = new OnDamage();
         #endregion
 
         private void Start()
@@ -96,10 +100,10 @@ namespace Musashi.NPC
                 eye = this.transform;
             }
 
-            stateMachine = new StateMachine<NPCMoveControl>(this, Idle);
+            stateMachine = new StateMachine<NPCMoveControl>(this, IdleState);
         }
 
-        private void Update()
+        private void Update()//Update ⇒async/await
         {
             stateMachine.ExcuteOnUpdate();
         }
@@ -108,6 +112,8 @@ namespace Musashi.NPC
         {
             patrolPoints = points;
         }
+
+
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -146,7 +152,7 @@ namespace Musashi.NPC
 
         public void OnUpdate(NPCMoveControl owner)
         {
-            owner.StateMacnie.ChangeState(owner.Patrol);
+            owner.StateMacnie.ChangeState(owner.PatrolState);
         }
     }
 
@@ -194,7 +200,7 @@ namespace Musashi.NPC
 
             if (AIHelper.CanSeePlayer(owner.Target,owner.transform,owner.VisitDistance,owner.ViewingAngle,owner.Eye))
             {
-                owner.StateMacnie.ChangeState(owner.Puersue);
+                owner.StateMacnie.ChangeState(owner.PuersueState);
             }
         }
 
@@ -215,7 +221,9 @@ namespace Musashi.NPC
     {
         public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
-            owner.Agent.destination = owner.Target.position;
+            owner.Agent.speed = owner.PursueSpeed;
+            owner.Agent.isStopped = false;
+            owner.Anim.Play(AnimatorName.Run);
         }
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
@@ -225,15 +233,31 @@ namespace Musashi.NPC
 
         public void OnUpdate(NPCMoveControl owner)
         {
+            AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
+            owner.Agent.SetDestination(owner.Target.position);
 
+            if (AIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
+            {
+                owner.StateMacnie.ChangeState(owner.AttackState);
+            }
+
+            if (!AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            {
+                owner.StateMacnie.ChangeState(owner.IdleState);
+            }
         }
     }
 
+    /// <summary>
+    /// 攻撃はアニメーションイベントからメソッドを呼ぶようにすること
+    /// </summary>
     public class Attack : IState<NPCMoveControl>
     {
         public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
-
+            owner.Agent.isStopped = true;
+            owner.Anim.Play(AnimatorName.Attack);
+            Debug.Log("攻撃！");
         }
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
