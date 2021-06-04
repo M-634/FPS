@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.2850269, g: 0.3713935, b: 0.49601045, a: 1}
+  m_IndirectSpecularColor: {r: 0.28502586, g: 0.37139237, b: 0.4960093, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1763,6 +1763,23 @@ MonoBehaviour:
   healthBarHightOffset: 0.6
   maxHp: 100
   healthBarFillImage: {fileID: 280266616}
+  OnDamageEnvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDieEvents:
+    m_PersistentCalls:
+      m_Calls: []
   deathEffect: {fileID: 2036627097}
 --- !u!1 &1625814353
 GameObject:
@@ -1911,8 +1928,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathes:
-  - {fileID: 217456218}
   - {fileID: 583455775}
+  - {fileID: 217456218}
   - {fileID: 797271319}
   addORDeletNodeEvent:
     m_PersistentCalls:
@@ -2075,14 +2092,15 @@ MonoBehaviour:
   eye: {fileID: 0}
   visitDistance: 10
   viewingAngle: 30
-  attackRange: 7
   patrolPoints:
-  - {fileID: 217456218}
   - {fileID: 583455775}
+  - {fileID: 217456218}
   - {fileID: 797271319}
   breakTime: 2
   stopOffset: 0.5
   turnAroundInterpolationSpeed: 0.1
+  attackRange: 7
+  attackCoolTime: 1
   visitDistanceColor: {r: 0.38936353, g: 1, b: 0, a: 0.105882354}
   attackRangeColor: {r: 1, g: 0.04609634, b: 0, a: 0.29803923}
 --- !u!95 &1825244771
@@ -5979,6 +5997,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4984413986740728368, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527462622276739067, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8612697287673763373, guid: cf4b62ed1077cc54aab07bba9a9d022c,
         type: 3}
       propertyPath: m_RootOrder
@@ -6493,6 +6521,11 @@ PrefabInstance:
         type: 3}
       propertyPath: wholeRangeColor.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9053597556201197501, guid: cf4b62ed1077cc54aab07bba9a9d022c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf4b62ed1077cc54aab07bba9a9d022c, type: 3}

@@ -1,9 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Events;
 
 namespace Musashi
 {
+    /// <summary>
+    /// ダメージ時のイベントラッパー関数
+    /// </summary>
+    [System.Serializable]
+    public class OnDamageEnvents : UnityEvent { }
+    /// <summary>
+    /// 死亡時のイベントラッパー関数
+    /// </summary>
+    [System.Serializable]
+    public class OnDieEvents : UnityEvent { }
     /// <summary>
     /// 体力があるオブジェクトにアタッチするベースクラス。
     /// 設定された体力がなくなるとそのオブジェットは消える
@@ -15,9 +26,11 @@ namespace Musashi
         [SerializeField] float healthBarHightOffset;
         [SerializeField] protected float maxHp;
         [SerializeField] protected Image healthBarFillImage;
+
+        [SerializeField] protected OnDamageEnvents OnDamageEnvents = default;
+        [SerializeField] protected OnDieEvents OnDieEvents = default;
+
         protected float currentHp;
-
-
         public bool IsDead { get; protected set; } = false;
         public bool UseBillBord => useBillBord;
         protected virtual float CurrentHp
@@ -59,9 +72,16 @@ namespace Musashi
             if (IsDead) return;
 
             CurrentHp -= damage;
+
             if (CurrentHp <= 0)
             {
                 OnDie();
+                return;
+            }
+
+            if (OnDamageEnvents != null)
+            {
+                OnDamageEnvents.Invoke();
             }
         }
 
@@ -69,7 +89,12 @@ namespace Musashi
         {
             IsDead = true;
 
-            if(healthBarFillImage)
+            if (OnDieEvents != null)
+            {
+                OnDieEvents.Invoke();
+            }
+
+            if (healthBarFillImage)
             {
                 healthBarFillImage.transform.parent.gameObject.SetActive(false);
             }

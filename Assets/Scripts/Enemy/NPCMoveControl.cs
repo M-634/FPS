@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 using UnityEngine.AI;
 
 namespace Musashi.NPC
 {
-    public static 
+    public static
         class AnimatorName
     {
         public const string Idle = "Idle";
@@ -108,9 +109,19 @@ namespace Musashi.NPC
             stateMachine.ExcuteOnUpdate();
         }
 
+        /// <summary>
+        /// PathToolのイベントから呼ばれる関数.
+        /// パトロールポイントをセットする
+        /// </summary>
+        /// <param name="points"></param>
         public void SetPatrolPoints(Transform[] points)
         {
             patrolPoints = points;
+        }
+
+        public void OnDamage()
+        {
+            stateMachine.ChangeState(OnDamageState);
         }
 
 
@@ -198,7 +209,7 @@ namespace Musashi.NPC
                 StopPoint(owner);
             }
 
-            if (AIHelper.CanSeePlayer(owner.Target,owner.transform,owner.VisitDistance,owner.ViewingAngle,owner.Eye))
+            if (AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
             {
                 owner.StateMacnie.ChangeState(owner.PuersueState);
             }
@@ -253,6 +264,7 @@ namespace Musashi.NPC
     /// </summary>
     public class Attack : IState<NPCMoveControl>
     {
+        bool canAttack = true;
         public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
             owner.Agent.isStopped = true;
@@ -267,7 +279,33 @@ namespace Musashi.NPC
 
         public void OnUpdate(NPCMoveControl owner)
         {
+            AIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
 
+            if (!AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            {
+                owner.StateMacnie.ChangeState(owner.IdleState);
+            }
+
+            if (!canAttack) return;
+
+            if (owner.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+            {
+                //攻撃アニメーションが終了時の処理
+                if (owner.Anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    canAttack = false;
+                    WaitAttackCoolTime(owner);
+                }
+            }
+        }
+
+        private async void WaitAttackCoolTime(NPCMoveControl owner)
+        {
+            owner.Anim.Play(AnimatorName.Idle);
+            await UniTask.Delay(TimeSpan.FromSeconds(owner.AttackCoolTime), ignoreTimeScale: false);
+            owner.Anim.Play(AnimatorName.Attack);
+            Debug.Log("攻撃！");
+            canAttack = true;
         }
     }
 
