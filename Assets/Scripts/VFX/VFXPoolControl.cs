@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Musashi
+namespace Musashi.VFX
 {
-    public class VFXControl : MonoBehaviour
+    /// <summary>
+    /// VFXの中でオブジェクトプールを適用するオブジェクトにアタッチする
+    /// </summary>
+    public class VFXPoolControl : MonoBehaviour
     {
         [SerializeField] int lifeTime = 1;
         bool init = true;//オブジェットプールで初期化される時は何もしない

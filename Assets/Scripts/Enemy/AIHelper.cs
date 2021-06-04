@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Musashi
+namespace Musashi.NPC
 {
     /// <summary>
     /// 敵AIのヘルパー関数

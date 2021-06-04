@@ -10,14 +10,19 @@ namespace Musashi
     /// </summary>
     [System.Serializable]
     public class OnDamageEnvents : UnityEvent { }
+
     /// <summary>
     /// 死亡時のイベントラッパー関数
     /// </summary>
     [System.Serializable]
     public class OnDieEvents : UnityEvent { }
+
     /// <summary>
     /// 体力があるオブジェクトにアタッチするベースクラス。
-    /// 設定された体力がなくなるとそのオブジェットは消える
+    /// ダメージ時のイベントと、体力がなくなった時（死亡時）のイベントを
+    /// 継承先、もしくはインスペクター上で設定できる。
+    /// 
+    /// リファクタリングメモ : Start OnDamage OnDie メソッドの各 virtual キーワードを外すこと
     /// </summary>
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
     {
@@ -55,7 +60,15 @@ namespace Musashi
             {
                 StartCoroutine(BillBoard());
             }
+
+            OnDamageEnvents.AddListener(AddOnDamageEvent);
+            OnDieEvents.AddListener(AddOnDieEvent);
         }
+
+
+        protected virtual void AddOnDamageEvent() { }
+
+        protected virtual void AddOnDieEvent() { }
 
         IEnumerator BillBoard()
         {
@@ -93,12 +106,6 @@ namespace Musashi
             {
                 OnDieEvents.Invoke();
             }
-
-            if (healthBarFillImage)
-            {
-                healthBarFillImage.transform.parent.gameObject.SetActive(false);
-            }
-            gameObject.SetActive(false);
         }
 
         public TargetType GetTargetType()

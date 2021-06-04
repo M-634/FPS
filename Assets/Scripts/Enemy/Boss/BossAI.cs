@@ -3,9 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Musashi
+namespace Musashi.NPC
 {
-
     /// <summary>
     /// プレイヤーとの距離、ボスの残り体力に応じて攻撃パターンを変化する
     /// </summary>

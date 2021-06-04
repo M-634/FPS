@@ -8,8 +8,10 @@ using UnityEngine.AI;
 
 namespace Musashi.NPC
 {
-    public static
-        class AnimatorName
+    /// <summary>
+    /// リファクタリングメモ ⇒ ユーティリティークラスとしてまとめる
+    /// </summary>
+    public static class AnimatorName
     {
         public const string Idle = "Idle";
         public const string Walk = "Walk";
@@ -76,7 +78,6 @@ namespace Musashi.NPC
         public StateMachine<NPCMoveControl> StateMacnie => stateMachine;
         #endregion
 
-
         #region States
         public IState<NPCMoveControl> IdleState { get; private set; } = new Idle();
         public IState<NPCMoveControl> PatrolState { get; private set; } = new Patrol();
@@ -85,6 +86,7 @@ namespace Musashi.NPC
         public IState<NPCMoveControl> OnDamageState { get; private set; } = new OnDamage();
         #endregion
 
+        #region Method
         private void Start()
         {
             animator = GetComponent<Animator>();
@@ -119,13 +121,15 @@ namespace Musashi.NPC
             patrolPoints = points;
         }
 
+        /// <summary>
+        /// NPCHealthControlのOnDamageEventから呼ばれる関数
+        /// ステートを被ダメージ状態に切り替える
+        /// </summary>
         public void OnDamage()
         {
             stateMachine.ChangeState(OnDamageState);
         }
-
-
-
+  
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
@@ -144,8 +148,8 @@ namespace Musashi.NPC
             }
         }
 #endif
+        #endregion
     }
-
 
     #region State Classes
     public class Idle : IState<NPCMoveControl>
@@ -196,9 +200,6 @@ namespace Musashi.NPC
 
         public void OnUpdate(NPCMoveControl owner)
         {
-            //Debug.Log(owner.Agent.remainingDistance);
-            //いったん0.5f以下になった後remainDistanceが再び0.53fとかになってしまい、想定どうりの動きが出来ないときがある
-            //これは、 Idleアニメーションが再生されるときに、位置がずれてしまっていることが原因である
             if (!owner.Agent.pathPending && owner.Agent.remainingDistance < owner.StopOffset)
             {
                 isStopping = true;
@@ -230,8 +231,13 @@ namespace Musashi.NPC
 
     public class Pursue : IState<NPCMoveControl>
     {
+        bool isAngryState = false;//ダメージ受けた後は、プレイヤーを攻撃できる距離まで追い詰める
         public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
+            if (prevState is OnDamage)
+            {
+                isAngryState = true;
+            }
             owner.Agent.speed = owner.PursueSpeed;
             owner.Agent.isStopped = false;
             owner.Anim.Play(AnimatorName.Run);
@@ -239,7 +245,7 @@ namespace Musashi.NPC
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
-
+            isAngryState = false;
         }
 
         public void OnUpdate(NPCMoveControl owner)
@@ -251,6 +257,8 @@ namespace Musashi.NPC
             {
                 owner.StateMacnie.ChangeState(owner.AttackState);
             }
+
+            if (isAngryState) return;
 
             if (!AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
             {
@@ -274,7 +282,7 @@ namespace Musashi.NPC
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
-
+            //memo: UnitTaskのキャンセルトークンを発行すること
         }
 
         public void OnUpdate(NPCMoveControl owner)
@@ -284,6 +292,11 @@ namespace Musashi.NPC
             if (!AIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
             {
                 owner.StateMacnie.ChangeState(owner.IdleState);
+            }
+
+            if (!AIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
+            {
+                owner.StateMacnie.ChangeState(owner.PuersueState);
             }
 
             if (!canAttack) return;
@@ -309,24 +322,35 @@ namespace Musashi.NPC
         }
     }
 
-
     public class OnDamage : IState<NPCMoveControl>
     {
+        IState<NPCMoveControl> prevState;
         public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
-
+            this.prevState = prevState;
+            owner.Agent.isStopped = true;
+            owner.Anim.Play(AnimatorName.OnDamage);
         }
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
-
+            prevState = null;
         }
 
         public void OnUpdate(NPCMoveControl owner)
         {
-
+            if (owner.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+            {
+                if (prevState is Attack)
+                {
+                    owner.StateMacnie.ChangeState(owner.AttackState);
+                }
+                else
+                {
+                    owner.StateMacnie.ChangeState(owner.PuersueState);
+                }
+            }
         }
     }
     #endregion
-
 }
