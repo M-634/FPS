@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Musashi
+namespace Musashi.Item
 {
     public enum ItemType
     {

@@ -1081,6 +1081,11 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2030184281571859619, guid: be35e1d7ee83c434fae95f034f1ace63,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2308581349290598497, guid: be35e1d7ee83c434fae95f034f1ace63,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1275,6 +1280,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7185695707031087755, guid: be35e1d7ee83c434fae95f034f1ace63,
+        type: 3}
+      propertyPath: hitSFX
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7185695708786841806, guid: be35e1d7ee83c434fae95f034f1ace63,
         type: 3}
@@ -1658,7 +1668,7 @@ PrefabInstance:
     - target: {fileID: 6064928344271464239, guid: ffd24f49aa2e65644a4e70e091cbb054,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6872814769629298069, guid: ffd24f49aa2e65644a4e70e091cbb054,
         type: 3}
@@ -1678,7 +1688,7 @@ PrefabInstance:
     - target: {fileID: 6872814769629298069, guid: ffd24f49aa2e65644a4e70e091cbb054,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.5240372
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 6872814769629298069, guid: ffd24f49aa2e65644a4e70e091cbb054,
         type: 3}

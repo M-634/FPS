@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Musashi.Player;
 
-namespace Musashi
+namespace Musashi.Item
 {
     public class HealItem : Item
     {
@@ -17,7 +18,7 @@ namespace Musashi
 
         public bool CanHealPlayer()
         {
-            PlayerHealthControl healthControl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
+            var healthControl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
 
             if (healthControl)
             {

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Musashi.Weapon;
 
 //memo :5/23 アイテムはとりあえず、回復キットと弾薬の２種類のみとする。
-namespace Musashi
+namespace Musashi.Item
 {
     /// <summary>
     /// ゲームシーンUIに表示しているアイテム(Ammo, HealKit, Weapon)を管理するクラス

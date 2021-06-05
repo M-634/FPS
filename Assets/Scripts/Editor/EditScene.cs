@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEngine.Rendering.PostProcessing;
+using Musashi.Player;
 
 namespace Musashi
 {

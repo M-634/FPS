@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Musashi
+namespace Musashi.Item
 {
     [CreateAssetMenu(fileName = "ItemDataBase", menuName = "CreateItemDataBase")]
     public class ItemDataBase : ScriptableObject

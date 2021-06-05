@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Musashi
+namespace Musashi.Item
 {
     [CustomEditor(typeof(ItemSettingSOData))]
     public class ItemDataCustomInspector : Editor

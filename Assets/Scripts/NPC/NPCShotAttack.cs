@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Musashi.Weapon;
 
 namespace Musashi.NPC
 {

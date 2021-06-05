@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Musashi
+namespace Musashi.Weapon
 {
     [CustomEditor(typeof(WeaponActiveControl))]
     public class WeaponActiveControlCustomInspector : Editor

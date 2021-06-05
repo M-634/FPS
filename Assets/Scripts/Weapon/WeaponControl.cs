@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Musashi.Item;
 
-namespace Musashi
+namespace Musashi.Weapon
 {
     public enum WeaponType
     {

@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 
 
-namespace Musashi
+namespace Musashi.Player
 {
     public class PlayerHealthControl : BaseHealthControl
     {
@@ -27,9 +27,10 @@ namespace Musashi
             } 
         }
 
-        protected override void OnDie()
+
+        protected override void AddOnDieEvent()
         {
-            GameManager.Instance.GameOver();
+            GameManager.Instance.GameClear();
         }
 
         public bool Heal(float healPoint,float healtime)

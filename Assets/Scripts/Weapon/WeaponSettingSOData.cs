@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace Musashi
+namespace Musashi.Weapon
 {
     /// <summary>
     /// 武器データのスクリプタブルオブジェクト

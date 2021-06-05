@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Musashi
+namespace Musashi.Weapon
 {
     /// <summary>
     /// 弾丸を制御するクラス
@@ -41,6 +41,7 @@ namespace Musashi
             if (init == false)
             {
                 prevPos = transform.position;
+                this.transform.forward = projectile.Muzzle.forward;
                 rb.velocity = projectile.Muzzle.forward * projectile.Power;
                 gameObject.SetActive(false, projectile.LifeTime);
             }

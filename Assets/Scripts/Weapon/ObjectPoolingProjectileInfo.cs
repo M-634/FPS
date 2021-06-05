@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Musashi
+namespace Musashi.Weapon
 {
     /// <summary>
     /// オブジェットプールで管理する弾丸の情報を格納するクラス

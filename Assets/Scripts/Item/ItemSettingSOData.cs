@@ -4,9 +4,8 @@ using System;
 using UnityEngine.Events;
 
 
-namespace Musashi
+namespace Musashi.Item
 {
-
     [Serializable]
     [CreateAssetMenu(fileName = "ItemData", menuName = "CreateItemData")]
     public class ItemSettingSOData : ScriptableObject
