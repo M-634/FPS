@@ -3,14 +3,14 @@
 namespace Musashi.NPC
 {
     /// <summary>
-    /// NPCが銃を撃つタイプのキャラクターの場合、撃つ弾をオブジェットプールで管理し、
+    /// NPCが銃を撃つタイプのキャラクターにアタッチする。撃つ弾をオブジェットプールで管理し、
     /// 撃つタイミングは、アニメーションイベントから呼ばれる。
     /// </summary>
     public class NPCShotAttack :BaseNPCAttackEventControl,IPoolUser<NPCShotAttack>
     {
-        [SerializeField] Transform muzzle;
-        [SerializeField] GameObject projectile;
-        [SerializeField] GameObject muzzleFlashVFX;
+        [SerializeField] ObjectPoolingProjectileInfo projectileInfo;
+        [SerializeField] ProjectileControl projectilePrefab;
+        [SerializeField] ParticleSystem muzzleFlashVFXPrefab;
         [SerializeField] Transform poolParent;
 
         [SerializeField,Range(1,30)] int poolSize = 5;
@@ -18,14 +18,12 @@ namespace Musashi.NPC
 
         private void Start()
         {
-            AddEvent(Shot);
             InitializePoolObject(poolSize);
         }
 
-        private void Shot()
+        public void Shot()
         {
-            poolObjectManager.UsePoolObject(muzzle.position, Quaternion.identity, SetPoolObj);
-            Debug.Log("shot!");
+            poolObjectManager.UsePoolObject(projectileInfo.Muzzle.position, Quaternion.identity, SetPoolObj);
         }
 
         public void InitializePoolObject(int poolSize = 1)
@@ -42,11 +40,13 @@ namespace Musashi.NPC
         {
             var poolObj = poolObjectManager.InstantiatePoolObj();
 
-            var b = Instantiate(projectile,poolParent);
-            var mF = Instantiate(muzzleFlashVFX,poolParent);
+            var projectile = Instantiate(projectilePrefab, poolParent);
+            var muzzleFlash = Instantiate(muzzleFlashVFXPrefab, poolParent);
 
-            poolObj.AddObj(b);
-            poolObj.AddObj(mF);
+            projectile.SetProjectileInfo(projectileInfo);
+
+            poolObj.AddObj(projectile.gameObject);
+            poolObj.AddObj(muzzleFlash.gameObject);
 
             poolObj.SetActiveAll(false);
 

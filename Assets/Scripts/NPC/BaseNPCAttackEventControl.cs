@@ -20,11 +20,6 @@ namespace Musashi.NPC
     {
         [SerializeField] NPCAttackAnimationEvent OnAnimationEvent;
 
-        protected void AddEvent(UnityAction call)
-        {
-            OnAnimationEvent.AddListener(call);
-        }
-
         /// <summary>
         /// アニメーションイベントから直接呼ばれる関数
         /// </summary>

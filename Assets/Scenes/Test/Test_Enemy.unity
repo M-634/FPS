@@ -977,6 +977,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_LazerSparksRed (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7655095426451682942, guid: a7cf6fa525bc9c542bc20ff13e51c95c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7cf6fa525bc9c542bc20ff13e51c95c, type: 3}
 --- !u!1001 &1107895275
@@ -1650,6 +1655,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HoverBot_Projectile
       objectReference: {fileID: 0}
+    - target: {fileID: 6064928344271464239, guid: ffd24f49aa2e65644a4e70e091cbb054,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6872814769629298069, guid: ffd24f49aa2e65644a4e70e091cbb054,
         type: 3}
       propertyPath: m_RootOrder
@@ -2311,11 +2321,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnAnimationEvent:
     m_PersistentCalls:
-      m_Calls: []
-  muzzle: {fileID: 628007544}
-  projectile: {fileID: 6064928344271464239, guid: ffd24f49aa2e65644a4e70e091cbb054,
+      m_Calls:
+      - m_Target: {fileID: 1825244773}
+        m_MethodName: Shot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  projectileInfo:
+    muzzle: {fileID: 628007544}
+    power: 100
+    damage: 10
+    lifeTime: 1
+  projectilePrefab: {fileID: 4572965019657341280, guid: ffd24f49aa2e65644a4e70e091cbb054,
     type: 3}
-  muzzleFlashVFX: {fileID: 7655095426451682942, guid: a7cf6fa525bc9c542bc20ff13e51c95c,
+  muzzleFlashVFXPrefab: {fileID: 7655095426451682928, guid: a7cf6fa525bc9c542bc20ff13e51c95c,
     type: 3}
   poolParent: {fileID: 737428912}
   poolSize: 5
