@@ -277,7 +277,6 @@ namespace Musashi.NPC
         {
             owner.Agent.isStopped = true;
             owner.Anim.Play(AnimatorName.Attack);
-            Debug.Log("攻撃！");
         }
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
@@ -317,7 +316,6 @@ namespace Musashi.NPC
             owner.Anim.Play(AnimatorName.Idle);
             await UniTask.Delay(TimeSpan.FromSeconds(owner.AttackCoolTime), ignoreTimeScale: false);
             owner.Anim.Play(AnimatorName.Attack);
-            Debug.Log("攻撃！");
             canAttack = true;
         }
     }
