@@ -2,7 +2,7 @@
 using UnityEditor;
 using TMPro;
 
-namespace Musashi
+namespace Musashi.Player
 {
     public class PlayerMoveControl : MonoBehaviour
     {

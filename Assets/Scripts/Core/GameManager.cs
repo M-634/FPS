@@ -19,6 +19,8 @@ namespace Musashi
         public bool HaveShowConfigure => configure.gameObject.activeSelf;
         public bool IsGameClear { get; private set; }
 
+        public bool CanProcessInput { get; private set; }
+
         public int DefeatNumberOfEnemySpwaner { get; set; }//記録
         public int SumOfEnemySpwaner { get; set; } //記録
 
@@ -74,11 +76,15 @@ namespace Musashi
             // Lock cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            CanProcessInput = true;
         }
         public void UnlockCusor()
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+            CanProcessInput = false;
         }
         public void SwichConfiguUI()
         {

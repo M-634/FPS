@@ -28,6 +28,21 @@ namespace Musashi
 
         //Input property
         public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
+
+        public Vector3 GetMoveInput
+        {
+            get
+            {
+                if (GameManager.Instance.CanProcessInput)
+                {
+                    var move = new Vector3(PlayerInputActions.Move.ReadValue<Vector2>().x, 0f, PlayerInputActions.Move.ReadValue<Vector2>().y);
+                    move = Vector3.ClampMagnitude(move, 1);
+                    return move;
+                }
+                return Vector3.zero;
+            }
+        }
+
         public Vector2 Look => PlayerInputActions.Look.ReadValue<Vector2>();
         public Vector2 MousePosition => PlayerInputActions.MousePosition.ReadValue<Vector2>();
         public bool Jump => PlayerInputActions.Jump.triggered;
@@ -77,7 +92,7 @@ namespace Musashi
 
                         else
                         {
-                           swichWeaponIDByGamepad -= 1;
+                            swichWeaponIDByGamepad -= 1;
                         }
                         return swichWeaponIDByGamepad;
                     }
