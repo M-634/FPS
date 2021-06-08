@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -63,6 +64,8 @@ namespace Musashi
         private bool sprint;
         public bool Sprint => sprint;
 
+        public bool CanCrouch { get; set; } = false;
+
         private int swichWeaponIDByGamepad = -1;
         /// <summary>
         ///押してない時は -１。武器チェンジする時は、0か1か２を返す.
@@ -101,6 +104,7 @@ namespace Musashi
             }
         }
 
+
         private void Awake()
         {
             inputActions = new MyInputActions();
@@ -115,6 +119,9 @@ namespace Musashi
             PlayerInputActions.Aim.started += ctx => aim = true;
             PlayerInputActions.Aim.canceled += ctx => aim = false;
 
+            PlayerInputActions.Crouch.started +=  ctx => CanCrouch = !CanCrouch; 
+
+      
             PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
         }
 

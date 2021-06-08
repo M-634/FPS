@@ -70,6 +70,7 @@ namespace Musashi.NPC
         public float AttackRange => attackRange;
         public float AttackCoolTime => attackCoolTime;
         public float TurnAroundInterpolationSpeed => turnAroundInterpolationSpeed;
+        public float LastTimeAttacked { get; set; }
 
         public Transform Eye => eye;
         public Transform Target => target;
@@ -281,7 +282,7 @@ namespace Musashi.NPC
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
-            //memo: UnitTaskのキャンセルトークンを発行すること
+
         }
 
         public void OnUpdate(NPCMoveControl owner)
@@ -298,16 +299,23 @@ namespace Musashi.NPC
                 owner.StateMacnie.ChangeState(owner.PuersueState);
             }
 
-            if (!canAttack) return;
+            //if (!canAttack) return;
 
             if (owner.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
             {
                 //攻撃アニメーションが終了時の処理
                 if (owner.Anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 {
-                    canAttack = false;
-                    WaitAttackCoolTime(owner);
+                    //canAttack = false;
+                    owner.Anim.Play(AnimatorName.Idle);
+                    //WaitAttackCoolTime(owner);
+                    owner.LastTimeAttacked = Time.time;
                 }
+            }
+
+            if(Time.time >= owner.LastTimeAttacked + owner.AttackCoolTime)
+            {
+                owner.Anim.Play(AnimatorName.Attack);
             }
         }
 

@@ -5,7 +5,7 @@ namespace Musashi
     public class StateMachine<T> where T : MonoBehaviour
     {
         public IState<T> CurrentState { get; set; }
-        public T owner;
+        private readonly T owner;
 
         public StateMachine(T owner, IState<T> state)
         {
