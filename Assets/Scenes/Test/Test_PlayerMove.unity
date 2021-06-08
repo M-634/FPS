@@ -1909,7 +1909,7 @@ GameObject:
   - component: {fileID: 1909847077}
   - component: {fileID: 1909847076}
   - component: {fileID: 1909847075}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -14027,7 +14027,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6609492524617125428}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 1.01, z: 14}
+  m_LocalPosition: {x: 0, y: 0, z: 14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6609492525447757949}
@@ -14100,11 +14100,11 @@ GameObject:
   - component: {fileID: 6609492524617125427}
   - component: {fileID: 6609492524617125426}
   - component: {fileID: 6609492524617125439}
-  - component: {fileID: 6609492524617125429}
   - component: {fileID: 6609492524617125435}
   - component: {fileID: 6609492524617125436}
   - component: {fileID: 6609492524617125437}
   - component: {fileID: 6609492524617125434}
+  - component: {fileID: 6609492524617125429}
   m_Layer: 10
   m_Name: FPSPlayer_ver3
   m_TagString: Player
@@ -14121,23 +14121,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 6609492524617125428}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aff8f6ed2dffab445be798e885ed9e88, type: 3}
+  m_Script: {fileID: 11500000, guid: c32a5d6ea55c1f54ba259379f1f5c6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeedOnGround: 7
-  sprintSpeedModifier: 2
-  movementSharpnessOnGround: 15
-  gravity: 9.85
-  maxVelocity: 5
-  jumpPower: 40
+  gravityDownForce: 20
   groundCheckDistance: 1
   groundLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
-  footstepSFXFrequency: 0.3
-  footstepSFX: {fileID: 8300000, guid: 18f1f68d6ecde43468ed6538af9ab81b, type: 3}
-  jumpSFX: {fileID: 8300000, guid: 598db9cdf9d68be43a3dbbee0d1c5ccc, type: 3}
-  landSFX: {fileID: 8300000, guid: 35b84cfa2f919f543af13ad39d8091f4, type: 3}
+    m_Bits: 1
+  maxSpeedOnGround: 10
+  movementSharpnessOnGround: 15
+  maxSpeedCrouchedRatio: 0.5
+  maxSpeedInAir: 10
+  accelerationSpeedInAir: 25
+  sprintSpeedModifier: 2
+  jumpForce: 10
 --- !u!82 &6609492524617125434
 AudioSource:
   m_ObjectHideFlags: 0
@@ -14249,7 +14247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 6609492525447757944}
   mouseSensitivity: 2
-  controllerSensitivity: 50
+  controllerSensitivity: 100
 --- !u!114 &6609492524617125436
 MonoBehaviour:
   m_ObjectHideFlags: 0
