@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,8 +8,8 @@ namespace Musashi.Player
     /// プレイヤーの動きをステートパターンで制御するクラス。
     /// リファレンス：タイタンフォール２。APEX
     /// </summary>
-    [RequireComponent(typeof(CharacterController),typeof(AudioSource))]
-    public class PlayerMoveStateMchine : MonoBehaviour
+    [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
+    public partial class PlayerMoveStateMchine : MonoBehaviour
     {
         #region SerializeFields 
         [Header("References")]
@@ -45,13 +44,13 @@ namespace Musashi.Player
 
         [Header("Stance")]
         [Tooltip("Ratio (0-1) of the character height where the camera will be at")]
-        public float cameraHeightRatio = 0.9f;
+        [SerializeField] float cameraHeightRatio = 0.9f;
         [Tooltip("Height of character when standing")]
-        public float capsuleHeightStanding = 1.8f;
+        [SerializeField] float capsuleHeightStanding = 1.8f;
         [Tooltip("Height of character when crouching")]
-        public float capsuleHeightCrouching = 0.9f;
+        [SerializeField] float capsuleHeightCrouching = 0.9f;
         [Tooltip("Speed of crouching transitions")]
-        public float crouchingSharpness = 10f;
+        [SerializeField] float crouchingSharpness = 10f;
 
         [Header("Audio")]
         [Tooltip("Amount of footstep sounds played when moving one meter")]
@@ -66,6 +65,9 @@ namespace Musashi.Player
         [SerializeField] AudioClip landSFX;
         [Tooltip("Sound played when taking damage froma fall")]
         [SerializeField] AudioClip fallDamageSFX;
+
+        [Space]
+        [SerializeField] PlayerWallRunState WallRunState;
         #endregion
 
         #region  Member variables
@@ -82,8 +84,8 @@ namespace Musashi.Player
         #endregion
 
         #region Const memeber variables
-        float k_GroundCheckDistanceInAir = 0.2f;
-        float k_JumpGroundingPreventionTime = 0.07f;
+        const float k_GroundCheckDistanceInAir = 0.2f;
+        const float k_JumpGroundingPreventionTime = 0.07f;
         #endregion
 
         #region Utility properties
@@ -96,13 +98,13 @@ namespace Musashi.Player
         IState<PlayerMoveStateMchine> OnGroundState => new PlayerOnGroundState();
         IState<PlayerMoveStateMchine> JumpState => new PlayerJumpState();
         IState<PlayerMoveStateMchine> CrouchingState => new PlayerIsCrouchingState();
-        IState<PlayerMoveStateMchine> WallRunningState => new PlayerWallRunState();
+        // IState<PlayerMoveStateMchine> WallRunningState => new PlayerWallRunState();
         #endregion
 
         #region Methods
         private void Start()
         {
-           if(playerCamera == null)
+            if (playerCamera == null)
             {
                 playerCamera = Camera.main;
             }
@@ -203,14 +205,13 @@ namespace Musashi.Player
         private void FootstepsSound()
         {
             float chosenFootstepSFXFrequency = IsSprinting ? footstepSFXFrequencyWhileSprinting : footstepSFXFrequency;
-            if(footstepDistanceCounter >= 1f / chosenFootstepSFXFrequency)
+            if (footstepDistanceCounter >= 1f / chosenFootstepSFXFrequency)
             {
                 footstepDistanceCounter = 0f;
                 audioSource.Play(footstepSFX);
             }
             footstepDistanceCounter += characterVelocity.magnitude * Time.deltaTime;
         }
-
 
         /// <summary>
         /// 斜辺上の時、進行方向のベクトルを調整する関数
@@ -241,145 +242,6 @@ namespace Musashi.Player
         {
             return transform.position + (transform.up * (atHeight - controller.radius));
         }
-        #endregion
-        
-        /// <summary>
-        /// プレイヤーが地上にいる時の動きを制御するクラス
-        /// </summary>
-        private class PlayerOnGroundState : IState<PlayerMoveStateMchine>
-        {
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
-            {
-                Debug.Log(this.ToString());
-                owner.targetCharacterHeight = owner.capsuleHeightStanding;
-            }
-
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
-            {
-              
-            }
-
-            /// <summary>
-            /// move on ground
-            /// </summary>
-            public void OnUpdate(PlayerMoveStateMchine owner)
-            {
-                if (owner.isGround && owner.inputProvider.Jump)
-                {
-                    owner.stateMachine.ChangeState(owner.JumpState);
-                    return;
-                }
-
-                if (!owner.IsSprinting && owner.inputProvider.CanCrouch)
-                {
-                    owner.stateMachine.ChangeState(owner.CrouchingState);
-                    return;
-                }
-                owner.HandleGroundedMovment(this);
-            }
-        }
-
-        /// <summary>
-        /// プレイヤーのジャンプ時の動きを制御するクラス
-        /// </summary>
-        private class PlayerJumpState : IState<PlayerMoveStateMchine>
-        {
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
-            {
-                Debug.Log(this.ToString());
-                //if prevState is CrouchingState, cancel crouching; 
-
-                //start by canceling out the vertical component of our velocity
-                owner.characterVelocity = new Vector3(owner.characterVelocity.x, 0f, owner.characterVelocity.z);
-
-                //prevState = WallRunState or OnGroundState によって加える力を分ける
-
-                //then,add the jumpSpeed value upwards
-                owner.characterVelocity += Vector3.up * owner.jumpForce;
-
-                //play jump sound
-
-                //force grounding to false
-                owner.isGround = false;
-                owner.groundNormal = Vector3.up;
-
-                owner.lastTimeJumped = Time.time;
-            }
-
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
-            {
-
-            }
-
-            /// <summary>
-            /// move in air
-            /// </summary>
-            public void OnUpdate(PlayerMoveStateMchine owner)
-            {
-                if (owner.isGround)
-                {
-                    owner.stateMachine.ChangeState(owner.OnGroundState);
-                    return;
-                }
-
-                //add air acceleration
-                owner.characterVelocity += owner.WorldSpaceMoveInput * owner.accelerationSpeedInAir * Time.deltaTime;
-
-                //limit air speed to maximum, but only horizontally
-                float verticalVelocity = owner.characterVelocity.y;
-                Vector3 horizontalVelocity = Vector3.ProjectOnPlane(owner.characterVelocity, Vector3.up);
-                horizontalVelocity = Vector3.ClampMagnitude(horizontalVelocity, owner.maxSpeedInAir * owner.SpeedModifier);
-                owner.characterVelocity = horizontalVelocity + (Vector3.up * verticalVelocity);
-
-                // apply the gravity to the velocity
-                owner.characterVelocity += Vector3.down * owner.gravityDownForce * Time.deltaTime;
-            }
-        }
-
-        /// <summary>
-        /// プレイヤーのしゃがみ状態を制限するクラス
-        /// </summary>
-        private class PlayerIsCrouchingState : IState<PlayerMoveStateMchine>
-        {
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
-            {
-                Debug.Log(this.ToString());
-
-                owner.targetCharacterHeight = owner.capsuleHeightCrouching;
-            }
-
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
-            {
-                owner.inputProvider.CanCrouch = false;
-            }
-
-            public void OnUpdate(PlayerMoveStateMchine owner)
-            {
-                if (owner.IsSprinting || !owner.inputProvider.CanCrouch)
-                {
-                    owner.stateMachine.ChangeState(owner.OnGroundState);
-                    return;
-                }
-                owner.HandleGroundedMovment(this);
-            }
-        }
-
-        private class PlayerWallRunState : IState<PlayerMoveStateMchine>
-        {
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
-            {
-
-            }
-
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
-            {
-
-            }
-
-            public void OnUpdate(PlayerMoveStateMchine owner)
-            {
-
-            }
-        }
+#endregion
     }
 }
