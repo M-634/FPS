@@ -4,8 +4,7 @@ namespace Musashi.Player
 {
     public partial class PlayerMoveStateMchine
     {
-        #endregion
-
+   
         /// <summary>
         /// プレイヤーのしゃがみ状態を制限するクラス
         /// </summary>

@@ -110,8 +110,9 @@ namespace Musashi.Player
             }
             inputProvider = GetComponentInParent<InputProvider>();
             controller = GetComponent<CharacterController>();
-            stateMachine = new StateMachine<PlayerMoveStateMchine>(this, OnGroundState);
             audioSource = GetComponent<AudioSource>();
+
+            stateMachine = new StateMachine<PlayerMoveStateMchine>(this, OnGroundState);
             GameManager.Instance.LockCusor();
 
             UpdateCharacterHeight(true);
@@ -161,6 +162,7 @@ namespace Musashi.Player
         /// <param name="isCrouching"></param>
         private void HandleGroundedMovment(IState<PlayerMoveStateMchine> state)
         {
+
             UpdateCharacterHeight(false);
 
             Vector3 targetVelocity = WorldSpaceMoveInput * maxSpeedOnGround * SpeedModifier;
@@ -242,6 +244,6 @@ namespace Musashi.Player
         {
             return transform.position + (transform.up * (atHeight - controller.radius));
         }
-#endregion
+        #endregion
     }
 }

@@ -20,8 +20,9 @@ namespace Musashi.Player
 
                 //prevState = WallRunState or OnGroundState によって加える力を分ける
 
-                //then,add the jumpSpeed value upwards
-                owner.characterVelocity += Vector3.up * owner.jumpForce;
+                //make sure prevState and add jump velocity 
+                var jumpVelocity = prevState is PlayerWallRunState ? owner.WallRunState.GetWallJumpDirection : Vector3.up;
+                owner.characterVelocity += jumpVelocity * owner.jumpForce;
 
                 //play jump sound
 
@@ -45,6 +46,12 @@ namespace Musashi.Player
                 if (owner.isGround)
                 {
                     owner.stateMachine.ChangeState(owner.OnGroundState);
+                    return;
+                }
+
+                if (owner.WallRunState.CanWallRun(owner))
+                {
+                    owner.stateMachine.ChangeState(owner.WallRunState);
                     return;
                 }
 

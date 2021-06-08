@@ -35,7 +35,16 @@ namespace Musashi.Player
                     owner.stateMachine.ChangeState(owner.CrouchingState);
                     return;
                 }
-                owner.HandleGroundedMovment(this);
+
+                if (owner.isGround)
+                {
+                    owner.HandleGroundedMovment(this);
+                }
+                else
+                {
+                    //playerがジャンプ以外で空中にいる時は、重力をかけて地面落とす
+                    owner.characterVelocity += Vector3.down * owner.gravityDownForce * Time.deltaTime;
+                }
             }
         }
     }
