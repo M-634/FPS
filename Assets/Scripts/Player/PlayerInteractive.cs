@@ -20,7 +20,7 @@ namespace Musashi
             inputProvider = GetComponentInParent<InputProvider>();
         }
 
-        private void Update()
+        private void Update()//コルーチンに変える
         {
             if (CheakInteractiveObj() && inputProvider.Interactive)
             {

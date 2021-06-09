@@ -2,19 +2,19 @@
 
 namespace Musashi.Player
 {
-    public partial class PlayerMoveStateMchine
+    public partial class PlayerCharacterStateMchine
     {
         /// <summary>
         /// プレイヤーが地上にいる時の動きを制御するクラス
         /// </summary>
-        private class PlayerOnGroundState : IState<PlayerMoveStateMchine>
+        private class PlayerOnGroundState : IState<PlayerCharacterStateMchine>
         {
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
+            public void OnEnter(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> prevState = null)
             {
                 owner.targetCharacterHeight = owner.capsuleHeightStanding;
             }
 
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
+            public void OnExit(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> nextState = null)
             {
 
             }
@@ -22,7 +22,7 @@ namespace Musashi.Player
             /// <summary>
             /// move on ground
             /// </summary>
-            public void OnUpdate(PlayerMoveStateMchine owner)
+            public void OnUpdate(PlayerCharacterStateMchine owner)
             {
                 if (owner.isGround && owner.inputProvider.Jump)
                 {

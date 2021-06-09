@@ -9,12 +9,16 @@ namespace Musashi.Player
     /// リファレンス：タイタンフォール２。APEX
     /// </summary>
     [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
-    public partial class PlayerMoveStateMchine : MonoBehaviour
+    public partial class PlayerCharacterStateMchine : MonoBehaviour
     {
         #region SerializeFields 
-        [Header("References")]
+        [Header("Camera settings")]
         [Tooltip("Reference to the main camera used for the player")]
         [SerializeField] Camera playerCamera;
+        [SerializeField] float mouseSensitivity = 2f;
+        [SerializeField] float controllerSensitivity = 100f;
+        [SerializeField] float aimingRotaionMultipiler = 0.4f;
+        [SerializeField] float cameraTransitionDuration = 1;
 
         [Header("General")]
         [Tooltip("Force applied downward when in the air")]
@@ -72,6 +76,8 @@ namespace Musashi.Player
 
         #region  Member variables
         bool isGround;
+        bool isAiming;
+        float cameraVerticalAngle;
         float footstepDistanceCounter;
         float targetCharacterHeight;
         float lastTimeJumped;
@@ -80,7 +86,7 @@ namespace Musashi.Player
         CharacterController controller;
         InputProvider inputProvider;
         AudioSource audioSource;
-        StateMachine<PlayerMoveStateMchine> stateMachine;
+        StateMachine<PlayerCharacterStateMchine> stateMachine;
         #endregion
 
         #region Const memeber variables
@@ -89,15 +95,18 @@ namespace Musashi.Player
         #endregion
 
         #region Utility properties
-        bool IsSprinting => inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
-        float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
-        Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
+
+        public bool IsSprinting => inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
+        public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
+        public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
+        public float CameraRotaionMuliplier => isAiming ? aimingRotaionMultipiler : 1f;
+        public float CameraSensitivity => inputProvider.IsGamepad ? controllerSensitivity : mouseSensitivity;
         #endregion
 
         #region State properties
-        IState<PlayerMoveStateMchine> OnGroundState => new PlayerOnGroundState();
-        IState<PlayerMoveStateMchine> JumpState => new PlayerJumpState();
-        IState<PlayerMoveStateMchine> CrouchingState => new PlayerIsCrouchingState();
+        IState<PlayerCharacterStateMchine> OnGroundState => new PlayerOnGroundState();
+        IState<PlayerCharacterStateMchine> JumpState => new PlayerJumpState();
+        IState<PlayerCharacterStateMchine> CrouchingState => new PlayerIsCrouchingState();
         // IState<PlayerMoveStateMchine> WallRunningState => new PlayerWallRunState();
         #endregion
 
@@ -112,7 +121,7 @@ namespace Musashi.Player
             controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
 
-            stateMachine = new StateMachine<PlayerMoveStateMchine>(this, OnGroundState);
+            stateMachine = new StateMachine<PlayerCharacterStateMchine>(this, OnGroundState);
             GameManager.Instance.LockCusor();
 
             UpdateCharacterHeight(true);
@@ -120,6 +129,8 @@ namespace Musashi.Player
 
         private void Update()
         {
+            ControlCameraAndPlayerRotation();
+
             GroundCheck();
             stateMachine.CurrentState.OnUpdate(this);
             controller.Move(characterVelocity * Time.deltaTime);
@@ -134,23 +145,22 @@ namespace Musashi.Player
             groundNormal = Vector3.up;
 
             //ジャンプしてすぐにチェックはしない
-            if (Time.time >= lastTimeJumped + k_JumpGroundingPreventionTime)
+            if (Time.time < lastTimeJumped + k_JumpGroundingPreventionTime) return;
+
+            //cheack ground
+            if (Physics.CapsuleCast(GetCapsuleBottomHemisphere(), GetCapsuleTopHemisphere(controller.height), controller.radius, Vector3.down, out RaycastHit hit, chosenGroundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))
             {
-                //cheack ground
-                if (Physics.CapsuleCast(GetCapsuleBottomHemisphere(), GetCapsuleTopHemisphere(controller.height), controller.radius, Vector3.down, out RaycastHit hit, chosenGroundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))
+                groundNormal = hit.normal;//地面の法線を取得
+
+                //地面の傾きがキャラクターコントローラーで設定したSlopeLimitを超えているかどうか
+                if (Vector3.Dot(hit.normal, transform.up) > 0f && IsNormalUnderSlopeLimit(groundNormal))
                 {
-                    groundNormal = hit.normal;//地面の法線を取得
+                    isGround = true;
 
-                    //地面の傾きがキャラクターコントローラーで設定したSlopeLimitを超えているかどうか
-                    if (Vector3.Dot(hit.normal, transform.up) > 0f && IsNormalUnderSlopeLimit(groundNormal))
+                    ////空中にちょっと浮いていたら、地面まで戻す
+                    if (hit.distance > controller.skinWidth)
                     {
-                        isGround = true;
-
-                        ////空中にちょっと浮いていたら、地面まで戻す
-                        if (hit.distance > controller.skinWidth)
-                        {
-                            controller.Move(Vector3.down * hit.distance);
-                        }
+                        controller.Move(Vector3.down * hit.distance);
                     }
                 }
             }
@@ -160,7 +170,7 @@ namespace Musashi.Player
         /// 地上にいる時のプレイヤーの動きを制御する関数
         /// </summary>
         /// <param name="isCrouching"></param>
-        private void HandleGroundedMovment(IState<PlayerMoveStateMchine> state)
+        private void HandleGroundedMovment(IState<PlayerCharacterStateMchine> state)
         {
 
             UpdateCharacterHeight(false);
@@ -176,7 +186,13 @@ namespace Musashi.Player
             characterVelocity = Vector3.Lerp(characterVelocity, targetVelocity, movementSharpnessOnGround * Time.deltaTime);
 
             //play footsteps Sound
-            FootstepsSound();
+            float chosenFootstepSFXFrequency = IsSprinting ? footstepSFXFrequencyWhileSprinting : footstepSFXFrequency;
+            if (footstepDistanceCounter >= 1f / chosenFootstepSFXFrequency)
+            {
+                footstepDistanceCounter = 0f;
+                audioSource.Play(footstepSFX);
+            }
+            footstepDistanceCounter += characterVelocity.magnitude * Time.deltaTime;
         }
 
         /// <summary>
@@ -202,17 +218,16 @@ namespace Musashi.Player
         }
 
         /// <summary>
-        /// 足音を制限するクラス
+        /// プレイヤーの回転とカメラの制御をする関数
         /// </summary>
-        private void FootstepsSound()
+        private void ControlCameraAndPlayerRotation()
         {
-            float chosenFootstepSFXFrequency = IsSprinting ? footstepSFXFrequencyWhileSprinting : footstepSFXFrequency;
-            if (footstepDistanceCounter >= 1f / chosenFootstepSFXFrequency)
-            {
-                footstepDistanceCounter = 0f;
-                audioSource.Play(footstepSFX);
-            }
-            footstepDistanceCounter += characterVelocity.magnitude * Time.deltaTime;
+            transform.Rotate(new Vector3(0f, inputProvider.GetLookInputsHorizontal * CameraSensitivity * CameraRotaionMuliplier, 0f), Space.Self);
+
+            cameraVerticalAngle += inputProvider.GetLookInputVertical * CameraSensitivity * CameraRotaionMuliplier;
+            cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -89f, 89f);
+
+            playerCamera.transform.localEulerAngles = new Vector3(cameraVerticalAngle, 0f, WallRunState.GetCameraAngle(this));
         }
 
         /// <summary>

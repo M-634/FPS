@@ -5,14 +5,14 @@ using DG.Tweening;
 
 namespace Musashi.Player
 {
-    public partial class PlayerMoveStateMchine
+    public partial class PlayerCharacterStateMchine
     {
         /// <summary>
         /// プレイヤーが壁歩きしている時の動きを制御するクラス。
         /// プレイヤーがジャンプして、壁に接触したら壁歩き状態に遷移する
         /// </summary>
         [Serializable]
-        public class PlayerWallRunState : IState<PlayerMoveStateMchine>
+        public class PlayerWallRunState : IState<PlayerCharacterStateMchine>
         {
             [SerializeField] float wallMaxDistance = 1;
             [SerializeField] float wallSpeedMultiplier = 1.2f;
@@ -27,6 +27,9 @@ namespace Musashi.Player
 
             [SerializeField] float wallGravityDownForce = 20f;
 
+            bool isWallRunning;
+            float elapsedTimeSinceWallAttach;
+            float elapsedTimeSinceWallDettach;
             float lastTimeJump = 0f;
             Vector3[] directions;
             RaycastHit[] hits;
@@ -53,7 +56,7 @@ namespace Musashi.Player
             /// </summary>
             /// <param name="owner"></param>
             /// <returns></returns>
-            public bool CanWallRun(PlayerMoveStateMchine owner)
+            public bool CanWallRun(PlayerCharacterStateMchine owner)
             {
                 //壁ジャンプしてから(jumpDuration)秒は、壁走りは出来ない。
                 if (Time.time < lastTimeJump + jumpDuration)
@@ -68,25 +71,24 @@ namespace Musashi.Player
             /// </summary>
             /// <param name="owner"></param>
             /// <returns></returns>
-            bool VerticalCheck(PlayerMoveStateMchine owner)
+            bool VerticalCheck(PlayerCharacterStateMchine owner)
             {
                 return !Physics.Raycast(owner.transform.position, Vector3.down, minimumHeight);
             }
 
-
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
+            public void OnEnter(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> prevState = null)
             {
-                //カメラを傾ける
-                CalculateCameraRoll(owner, true);
+                isWallRunning = true;
+                elapsedTimeSinceWallDettach = 0f;
             }
 
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
+            public void OnExit(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> nextState = null)
             {
-                //カメラを元に戻す
-                CalculateCameraRoll(owner, false);
+                isWallRunning = false;
+                elapsedTimeSinceWallAttach = 0f;
             }
 
-            public void OnUpdate(PlayerMoveStateMchine owner)
+            public void OnUpdate(PlayerCharacterStateMchine owner)
             {
                 if (owner.inputProvider.Jump)
                 {
@@ -109,7 +111,7 @@ namespace Musashi.Player
             /// rayを飛ばして、壁に当たったか確認する関数
             /// </summary>
             /// <param name="owner"></param>
-            private void HitCheckTheWall(PlayerMoveStateMchine owner)
+            private void HitCheckTheWall(PlayerCharacterStateMchine owner)
             {
                 hits = new RaycastHit[directions.Length];
                 for (int i = 0; i < directions.Length; i++)
@@ -132,7 +134,7 @@ namespace Musashi.Player
             /// </summary>
             /// <param name="owner"></param>
             /// <returns></returns>
-            private bool CanAttachTheWall(PlayerMoveStateMchine owner)
+            private bool CanAttachTheWall(PlayerCharacterStateMchine owner)
             {
                 var canAttach = false;
                 HitCheckTheWall(owner);
@@ -154,7 +156,7 @@ namespace Musashi.Player
             /// プレイヤーが壁走りする時の処理をする関数
             /// </summary>
             /// <param name="owner"></param>
-            private void MoveOnWall(PlayerMoveStateMchine owner)
+            private void MoveOnWall(PlayerCharacterStateMchine owner)
             {
                 float vertical = owner.inputProvider.GetMoveInput.z;
                 Vector3 alongWall = owner.transform.TransformDirection(Vector3.forward);
@@ -164,31 +166,30 @@ namespace Musashi.Player
 
 
             /// <summary>
-            /// 壁の法線とプレイヤーの進行方向から、カメラをプレイヤーの進行方向軸を基準に傾ける角度を計算する関数。
-            /// WallRunStateが終了時に、元に戻す
+            /// 壁の法線とプレイヤーの進行方向から、カメラをプレイヤーの進行方向軸を基準にカメラの傾ける角度を計算する関数。
+            /// 壁走りしていない時は、0を返す。
             /// </summary>
             /// <param name="owner"></param>
-            private void CalculateCameraRoll(PlayerMoveStateMchine owner, bool enter)
+            public float GetCameraAngle(PlayerCharacterStateMchine owner)
             {
-                Vector3 cross = Vector3.Cross(lastWallNormal, owner.transform.forward);
-                float dot = Vector3.Dot(cross, owner.transform.up);//dot > 0 左回転, dot < 0  右回転 
-                float targetAngleRoll = 0f;
-
-                if (enter)
+                float cameraAngle = owner.playerCamera.transform.eulerAngles.z;
+                float targetAngle = 0f;
+                if (isWallRunning)
                 {
-                    targetAngleRoll = maxAngleRoll;
+                    Vector3 cross = Vector3.Cross(lastWallNormal, owner.transform.forward);
+                    float dot = Vector3.Dot(cross, owner.transform.up);//dot > 0 左回転, dot < 0  右回転 
+                    targetAngle = maxAngleRoll;
                     if (dot < 0)
                     {
-                        targetAngleRoll *= -1;
+                        targetAngle *= -1;
                     }
-                    //memo:壁走り中は、カメラのY軸回転を辞めること（プレイヤーが振り向くのを禁止する）
-                    owner.playerCamera.transform.DOLocalRotate(new Vector3(0, 0, targetAngleRoll), cameraTransitionDuration);
+                    elapsedTimeSinceWallAttach += Time.deltaTime;
                 }
                 else
                 {
-                    //exit
-                    owner.playerCamera.transform.DOLocalRotate(new Vector3(owner.playerCamera.transform.eulerAngles.x, 0, targetAngleRoll), cameraTransitionDuration);
+                    elapsedTimeSinceWallDettach += Time.deltaTime;
                 }
+                return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(elapsedTimeSinceWallAttach, elapsedTimeSinceWallDettach) / cameraTransitionDuration);
             }
         }
     }

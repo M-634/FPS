@@ -2,15 +2,15 @@
 
 namespace Musashi.Player
 {
-    public partial class PlayerMoveStateMchine
+    public partial class PlayerCharacterStateMchine
     {
 
         /// <summary>
         /// プレイヤーのジャンプ時の動きを制御するクラス
         /// </summary>
-        private class PlayerJumpState : IState<PlayerMoveStateMchine>
+        private class PlayerJumpState : IState<PlayerCharacterStateMchine>
         {
-            public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
+            public void OnEnter(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> prevState = null)
             {
                 //if prevState is CrouchingState, cancel crouching; 
 
@@ -32,7 +32,7 @@ namespace Musashi.Player
                 owner.lastTimeJumped = Time.time;
             }
 
-            public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
+            public void OnExit(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> nextState = null)
             {
 
             }
@@ -40,7 +40,7 @@ namespace Musashi.Player
             /// <summary>
             /// move in air
             /// </summary>
-            public void OnUpdate(PlayerMoveStateMchine owner)
+            public void OnUpdate(PlayerCharacterStateMchine owner)
             {
                 if (owner.isGround)
                 {

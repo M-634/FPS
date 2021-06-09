@@ -12,6 +12,8 @@ namespace Musashi
     /// </summary>
     public class InputProvider : MonoBehaviour//AcionBaseでメソッド呼ぶとコールバックでバグるので、とりあえずこのまま
     {
+        [SerializeField] bool invertLookY = false;
+
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
 
@@ -41,6 +43,20 @@ namespace Musashi
                     return move;
                 }
                 return Vector3.zero;
+            }
+        }
+
+        public float GetLookInputsHorizontal => PlayerInputActions.Look.ReadValue<Vector2>().x;
+        public float GetLookInputVertical 
+        {
+            get
+            {
+                var Y = PlayerInputActions.Look.ReadValue<Vector2>().y;
+                if (invertLookY == false)
+                {
+                    Y *= -1;
+                }
+                return Y;
             }
         }
 
