@@ -54,7 +54,7 @@ namespace Musashi.Player
                     return;
                 }
 
-                //check can or can't wall run
+             
 
                 //add air acceleration
                 owner.characterVelocity += owner.WorldSpaceMoveInput * owner.accelerationSpeedInAir * Time.deltaTime;

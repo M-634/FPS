@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Musashi.Item;
+using Musashi.Player;
 
 namespace Musashi.Weapon
 {
@@ -63,7 +64,7 @@ namespace Musashi.Weapon
 
         PoolObjectManager poolObjectManager;
         InputProvider playerInput;
-        PlayerCamaraControl playerCamara;
+        PlayerCharacterStateMchine playerCharacter;
         Animator animator;
         AudioSource audioSource;
         #endregion
@@ -94,8 +95,8 @@ namespace Musashi.Weapon
         {
             SetDataFromWeaponSettingSOData();
             playerInput = transform.GetComponentInParent<InputProvider>();
-            playerCamara = transform.GetComponentInParent<PlayerCamaraControl>();
-
+            playerCharacter = transform.GetComponentInParent<PlayerCharacterStateMchine>();
+   
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
 
@@ -323,13 +324,13 @@ namespace Musashi.Weapon
                 animator.SetBool("Aim", isAiming);
             }
 
+            if (playerCharacter)
+            {
+                playerCharacter.SetFovOfCamera(isAiming, aimCameraFOV, aimSpeed);
+            }
+
             if (isAiming)
             {
-                if (playerCamara)
-                {
-                    playerCamara.SetFovOfCamera(aimCameraFOV, aimSpeed);
-                }
-
                 if (reticle)
                 {
                     reticle.gameObject.SetActive(false);
@@ -337,11 +338,6 @@ namespace Musashi.Weapon
             }
             else
             {
-                if (playerCamara)
-                {
-                    playerCamara.SetNormalFovOfCamera(aimSpeed);
-                }
-
                 if (reticle)
                 {
                     reticle.gameObject.SetActive(true);

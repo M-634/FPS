@@ -42,7 +42,7 @@ namespace Musashi.Player
                 }
                 else
                 {
-                    //playerがジャンプ以外で空中にいる時は、重力をかけて地面落とす
+                    //playerがジャンプ以外で空中にいる時は、重力をかけて地面に落とす
                     owner.characterVelocity += Vector3.down * owner.gravityDownForce * Time.deltaTime;
                 }
             }

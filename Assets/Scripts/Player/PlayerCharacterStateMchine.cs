@@ -15,6 +15,7 @@ namespace Musashi.Player
         [Header("Camera settings")]
         [Tooltip("Reference to the main camera used for the player")]
         [SerializeField] Camera playerCamera;
+        [SerializeField] float defultFieldOfView = 60f;
         [SerializeField] float mouseSensitivity = 2f;
         [SerializeField] float controllerSensitivity = 100f;
         [SerializeField] float aimingRotaionMultipiler = 0.4f;
@@ -77,6 +78,8 @@ namespace Musashi.Player
         #region  Member variables
         bool isGround;
         bool isAiming;
+        float fovSpeed;
+        float targetFov;
         float cameraVerticalAngle;
         float footstepDistanceCounter;
         float targetCharacterHeight;
@@ -125,6 +128,8 @@ namespace Musashi.Player
             GameManager.Instance.LockCusor();
 
             UpdateCharacterHeight(true);
+
+            playerCamera.fieldOfView = defultFieldOfView;
         }
 
         private void Update()
@@ -222,12 +227,34 @@ namespace Musashi.Player
         /// </summary>
         private void ControlCameraAndPlayerRotation()
         {
+            //horizoltal rotation
             transform.Rotate(new Vector3(0f, inputProvider.GetLookInputsHorizontal * CameraSensitivity * CameraRotaionMuliplier, 0f), Space.Self);
 
+            //vertical rotation
             cameraVerticalAngle += inputProvider.GetLookInputVertical * CameraSensitivity * CameraRotaionMuliplier;
             cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -89f, 89f);
 
             playerCamera.transform.localEulerAngles = new Vector3(cameraVerticalAngle, 0f, WallRunState.GetCameraAngle(this));
+
+            //set field of view
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFov, Time.deltaTime * fovSpeed);
+        }
+
+        /// <summary>
+        /// 外部からカメラのFOVを変更する関数。
+        /// </summary>
+        public void SetFovOfCamera(bool isAiming, float targetFov, float fovSpeed)
+        {
+            this.isAiming = isAiming;
+            if (isAiming)
+            {
+                this.targetFov = targetFov;
+            }
+            else
+            {
+                this.targetFov = defultFieldOfView; 
+            }
+            this.fovSpeed = fovSpeed;
         }
 
         /// <summary>
