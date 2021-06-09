@@ -45,6 +45,7 @@ namespace Musashi
             }
             configure.gameObject.SetActive(false);//設定画面を隠す
         }
+
         public void ExitGame()
         {
             Debug.Log("a");
@@ -54,6 +55,7 @@ namespace Musashi
             Application.Quit();
 #endif
         }
+
         public void GameOver()
         {
             Debug.Log("GameOver");
@@ -61,6 +63,7 @@ namespace Musashi
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
             GameEventManager.Instance.Excute(GameEventType.EndGame);
         }
+
         public void GameClear()
         {
             Debug.Log("GameClear");
@@ -79,6 +82,7 @@ namespace Musashi
 
             CanProcessInput = true;
         }
+
         public void UnlockCusor()
         {
             Cursor.lockState = CursorLockMode.None;
@@ -86,13 +90,19 @@ namespace Musashi
 
             CanProcessInput = false;
         }
+
         public void SwichConfiguUI()
         {
             if (configure.gameObject.activeSelf)
+            {
                 CloseConfigure();
+            }
             else
+            {
                 ShowConfigure();
+            }
         }
+
         public void ShowConfigure()
         {
             UnlockCusor();

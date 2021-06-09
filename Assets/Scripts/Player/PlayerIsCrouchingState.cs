@@ -12,8 +12,6 @@ namespace Musashi.Player
         {
             public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
             {
-                Debug.Log(this.ToString());
-
                 owner.targetCharacterHeight = owner.capsuleHeightCrouching;
             }
 

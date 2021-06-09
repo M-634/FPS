@@ -30,7 +30,7 @@ namespace Musashi.Player
 
         protected override void AddOnDieEvent()
         {
-            GameManager.Instance.GameClear();
+            GameManager.Instance.GameOver();
         }
 
         public bool Heal(float healPoint,float healtime)

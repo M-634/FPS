@@ -12,7 +12,6 @@ namespace Musashi.Player
         {
             public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
             {
-                Debug.Log(this.ToString());
                 //if prevState is CrouchingState, cancel crouching; 
 
                 //start by canceling out the vertical component of our velocity

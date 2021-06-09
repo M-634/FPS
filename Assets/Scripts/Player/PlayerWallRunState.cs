@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Musashi.Player
 {
@@ -32,7 +33,7 @@ namespace Musashi.Player
             Vector3 lastWallNormal;
 
 
-            public Vector3 GetWallJumpDirection => lastWallNormal * wallBouncing + Vector3.up; 
+            public Vector3 GetWallJumpDirection => lastWallNormal * wallBouncing + Vector3.up;
 
             private PlayerWallRunState()
             {
@@ -55,7 +56,7 @@ namespace Musashi.Player
             public bool CanWallRun(PlayerMoveStateMchine owner)
             {
                 //壁ジャンプしてから(jumpDuration)秒は、壁走りは出来ない。
-                if(Time.time < lastTimeJump + jumpDuration)
+                if (Time.time < lastTimeJump + jumpDuration)
                 {
                     return false;
                 }
@@ -75,14 +76,14 @@ namespace Musashi.Player
 
             public void OnEnter(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> prevState = null)
             {
-                Debug.Log(this.ToString());
-
                 //カメラを傾ける
+                CalculateCameraRoll(owner, true);
             }
 
             public void OnExit(PlayerMoveStateMchine owner, IState<PlayerMoveStateMchine> nextState = null)
             {
                 //カメラを元に戻す
+                CalculateCameraRoll(owner, false);
             }
 
             public void OnUpdate(PlayerMoveStateMchine owner)
@@ -96,7 +97,7 @@ namespace Musashi.Player
 
                 if (CanWallRun(owner))
                 {
-                    CalculateVelocityOnWall(owner);
+                    MoveOnWall(owner);
                 }
                 else
                 {
@@ -150,15 +151,44 @@ namespace Musashi.Player
             }
 
             /// <summary>
-            /// プレイヤーが壁走りする時の速度を計算する関数
+            /// プレイヤーが壁走りする時の処理をする関数
             /// </summary>
             /// <param name="owner"></param>
-            private void CalculateVelocityOnWall(PlayerMoveStateMchine owner)
+            private void MoveOnWall(PlayerMoveStateMchine owner)
             {
                 float vertical = owner.inputProvider.GetMoveInput.z;
                 Vector3 alongWall = owner.transform.TransformDirection(Vector3.forward);
                 owner.characterVelocity = alongWall * vertical * wallSpeedMultiplier;
                 owner.characterVelocity += Vector3.down * wallGravityDownForce * Time.deltaTime;
+            }
+
+
+            /// <summary>
+            /// 壁の法線とプレイヤーの進行方向から、カメラをプレイヤーの進行方向軸を基準に傾ける角度を計算する関数。
+            /// WallRunStateが終了時に、元に戻す
+            /// </summary>
+            /// <param name="owner"></param>
+            private void CalculateCameraRoll(PlayerMoveStateMchine owner, bool enter)
+            {
+                Vector3 cross = Vector3.Cross(lastWallNormal, owner.transform.forward);
+                float dot = Vector3.Dot(cross, owner.transform.up);//dot > 0 左回転, dot < 0  右回転 
+                float targetAngleRoll = 0f;
+
+                if (enter)
+                {
+                    targetAngleRoll = maxAngleRoll;
+                    if (dot < 0)
+                    {
+                        targetAngleRoll *= -1;
+                    }
+                    //memo:壁走り中は、カメラのY軸回転を辞めること（プレイヤーが振り向くのを禁止する）
+                    owner.playerCamera.transform.DOLocalRotate(new Vector3(0, 0, targetAngleRoll), cameraTransitionDuration);
+                }
+                else
+                {
+                    //exit
+                    owner.playerCamera.transform.DOLocalRotate(new Vector3(owner.playerCamera.transform.eulerAngles.x, 0, targetAngleRoll), cameraTransitionDuration);
+                }
             }
         }
     }
