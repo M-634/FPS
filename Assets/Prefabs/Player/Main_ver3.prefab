@@ -7953,10 +7953,9 @@ MonoBehaviour:
   crouchingSharpness: 15
   footstepSFXFrequency: 0.3
   footstepSFXFrequencyWhileSprinting: 0.2
-  footstepSFX: {fileID: 0}
-  jumpSFX: {fileID: 0}
-  landSFX: {fileID: 0}
-  fallDamageSFX: {fileID: 0}
+  footstepSFX: {fileID: 8300000, guid: 18f1f68d6ecde43468ed6538af9ab81b, type: 3}
+  jumpSFX: {fileID: 8300000, guid: 598db9cdf9d68be43a3dbbee0d1c5ccc, type: 3}
+  landSFX: {fileID: 8300000, guid: 35b84cfa2f919f543af13ad39d8091f4, type: 3}
   WallRunState:
     wallMaxDistance: 1
     wallSpeedMultiplier: 12

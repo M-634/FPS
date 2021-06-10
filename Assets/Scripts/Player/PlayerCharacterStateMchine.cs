@@ -68,8 +68,6 @@ namespace Musashi.Player
         [SerializeField] AudioClip jumpSFX;
         [Tooltip("Sound played when landing")]
         [SerializeField] AudioClip landSFX;
-        [Tooltip("Sound played when taking damage froma fall")]
-        [SerializeField] AudioClip fallDamageSFX;
 
         [Space]
         [SerializeField] PlayerWallRunState WallRunState;

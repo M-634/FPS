@@ -24,6 +24,7 @@ namespace Musashi.Player
                 owner.characterVelocity += jumpVelocity * owner.jumpForce;
 
                 //play jump sound
+                owner.audioSource.Play(owner.jumpSFX);
 
                 //force grounding to false
                 owner.isGround = false;
@@ -44,6 +45,7 @@ namespace Musashi.Player
             {
                 if (owner.isGround)
                 {
+                    owner.audioSource.Play(owner.landSFX);
                     owner.stateMachine.ChangeState(owner.OnGroundState);
                     return;
                 }
