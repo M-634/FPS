@@ -257,8 +257,8 @@ MonoBehaviour:
   target: {fileID: 0}
   patrolSpeed: 2
   pursueSpeed: 4
-  eye: {fileID: 0}
-  visitDistance: 10
+  eye: {fileID: 454527072156867508}
+  visitDistance: 20
   viewingAngle: 30
   patrolPoints:
   - {fileID: 454527072130117075}

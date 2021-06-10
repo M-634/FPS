@@ -11,8 +11,7 @@ namespace Musashi.Weapon
         ObjectPoolingProjectileInfo projectile = default;
         Rigidbody rb;
         Vector3 prevPos;
-        bool init = true;//オブジェクトプール初期化にインスタンス化するタイミングは、projectile = nullとなる為。NullReference Errorが呼ばれてしまうのを防ぐ意図がある。  
-
+ 
         private void Reset()
         {
             rb = GetComponent<Rigidbody>();
@@ -38,14 +37,13 @@ namespace Musashi.Weapon
                 rb = GetComponent<Rigidbody>();
             }
 
-            if (init == false)
+            if (projectile != null)
             {
                 prevPos = transform.position;
                 this.transform.forward = projectile.Muzzle.forward;
                 rb.velocity = projectile.Muzzle.forward * projectile.Power;
                 gameObject.SetActive(false, projectile.LifeTime);
             }
-            init = false;
         }
 
         /// <summary>

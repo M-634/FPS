@@ -12,7 +12,7 @@ namespace Musashi.NPC
     /// </summary>
     public static class NPCAIHelper
     {
-        public static bool CanSeePlayer(Transform player,Transform self,float visitDistance,float viewingAngle,Transform eye)
+        public static bool CanSeePlayer(Transform player, Transform self, float visitDistance, float viewingAngle, Transform eye)
         {
             Vector3 dir = player.position - self.position;
             float angle = Vector3.Angle(dir, self.forward);
@@ -22,18 +22,16 @@ namespace Musashi.NPC
                 //Playerと敵の間に障害物があるかどうかRayを飛ばして確かめる
                 if (Physics.Linecast(eye.position, player.position, out RaycastHit hit))
                 {
-                    Debug.DrawLine(player.position, player.position, Color.white);
-                    if (hit.collider.gameObject.CompareTag("Player"))
-                    {
-                        return true;
-                    }
+                    Debug.DrawLine(eye.position, hit.point, Color.green);
                     return false;
                 }
+                Debug.DrawLine(eye.position, player.position, Color.red);
+                return true;
             }
             return false;
         }
 
-        public static bool CanAttackPlayer(Transform player, Transform self,float attackRange)
+        public static bool CanAttackPlayer(Transform player, Transform self, float attackRange)
         {
             Vector3 dir = player.position - self.position;
             if (dir.magnitude < attackRange)
@@ -43,7 +41,7 @@ namespace Musashi.NPC
             return false;
         }
 
-        public static void LookAtPlayer(Transform player,Transform self,float duration)
+        public static void LookAtPlayer(Transform player, Transform self, float duration)
         {
             var aim = player.position - self.position;
             aim.y = 0;

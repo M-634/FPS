@@ -50,7 +50,7 @@ namespace Musashi
             //hit check; 修正どころ：
             RaycastHit[] hits = Physics.RaycastAll(new Ray(prevPos, (transform.position - prevPos).normalized), (transform.position - prevPos).magnitude);
 
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < hits.Length;)
             {
                 if (hits[i].collider.TryGetComponent(out IDamageable target))
                 {
@@ -66,6 +66,8 @@ namespace Musashi
                     hitVFXManager.PoolObjectManager.UsePoolObject(hitVFXManager.DecalVFX, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f), hitVFXManager.SetPoolObj);
                     hitVFXManager.AudioSource.Play(hitVFXManager.HitSFX);
                 }
+                gameObject.SetActive(false);
+                break;
             }
             prevPos = transform.position;
         }

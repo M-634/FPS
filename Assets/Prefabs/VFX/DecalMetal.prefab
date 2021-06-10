@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33277891460618824}
   - component: {fileID: 64309753144618258}
   - component: {fileID: 23177155067897752}
-  - component: {fileID: -802618190060534602}
+  - component: {fileID: 1418937261}
   m_Layer: 0
   m_Name: DecalMetal
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479812948273588}
-  m_LocalRotation: {x: -0, y: 0.7071024, z: -0, w: -0.70711124}
+  m_LocalRotation: {x: 0, y: 0.70710045, z: -0, w: -0.70711315}
   m_LocalPosition: {x: -4.551002, y: 0.03546551, z: 4.8812456}
   m_LocalScale: {x: 0.05253979, y: 0.05253976, z: 0.05253976}
   m_Children: []
@@ -95,7 +95,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &-802618190060534602
+--- !u!114 &1418937261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1479812948273588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 308e54d730aab8d489705d40d2c9c1e9, type: 3}
+  m_Script: {fileID: 11500000, guid: e771fbc4fd62d9b49bd67c8ef46d22d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 2
+  lifeTime: 1
