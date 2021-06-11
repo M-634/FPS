@@ -25,6 +25,7 @@ namespace Musashi.NPC
     /// プレイヤーを発見したら追いかけ回して弾を放つ。
     /// 平常時は、パスに沿ってパトロールする。
     /// </summary>
+    [RequireComponent(typeof(NavMeshAgent))]
     public class NPCMoveControl : MonoBehaviour
     {
         #region Field

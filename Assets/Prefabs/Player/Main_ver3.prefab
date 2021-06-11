@@ -17974,7 +17974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 1033323695952594955}
-  bestTimeText: {fileID: 0}
+  bestTimeText: {fileID: 3057927564801438775}
   timerPanel: {fileID: 8782956224668207378}
 --- !u!1 &8842992498442781571
 GameObject:

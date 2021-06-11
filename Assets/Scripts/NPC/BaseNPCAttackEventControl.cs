@@ -23,7 +23,7 @@ namespace Musashi.NPC
         /// <summary>
         /// アニメーションイベントから直接呼ばれる関数
         /// </summary>
-        public void Excute()
+        public void ExcuteAnimationEvent()
         {
             if(OnAnimationEvent != null)
             {
