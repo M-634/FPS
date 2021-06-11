@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &22080935
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1756,6 +1756,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_HoverBot
       objectReference: {fileID: 0}
+    - target: {fileID: 454527072591482750, guid: 2e665bbfe8d7ea24683a2c71989bf764,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 454527072591482751, guid: 2e665bbfe8d7ea24683a2c71989bf764,
         type: 3}
       propertyPath: m_RootOrder
@@ -2720,7 +2725,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &6931494403865345392
 GameObject:
   m_ObjectHideFlags: 0
@@ -3440,7 +3445,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6931494403865345390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.35, y: 0, z: -0.105}
+  m_LocalPosition: {x: 0, y: 0, z: -0.105}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6931494403865829644}
