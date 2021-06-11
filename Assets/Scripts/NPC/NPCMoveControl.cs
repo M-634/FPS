@@ -59,6 +59,10 @@ namespace Musashi.NPC
         StateMachine<NPCMoveControl> stateMachine;
         #endregion
 
+        //events
+        public Action OnEnterAttackEvent;
+        public Action OnExitAttackEvent;
+
         #region Field's property
         public float PatrolSpeed => patrolSpeed;
         public float PursueSpeed => pursueSpeed;
@@ -131,7 +135,7 @@ namespace Musashi.NPC
         {
             stateMachine.ChangeState(OnDamageState);
         }
-  
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
@@ -277,23 +281,31 @@ namespace Musashi.NPC
         bool canAttack = true;
         public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
         {
+            if (owner.OnEnterAttackEvent != null)
+            {
+                owner.OnEnterAttackEvent.Invoke();
+            }
+
             owner.Agent.isStopped = true;
             owner.Anim.Play(AnimatorName.Attack);
         }
 
         public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
         {
-
+            if(owner.OnExitAttackEvent != null)
+            {
+                owner.OnExitAttackEvent.Invoke();
+            }
         }
 
         public void OnUpdate(NPCMoveControl owner)
         {
             NPCAIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
 
-            if (!NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
-            {
-                owner.StateMacnie.ChangeState(owner.IdleState);
-            }
+            //if (!NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            //{
+            //    owner.StateMacnie.ChangeState(owner.IdleState);
+            //}
 
             if (!NPCAIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
             {
@@ -314,7 +326,7 @@ namespace Musashi.NPC
                 }
             }
 
-            if(Time.time >= owner.LastTimeAttacked + owner.AttackCoolTime)
+            if (Time.time >= owner.LastTimeAttacked + owner.AttackCoolTime)
             {
                 owner.Anim.Play(AnimatorName.Attack);
             }

@@ -7,21 +7,39 @@ namespace Musashi.NPC
     /// NPCが銃を撃つタイプのキャラクターにアタッチする。撃つ弾をオブジェットプールで管理し、
     /// 撃つタイミングは、アニメーションイベントから呼ばれる。
     /// </summary>
-    public class NPCShotAttack :BaseNPCAttackEventControl,IPoolUser<NPCShotAttack>
+    [RequireComponent(typeof(NPCMoveControl))]
+    public class NPCShotAttack : BaseNPCAttackEventControl, IPoolUser<NPCShotAttack>
     {
         [SerializeField] ObjectPoolingProjectileInfo projectileInfo;
         [SerializeField] ProjectileControl projectilePrefab;
         [SerializeField] ParticleSystem muzzleFlashVFXPrefab;
         [SerializeField] Transform poolParent;
 
-        [SerializeField,Range(1,30)] int poolSize = 5;
+        [SerializeField, Range(1, 30)] int poolSize = 5;
+
+        [SerializeField] bool useIK;
+        [SerializeField] Transform targetRightHand;
+        [SerializeField] Transform targetLeftHand;
+   
+        bool isIkActive;
         PoolObjectManager poolObjectManager;
+        NPCMoveControl control;
 
         private void Start()
         {
+            isIkActive = false;
+            control = GetComponent<NPCMoveControl>();
+            if (useIK)
+            {
+                control.OnEnterAttackEvent += () => isIkActive = true;
+                control.OnExitAttackEvent += () => isIkActive = false;
+            }
             InitializePoolObject(poolSize);
         }
 
+        /// <summary>
+        /// アニメーションイベントから呼ばれる関数
+        /// </summary>
         public void Shot()
         {
             poolObjectManager.UsePoolObject(projectileInfo.Muzzle.position, Quaternion.identity, SetPoolObj);
@@ -52,6 +70,31 @@ namespace Musashi.NPC
             poolObj.SetActiveAll(false);
 
             return poolObj;
+        }
+
+        private void OnAnimatorIK(int layerIndex)
+        {
+            if (!isIkActive) return;  // IK がアクティブでなければ何もしない
+
+            // 両手の IK Position/Rotation をセットする
+            control.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+            control.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+            control.Anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+            control.Anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
+            //control.Anim.SetIKPosition(AvatarIKGoal.RightHand, control.Target.position);
+            //control.Anim.SetIKRotation(AvatarIKGoal.RightHand, control.Target.rotation);
+            //control.Anim.SetIKPosition(AvatarIKGoal.LeftHand, control.Target.position);
+            //control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, control.Target.rotation);
+            control.Anim.SetIKPosition(AvatarIKGoal.RightHand, targetRightHand.position);
+            control.Anim.SetIKRotation(AvatarIKGoal.RightHand, targetRightHand.rotation);
+            control.Anim.SetIKPosition(AvatarIKGoal.LeftHand, targetLeftHand.position);
+            control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, targetRightHand.rotation);
+        }
+
+        private void OnDestroy()
+        {
+            control.OnEnterAttackEvent -= () => isIkActive = true;
+            control.OnExitAttackEvent -= () => isIkActive = false;
         }
     }
 }
