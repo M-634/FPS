@@ -17,6 +17,7 @@ namespace Musashi.NPC
 
         [SerializeField, Range(1, 30)] int poolSize = 5;
 
+        [Header("Setting IK")]
         [SerializeField] bool useIK;
         [SerializeField] Transform targetRightHand;
         [SerializeField] Transform targetLeftHand;
@@ -72,23 +73,25 @@ namespace Musashi.NPC
             return poolObj;
         }
 
+        /// <summary>
+        /// NPCの銃を構えるアニメーションで、標準がプレイヤーに向IKで調整する
+        /// </summary>
+        /// <param name="layerIndex"></param>
         private void OnAnimatorIK(int layerIndex)
         {
-            if (!isIkActive) return;  // IK がアクティブでなければ何もしない
+            if (!isIkActive) return;  
+
+            if (targetLeftHand == null || targetRightHand == null) return;
 
             // 両手の IK Position/Rotation をセットする
             control.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
             control.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
             control.Anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             control.Anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
-            //control.Anim.SetIKPosition(AvatarIKGoal.RightHand, control.Target.position);
-            //control.Anim.SetIKRotation(AvatarIKGoal.RightHand, control.Target.rotation);
-            //control.Anim.SetIKPosition(AvatarIKGoal.LeftHand, control.Target.position);
-            //control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, control.Target.rotation);
             control.Anim.SetIKPosition(AvatarIKGoal.RightHand, targetRightHand.position);
             control.Anim.SetIKRotation(AvatarIKGoal.RightHand, targetRightHand.rotation);
             control.Anim.SetIKPosition(AvatarIKGoal.LeftHand, targetLeftHand.position);
-            control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, targetRightHand.rotation);
+            control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, targetLeftHand.rotation);
         }
 
         private void OnDestroy()
