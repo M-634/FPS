@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: Portfolio
+  companyName: MusahiCompany
+  productName: Test
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -125,7 +125,8 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: 5b534d3a3e1f0e248a5798e298b99a19, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -328,13 +329,13 @@ PlayerSettings:
     m_Automatic: 0
   - m_BuildTarget: WindowsStandaloneSupport
     m_APIs: 02000000
-    m_Automatic: 0
+    m_Automatic: 1
   - m_BuildTarget: MacStandaloneSupport
     m_APIs: 1000000011000000
-    m_Automatic: 0
+    m_Automatic: 1
   - m_BuildTarget: LinuxStandaloneSupport
     m_APIs: 1100000015000000
-    m_Automatic: 0
+    m_Automatic: 1
   m_BuildTargetVRSettings: []
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
