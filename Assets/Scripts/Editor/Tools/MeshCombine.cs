@@ -12,7 +12,7 @@ using UnityEngine;
 /// メッシュを結合させたいオブジェットの親に空のオブジェットを生成し、このスクリプトをアタッチする。
 /// 結合後のマテリアルをセットして、Applyボタンを押すと、実行される
 /// </summary>
-
+#if UNITY_EDITOR
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [ExecuteInEditMode]
@@ -59,3 +59,4 @@ public class MeshCombine : MonoBehaviour
         DestroyImmediate(this);
     }
 }
+#endif
