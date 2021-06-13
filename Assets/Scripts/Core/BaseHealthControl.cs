@@ -35,6 +35,8 @@ namespace Musashi
         [SerializeField] protected OnDamageEnvents OnDamageEnvents = default;
         [SerializeField] protected OnDieEvents OnDieEvents = default;
 
+        [SerializeField] bool isDebugMode;//ダメージを受け付けないフラグ
+
         protected float currentHp;
         public bool IsDead { get; protected set; } = false;
         public bool UseBillBord => useBillBord;
@@ -82,7 +84,7 @@ namespace Musashi
 
         public virtual void OnDamage(float damage)
         {
-            if (IsDead) return;
+            if (IsDead || isDebugMode) return;
 
             CurrentHp -= damage;
 

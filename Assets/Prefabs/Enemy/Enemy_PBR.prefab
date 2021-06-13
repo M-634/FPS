@@ -5291,6 +5291,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isDebugMode: 0
   deathVFX: {fileID: 0}
   spwanVFXPoint: {fileID: 7037958925467918593}
 --- !u!1 &115483034220415728
@@ -20152,13 +20153,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115483035220892946}
-  m_LocalRotation: {x: 0.048753217, y: 0.00622347, z: -0.64435095, w: 0.7631489}
-  m_LocalPosition: {x: 0.44, y: 1.303, z: -0.016}
+  m_LocalRotation: {x: 0.02487269, y: -0.004996866, z: -0.6669737, w: 0.74464923}
+  m_LocalPosition: {x: 0.47900018, y: 1.298, z: -0.006000149}
   m_LocalScale: {x: 0.09005208, y: 0.09005208, z: 0.09005208}
   m_Children: []
   m_Father: {fileID: 7037958925467918593}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 4.728, y: -3.0670002, z: -80.478004}
+  m_LocalEulerAnglesHint: {x: 1.741, y: -2.329, z: -83.73601}
 --- !u!33 &115483035220892974
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -92,6 +92,9 @@ namespace Musashi.NPC
             control.Anim.SetIKRotation(AvatarIKGoal.RightHand, targetRightHand.rotation);
             control.Anim.SetIKPosition(AvatarIKGoal.LeftHand, targetLeftHand.position);
             control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, targetLeftHand.rotation);
+
+            //銃を持っている手のIKターゲット向きをプレイヤーに向ける。(余裕があったら)
+            //敵の顔をプレイヤーに向ける
         }
 
         private void OnDestroy()
