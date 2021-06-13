@@ -64,9 +64,7 @@ namespace Musashi.Item
 
             if (testScene)
             {
-#if UNITY_EDITOR
                 SumNumberOfAmmoInInventory = maxAmmoInInventory;
-#endif
             }
             else
             {
