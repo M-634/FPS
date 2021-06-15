@@ -21,23 +21,24 @@ namespace Musashi
         [SerializeField] Slider aimingRotationMultipilerSlider;
 
         [Header("Other Gameplay settings")]
-        [SerializeField] Toggle invertLookYToggle;  
+        [SerializeField] Toggle invertLookYToggle;
         [SerializeField] Toggle displayFramerateCounterToggle;
 
-  
+
         // player camera settings property
         public float MouseSensitivity { get => optionsData.mouseSensitivity; set => optionsData.mouseSensitivity = value; }
         public float ControllerSensitivity { get => optionsData.controllerSensitivity; set => optionsData.controllerSensitivity = value; }
         public float AimingRotaionMultipiler { get => optionsData.aimingRotaionMultipiler; set => optionsData.aimingRotaionMultipiler = value; }
 
-        public bool DoInvert_Y { get => optionsData.invert_Y; set { optionsData.invert_Y = value; OnInvertYToggleEvent.Invoke(value); } }
-        public bool DoDisplayFrameCounter { get => optionsData.displayFrameCount; set { optionsData.displayFrameCount = value; OnDisplayFramerateCounterToggleEvent(value); } }
+        public bool DoInvert_Y { get => optionsData.invert_Y; set => optionsData.invert_Y = value; }
+        public bool DoDisplayFrameCounter { get => optionsData.displayFrameCount; set => optionsData.displayFrameCount = value; }
 
         public Action<bool> OnInvertYToggleEvent;
         public Action<bool> OnDisplayFramerateCounterToggleEvent;
 
         private void Start()
         {
+
             InitGameplaySettings();
         }
 
@@ -51,15 +52,17 @@ namespace Musashi
             controllerSensitivitySlider.SetSliderValueChangedEvent(value => ControllerSensitivity = value * OptionsSOData.MAX_CONTROLLERSENCITICITY);
             aimingRotationMultipilerSlider.SetSliderValueChangedEvent(value => AimingRotaionMultipiler = value * OptionsSOData.MAX_AIMINGROTATIONMULTIPILER);
 
-            invertLookYToggle.SetToggleValueChangedEvent(value => DoInvert_Y = value);
-            displayFramerateCounterToggle.SetToggleValueChangedEvent(value => DoDisplayFrameCounter = value);
+            invertLookYToggle.SetToggleValueChangedEvent(value => { DoInvert_Y = value; OnInvertYToggleEvent.Invoke(value); });
+            displayFramerateCounterToggle.SetToggleValueChangedEvent(value => { DoDisplayFrameCounter = value; OnDisplayFramerateCounterToggleEvent.Invoke(value); });
 
             //各種の初期値を設定する
             mouseSensitivitySlider.SetInitializeSliderValue(MouseSensitivity, OptionsSOData.MIN_MOUSESENCITIVITY, OptionsSOData.MAX_MOUSESENCITIVITY);
             controllerSensitivitySlider.SetInitializeSliderValue(ControllerSensitivity, OptionsSOData.MIN_CONTROLLERSENCITICITY, OptionsSOData.MAX_CONTROLLERSENCITICITY);
             aimingRotationMultipilerSlider.SetInitializeSliderValue(AimingRotaionMultipiler, OptionsSOData.MiN_AIMINGROTATIONMULTIPILER, OptionsSOData.MAX_AIMINGROTATIONMULTIPILER);
 
+            invertLookYToggle.onValueChanged.Invoke(DoInvert_Y);
             invertLookYToggle.isOn = DoInvert_Y;
+            displayFramerateCounterToggle.onValueChanged.Invoke(DoDisplayFrameCounter);
             displayFramerateCounterToggle.isOn = DoDisplayFrameCounter;
         }
 

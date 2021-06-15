@@ -22,6 +22,10 @@ namespace Musashi
             if (elapsedTime >= 1.0f)
             {
                 float fps = 1.0f * frameCount / elapsedTime;
+                if (fpsText)
+                {
+
+                }
                 fpsText.text = $"FPS : {fps:F2}";
 
                 frameCount = 0;
@@ -31,10 +35,13 @@ namespace Musashi
 
         private void OnEnable()
         {
-            GameManager.Instance.Configure.OnDisplayFramerateCounterToggleEvent += value => 
+            GameManager.Instance.Configure.OnDisplayFramerateCounterToggleEvent += value =>
             {
-                fpsText.text = "";
                 canDisplay = value;
+                if (!value)
+                {
+                    fpsText.text = "";
+                }
             };
         }
 
@@ -42,8 +49,11 @@ namespace Musashi
         {
             GameManager.Instance.Configure.OnDisplayFramerateCounterToggleEvent -= value =>
             {
-                fpsText.text = "";
                 canDisplay = value;
+                if (!value)
+                {
+                    fpsText.text = "";
+                }
             };
         }
     }
