@@ -19,6 +19,11 @@ public class OptionsSOData :ScriptableObject
     [Range(0.1f,1f)] 
     public float aimingRotaionMultipiler = 0.4f;
 
+    [Header("Other Gameplay Settings")]
+    public bool invert_Y = false;
+    public bool displayFrameCount = true;
+
+    #region const variables
     public const float MAX_MOUSESENCITIVITY = 0.1f;
     public const float MIN_MOUSESENCITIVITY = 0.01f;
     public const float DEFULT_MOUSESENCITIVITY = 0.05f;
@@ -30,6 +35,10 @@ public class OptionsSOData :ScriptableObject
     public const float MAX_AIMINGROTATIONMULTIPILER = 1f;
     public const float MiN_AIMINGROTATIONMULTIPILER = 0.1f;
     public const float DEFULT_AIMINGROTATIONMULTIPILER = 0.4f;
+
+    public const bool DEFULT_INVERT_Y = false;
+    public const bool DEFULT_DISPLAYFRAMECOUNTER = true;
+    #endregion
 
 
     //audio

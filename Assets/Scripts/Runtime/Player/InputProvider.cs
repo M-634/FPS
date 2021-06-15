@@ -11,12 +11,13 @@ namespace Musashi
     /// </summary>
     public class InputProvider : MonoBehaviour
     {
-        [SerializeField] bool invertLookY = false;
 
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
 
         private bool isGamepad;
+        private bool invertLookY;
+
         public bool IsGamepad
         {
             get
@@ -137,11 +138,13 @@ namespace Musashi
         private void OnEnable()
         {
             inputActions.Enable();
+            GameManager.Instance.Configure.OnInvertYToggleEvent += value => invertLookY = value;
         }
 
         private void OnDisable()
         {
             inputActions.Disable();
+            GameManager.Instance.Configure.OnInvertYToggleEvent -= value => invertLookY = value;
         }
     }
 }

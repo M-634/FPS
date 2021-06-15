@@ -69,7 +69,7 @@ namespace Musashi
         /// <summary>
         /// スライダーの値が変化した時のイベントを登録する関数。
         /// </summary>
-        public static void SetValueChangedEvent(this Slider slider, UnityAction<float> sliderCallback)
+        public static void SetSliderValueChangedEvent(this Slider slider, UnityAction<float> sliderCallBack)
         {
             if (!slider)
             {
@@ -82,7 +82,7 @@ namespace Musashi
                 slider.onValueChanged.RemoveAllListeners();
             }
 
-            slider.onValueChanged.AddListener(sliderCallback);
+            slider.onValueChanged.AddListener(sliderCallBack);
         }
 
         /// <summary>
@@ -99,6 +99,25 @@ namespace Musashi
             slider.minValue = minValue / maxValue;
             slider.maxValue = 1f;
             slider.value = initValue / maxValue;
+        }
+
+   
+        /// <summary>
+        /// トグルが切り替わった時に呼ばれるイベントを登録する関数
+        /// </summary>
+        public static void SetToggleValueChangedEvent(this Toggle toggle,UnityAction<bool> toggleCallBack)
+        {
+            if (!toggle)
+            {
+                Debug.LogError("Toggleがアタッチされていない");
+                return;
+            } 
+
+            if(toggle.onValueChanged != null)
+            {
+                toggle.onValueChanged.RemoveAllListeners();
+            }
+            toggle.onValueChanged.AddListener(toggleCallBack);
         }
     }
 
