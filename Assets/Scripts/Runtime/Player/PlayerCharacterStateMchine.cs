@@ -19,7 +19,7 @@ namespace Musashi.Player
         [SerializeField] float mouseSensitivity = 2f;
         [SerializeField] float controllerSensitivity = 100f;
         [SerializeField] float aimingRotaionMultipiler = 0.4f;
-        [SerializeField] float cameraTransitionDuration = 1;
+        //[SerializeField] float cameraTransitionDuration = 1;
 
         [Header("General")]
         [Tooltip("Force applied downward when in the air")]

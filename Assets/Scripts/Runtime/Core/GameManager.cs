@@ -111,7 +111,7 @@ namespace Musashi
 
         public void CloseConfigure()
         {
-            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.MainGame)
+            if (sceneLoder.GetActiveSceneBuildIndex != (int)SceneInBuildIndex.Title)
             {
                 LockCusor();
             }
