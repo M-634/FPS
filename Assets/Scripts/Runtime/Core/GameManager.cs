@@ -16,6 +16,7 @@ namespace Musashi
         [SerializeField] Configure configure;
         public SoundManager SoundManager => soundManager;
         public SceneLoader SceneLoder => sceneLoder;
+        public Configure Configure => configure;
         public bool HaveShowConfigure => configure.gameObject.activeSelf;
         public bool IsGameClear { get; private set; }
 

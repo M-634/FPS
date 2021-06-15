@@ -16,9 +16,9 @@ namespace Musashi.Player
         [Tooltip("Reference to the main camera used for the player")]
         [SerializeField] Camera playerCamera;
         [SerializeField] float defultFieldOfView = 60f;
-        [SerializeField] float mouseSensitivity = 2f;
-        [SerializeField] float controllerSensitivity = 100f;
-        [SerializeField] float aimingRotaionMultipiler = 0.4f;
+        //[SerializeField] float mouseSensitivity = 2f;
+        //[SerializeField] float controllerSensitivity = 100f;
+        //[SerializeField] float aimingRotaionMultipiler = 0.4f;
         //[SerializeField] float cameraTransitionDuration = 1;
 
         [Header("General")]
@@ -100,8 +100,8 @@ namespace Musashi.Player
         public bool IsSprinting => inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
-        public float CameraRotaionMuliplier => isAiming ? aimingRotaionMultipiler : 1f;
-        public float CameraSensitivity => inputProvider.IsGamepad ? controllerSensitivity : mouseSensitivity;
+        public float CameraRotaionMuliplier => isAiming ? GameManager.Instance.Configure.AimingRotaionMultipiler : 1f;
+        public float CameraSensitivity => inputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
         #endregion
 
         #region State properties
@@ -130,10 +130,14 @@ namespace Musashi.Player
             playerCamera.fieldOfView = defultFieldOfView;
         }
 
+
         private void Update()
         {
-            ControlCameraAndPlayerRotation();
+            //Debug.Log($"Horizontal : {inputProvider.GetLookInputsHorizontal * CameraSensitivity} ");
+            //Debug.Log($"Vertical : {inputProvider.GetLookInputVertical * CameraSensitivity} ");
 
+
+            ControlCameraAndPlayerRotation();
             GroundCheck();
             stateMachine.CurrentState.OnUpdate(this);
             controller.Move(characterVelocity * Time.deltaTime);

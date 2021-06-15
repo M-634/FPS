@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 
 namespace Musashi
 {
+    /// <summary>
+    /// ゲームシーンのリスタート機能。シーンの再読み込み
+    /// </summary>
     public class Restart : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {
         Button button;
@@ -31,22 +34,15 @@ namespace Musashi
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (GameManager.Instance)
-            {
-                GameManager.Instance.SoundManager.PlaySE(SoundName.OnClickButton);
-            }
+            if (!button.interactable) return;
+            GameManager.Instance.SoundManager.PlaySE(SoundName.OnClickButton);
             GameManager.Instance.SceneLoder.LoadScene(SceneInBuildIndex.MainGame, GameManager.Instance.CloseConfigure);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (button.interactable)
-            {
-                if (GameManager.Instance)
-                {
-                    GameManager.Instance.SoundManager.PlaySE(SoundName.PointerEnterButton);
-                }
-            }
+            if (!button.interactable) return;
+            GameManager.Instance.SoundManager.PlaySE(SoundName.PointerEnterButton);
         }
     }
 }

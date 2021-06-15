@@ -20,7 +20,7 @@ namespace Musashi
         /// </summary>
         /// <param name="text"></param>
         /// <param name="timer"></param>
-        public static void ChangeTheTimeDisplayFormat(this TextMeshProUGUI textMeshPro,float timer)
+        public static void ChangeTheTimeDisplayFormat(this TextMeshProUGUI textMeshPro, float timer)
         {
             int minutes = (int)timer / 60;
             float seconds = timer - minutes * 60;
@@ -41,10 +41,10 @@ namespace Musashi
             canvasGroup.blocksRaycasts = false;
         }
 
-        public static void FadeImage(this Image image, FadeType type,float duration,UnityAction callback = null)
+        public static void FadeImage(this Image image, FadeType type, float duration, UnityAction callback = null)
         {
             image.enabled = true;
-          
+
             Color endValue;
             if (type == FadeType.In)
             {
@@ -57,17 +57,53 @@ namespace Musashi
                 endValue = Color.black;
             }
 
-             DOTween.To(() => image.color, (x) => image.color = x, endValue, duration)
-                   .OnComplete(() =>
-                   {
-                       callback?.Invoke();
-                       image.enabled = false;
-                   });
+            DOTween.To(() => image.color, (x) => image.color = x, endValue, duration)
+                  .OnComplete(() =>
+                  {
+                      callback?.Invoke();
+                      image.enabled = false;
+                  });
+        }
+
+
+        /// <summary>
+        /// スライダーの値が変化した時のイベントを登録する関数。
+        /// </summary>
+        public static void SetValueChangedEvent(this Slider slider, UnityAction<float> sliderCallback)
+        {
+            if (!slider)
+            {
+                Debug.LogError("Sliderがアタッチされていない");
+                return;
+            }
+
+            if (slider.onValueChanged != null)
+            {
+                slider.onValueChanged.RemoveAllListeners();
+            }
+
+            slider.onValueChanged.AddListener(sliderCallback);
+        }
+
+        /// <summary>
+        /// スライダーの初期値を設定する関数。値は、０～１に正規化される
+        /// </summary>
+        public static void SetInitializeSliderValue(this Slider slider, float initValue = 0.5f, float minValue = 0f, float maxValue = 1f)
+        {
+            if (!slider)
+            {
+                Debug.LogError("Sliderがアタッチされていない");
+                return;
+            }
+
+            slider.minValue = minValue / maxValue;
+            slider.maxValue = 1f;
+            slider.value = initValue / maxValue;
         }
     }
 
     public enum FadeType
     {
-        In,Out
+        In, Out
     }
 }

@@ -65,7 +65,7 @@ namespace Musashi
         public bool Reload => GameManager.Instance.CanProcessInput && PlayerInputActions.Reload.triggered;
         public bool Interactive => GameManager.Instance.CanProcessInput && PlayerInputActions.Interactive.triggered;
         public bool UseHealItem => GameManager.Instance.CanProcessInput && PlayerInputActions.UseHealItem.triggered;
-    
+
         private bool aim;
         public bool Aim => GameManager.Instance.CanProcessInput && aim;
 
