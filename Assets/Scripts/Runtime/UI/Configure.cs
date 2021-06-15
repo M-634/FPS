@@ -33,12 +33,8 @@ namespace Musashi
         public bool DoInvert_Y { get => optionsData.invert_Y; set => optionsData.invert_Y = value; }
         public bool DoDisplayFrameCounter { get => optionsData.displayFrameCount; set => optionsData.displayFrameCount = value; }
 
-        public Action<bool> OnInvertYToggleEvent;
-        public Action<bool> OnDisplayFramerateCounterToggleEvent;
-
         private void Start()
-        {
-
+        {  
             InitGameplaySettings();
         }
 
@@ -52,8 +48,8 @@ namespace Musashi
             controllerSensitivitySlider.SetSliderValueChangedEvent(value => ControllerSensitivity = value * OptionsSOData.MAX_CONTROLLERSENCITICITY);
             aimingRotationMultipilerSlider.SetSliderValueChangedEvent(value => AimingRotaionMultipiler = value * OptionsSOData.MAX_AIMINGROTATIONMULTIPILER);
 
-            invertLookYToggle.SetToggleValueChangedEvent(value => { DoInvert_Y = value; OnInvertYToggleEvent.Invoke(value); });
-            displayFramerateCounterToggle.SetToggleValueChangedEvent(value => { DoDisplayFrameCounter = value; OnDisplayFramerateCounterToggleEvent.Invoke(value); });
+            invertLookYToggle.SetToggleValueChangedEvent(value => DoInvert_Y = value);
+            displayFramerateCounterToggle.SetToggleValueChangedEvent(value => DoDisplayFrameCounter = value);
 
             //各種の初期値を設定する
             mouseSensitivitySlider.SetInitializeSliderValue(MouseSensitivity, OptionsSOData.MIN_MOUSESENCITIVITY, OptionsSOData.MAX_MOUSESENCITIVITY);
@@ -64,6 +60,7 @@ namespace Musashi
             invertLookYToggle.isOn = DoInvert_Y;
             displayFramerateCounterToggle.onValueChanged.Invoke(DoDisplayFrameCounter);
             displayFramerateCounterToggle.isOn = DoDisplayFrameCounter;
+
         }
 
         /// <summary>

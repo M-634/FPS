@@ -102,7 +102,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Esc",
+                    "name": "OpenOption",
                     "type": "Button",
                     "id": "62a7cb73-b9d2-45ea-bb53-6690155b8abb",
                     "expectedControlType": "Button",
@@ -592,7 +592,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Esc",
+                    "action": "OpenOption",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7d2eab3d-e75a-4df0-92d3-99fb78a942df",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "OpenOption",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

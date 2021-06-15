@@ -16,8 +16,6 @@ namespace Musashi
         MyInputActions.PlayerActions PlayerInputActions;
 
         private bool isGamepad;
-        private bool invertLookY;
-
         public bool IsGamepad
         {
             get
@@ -49,7 +47,7 @@ namespace Musashi
                 if (GameManager.Instance.CanProcessInput)
                 {
                     var Y = PlayerInputActions.Look.ReadValue<Vector2>().y;
-                    if (invertLookY == false)
+                    if (GameManager.Instance.Configure.DoInvert_Y == false)
                     {
                         Y *= -1;
                     }
@@ -132,19 +130,17 @@ namespace Musashi
 
             PlayerInputActions.Crouch.started += ctx => CanCrouch = GameManager.Instance.CanProcessInput ? !CanCrouch : CanCrouch;
 
-            PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
+            PlayerInputActions.OpenOption.performed += ctx => GameManager.Instance.SwichConfiguUI();
         }
 
         private void OnEnable()
         {
             inputActions.Enable();
-            GameManager.Instance.Configure.OnInvertYToggleEvent += value => invertLookY = value;
         }
 
         private void OnDisable()
         {
             inputActions.Disable();
-            GameManager.Instance.Configure.OnInvertYToggleEvent -= value => invertLookY = value;
         }
     }
 }

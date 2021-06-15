@@ -14,13 +14,14 @@ namespace Musashi
     /// ボタンのベースクラス
     /// </summary>
     [RequireComponent(typeof(Button))]
-    public abstract class BaseButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public abstract class BaseButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,ISelectHandler
     {
         public ButtonEvents OnEnterButtonEvents = default;
         public ButtonEvents OnClickButtonEvents = default;
         public ButtonEvents OnExitButtonEvents = default;
+        public ButtonEvents OnSelectedButtonEvents = default;
 
-        Button button;
+        protected Button button;
         protected virtual void Awake()
         {
             button = GetComponent<Button>();
@@ -55,6 +56,15 @@ namespace Musashi
             if(OnExitButtonEvents != null)
             {
                 OnExitButtonEvents.Invoke();
+            }
+        }
+
+        public void OnSelect(BaseEventData eventData)
+        {
+            if (!button.interactable) return;
+            if(OnSelectedButtonEvents != null)
+            {
+                OnSelectedButtonEvents.Invoke();
             }
         }
     }
