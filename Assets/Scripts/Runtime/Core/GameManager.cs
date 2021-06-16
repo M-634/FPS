@@ -102,6 +102,7 @@ namespace Musashi
         {
             UnlockCusor();
             configure.gameObject.SetActive(true);
+            Time.timeScale = 0f;
         }
 
         public void CloseConfigure()
@@ -113,6 +114,7 @@ namespace Musashi
             else
             {
                 LockCusor();
+                Time.timeScale = 1f;
             }
             configure.gameObject.SetActive(false);
         }
