@@ -16,13 +16,9 @@ namespace Musashi
         [SerializeField] Configure configure;
         public SoundManager SoundManager => soundManager;
         public SceneLoader SceneLoder => sceneLoder;
-        public bool HaveShowConfigure => configure.gameObject.activeSelf;
+        public Configure Configure => configure;
         public bool IsGameClear { get; private set; }
-
         public bool CanProcessInput { get; private set; }
-
-        public int DefeatNumberOfEnemySpwaner { get; set; }//記録
-        public int SumOfEnemySpwaner { get; set; } //記録
 
         protected override void Awake()
         {
@@ -48,7 +44,6 @@ namespace Musashi
 
         public void ExitGame()
         {
-            Debug.Log("a");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -107,13 +102,19 @@ namespace Musashi
         {
             UnlockCusor();
             configure.gameObject.SetActive(true);
+            Time.timeScale = 0f;
         }
 
         public void CloseConfigure()
         {
-            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.MainGame)
+            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title)
+            {
+                FindObjectOfType<Title>().SetOptionButtonSelected();//修正箇所:現在は、応急処置でFind関数を使っている。設計を検討中...
+            }
+            else
             {
                 LockCusor();
+                Time.timeScale = 1f;
             }
             configure.gameObject.SetActive(false);
         }

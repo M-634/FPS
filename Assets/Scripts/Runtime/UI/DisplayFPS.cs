@@ -3,25 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DisplayFPS : MonoBehaviour
+namespace Musashi
 {
-    [SerializeField] TextMeshProUGUI fpsText;
-    int frameCount;
-    float elapsedTime;
-
-    // Update is called once per frame
-    void Update()
+    public class DisplayFPS : MonoBehaviour
     {
-        frameCount++;
-        elapsedTime += Time.deltaTime;
+        [SerializeField] TextMeshProUGUI fpsText;
+        int frameCount;
+        float elapsedTime;
 
-        if(elapsedTime >= 1.0f)
+        void Update()
         {
-            float fps = 1.0f * frameCount / elapsedTime;
-            fpsText.text = $"FPS : {fps:F2}";
+            if (!GameManager.Instance.Configure.DoDisplayFrameCounter)
+            {
+                frameCount = 0;
+                elapsedTime = 0f;
+                fpsText.text = "";
+                return;
+            }
 
-            frameCount = 0;
-            elapsedTime = 0f;
+            frameCount++;
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= 1.0f)
+            {
+                float fps = 1.0f * frameCount / elapsedTime;
+                fpsText.text = $"FPS : {fps:F2}";
+
+                frameCount = 0;
+                elapsedTime = 0f;
+            }
         }
     }
 }

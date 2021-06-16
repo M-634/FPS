@@ -117,7 +117,7 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Esc"",
+                    ""name"": ""OpenOption"",
                     ""type"": ""Button"",
                     ""id"": ""62a7cb73-b9d2-45ea-bb53-6690155b8abb"",
                     ""expectedControlType"": ""Button"",
@@ -607,7 +607,18 @@ namespace Musashi
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Esc"",
+                    ""action"": ""OpenOption"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d2eab3d-e75a-4df0-92d3-99fb78a942df"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""OpenOption"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1296,7 +1307,7 @@ namespace Musashi
             m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
             m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
-            m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
+            m_Player_OpenOption = m_Player.FindAction("OpenOption", throwIfNotFound: true);
             m_Player_SwichWeapon0 = m_Player.FindAction("SwichWeapon0", throwIfNotFound: true);
             m_Player_SwichWeapon1 = m_Player.FindAction("SwichWeapon1", throwIfNotFound: true);
             m_Player_SwichWeapon2 = m_Player.FindAction("SwichWeapon2", throwIfNotFound: true);
@@ -1377,7 +1388,7 @@ namespace Musashi
         private readonly InputAction m_Player_Aim;
         private readonly InputAction m_Player_MousePosition;
         private readonly InputAction m_Player_Sprint;
-        private readonly InputAction m_Player_Esc;
+        private readonly InputAction m_Player_OpenOption;
         private readonly InputAction m_Player_SwichWeapon0;
         private readonly InputAction m_Player_SwichWeapon1;
         private readonly InputAction m_Player_SwichWeapon2;
@@ -1401,7 +1412,7 @@ namespace Musashi
             public InputAction @Aim => m_Wrapper.m_Player_Aim;
             public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
             public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
-            public InputAction @Esc => m_Wrapper.m_Player_Esc;
+            public InputAction @OpenOption => m_Wrapper.m_Player_OpenOption;
             public InputAction @SwichWeapon0 => m_Wrapper.m_Player_SwichWeapon0;
             public InputAction @SwichWeapon1 => m_Wrapper.m_Player_SwichWeapon1;
             public InputAction @SwichWeapon2 => m_Wrapper.m_Player_SwichWeapon2;
@@ -1454,9 +1465,9 @@ namespace Musashi
                     @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                     @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                     @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
-                    @Esc.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
-                    @Esc.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
-                    @Esc.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
+                    @OpenOption.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenOption;
+                    @OpenOption.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenOption;
+                    @OpenOption.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenOption;
                     @SwichWeapon0.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
                     @SwichWeapon0.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
                     @SwichWeapon0.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
@@ -1518,9 +1529,9 @@ namespace Musashi
                     @Sprint.started += instance.OnSprint;
                     @Sprint.performed += instance.OnSprint;
                     @Sprint.canceled += instance.OnSprint;
-                    @Esc.started += instance.OnEsc;
-                    @Esc.performed += instance.OnEsc;
-                    @Esc.canceled += instance.OnEsc;
+                    @OpenOption.started += instance.OnOpenOption;
+                    @OpenOption.performed += instance.OnOpenOption;
+                    @OpenOption.canceled += instance.OnOpenOption;
                     @SwichWeapon0.started += instance.OnSwichWeapon0;
                     @SwichWeapon0.performed += instance.OnSwichWeapon0;
                     @SwichWeapon0.canceled += instance.OnSwichWeapon0;
@@ -1710,7 +1721,7 @@ namespace Musashi
             void OnAim(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
-            void OnEsc(InputAction.CallbackContext context);
+            void OnOpenOption(InputAction.CallbackContext context);
             void OnSwichWeapon0(InputAction.CallbackContext context);
             void OnSwichWeapon1(InputAction.CallbackContext context);
             void OnSwichWeapon2(InputAction.CallbackContext context);

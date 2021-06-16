@@ -3,16 +3,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-
 namespace Musashi
 {
     /// <summary>
     /// プレイヤーの入力を管理するクラス
     /// プレイヤーオブジェット全ての親オブジェットにアタッチすること
     /// </summary>
-    public class InputProvider : MonoBehaviour//AcionBaseでメソッド呼ぶとコールバックでバグるので、とりあえずこのまま
+    public class InputProvider : MonoBehaviour
     {
-        [SerializeField] bool invertLookY = false;
 
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
@@ -28,10 +26,6 @@ namespace Musashi
                 return isGamepad;
             }
         }
-
-        //Input property
-        public Vector2 Move => PlayerInputActions.Move.ReadValue<Vector2>();
-
         public Vector3 GetMoveInput
         {
             get
@@ -45,42 +39,38 @@ namespace Musashi
                 return Vector3.zero;
             }
         }
-
-        public float GetLookInputsHorizontal => PlayerInputActions.Look.ReadValue<Vector2>().x;
-        public float GetLookInputVertical 
+        public float GetLookInputsHorizontal => GameManager.Instance.CanProcessInput ? PlayerInputActions.Look.ReadValue<Vector2>().x : 0f;
+        public float GetLookInputVertical
         {
             get
             {
-                var Y = PlayerInputActions.Look.ReadValue<Vector2>().y;
-                if (invertLookY == false)
+                if (GameManager.Instance.CanProcessInput)
                 {
-                    Y *= -1;
+                    var Y = PlayerInputActions.Look.ReadValue<Vector2>().y;
+                    if (GameManager.Instance.Configure.DoInvert_Y == false)
+                    {
+                        Y *= -1;
+                    }
+                    return Y;
                 }
-                return Y;
+                return 0;
             }
         }
-
-        public Vector2 Look => PlayerInputActions.Look.ReadValue<Vector2>();
-        public Vector2 MousePosition => PlayerInputActions.MousePosition.ReadValue<Vector2>();
-        public bool Jump => PlayerInputActions.Jump.triggered;
-        public bool Fire => PlayerInputActions.Fire.triggered;
+        public bool Jump => GameManager.Instance.CanProcessInput && PlayerInputActions.Jump.triggered;
+        public bool Fire => GameManager.Instance.CanProcessInput && PlayerInputActions.Fire.triggered;
 
         private bool heldFire;
-        public bool HeldFire => heldFire;
-        public bool Reload => PlayerInputActions.Reload.triggered;
-        public bool Interactive => PlayerInputActions.Interactive.triggered;
-        public bool Inventory => PlayerInputActions.Inventory.triggered;
-        public bool UseItem => PlayerInputActions.UseItem.triggered;
-        public bool UseHealItem => PlayerInputActions.UseHealItem.triggered;
-        public bool DropItem => PlayerInputActions.DropItem.triggered;
+        public bool HeldFire => GameManager.Instance.CanProcessInput && heldFire;
+        public bool Reload => GameManager.Instance.CanProcessInput && PlayerInputActions.Reload.triggered;
+        public bool Interactive => GameManager.Instance.CanProcessInput && PlayerInputActions.Interactive.triggered;
+        public bool UseHealItem => GameManager.Instance.CanProcessInput && PlayerInputActions.UseHealItem.triggered;
 
         private bool aim;
-        public bool Aim => aim;
+        public bool Aim => GameManager.Instance.CanProcessInput && aim;
 
         private bool sprint;
-        public bool Sprint => sprint;
-
-        public bool CanCrouch { get; set; } = false;
+        public bool Sprint => GameManager.Instance.CanProcessInput && sprint;
+        public bool CanCrouch { get; set; }
 
         private int swichWeaponIDByGamepad = -1;
         /// <summary>
@@ -90,30 +80,33 @@ namespace Musashi
         {
             get
             {
-                if (PlayerInputActions.SwichWeapon0.triggered) return 0;
-                if (PlayerInputActions.SwichWeapon1.triggered) return 1;
-                if (PlayerInputActions.SwichWeapon2.triggered) return 2;
-
-                if (IsGamepad)
+                if (GameManager.Instance.CanProcessInput)
                 {
-                    if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
-                    {
-                        swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
-                        return swichWeaponIDByGamepad;
-                    }
+                    if (PlayerInputActions.SwichWeapon0.triggered) return 0;
+                    if (PlayerInputActions.SwichWeapon1.triggered) return 1;
+                    if (PlayerInputActions.SwichWeapon2.triggered) return 2;
 
-                    if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
+                    if (IsGamepad)
                     {
-                        if (swichWeaponIDByGamepad - 1 < 0)
+                        if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
                         {
-                            swichWeaponIDByGamepad = 2;
+                            swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
+                            return swichWeaponIDByGamepad;
                         }
 
-                        else
+                        if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
                         {
-                            swichWeaponIDByGamepad -= 1;
+                            if (swichWeaponIDByGamepad - 1 < 0)
+                            {
+                                swichWeaponIDByGamepad = 2;
+                            }
+
+                            else
+                            {
+                                swichWeaponIDByGamepad -= 1;
+                            }
+                            return swichWeaponIDByGamepad;
                         }
-                        return swichWeaponIDByGamepad;
                     }
                 }
                 return -1;
@@ -135,10 +128,9 @@ namespace Musashi
             PlayerInputActions.Aim.started += ctx => aim = true;
             PlayerInputActions.Aim.canceled += ctx => aim = false;
 
-            PlayerInputActions.Crouch.started +=  ctx => CanCrouch = !CanCrouch; 
+            PlayerInputActions.Crouch.started += ctx => CanCrouch = GameManager.Instance.CanProcessInput ? !CanCrouch : CanCrouch;
 
-      
-            PlayerInputActions.Esc.performed += ctx => GameManager.Instance.SwichConfiguUI();
+            PlayerInputActions.OpenOption.performed += ctx => GameManager.Instance.SwichConfiguUI();
         }
 
         private void OnEnable()
