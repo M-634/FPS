@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 973321178}
   - component: {fileID: 973321177}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -430,6 +430,9 @@ MonoBehaviour:
   OnExitButtonEvents:
     m_PersistentCalls:
       m_Calls: []
+  OnSelectedButtonEvents:
+    m_PersistentCalls:
+      m_Calls: []
   buildIndex: 7
 --- !u!114 &973321178
 MonoBehaviour:
@@ -452,9 +455,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0, g: 1, b: 0.8971636, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0, g: 1, b: 0.8971636, a: 1}
     m_DisabledColor: {r: 0.38679248, g: 0.3521271, b: 0.3521271, a: 0.21960784}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -646,6 +649,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1090645472}
   m_CullTransparentMesh: 0
+--- !u!1 &1135668408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1135668409}
+  - component: {fileID: 1135668410}
+  m_Layer: 0
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1135668409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135668408}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1135668410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135668408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58f039666d5f5c54fab3c746dfac2f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initButton: {fileID: 1177174599}
 --- !u!1 &1177174597
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +707,7 @@ GameObject:
   - component: {fileID: 1177174599}
   - component: {fileID: 1177174602}
   m_Layer: 5
-  m_Name: Button
+  m_Name: StartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -707,9 +754,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0, g: 1, b: 0.8971636, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0, g: 1, b: 0.8971636, a: 1}
     m_DisabledColor: {r: 0.38679248, g: 0.3521271, b: 0.3521271, a: 0.21960784}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -785,6 +832,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnExitButtonEvents:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSelectedButtonEvents:
     m_PersistentCalls:
       m_Calls: []
   buildIndex: 3
@@ -968,7 +1018,7 @@ GameObject:
   - component: {fileID: 1523197019}
   - component: {fileID: 1523197018}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: OptionButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1015,6 +1065,9 @@ MonoBehaviour:
   OnExitButtonEvents:
     m_PersistentCalls:
       m_Calls: []
+  OnSelectedButtonEvents:
+    m_PersistentCalls:
+      m_Calls: []
   buildIndex: 5
 --- !u!114 &1523197019
 MonoBehaviour:
@@ -1037,9 +1090,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0, g: 1, b: 0.8971636, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0, g: 1, b: 0.8971636, a: 1}
     m_DisabledColor: {r: 0.38679248, g: 0.3521271, b: 0.3521271, a: 0.21960784}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1058,7 +1111,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2083576564}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1523197019}
+        m_MethodName: Select
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1523197020
 MonoBehaviour:
   m_ObjectHideFlags: 0

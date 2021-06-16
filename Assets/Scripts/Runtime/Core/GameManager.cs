@@ -17,13 +17,8 @@ namespace Musashi
         public SoundManager SoundManager => soundManager;
         public SceneLoader SceneLoder => sceneLoder;
         public Configure Configure => configure;
-        public bool HaveShowConfigure => configure.gameObject.activeSelf;
         public bool IsGameClear { get; private set; }
-
         public bool CanProcessInput { get; private set; }
-
-        public int DefeatNumberOfEnemySpwaner { get; set; }//記録
-        public int SumOfEnemySpwaner { get; set; } //記録
 
         protected override void Awake()
         {
@@ -112,7 +107,11 @@ namespace Musashi
 
         public void CloseConfigure()
         {
-            if (sceneLoder.GetActiveSceneBuildIndex != (int)SceneInBuildIndex.Title)
+            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title)
+            {
+                
+            }
+            else
             {
                 LockCusor();
             }

@@ -22,6 +22,8 @@ namespace Musashi
         public ButtonEvents OnSelectedButtonEvents = default;
 
         protected Button button;
+        bool isInit = true;
+
         protected virtual void Awake()
         {
             button = GetComponent<Button>();
@@ -61,11 +63,18 @@ namespace Musashi
 
         public void OnSelect(BaseEventData eventData)
         {
+            if (isInit)
+            {
+                isInit = false;
+                return;
+            }
+
             if (!button.interactable) return;
             if(OnSelectedButtonEvents != null)
             {
                 OnSelectedButtonEvents.Invoke();
             }
+            GameManager.Instance.SoundManager.PlaySE(SoundName.PointerEnterButton);
         }
     }
 }
