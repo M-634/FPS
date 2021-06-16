@@ -27,6 +27,16 @@ namespace Musashi.Player
             } 
         }
 
+        protected override void Start()
+        {
+            base.Start();
+            GameEventManager.Instance.Subscribe(GameEventType.Goal, ResetHP);
+        }
+
+        private void OnDestroy()
+        {
+            GameEventManager.Instance.UnSubscribe(GameEventType.Goal, ResetHP);
+        }
 
         protected override void AddOnDieEvent()
         {

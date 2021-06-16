@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Musashi.NPC
 {
     /// <summary>
-    /// 敵AIのヘルパー関数
+    /// 敵AIのヘルパー関数 : → 敵のベースクラスにまとめる
     /// </summary>
     public static class NPCAIHelper
     {

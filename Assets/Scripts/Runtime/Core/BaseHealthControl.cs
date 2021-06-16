@@ -56,17 +56,26 @@ namespace Musashi
 
         protected virtual void Start()
         {
-            CurrentHp = maxHp;
-
-            if (healthBarFillImage && useBillBord)
-            {
-                StartCoroutine(BillBoard());
-            }
+            ResetHP();
 
             OnDamageEnvents.AddListener(AddOnDamageEvent);
             OnDieEvents.AddListener(AddOnDieEvent);
         }
 
+        public void ResetHP()
+        {
+            CurrentHp = maxHp;
+            IsDead = false;
+        }
+
+
+        private void OnEnable()
+        {
+            if (healthBarFillImage && useBillBord)
+            {
+                StartCoroutine(BillBoard());
+            }
+        }
 
         protected virtual void AddOnDamageEvent() { }
 
