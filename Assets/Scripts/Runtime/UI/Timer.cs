@@ -54,13 +54,13 @@ namespace Musashi
         private void OnEnable()
         {
             GameEventManager.Instance.Subscribe(GameEventType.StartGame, StartTimer);
-            GameEventManager.Instance.Subscribe(GameEventType.EndGame, EndTimer);
+            GameEventManager.Instance.Subscribe(GameEventType.Goal, EndTimer);
         }
 
         private void OnDisable()
         {
             GameEventManager.Instance.UnSubscribe(GameEventType.StartGame, StartTimer);
-            GameEventManager.Instance.UnSubscribe(GameEventType.EndGame, EndTimer);
+            GameEventManager.Instance.UnSubscribe(GameEventType.Goal, EndTimer);
             currutine = null;
         }
     }

@@ -28,6 +28,7 @@ namespace Musashi.NPC
             {
                 Debug.LogWarning($"死亡時エフェクトをアタッチしていません。");
             }
+            GameEventManager.Instance.Excute(GameEventType.EnemyDie);
         }
     }
 }

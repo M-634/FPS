@@ -97,10 +97,10 @@ namespace Musashi.NPC
             //敵の顔をプレイヤーに向ける
         }
 
-        private void OnDestroy()
-        {
-            control.OnEnterAttackEvent -= () => isIkActive = true;
-            control.OnExitAttackEvent -= () => isIkActive = false;
-        }
+        //private void OnDestroy()
+        //{
+        //    control.OnEnterAttackEvent -= () => isIkActive = true;
+        //    control.OnExitAttackEvent -= () => isIkActive = false;
+        //}
     }
 }

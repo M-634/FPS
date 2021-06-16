@@ -11,9 +11,9 @@ namespace Musashi
     /// </summary>
     public class Trigger : MonoBehaviour
     {
-        enum TriggerType 
+        enum TriggerType
         {
-            Start,Goal,Exit
+            Start, Goal, Exit
         }
 
         [SerializeField] TriggerType triggerType;
@@ -28,10 +28,10 @@ namespace Musashi
                         GameEventManager.Instance.Excute(GameEventType.StartGame);
                         break;
                     case TriggerType.Goal:
-                        GameEventManager.Instance.Excute(GameEventType.EndGame);
+                        GameEventManager.Instance.Excute(GameEventType.Goal);
                         break;
                     case TriggerType.Exit:
-                        GameManager.Instance.SceneLoder.LoadScene(SceneInBuildIndex.Title,GameManager.Instance.UnlockCusor);
+                        GameManager.Instance.SceneLoder.LoadScene(SceneInBuildIndex.Title, GameManager.Instance.UnlockCusor);
                         break;
                     default:
                         break;
