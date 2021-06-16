@@ -11,12 +11,24 @@ namespace Musashi
     public class Title : MonoBehaviour
     {
         [SerializeField] Button initButton;
+        [SerializeField] Button optionButton;
 
         private void Start()
         {
             if (initButton)
             {
                 initButton.Select();
+            }
+        }
+
+        /// <summary>
+        /// オプション画面を閉じたら、オプションボタンを選択状態にする
+        /// </summary>
+        public void SetOptionButtonSelected()
+        {
+            if (optionButton)
+            {
+                optionButton.Select();
             }
         }
     }

@@ -44,7 +44,6 @@ namespace Musashi
 
         public void ExitGame()
         {
-            Debug.Log("a");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -109,7 +108,7 @@ namespace Musashi
         {
             if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title)
             {
-                
+                FindObjectOfType<Title>().SetOptionButtonSelected();//修正箇所:現在は、応急処置でFind関数を使っている。設計を検討中...
             }
             else
             {
