@@ -14,7 +14,7 @@ namespace Musashi
     /// ボタンのベースクラス
     /// </summary>
     [RequireComponent(typeof(Button))]
-    public abstract class BaseButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,ISelectHandler
+    public abstract class BaseButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, ISelectHandler
     {
         public ButtonEvents OnEnterButtonEvents = default;
         public ButtonEvents OnClickButtonEvents = default;
@@ -22,7 +22,6 @@ namespace Musashi
         public ButtonEvents OnSelectedButtonEvents = default;
 
         protected Button button;
-        bool isInit = true;
 
         protected virtual void Awake()
         {
@@ -33,7 +32,7 @@ namespace Musashi
         {
             if (!button.interactable) return;
 
-            if(OnClickButtonEvents != null)
+            if (OnClickButtonEvents != null)
             {
                 OnClickButtonEvents.Invoke();
             }
@@ -43,9 +42,9 @@ namespace Musashi
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (!button.interactable) return; 
+            if (!button.interactable) return;
 
-            if(OnEnterButtonEvents != null)
+            if (OnEnterButtonEvents != null)
             {
                 OnEnterButtonEvents.Invoke();
             }
@@ -55,7 +54,7 @@ namespace Musashi
         public void OnPointerExit(PointerEventData eventData)
         {
             if (!button.interactable) return;
-            if(OnExitButtonEvents != null)
+            if (OnExitButtonEvents != null)
             {
                 OnExitButtonEvents.Invoke();
             }
@@ -63,14 +62,8 @@ namespace Musashi
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (isInit)
-            {
-                isInit = false;
-                return;
-            }
-
             if (!button.interactable) return;
-            if(OnSelectedButtonEvents != null)
+            if (OnSelectedButtonEvents != null)
             {
                 OnSelectedButtonEvents.Invoke();
             }

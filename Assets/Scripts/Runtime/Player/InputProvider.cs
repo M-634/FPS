@@ -11,12 +11,11 @@ namespace Musashi
     /// </summary>
     public class InputProvider : MonoBehaviour
     {
-
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
 
-        private bool isGamepad;
-        public bool IsGamepad
+        private static bool isGamepad;
+        public static bool IsGamepad
         {
             get
             {
@@ -26,6 +25,8 @@ namespace Musashi
                 return isGamepad;
             }
         }
+
+
         public Vector3 GetMoveInput
         {
             get

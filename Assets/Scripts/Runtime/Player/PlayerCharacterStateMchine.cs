@@ -101,7 +101,7 @@ namespace Musashi.Player
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
         public float CameraRotaionMuliplier => isAiming ? GameManager.Instance.Configure.AimingRotaionMultipiler : 1f;
-        public float CameraSensitivity => inputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
+        public float CameraSensitivity => InputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
         #endregion
 
         #region State properties
