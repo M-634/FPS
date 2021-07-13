@@ -21,8 +21,8 @@ namespace Musashi.NPC
 
             if (deathVFX != null)
             {
-                deathVFX.transform.position = spwanVFXPoint.position;
-                deathVFX.gameObject.SetActive(true);
+                deathVFX.transform.SetPositionAndRotation(spwanVFXPoint.position, spwanVFXPoint.rotation);
+                deathVFX.SetActive(true);
             }
             else
             {

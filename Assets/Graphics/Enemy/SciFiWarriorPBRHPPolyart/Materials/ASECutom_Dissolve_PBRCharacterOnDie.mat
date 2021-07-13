@@ -36,7 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OpacityMask:
-        m_Texture: {fileID: 2800000, guid: e28dc97a9541e3642a48c0e3886688c5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 645c1cb9966f24f4c96d8125d9a87f33, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
@@ -53,8 +53,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Cutoff: 0.5
-    - _DissolveAmount: 0
+    - _DissolveAmount: 1
     - _DissolveEgeAmount: 0.505
+    - _NoiseScale: 1
     - __dirty: 0
     m_Colors:
     - _DissolveEgeColor: {r: 0, g: 21.361254, b: 21.361248, a: 0}

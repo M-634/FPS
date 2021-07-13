@@ -1,10 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-
-[System.Serializable]
-public class UnityEventWrapper : UnityEvent { } //リファクタリングメモ： このクラスをUnityEventのラッパークラスとして統一すること
 
 namespace Musashi.NPC
 {

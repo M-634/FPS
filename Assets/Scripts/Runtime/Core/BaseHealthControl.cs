@@ -6,18 +6,6 @@ using UnityEngine.Events;
 namespace Musashi
 {
     /// <summary>
-    /// ダメージ時のイベントラッパー関数
-    /// </summary>
-    [System.Serializable]
-    public class OnDamageEnvents : UnityEvent { }
-
-    /// <summary>
-    /// 死亡時のイベントラッパー関数
-    /// </summary>
-    [System.Serializable]
-    public class OnDieEvents : UnityEvent { }
-
-    /// <summary>
     /// 体力があるオブジェクトにアタッチするベースクラス。
     /// ダメージ時のイベントと、体力がなくなった時（死亡時）のイベントを
     /// 継承先、もしくはインスペクター上で設定できる。
@@ -35,8 +23,8 @@ namespace Musashi
         [SerializeField] protected Image healthBarFillImage;
 
         [Header("Events")]
-        [SerializeField] protected OnDamageEnvents OnDamageEnvents = default;
-        [SerializeField] protected OnDieEvents OnDieEvents = default;
+        [SerializeField] protected UnityEventWrapper OnDamageEnvents = default;
+        [SerializeField] protected UnityEventWrapper OnDieEvents = default;
 
         [Header("Set each flag")]
         ///<summary>無敵モードにするか判定するフラグ</summary>
