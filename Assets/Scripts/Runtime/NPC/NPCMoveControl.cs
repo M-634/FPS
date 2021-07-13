@@ -8,9 +8,6 @@ using UnityEngine.AI;
 
 namespace Musashi.NPC
 {
-    /// <summary>
-    /// リファクタリングメモ ⇒ ユーティリティークラスとしてまとめる
-    /// </summary>
     public static class AnimatorName
     {
         public const string Idle = "Idle";
@@ -62,6 +59,7 @@ namespace Musashi.NPC
         public event Action OnEnterAttackEvent;
         public event Action OnExitAttackEvent;
 
+        private float targetCenterPos;
         private float lastTimeAttacked;
         private int patrolPointsIndex;
 
@@ -89,6 +87,10 @@ namespace Musashi.NPC
             if (!target)
             {
                 target = GameObject.FindGameObjectWithTag("Player").transform;
+                if (target.TryGetComponent(out CharacterController controller))
+                {
+                    targetCenterPos = controller.height / 2;//playerの真ん中までの高さを取得
+                }
             }
 
             if (!eye)
@@ -144,6 +146,52 @@ namespace Musashi.NPC
 #endif
         #endregion
 
+        #region UtilityMethod
+        private bool CanSeeTarget()
+        {
+            var dir = target.position - transform.position;
+            var angle = Vector3.Angle(dir, transform.forward);
+
+            if (dir.magnitude < visitDistance && angle < viewingAngle)
+            {
+                //ここの処理を上手くやらないと、思うようにいかない。が、重要度が高いわけでもないため後回し！
+
+                ////plyarの真ん中目掛けてLineCastを飛ばす(target.positionのY座標が0のため、目線が低いNPCだと地面)
+                //var lineCastEndPos = target.position + new Vector3(0, targetCenterPos, 0);
+
+                ////Playerと敵の間に障害物があるかどうかRayを飛ばして確かめる
+                //if (Physics.Linecast(eye.position, lineCastEndPos, out RaycastHit hit))
+                //{
+                //    if (hit.transform.CompareTag("Player"))
+                //    {
+                //        Debug.DrawLine(eye.position, hit.point, Color.blue);
+                //        return true;
+                //    }
+                //}
+                //Debug.DrawLine(eye.position, hit.point, Color.white);
+                //return false;
+                return true;
+            }
+            return false;
+        }
+        private bool CanAttackTarget()
+        {
+            Vector3 dir = target.position - transform.position;
+            if (dir.magnitude < attackRange)
+            {
+                return true;
+            }
+            return false;
+        }
+        private void LookAtTarget()
+        {
+            var aim = target.position - transform.position;
+            aim.y = 0;
+            var look = Quaternion.LookRotation(aim);
+            transform.rotation = Quaternion.Slerp(transform.rotation, look, turnAroundInterpolationSpeed);
+        }
+        #endregion
+
         #region State Classes
         public class Idle : IState<NPCMoveControl>
         {
@@ -161,6 +209,7 @@ namespace Musashi.NPC
             public void OnUpdate(NPCMoveControl owner)
             {
                 owner.stateMachine.ChangeState(owner.PatrolState);
+                return;
             }
         }
 
@@ -203,9 +252,10 @@ namespace Musashi.NPC
                     StopPoint(owner);
                 }
 
-                if (NPCAIHelper.CanSeePlayer(owner.target, owner.transform, owner.visitDistance, owner.viewingAngle, owner.eye))
+                if (owner.CanSeeTarget())
                 {
                     owner.stateMachine.ChangeState(owner.PuersueState);
+                    return;
                 }
             }
 
@@ -225,6 +275,7 @@ namespace Musashi.NPC
         public class Pursue : IState<NPCMoveControl>
         {
             bool isAngryState = false;//ダメージ受けた後は、プレイヤーを攻撃できる距離まで追い詰める
+
             public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
             {
                 if (prevState is OnDamage)
@@ -233,6 +284,7 @@ namespace Musashi.NPC
                 }
                 owner.agent.speed = owner.pursueSpeed;
                 owner.agent.isStopped = false;
+                owner.agent.ResetPath();//メモ:NavmeshクラスのResetPath関数を呼んでPathを初期化してあげないと、SetDestinationが上手く機能しない時がある。
                 owner.animator.Play(AnimatorName.Run);
             }
 
@@ -243,31 +295,36 @@ namespace Musashi.NPC
 
             public void OnUpdate(NPCMoveControl owner)
             {
-                NPCAIHelper.LookAtPlayer(owner.target, owner.transform, owner.turnAroundInterpolationSpeed);
+                owner.LookAtTarget();
                 owner.agent.SetDestination(owner.target.position);
 
-                if (NPCAIHelper.CanAttackPlayer(owner.target, owner.transform, owner.attackRange))
+                if (owner.CanAttackTarget())
                 {
                     owner.stateMachine.ChangeState(owner.AttackState);
+                    return;
                 }
 
-                if (isAngryState) return;
-
-                if (!NPCAIHelper.CanSeePlayer(owner.target, owner.transform, owner.visitDistance, owner.viewingAngle, owner.eye))
+                if (!isAngryState)
                 {
-                    owner.stateMachine.ChangeState(owner.IdleState);
+                    if (!owner.CanSeeTarget())
+                    {
+                        owner.stateMachine.ChangeState(owner.IdleState);
+                        return;
+                    }
                 }
             }
         }
 
         public class Attack : IState<NPCMoveControl>
         {
+            bool canAttack;
             public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
             {
                 if (owner.OnEnterAttackEvent != null)
                 {
                     owner.OnEnterAttackEvent.Invoke();
                 }
+                canAttack = false;
                 owner.agent.isStopped = true;
                 owner.animator.Play(AnimatorName.Attack);
             }
@@ -282,12 +339,7 @@ namespace Musashi.NPC
 
             public void OnUpdate(NPCMoveControl owner)
             {
-                NPCAIHelper.LookAtPlayer(owner.target, owner.transform, owner.turnAroundInterpolationSpeed);
-
-                if (!NPCAIHelper.CanAttackPlayer(owner.target, owner.transform, owner.attackRange))
-                {
-                    owner.stateMachine.ChangeState(owner.PuersueState);
-                }
+                owner.LookAtTarget();
 
                 if (owner.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
                 {
@@ -296,12 +348,26 @@ namespace Musashi.NPC
                     {
                         owner.animator.Play(AnimatorName.Idle);
                         owner.lastTimeAttacked = Time.time;
+                        canAttack = true;
                     }
                 }
 
-                if (Time.time >= owner.lastTimeAttacked + owner.attackCoolTime)
+                if (canAttack && Time.time >= owner.lastTimeAttacked + owner.attackCoolTime)
                 {
                     owner.animator.Play(AnimatorName.Attack);
+                    canAttack = false;
+                }
+
+                if (!owner.CanAttackTarget())
+                {
+                    owner.stateMachine.ChangeState(owner.PuersueState);
+                    return;
+                }
+
+                if (!owner.CanSeeTarget())
+                {
+                    owner.stateMachine.ChangeState(owner.PatrolState);
+                    return;
                 }
             }
         }

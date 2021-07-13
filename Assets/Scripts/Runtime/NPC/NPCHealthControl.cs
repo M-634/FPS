@@ -7,7 +7,7 @@ namespace Musashi.NPC
     /// <summary>
     /// 死亡時にエフェクトを出す
     /// </summary>
-    public class NPCHealthControl : BaseHealthControl
+    public sealed class NPCHealthControl : BaseHealthControl
     {
         [SerializeField] GameObject deathVFX;
         [SerializeField] Transform spwanVFXPoint;
