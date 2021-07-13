@@ -24,6 +24,11 @@ namespace Musashi
             CurrentState.OnExit(owner, nextstate);
             nextstate.OnEnter(owner, CurrentState);
             CurrentState = nextstate;
+            
+            if(owner is NPC.NPCMoveControl)
+            {
+                Debug.Log(CurrentState);
+            }
         }
     }
 }

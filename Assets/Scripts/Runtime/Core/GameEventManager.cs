@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Events;
 
 namespace Musashi
 {
@@ -72,6 +73,9 @@ namespace Musashi
         StartGame,//タイマー表示、タイマースタート、敵を生成
         Goal//タイマーストップ、残った敵を削除、タイマーがベストタイムなら記録,プレイヤーの体力を満タンにする
     }
+
+    [System.Serializable]
+    public class UnityEventWrapper : UnityEvent { }
 }
 
 

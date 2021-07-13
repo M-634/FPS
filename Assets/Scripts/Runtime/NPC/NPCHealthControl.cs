@@ -7,7 +7,7 @@ namespace Musashi.NPC
     /// <summary>
     /// 死亡時にエフェクトを出す
     /// </summary>
-    public class NPCHealthControl : BaseHealthControl
+    public sealed class NPCHealthControl : BaseHealthControl
     {
         [SerializeField] GameObject deathVFX;
         [SerializeField] Transform spwanVFXPoint;
@@ -21,8 +21,8 @@ namespace Musashi.NPC
 
             if (deathVFX != null)
             {
-                deathVFX.transform.position = spwanVFXPoint.position;
-                deathVFX.gameObject.SetActive(true);
+                deathVFX.transform.SetPositionAndRotation(spwanVFXPoint.position, spwanVFXPoint.rotation);
+                deathVFX.SetActive(true);
             }
             else
             {
