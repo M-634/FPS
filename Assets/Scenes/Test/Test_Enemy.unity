@@ -1645,18 +1645,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807825636}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1855653410 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7037958925467630880, guid: db4a42016ef826643bbd122fccafdfa7,
-    type: 3}
-  m_PrefabInstance: {fileID: 115483034102906959}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d16a828a64dc4a4fba256c2e497af09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1893768339
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1837,41 +1825,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1855653410}
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnDamage
-      objectReference: {fileID: 0}
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Musashi.NPC.NPCMoveControl, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 115483034125563098, guid: db4a42016ef826643bbd122fccafdfa7,
-        type: 3}
-      propertyPath: OnDamageEnvents.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 5351927688555602868, guid: db4a42016ef826643bbd122fccafdfa7,
         type: 3}
       propertyPath: m_Name
@@ -1949,6 +1902,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7037958925467630880, guid: db4a42016ef826643bbd122fccafdfa7,
         type: 3}
+      propertyPath: doKnockback
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037958925467630880, guid: db4a42016ef826643bbd122fccafdfa7,
+        type: 3}
+      propertyPath: patrolSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037958925467630880, guid: db4a42016ef826643bbd122fccafdfa7,
+        type: 3}
       propertyPath: visitDistance
       value: 12.02
       objectReference: {fileID: 0}
@@ -1956,6 +1919,11 @@ PrefabInstance:
         type: 3}
       propertyPath: attackCoolTime
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037958926427971204, guid: db4a42016ef826643bbd122fccafdfa7,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db4a42016ef826643bbd122fccafdfa7, type: 3}

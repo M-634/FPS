@@ -27,15 +27,20 @@ namespace Musashi
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
     {
         [SerializeField] TargetType targetType;
+
+        [Header("Set HP properties")]
         [SerializeField] bool useBillBord;
         [SerializeField] float healthBarHightOffset;
         [SerializeField] protected float maxHp;
         [SerializeField] protected Image healthBarFillImage;
 
+        [Header("Events")]
         [SerializeField] protected OnDamageEnvents OnDamageEnvents = default;
         [SerializeField] protected OnDieEvents OnDieEvents = default;
 
-        [SerializeField] bool isDebugMode;//ダメージを受け付けないフラグ
+        [Header("Set each flag")]
+        ///<summary>無敵モードにするか判定するフラグ</summary>
+        [SerializeField] bool isInvincibleMode;
 
         protected float currentHp;
         public bool IsDead { get; protected set; } = false;
@@ -93,7 +98,7 @@ namespace Musashi
 
         public virtual void OnDamage(float damage)
         {
-            if (IsDead || isDebugMode) return;
+            if (IsDead || isInvincibleMode) return;
 
             CurrentHp -= damage;
 

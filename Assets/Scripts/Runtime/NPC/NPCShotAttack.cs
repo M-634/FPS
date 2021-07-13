@@ -7,7 +7,7 @@ namespace Musashi.NPC
     /// NPCが銃を撃つタイプのキャラクターにアタッチする。撃つ弾をオブジェットプールで管理し、
     /// 撃つタイミングは、アニメーションイベントから呼ばれる。
     /// </summary>
-    [RequireComponent(typeof(NPCMoveControl))]
+    [RequireComponent(typeof(NPCMoveControl),typeof(Animator))]
     public class NPCShotAttack : BaseNPCAttackEventControl, IPoolUser<NPCShotAttack>
     {
         [SerializeField] ObjectPoolingProjectileInfo projectileInfo;
@@ -24,12 +24,14 @@ namespace Musashi.NPC
    
         bool isIkActive;
         PoolObjectManager poolObjectManager;
+        Animator animator;
         NPCMoveControl control;
 
         private void Start()
         {
             isIkActive = false;
             control = GetComponent<NPCMoveControl>();
+            animator = GetComponent<Animator>();
             if (useIK)
             {
                 control.OnEnterAttackEvent += () => isIkActive = true;
@@ -84,23 +86,17 @@ namespace Musashi.NPC
             if (targetLeftHand == null || targetRightHand == null) return;
 
             // 両手の IK Position/Rotation をセットする
-            control.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
-            control.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
-            control.Anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
-            control.Anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
-            control.Anim.SetIKPosition(AvatarIKGoal.RightHand, targetRightHand.position);
-            control.Anim.SetIKRotation(AvatarIKGoal.RightHand, targetRightHand.rotation);
-            control.Anim.SetIKPosition(AvatarIKGoal.LeftHand, targetLeftHand.position);
-            control.Anim.SetIKRotation(AvatarIKGoal.LeftHand, targetLeftHand.rotation);
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKPosition(AvatarIKGoal.RightHand, targetRightHand.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, targetRightHand.rotation);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, targetLeftHand.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, targetLeftHand.rotation);
 
             //銃を持っている手のIKターゲット向きをプレイヤーに向ける。(余裕があったら)
             //敵の顔をプレイヤーに向ける
         }
-
-        //private void OnDestroy()
-        //{
-        //    control.OnEnterAttackEvent -= () => isIkActive = true;
-        //    control.OnExitAttackEvent -= () => isIkActive = false;
-        //}
     }
 }
