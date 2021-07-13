@@ -5,7 +5,7 @@ using DG.Tweening;
 
 namespace Musashi.Player
 {
-    public class PlayerHealthControl : BaseHealthControl
+    public sealed class PlayerHealthControl : BaseHealthControl
     {
         [Header("damage effect property")]
         ///<summary>被ダメージ時に出るイメージエフェクト</summary>
