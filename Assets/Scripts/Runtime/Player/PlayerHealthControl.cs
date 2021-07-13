@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 
 namespace Musashi.Player
 {
     public class PlayerHealthControl : BaseHealthControl
     {
-        [SerializeField] Image damageEffectImage;
-   
+        [Header("damage effect property")]
+        ///<summary>被ダメージ時に出るイメージエフェクト</summary>
+        [SerializeField] Image damageEffectImage = default;
+        /// <summary>ダメージエフェクトのイメージカラーのアルファ値が０に戻るまでの時間</summary>
+        [SerializeField] float autoHealTime = 1f;
+
         public  bool IsMaxHP  => CurrentHp == maxHp;
         protected override float CurrentHp 
         {
@@ -22,7 +27,10 @@ namespace Musashi.Player
                 }
                 if (damageEffectImage)
                 {
-                    damageEffectImage.color = new Color(1, 1, 1, 1 - ratio);
+                    float invRatio = 1 - ratio;
+                    damageEffectImage.SetOpacityImageColor(invRatio);
+                    DOTween.To(() => invRatio, (x) => invRatio = x, 0f, autoHealTime)
+                        .OnUpdate(()=> damageEffectImage.SetOpacityImageColor(invRatio));
                 }
             } 
         }

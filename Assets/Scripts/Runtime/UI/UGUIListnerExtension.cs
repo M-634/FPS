@@ -65,6 +65,17 @@ namespace Musashi
                   });
         }
 
+        /// <summary>
+        /// image colorの不透明度を設定する関数
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="alpha">0f:透明 1f:不透明</param>
+        public static void SetOpacityImageColor(this Image image,float alpha)
+        {
+            var c = image.color;
+            image.color = new Color(c.r, c.g, c.b, alpha);
+        }
+
 
         /// <summary>
         /// スライダーの値が変化した時のイベントを登録する関数。
