@@ -7953,7 +7953,7 @@ MonoBehaviour:
   maxSpeedCrouchedRatio: 0.5
   maxSpeedInAir: 10
   accelerationSpeedInAir: 25
-  sprintSpeedModifier: 1.5
+  sprintSpeedModifier: 2
   jumpForce: 10
   cameraHeightRatio: 0.9
   capsuleHeightStanding: 1.8
