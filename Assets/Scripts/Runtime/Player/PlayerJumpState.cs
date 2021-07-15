@@ -14,7 +14,7 @@ namespace Musashi.Player
 
             private float SpeedModifierInAir(PlayerCharacterStateMchine owner)
             {
-                return owner.isLastSprint ? owner.sprintSpeedModifier : 1f;
+                return owner.isDushJump ? owner.sprintSpeedModifier : 1f;
             }
 
             public void OnEnter(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> prevState = null)
@@ -34,13 +34,11 @@ namespace Musashi.Player
                 owner.groundNormal = Vector3.up;
 
                 owner.lastTimeFirstJumped = Time.time;
-                Debug.Log(owner.isLastSprint);
             }
 
             public void OnExit(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> nextState = null)
             {
                 hasSecondJumped = false;
-                owner.isLastSprint = false;
             }
 
             /// <summary>
@@ -91,7 +89,7 @@ namespace Musashi.Player
             private void CalcSecondJump(PlayerCharacterStateMchine owner)
             {
                 owner.characterVelocity += Vector3.up * owner.jumpForce * owner.secondJumpModifier;
-                owner.isLastSprint = false;
+                owner.isDushJump = false;
                 hasSecondJumped = true;
             }
         }

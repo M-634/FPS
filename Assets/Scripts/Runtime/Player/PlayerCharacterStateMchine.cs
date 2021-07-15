@@ -80,7 +80,7 @@ namespace Musashi.Player
         #region  Member variables
         bool isGround;
         bool isAiming;
-        bool isLastSprint;//ジャンプ前にダッシュしたかどうか判定するフラグ。空中でダッシュボタンを押すと加速するのを防ぐため
+        bool isDushJump;//ダッシュ速度でジャンプしていたかどうか判断するフラグ。
         float fovSpeed;
         float targetFov;
         float cameraVerticalAngle;

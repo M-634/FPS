@@ -26,10 +26,7 @@ namespace Musashi.Player
             {
                 if (owner.isGround && owner.inputProvider.Jump)
                 {
-                    if (owner.IsSprinting)
-                    {
-                        owner.isLastSprint = true;
-                    }
+                    owner.isDushJump = owner.IsSprinting;
                     owner.stateMachine.ChangeState(owner.JumpState);
                     return;
                 }
