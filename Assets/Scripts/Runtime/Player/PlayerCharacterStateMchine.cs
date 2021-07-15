@@ -46,7 +46,11 @@ namespace Musashi.Player
         [Header("Jump")]
         [Tooltip("Force applied upward when jumping")]
         [SerializeField] float jumpForce = 10f;
-
+        [Tooltip("Multipilcator for the second jumping based on first jumpForce")]
+        [SerializeField] float secondJumpModifier = 1.2f;
+        [Tooltip("Time from the first jump to being able to make the second jump.")]
+        [SerializeField] float firstJumpDuration = 0.1f;
+     
         [Header("Stance")]
         [Tooltip("Ratio (0-1) of the character height where the camera will be at")]
         [SerializeField] float cameraHeightRatio = 0.9f;
@@ -76,12 +80,13 @@ namespace Musashi.Player
         #region  Member variables
         bool isGround;
         bool isAiming;
+        bool isLastSprint;//ジャンプ前にダッシュしたかどうか判定するフラグ。空中でダッシュボタンを押すと加速するのを防ぐため
         float fovSpeed;
         float targetFov;
         float cameraVerticalAngle;
         float footstepDistanceCounter;
         float targetCharacterHeight;
-        float lastTimeJumped;
+        float lastTimeFirstJumped;
         Vector3 groundNormal;
         Vector3 characterVelocity;
         CharacterController controller;
@@ -95,9 +100,9 @@ namespace Musashi.Player
         const float k_JumpGroundingPreventionTime = 0.07f;
         #endregion
 
+        //ここプロパティである必要がない
         #region Utility properties
-
-        public bool IsSprinting => inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
+        public bool IsSprinting => isGround && inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
         public float CameraRotaionMuliplier => isAiming ? GameManager.Instance.Configure.AimingRotaionMultipiler : 1f;
@@ -126,17 +131,12 @@ namespace Musashi.Player
             GameManager.Instance.LockCusor();
 
             UpdateCharacterHeight(true);
-
             playerCamera.fieldOfView = defultFieldOfView;
         }
 
 
         private void Update()
         {
-            //Debug.Log($"Horizontal : {inputProvider.GetLookInputsHorizontal * CameraSensitivity} ");
-            //Debug.Log($"Vertical : {inputProvider.GetLookInputVertical * CameraSensitivity} ");
-
-
             ControlCameraAndPlayerRotation();
             GroundCheck();
             stateMachine.CurrentState.OnUpdate(this);
@@ -152,7 +152,7 @@ namespace Musashi.Player
             groundNormal = Vector3.up;
 
             //ジャンプしてすぐにチェックはしない
-            if (Time.time < lastTimeJumped + k_JumpGroundingPreventionTime) return;
+            if (Time.time < lastTimeFirstJumped + k_JumpGroundingPreventionTime) return;
 
             //cheack ground
             if (Physics.CapsuleCast(GetCapsuleBottomHemisphere(), GetCapsuleTopHemisphere(controller.height), controller.radius, Vector3.down, out RaycastHit hit, chosenGroundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))

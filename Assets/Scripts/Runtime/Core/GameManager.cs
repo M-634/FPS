@@ -24,8 +24,8 @@ namespace Musashi
         {
             base.Awake();
             DontDestroyOnLoad(this.gameObject);
-            QualitySettings.vSyncCount = 0; // VSyncをOFFにする
-            Application.targetFrameRate = 60;//60フレームに固定する
+            //QualitySettings.vSyncCount = 0; // VSyncをOFFにする
+            //Application.targetFrameRate = 60;//60フレームに固定する
         }
 
         // Start is called before the first frame update
