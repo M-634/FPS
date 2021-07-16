@@ -7972,7 +7972,7 @@ MonoBehaviour:
     minimumHeight: 0.7
     maxAngleRoll: 30
     normalizedAngleThreshold: 0.3
-    wallJumpDuration: 1
+    wallJumpDuration: 0.2
     wallBouncing: 3
     cameraTransitionDuration: 1
     wallGravityDownForce: 20
