@@ -8,7 +8,7 @@ namespace Musashi.Player
     /// プレイヤーの動きをステートパターンで制御するクラス。
     /// リファレンス：タイタンフォール２。APEX
     /// </summary>
-    [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
+    [RequireComponent(typeof(CharacterController),typeof(InputProvider))]
     public partial class PlayerCharacterStateMchine : MonoBehaviour
     {
         #region SerializeFields 
@@ -123,7 +123,8 @@ namespace Musashi.Player
             {
                 playerCamera = Camera.main;
             }
-            inputProvider = GetComponentInParent<InputProvider>();
+            //inputProvider = GetComponentInParent<InputProvider>();
+            inputProvider = GetComponent<InputProvider>();
             controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
 

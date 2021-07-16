@@ -7,6 +7,7 @@ namespace Musashi
 {
     /// <summary>
     /// 1frame前の位置から、現在の位置までにRayを飛ばして当たり判定をとる。
+    /// リファクタリングメモ：bulletControl ⇒ ProjectileControlにまとめる
     /// </summary>
     public class BulletControl : MonoBehaviour
     {
