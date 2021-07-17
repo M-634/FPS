@@ -26,6 +26,7 @@ namespace Musashi.Player
         [SerializeField] Transform aimmingWeaponPos;
         [SerializeField] Transform downWeaponPos;
         [SerializeField] Transform weaponParentSocket;
+        [SerializeField] float adjustPosTime = 0.2f;
 
         [Header("set aiming propeties")]
         [SerializeField] AnimationCurve weaponChangeCorrectiveCurvel;
@@ -125,17 +126,27 @@ namespace Musashi.Player
         private void Update()
         {
             if (!CurrentEquipmentWeapon) return;
-
             InteractiveShooterTypeWeapon();
+        }
+
+        private void LateUpdate()
+        {
+            //装備していないか、銃のアニメーションがIdle状態の時は何もしない。
+            if (!CurrentEquipmentWeapon || !CurrentEquipmentWeapon.IsPlayingAnimationStateIdle) return;
+
+            //銃の武器アニメーションはルートモーションで行っている。そのため、リロードやショットを打つたびに座標が若干ずれて行きます。
+            //それを防ぐために、補正をかけてweaponParentSocketのローカル座標に合わせてずれを防ぐ。
+            CurrentEquipmentWeapon.transform.localPosition = Vector3.Lerp(CurrentEquipmentWeapon.transform.localPosition, Vector3.zero , adjustPosTime * Time.deltaTime);
+            CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
         }
 
         #region Utility Methods
         private void InteractiveShooterTypeWeapon()
         {
-            if (!CurrentEquipmentWeapon.CanInputAction) return;
-
             //Aim
             AimingWeapon(inputProvider.Aim);
+
+            if (!CurrentEquipmentWeapon.CanInputAction) return;
 
             //Shoot
             switch (CurrentEquipmentWeapon.GetWeaponShootType)

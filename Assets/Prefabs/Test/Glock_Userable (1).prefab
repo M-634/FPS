@@ -2106,7 +2106,6 @@ MonoBehaviour:
   weaponIcon: {fileID: 0}
   muzzle: {fileID: 2829662098685297405}
   poolObjectParent: {fileID: 0}
-  hitVFXManager: {fileID: 0}
 --- !u!82 &2829662099362326772
 AudioSource:
   m_ObjectHideFlags: 0

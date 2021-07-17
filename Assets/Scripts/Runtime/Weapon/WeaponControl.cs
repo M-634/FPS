@@ -58,10 +58,7 @@ namespace Musashi.Weapon
         [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
         [SerializeField] Transform poolObjectParent;
-        [Header("Require Component")]
-        //[SerializeField] ReticleAnimation reticle;
-        [SerializeField] HitVFXManager hitVFXManager;
-
+   
         /// <summary>If Ammo number changed, Invoke this events</summary>
         public event Action OnChangedAmmo;
         public event Func<bool> CanReloadAmmo;
@@ -71,6 +68,7 @@ namespace Musashi.Weapon
         float lastTimeShot = Mathf.NegativeInfinity;
 
         PoolObjectManager poolObjectManager;
+        HitVFXManager hitVFXManager;
         Animator animator;
         AudioSource audioSource;
         #endregion
@@ -79,6 +77,7 @@ namespace Musashi.Weapon
         public bool CanInputAction { get; private set; } = true;//リロード中は、入力を受け付けない
         public Image GetIcon => weaponIcon;
         public WeaponShootType GetWeaponShootType => weaponShootType;
+        public bool IsPlayingAnimationStateIdle => animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
         {
@@ -99,12 +98,13 @@ namespace Musashi.Weapon
         }
         #endregion
 
-        private void Awake()
+        private void Start()
         {
             SetDataFromWeaponSettingSOData();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
-
+            hitVFXManager = GetComponentInParent<HitVFXManager>();
+  
             if (!muzzle)
             {
                 muzzle = this.transform;
@@ -243,12 +243,11 @@ namespace Musashi.Weapon
 
         #region Animation Events
         /// <summary>
-        /// リロードアニメーションイベントから呼ばれる関数
+        /// 弾の装填が完了したタイミングで呼ばれるアニメーションイベント関数
         /// </summary>
-        public void EndReload()
+        public void EndReloadCharge()
         {
             CurrentAmmo = HaveEndedReloadingAmmo.Invoke();
-            CanInputAction = true;
         }
 
         /// <summary>
@@ -277,17 +276,17 @@ namespace Musashi.Weapon
         }
 
         /// <summary>
-        /// ショットガンのPullアニメーションイベントから呼ばれる関数
+        /// リロードアニメーション中にどこから入力を受け付けないかを決めるアニメーションイベント関数
         /// </summary>
-        public void ShutGunPullStart()
+        public void ReloadActionStartTrigger()
         {
             CanInputAction = false;
         }
 
         /// <summary>
-        /// ショットガンのPullアニメーションイベントから呼ばれる関数
+        /// リロードアニメーション終了時に設定するアニメーションイベント関数。
         /// </summary>
-        public void ShutGunPullEnd()
+        public void ReloadActionEndTrigger()
         {
             CanInputAction = true;
             if (weaponType == WeaponType.ShotGun)
