@@ -4,7 +4,59 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 using Musashi.Weapon;
+using Musashi.Item;
+using UnityEngine.UI;
+using TMPro;
 
+namespace Musashi.Weapon
+{
+    /// <summary>
+    /// 装備中の武器情報をUIに表示するのに必要な変数を用意し、
+    /// それらにまつわる処理を制御するクラス
+    /// </summary>
+    [System.Serializable]
+    public class EquipmentWeaponInfo
+    {
+        [SerializeField] GameObject equipmentWeaponInfoUI;
+        [SerializeField] Image equipmentWeaponIcon = default;
+        [SerializeField] Image ammoCounterSllider = default;
+        [SerializeField] TextMeshProUGUI ammoCounterText = default;
+
+        WeaponControl weapon;
+        public GameObject GetInfoUI => equipmentWeaponInfoUI;
+
+        public void SetCurrentEquipmentWeaponInfo(WeaponControl currentEquipmentWeapon)
+        {
+            weapon = currentEquipmentWeapon;
+            UpdateAmmmoCounter();
+            weapon.OnChangedAmmo += UpdateAmmmoCounter;
+
+            if (weapon.GetIcon)
+            {
+                equipmentWeaponIcon.sprite = weapon.GetIcon.sprite;
+            }
+            GetInfoUI.SetActive(true);
+        }
+
+        private void UpdateAmmmoCounter()
+        {
+            ammoCounterText.text = weapon.CurrentAmmo.ToString() + " | " + ItemInventory.Instance.SumNumberOfAmmoInInventory.ToString();
+            ammoCounterSllider.fillAmount = (float)weapon.CurrentAmmo / weapon.MaxAmmo;
+        }
+
+        public void ResetInfo()
+        {
+            weapon.OnChangedAmmo -= UpdateAmmmoCounter;
+
+            equipmentWeaponIcon.sprite = null;
+            ammoCounterSllider.fillAmount = 0f;
+            ammoCounterText.text = "";
+
+            weapon = null;
+            GetInfoUI.SetActive(false);
+        }
+    }
+}
 
 namespace Musashi.Player
 {
@@ -28,6 +80,8 @@ namespace Musashi.Player
         [SerializeField] float weaponUpDuration = 1f;
         [SerializeField] float weaponDownDuration = 1f;
 
+        [SerializeField] EquipmentWeaponInfo equipmentWeaponInfo = default;
+
         InputProvider inputProvider;
         PlayerCharacterStateMchine playerCharacter;
 
@@ -42,7 +96,6 @@ namespace Musashi.Player
             playerCharacter = GetComponent<PlayerCharacterStateMchine>();
             InitializeWeapon();
         }
-
         private void InitializeWeapon()
         {
             weaponParentSocket.localPosition = downWeaponPos.localPosition;
@@ -51,13 +104,28 @@ namespace Musashi.Player
             startWeapon.transform.rotation = weaponParentSocket.rotation;
             ChangeWeapon(nextWeapon: startWeapon);
         }
-
         private void Update()
         {
+            if (!currentEquipmentWeapon) return;
+
             //Aim
-            if (currentEquipmentWeapon)
+            AimingWeapon(inputProvider.Aim);
+
+            //Shoot
+            switch (currentEquipmentWeapon.GetWeaponShootType)
             {
-                AimingWeapon(inputProvider.Aim);
+                case WeaponShootType.Manual:
+                    if (inputProvider.Fire)
+                    {
+                        currentEquipmentWeapon.TryShot();
+                    }
+                    break;
+                case WeaponShootType.Automatic:
+                    if (inputProvider.HeldFire)
+                    {
+                        currentEquipmentWeapon.TryShot();
+                    }
+                    break;
             }
         }
 
@@ -98,6 +166,8 @@ namespace Musashi.Player
                     .OnComplete(() =>
                     {
                         currentEquipmentWeapon.gameObject.SetActive(false);
+                        equipmentWeaponInfo.ResetInfo();
+
                         nextWeapon.gameObject.SetActive(true);
                     });
             }
@@ -110,8 +180,9 @@ namespace Musashi.Player
                     {
                         callBack.Invoke();
                     }
+                    currentEquipmentWeapon = nextWeapon;
+                    equipmentWeaponInfo.SetCurrentEquipmentWeaponInfo(currentEquipmentWeapon);
                 });
-            currentEquipmentWeapon = nextWeapon;
         }
     }
 }

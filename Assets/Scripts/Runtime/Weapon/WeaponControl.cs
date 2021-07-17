@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Musashi.Item;
 using Musashi.Player;
+using UnityEngine.UI;
+using System;
 
 namespace Musashi.Weapon
 {
@@ -11,16 +13,16 @@ namespace Musashi.Weapon
         ShotGun, HandGun, AssaultRifle,
     }
 
+    public enum WeaponShootType
+    {
+        Manual, Automatic,
+    }
+
     /// <summary>
     /// プレイヤーの入力処理に応じて武器を制御するクラス
     /// </summary>
     public class WeaponControl : MonoBehaviour, IPoolUser<WeaponControl>
     {
-        private enum WeaponShootType
-        {
-            Manual, Automatic,
-        }
-
         #region Field
 
         #region Gun settings from WeaponSettingSOData 
@@ -33,7 +35,7 @@ namespace Musashi.Weapon
         private float shotDamage;
         private float shotPower;
         private float fireRate;
-        private Vector2 recoill;
+        // private Vector2 recoill;
         private int ammmoAndMuzzleFlashPoolsize;
         //effects
         private ParticleSystem muzzleFalsh;
@@ -51,6 +53,8 @@ namespace Musashi.Weapon
         [SerializeField] WeaponSettingSOData weaponSetting;
         [Header("Manual is single shot. Automatic is rapid fire")]
         [SerializeField] WeaponShootType weaponShootType;
+        [Header("Display weapon icon on UI")]
+        [SerializeField] Image weaponIcon;
         [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
         [SerializeField] Transform poolObjectParent;
@@ -58,19 +62,21 @@ namespace Musashi.Weapon
         [SerializeField] ReticleAnimation reticle;
         [SerializeField] HitVFXManager hitVFXManager;
 
-        int currentAmmo;
+        /// <summary>If Ammo number changed, Invoke this events</summary>
+        public event Action OnChangedAmmo;
+
+        int currentAmmo = 0;
         float lastTimeShot = Mathf.NegativeInfinity;
         bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
-        bool isAiming = false;
 
         PoolObjectManager poolObjectManager;
-        //InputProvider playerInput;
-        //PlayerCharacterStateMchine playerCharacter;
         Animator animator;
         AudioSource audioSource;
         #endregion
 
         #region Property
+        public Image GetIcon => weaponIcon;
+        public WeaponShootType GetWeaponShootType => weaponShootType;
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
         {
@@ -83,9 +89,9 @@ namespace Musashi.Weapon
                     currentAmmo = maxAmmo;
                 }
 
-                if (ItemInventory.Instance)
+                if (OnChangedAmmo != null)
                 {
-                    ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
+                    OnChangedAmmo.Invoke();
                 }
             }
         }
@@ -95,9 +101,6 @@ namespace Musashi.Weapon
         private void Awake()
         {
             SetDataFromWeaponSettingSOData();
-            //playerInput = transform.GetComponentInParent<InputProvider>();
-            //playerCharacter = transform.GetComponentInParent<PlayerCharacterStateMchine>();
-   
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
 
@@ -106,10 +109,7 @@ namespace Musashi.Weapon
                 muzzle = this.transform;
             }
 
-            if (!poolObjectParent)
-            {
-                poolObjectParent = this.transform;
-            }
+            poolObjectParent = GameObject.FindGameObjectWithTag("ObjectPoolParent").transform;
 
             currentAmmo = maxAmmo;
 
@@ -142,7 +142,7 @@ namespace Musashi.Weapon
             shotDamage = weaponSetting.shotDamage;
             shotPower = weaponSetting.shotPower;
             fireRate = weaponSetting.fireRate;
-            recoill = weaponSetting.recoil;
+            //recoill = weaponSetting.recoil;
             //set aim settings
             AimCameraFOV = weaponSetting.aimCameraFOV;
             AimSpeed = weaponSetting.aimSpeed;
@@ -281,71 +281,7 @@ namespace Musashi.Weapon
             animator.Play("Idle");
         }
 
-        //void Update()
-        //{
-        //    if (!canAction) return;
-
-        //    if (playerInput.Reload)
-        //    {
-        //        CanReload();
-        //    }
-
-        //    if (playerInput.Aim)
-        //    {
-        //        isAiming = true;
-        //    }
-        //    else
-        //    {
-        //        isAiming = false;
-        //    }
-
-        //    SetAim();
-
-        //    switch (weaponShootType)
-        //    {
-        //        case WeaponShootType.Manual:
-        //            if (playerInput.Fire)
-        //            {
-        //                TryShot();
-        //            }
-        //            break;
-        //        case WeaponShootType.Automatic:
-        //            if (playerInput.HeldFire)
-        //            {
-        //                TryShot();
-        //            }
-        //            break;
-        //    }
-        //}
-
-        //void SetAim()
-        //{
-        //    if (animator)
-        //    {
-        //        animator.SetBool("Aim", isAiming);
-        //    }
-
-        //    if (playerCharacter)
-        //    {
-        //        playerCharacter.SetFovOfCamera(isAiming, aimCameraFOV, aimSpeed);
-        //    }
-
-        //    if (isAiming)
-        //    {
-        //        if (reticle)
-        //        {
-        //            reticle.gameObject.SetActive(false);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (reticle)
-        //        {
-        //            reticle.gameObject.SetActive(true);
-        //        }
-        //    }
-        //}
-
+       
         public void TryShot()
         {
             if (CurrentAmmo < 1)
@@ -398,27 +334,27 @@ namespace Musashi.Weapon
 
         }
 
-        public void OnEnable()
-        {
-            if (ItemInventory.Instance)
-            {
-                ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
-            }
+        //public void OnEnable()
+        //{
+        //    if (ItemInventory.Instance)
+        //    {
+        //        ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
+        //    }
 
-            if (reticle)
-            {
-                reticle.IsDefult = false;
-            }
-        }
+        //    if (reticle)
+        //    {
+        //        reticle.IsDefult = false;
+        //    }
+        //}
 
-        public void OnDisable()
-        {
+        //public void OnDisable()
+        //{
 
-            if (reticle)
-            {
-                reticle.IsDefult = true;
-            }
-        }
+        //    if (reticle)
+        //    {
+        //        reticle.IsDefult = true;
+        //    }
+        //}
         #endregion
     }
 }

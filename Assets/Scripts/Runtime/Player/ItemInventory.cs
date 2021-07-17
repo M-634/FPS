@@ -29,18 +29,18 @@ namespace Musashi.Item
         [Header("0:hundGun 1:shutGun 2: Rifle")]
         [SerializeField] WeaponActiveControl[] weaponActive;
 
-        [Header("Equipmet weapon info")]
-        [SerializeField] GameObject equipmentWeaponInfo;
-        [SerializeField] Image ammoCounterSllider;
-        [SerializeField] Image equipmentWeaponIcon;
-        [SerializeField] TextMeshProUGUI ammoCounterText;
+        //[Header("Equipmet weapon info")]
+        //[SerializeField] GameObject equipmentWeaponInfo;
+        //[SerializeField] Image ammoCounterSllider;
+        //[SerializeField] Image equipmentWeaponIcon;
+        //[SerializeField] TextMeshProUGUI ammoCounterText;
 
         int currentWeaponEquipmentIndex = -1;
 
         [Header("Ammo in inventory")]
         [SerializeField] bool testScene;
         [SerializeField] int maxAmmoInInventory = 999;
-        [SerializeField] TextMeshProUGUI ammoStackNumberInInventoryText;
+        //[SerializeField] TextMeshProUGUI ammoStackNumberInInventoryText;
         int sumNumberOfAmmoInInventory;
         public int SumNumberOfAmmoInInventory
         {
@@ -48,10 +48,10 @@ namespace Musashi.Item
             private set
             {
                 sumNumberOfAmmoInInventory = value;
-                if (ammoStackNumberInInventoryText)
-                {
-                    ammoStackNumberInInventoryText.text = sumNumberOfAmmoInInventory.ToString() + "/" + maxAmmoInInventory.ToString();
-                }
+                //if (ammoStackNumberInInventoryText)
+                //{
+                //    ammoStackNumberInInventoryText.text = sumNumberOfAmmoInInventory.ToString() + "/" + maxAmmoInInventory.ToString();
+                //}
             }
         }
 
@@ -59,8 +59,8 @@ namespace Musashi.Item
 
         private void Start()
         {
-            stockHealItems = new Queue<HealItem>();
-            input = GetComponentInParent<InputProvider>();
+            //stockHealItems = new Queue<HealItem>();
+            //input = GetComponentInParent<InputProvider>();
 
             if (testScene)
             {
@@ -71,15 +71,15 @@ namespace Musashi.Item
                 SumNumberOfAmmoInInventory = 0;
             }
 
-            for (int i = 0; i < weaponSlots.Length; i++)
-            {
-                weaponSlots[i].StackSize.text = weaponActive[i].Control.CurrentAmmo.ToString() + " / " + weaponActive[i].Control.MaxAmmo.ToString();
-            }
+            //for (int i = 0; i < weaponSlots.Length; i++)
+            //{
+            //    weaponSlots[i].StackSize.text = weaponActive[i].Control.CurrentAmmo.ToString() + " / " + weaponActive[i].Control.MaxAmmo.ToString();
+            //}
 
-            if (equipmentWeaponInfo.activeSelf)
-            {
-                equipmentWeaponInfo.SetActive(false);
-            }
+            //if (equipmentWeaponInfo.activeSelf)
+            //{
+            //    equipmentWeaponInfo.SetActive(false);
+            //}
         }
 
         /// <summary>
@@ -115,10 +115,10 @@ namespace Musashi.Item
                     return true;
                 }
             }
-            if (getItem.ItemType == ItemType.AmmoBox)
-            {
-                return CanStackItem(getItem, ref sumNumberOfAmmoInInventory, ammoStackNumberInInventoryText);
-            }
+            //if (getItem.ItemType == ItemType.AmmoBox)
+            //{
+            //    return CanStackItem(getItem, ref sumNumberOfAmmoInInventory, ammoStackNumberInInventoryText);
+            //}
             return false;
         }
 
@@ -146,33 +146,33 @@ namespace Musashi.Item
             return res;
         }
 
-        private void Update()
-        {
-            if (input.UseHealItem)
-            {
-                UseHealthItem();
-            }
+        //private void Update()
+        //{
+        //    if (input.UseHealItem)
+        //    {
+        //        UseHealthItem();
+        //    }
 
-            ChangeWeapon(input.SwichWeaponID);
-        }
+        //    ChangeWeapon(input.SwichWeaponID);
+        //}
 
-        private void ChangeWeapon(int index)
-        {
-            if (index == -1) return;
+        //private void ChangeWeapon(int index)
+        //{
+        //    if (index == -1) return;
 
-            //remove equipment 
-            if (currentWeaponEquipmentIndex != -1)
-            {
-                weaponActive[currentWeaponEquipmentIndex].SetActive(false);
-                weaponSlots[currentWeaponEquipmentIndex].MissingSelection();
-            }
-            currentWeaponEquipmentIndex = index;
-            equipmentWeaponInfo.SetActive(true);
+        //    //remove equipment 
+        //    if (currentWeaponEquipmentIndex != -1)
+        //    {
+        //        weaponActive[currentWeaponEquipmentIndex].SetActive(false);
+        //        weaponSlots[currentWeaponEquipmentIndex].MissingSelection();
+        //    }
+        //    currentWeaponEquipmentIndex = index;
+        //    equipmentWeaponInfo.SetActive(true);
 
-            weaponActive[currentWeaponEquipmentIndex].SetActive(true);
-            weaponSlots[currentWeaponEquipmentIndex].OnSelected();
-            equipmentWeaponIcon.sprite = weaponSlots[currentWeaponEquipmentIndex].Icon.sprite;
-        }
+        //    weaponActive[currentWeaponEquipmentIndex].SetActive(true);
+        //    weaponSlots[currentWeaponEquipmentIndex].OnSelected();
+        //    equipmentWeaponIcon.sprite = weaponSlots[currentWeaponEquipmentIndex].Icon.sprite;
+        //}
 
         public void UseHealthItem()
         {
@@ -259,16 +259,16 @@ namespace Musashi.Item
         /// </summary>
         /// <param name="currentAmmo"></param>
         /// <param name="maxAmmo"></param>
-        public void DisplayEquipmentWeaponInfo(int currentAmmo, int maxAmmo)
-        {
-            equipmentWeaponInfo.SetActive(true);
-            ammoCounterText.text = currentAmmo.ToString();
-            ammoCounterSllider.fillAmount = (float)currentAmmo / maxAmmo;
-            if (currentWeaponEquipmentIndex != -1)
-            {
-                weaponSlots[currentWeaponEquipmentIndex].StackSize.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
-            }
-        }
+        //public void DisplayEquipmentWeaponInfo(int currentAmmo, int maxAmmo)
+        //{
+        //    equipmentWeaponInfo.SetActive(true);
+        //    ammoCounterText.text = currentAmmo.ToString();
+        //    ammoCounterSllider.fillAmount = (float)currentAmmo / maxAmmo;
+        //    if (currentWeaponEquipmentIndex != -1)
+        //    {
+        //        weaponSlots[currentWeaponEquipmentIndex].StackSize.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
+        //    }
+        //}
         #endregion
 
     }
