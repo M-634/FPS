@@ -30,24 +30,24 @@ namespace Musashi.Item
         {
             SetItemDataFromScriptableObject();
 
-            OnPickUpEvent += (Transform player) =>
-            {
-                //var canGet = player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
-                var canGet = ItemInventory.Instance.CanGetItem(this);
+            //OnPickUpEvent += (Transform player) =>
+            //{
+            //    //var canGet = player.GetComponentInChildren<ItemInventory>().CanGetItem(this);
+            //    var canGet = PlayerItemInventory.Instance.CanGetItem(this);
 
-                if (canGet)
-                {
-                    GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
-                    if(canUseItem)
-                    {
-                        gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        Destroy(gameObject);
-                    }
-                }
-            };
+            //    if (canGet)
+            //    {
+            //        GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+            //        if(canUseItem)
+            //        {
+            //            gameObject.SetActive(false);
+            //        }
+            //        else
+            //        {
+            //            Destroy(gameObject);
+            //        }
+            //    }
+            //};
         }
 
         private void SetItemDataFromScriptableObject()

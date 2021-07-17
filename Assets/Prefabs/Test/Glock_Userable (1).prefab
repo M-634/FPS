@@ -2103,9 +2103,9 @@ MonoBehaviour:
   weaponType: 1
   weaponSetting: {fileID: 11400000, guid: 6b3c2cae97f737d4db15d0692d02b242, type: 2}
   weaponShootType: 0
+  weaponIcon: {fileID: 0}
   muzzle: {fileID: 2829662098685297405}
   poolObjectParent: {fileID: 0}
-  reticle: {fileID: 0}
   hitVFXManager: {fileID: 0}
 --- !u!82 &2829662099362326772
 AudioSource:

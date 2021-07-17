@@ -3544,31 +3544,6 @@ RectTransform:
   m_AnchoredPosition: {x: -176.59998, y: 0}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &807937219705384900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5659815656372321523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2f2d88e28c2c754b970947c9c15b2d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemDataBase: {fileID: 11400000, guid: c1513bb49e6915f45a8c1ec633dc3163, type: 2}
-  maxHealKitNumberInInventory: 10
-  healItemStackNumberText: {fileID: 807937218683448751}
-  weaponSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  weaponActive:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  testScene: 1
-  maxAmmoInInventory: 999
 --- !u!224 &858342676045590628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5250,6 +5225,7 @@ GameObject:
   - component: {fileID: 3536569040636429404}
   - component: {fileID: 3536569040636429396}
   - component: {fileID: 3536569040636429399}
+  - component: {fileID: 3536569040636429400}
   - component: {fileID: 3536569040636429403}
   m_Layer: 10
   m_Name: FPSPlayer_ver4
@@ -5315,11 +5291,27 @@ MonoBehaviour:
     m_RotationOrder: 4
   weaponUpDuration: 0.4
   weaponDownDuration: 0.4
-  equipmentWeaponInfo:
-    equipmentWeaponInfoUI: {fileID: 7564349250874531232}
-    equipmentWeaponIcon: {fileID: 807937219086488175}
-    ammoCounterSllider: {fileID: 807937219074124266}
-    ammoCounterText: {fileID: 780448476258512976}
+  equipmentWeaponInfoUI: {fileID: 7564349250874531232}
+  equipmentWeaponIcon: {fileID: 807937219086488175}
+  ammoCounterSllider: {fileID: 807937219074124266}
+  ammoCounterText: {fileID: 780448476258512976}
+--- !u!114 &3536569040636429400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3536569040636429397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f2d88e28c2c754b970947c9c15b2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDataBase: {fileID: 11400000, guid: c1513bb49e6915f45a8c1ec633dc3163, type: 2}
+  maxHealKitNumberInInventory: 10
+  healItemStackNumberText: {fileID: 807937218683448751}
+  testScene: 1
+  limmitAmmoNumberInInventory: 999
 --- !u!82 &3536569040636429403
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6972,9 +6964,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2947976055611051017}
   - component: {fileID: 6715598264011991608}
-  - component: {fileID: 807937219705384900}
   m_Layer: 5
-  m_Name: Inventory
+  m_Name: PlayerInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -8,65 +8,16 @@ using Musashi.Item;
 using UnityEngine.UI;
 using TMPro;
 
-namespace Musashi.Weapon
-{
-    /// <summary>
-    /// 装備中の武器情報をUIに表示するのに必要な変数を用意し、
-    /// それらにまつわる処理を制御するクラス
-    /// </summary>
-    [System.Serializable]
-    public class EquipmentWeaponInfo
-    {
-        [SerializeField] GameObject equipmentWeaponInfoUI;
-        [SerializeField] Image equipmentWeaponIcon = default;
-        [SerializeField] Image ammoCounterSllider = default;
-        [SerializeField] TextMeshProUGUI ammoCounterText = default;
-
-        WeaponControl weapon;
-        public GameObject GetInfoUI => equipmentWeaponInfoUI;
-
-        public void SetCurrentEquipmentWeaponInfo(WeaponControl currentEquipmentWeapon)
-        {
-            weapon = currentEquipmentWeapon;
-            UpdateAmmmoCounter();
-            weapon.OnChangedAmmo += UpdateAmmmoCounter;
-
-            if (weapon.GetIcon)
-            {
-                equipmentWeaponIcon.sprite = weapon.GetIcon.sprite;
-            }
-            GetInfoUI.SetActive(true);
-        }
-
-        private void UpdateAmmmoCounter()
-        {
-            ammoCounterText.text = weapon.CurrentAmmo.ToString() + " | " + ItemInventory.Instance.SumNumberOfAmmoInInventory.ToString();
-            ammoCounterSllider.fillAmount = (float)weapon.CurrentAmmo / weapon.MaxAmmo;
-        }
-
-        public void ResetInfo()
-        {
-            weapon.OnChangedAmmo -= UpdateAmmmoCounter;
-
-            equipmentWeaponIcon.sprite = null;
-            ammoCounterSllider.fillAmount = 0f;
-            ammoCounterText.text = "";
-
-            weapon = null;
-            GetInfoUI.SetActive(false);
-        }
-    }
-}
 
 namespace Musashi.Player
 {
-    /// memo:段数管理、エイム時のカメラFOVを変えるのもこのクラス内で行い依存関係を解消させる
     /// <summary>
     /// プレイヤーが扱う武器を制作するクラス。
     /// </summary>
-    [RequireComponent(typeof(InputProvider), typeof(PlayerCharacterStateMchine))]
+    [RequireComponent(typeof(PlayerInputProvider), typeof(PlayerCharacterStateMchine))]
     public class PlayerWeaponManager : MonoBehaviour
     {
+        #region Field
         [SerializeField] WeaponControl startDefultWeapon;
         [SerializeField] Camera weaponCamera;
 
@@ -76,26 +27,140 @@ namespace Musashi.Player
         [SerializeField] Transform downWeaponPos;
         [SerializeField] Transform weaponParentSocket;
 
+        [Header("set aiming propeties")]
         [SerializeField] AnimationCurve weaponChangeCorrectiveCurvel;
         [SerializeField] float weaponUpDuration = 1f;
         [SerializeField] float weaponDownDuration = 1f;
 
-        [SerializeField] EquipmentWeaponInfo equipmentWeaponInfo = default;
-
-        InputProvider inputProvider;
-        PlayerCharacterStateMchine playerCharacter;
-
-        WeaponControl currentEquipmentWeapon;
+        [Header("current equipment weapon information")]
+        [SerializeField] GameObject equipmentWeaponInfoUI;
+        [SerializeField] Image equipmentWeaponIcon = default;
+        [SerializeField] Image ammoCounterSllider = default;
+        [SerializeField] TextMeshProUGUI ammoCounterText = default;
 
         float targetAimFov;
         Vector3 targetAimPos;
 
+        PlayerInputProvider inputProvider;
+        PlayerCharacterStateMchine playerCharacter;
+        PlayerItemInventory inventory;
+
+        private WeaponControl currentEquipmentWeapon;
+        #endregion
+
+        #region Properties
+        public WeaponControl CurrentEquipmentWeapon
+        { 
+            get => currentEquipmentWeapon; 
+            private set
+            {
+                if(value == null)
+                {
+                    currentEquipmentWeapon = null;
+                    //remove each events
+                    currentEquipmentWeapon.CanReloadAmmo -= CurrentEquipmentWeapon_CanReloadAmmo;
+                    currentEquipmentWeapon.HaveEndedReloadingAmmo -= CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
+                    currentEquipmentWeapon.OnChangedAmmo -= CurrentEquipmentWeapon_OnChangedAmmo;
+                    return;
+                }
+                currentEquipmentWeapon = value;
+                //set each events;
+                currentEquipmentWeapon.CanReloadAmmo += CurrentEquipmentWeapon_CanReloadAmmo;
+                currentEquipmentWeapon.HaveEndedReloadingAmmo += CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
+                currentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
+            }
+        }
+        #endregion
+
+        #region  Events Methos
+
+        /// <summary>
+        /// リロードが完了したらインベントリ内の段数を考慮し、 実際にリロードできる段数を返す関数。
+        /// </summary>
+        private int CurrentEquipmentWeapon_HaveEndedReloadingAmmo()
+        {
+            int diff = currentEquipmentWeapon.MaxAmmo - currentEquipmentWeapon.CurrentAmmo;
+
+            if (inventory.SumNumberOfAmmoInInventory - diff >= 0)
+            {
+                inventory.SumNumberOfAmmoInInventory -= diff;
+                return currentEquipmentWeapon.MaxAmmo;
+            }
+
+            int temp = currentEquipmentWeapon.CurrentAmmo + inventory.SumNumberOfAmmoInInventory;
+            inventory.SumNumberOfAmmoInInventory = 0;
+            return temp;
+        }
+
+        /// <summary>
+        /// リロードできるかどうか判定する関数
+        /// </summary>
+        private bool CurrentEquipmentWeapon_CanReloadAmmo()
+        {
+            if (inventory.SumNumberOfAmmoInInventory > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 装備中の武器の銃弾が変化するたびに呼ばれる関数
+        /// </summary>
+        private void CurrentEquipmentWeapon_OnChangedAmmo()
+        {
+            ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumNumberOfAmmoInInventory.ToString();
+            ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
+        }
+        #endregion
+
         private void Start()
         {
-            inputProvider = GetComponent<InputProvider>();
+            inputProvider = GetComponent<PlayerInputProvider>();
             playerCharacter = GetComponent<PlayerCharacterStateMchine>();
+            inventory = GetComponent<PlayerItemInventory>();
             InitializeWeapon();
         }
+
+        private void Update()
+        {
+            if (!CurrentEquipmentWeapon) return;
+
+            InteractiveShooterTypeWeapon();
+        }
+
+        #region Utility Methods
+        private void InteractiveShooterTypeWeapon()
+        {
+            if (!CurrentEquipmentWeapon.CanInputAction) return;
+
+            //Aim
+            AimingWeapon(inputProvider.Aim);
+
+            //Shoot
+            switch (CurrentEquipmentWeapon.GetWeaponShootType)
+            {
+                case WeaponShootType.Manual:
+                    if (inputProvider.Fire)
+                    {
+                        CurrentEquipmentWeapon.TryShot();
+                    }
+                    break;
+                case WeaponShootType.Automatic:
+                    if (inputProvider.HeldFire)
+                    {
+                        CurrentEquipmentWeapon.TryShot();
+                    }
+                    break;
+            }
+
+            //Reload
+            if (inputProvider.Reload)
+            {
+                CurrentEquipmentWeapon.StartReload();
+            }
+        }
+
         private void InitializeWeapon()
         {
             weaponParentSocket.localPosition = downWeaponPos.localPosition;
@@ -103,30 +168,6 @@ namespace Musashi.Player
             startWeapon.transform.localPosition = Vector3.zero;
             startWeapon.transform.rotation = weaponParentSocket.rotation;
             ChangeWeapon(nextWeapon: startWeapon);
-        }
-        private void Update()
-        {
-            if (!currentEquipmentWeapon) return;
-
-            //Aim
-            AimingWeapon(inputProvider.Aim);
-
-            //Shoot
-            switch (currentEquipmentWeapon.GetWeaponShootType)
-            {
-                case WeaponShootType.Manual:
-                    if (inputProvider.Fire)
-                    {
-                        currentEquipmentWeapon.TryShot();
-                    }
-                    break;
-                case WeaponShootType.Automatic:
-                    if (inputProvider.HeldFire)
-                    {
-                        currentEquipmentWeapon.TryShot();
-                    }
-                    break;
-            }
         }
 
         /// <summary>
@@ -137,7 +178,7 @@ namespace Musashi.Player
         {
             if (isAiming)
             {
-                targetAimFov = currentEquipmentWeapon.AimCameraFOV;
+                targetAimFov = CurrentEquipmentWeapon.AimCameraFOV;
                 targetAimPos = aimmingWeaponPos.localPosition;
             }
             else
@@ -145,7 +186,7 @@ namespace Musashi.Player
                 targetAimFov = playerCharacter.DefultFieldOfView;
                 targetAimPos = defultWeaponPos.localPosition;
             }
-            float aimSpeed = currentEquipmentWeapon.AimSpeed;
+            float aimSpeed = CurrentEquipmentWeapon.AimSpeed;
 
             //set camera
             playerCharacter.SetFovOfCamera(isAiming, targetAimFov, aimSpeed);
@@ -159,15 +200,14 @@ namespace Musashi.Player
         /// </summary>
         private void ChangeWeapon(WeaponControl nextWeapon, UnityAction callBack = null)
         {
-            if (currentEquipmentWeapon)
+            if (CurrentEquipmentWeapon)
             {
                 weaponParentSocket.DOLocalMove(downWeaponPos.localPosition, weaponDownDuration)
                     .SetEase(weaponChangeCorrectiveCurvel)
                     .OnComplete(() =>
                     {
-                        currentEquipmentWeapon.gameObject.SetActive(false);
-                        equipmentWeaponInfo.ResetInfo();
-
+                        CurrentEquipmentWeapon.gameObject.SetActive(false);
+                        ResetEquipmentWeaponInfo();
                         nextWeapon.gameObject.SetActive(true);
                     });
             }
@@ -180,9 +220,40 @@ namespace Musashi.Player
                     {
                         callBack.Invoke();
                     }
-                    currentEquipmentWeapon = nextWeapon;
-                    equipmentWeaponInfo.SetCurrentEquipmentWeaponInfo(currentEquipmentWeapon);
+                    CurrentEquipmentWeapon = nextWeapon;
+                    SetEquipmentWeaponInfo();
                 });
         }
+
+        /// <summary>
+        /// 装備中の武器情報をUIに表示する関数
+        /// </summary>
+        public void SetEquipmentWeaponInfo()
+        {
+            CurrentEquipmentWeapon_OnChangedAmmo();
+            //CurrentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
+
+            if (CurrentEquipmentWeapon.GetIcon)
+            {
+                equipmentWeaponIcon.sprite = CurrentEquipmentWeapon.GetIcon.sprite;
+            }
+            equipmentWeaponInfoUI.SetActive(true);
+        }
+
+        /// <summary>
+        /// 装備中の武器情報をリセットする関数
+        /// </summary>
+        public void ResetEquipmentWeaponInfo()
+        {
+            //CurrentEquipmentWeapon.OnChangedAmmo -= CurrentEquipmentWeapon_OnChangedAmmo;
+
+            equipmentWeaponIcon.sprite = null;
+            ammoCounterSllider.fillAmount = 0f;
+            ammoCounterText.text = "";
+
+            CurrentEquipmentWeapon = null;
+            equipmentWeaponInfoUI.SetActive(false);
+        }
+        #endregion
     }
 }

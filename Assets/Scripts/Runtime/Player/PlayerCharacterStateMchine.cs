@@ -8,7 +8,7 @@ namespace Musashi.Player
     /// プレイヤーの動きをステートパターンで制御するクラス。
     /// リファレンス：タイタンフォール２。APEX
     /// </summary>
-    [RequireComponent(typeof(CharacterController),typeof(InputProvider))]
+    [RequireComponent(typeof(CharacterController),typeof(PlayerInputProvider))]
     public partial class PlayerCharacterStateMchine : MonoBehaviour
     {
         #region SerializeFields 
@@ -90,7 +90,7 @@ namespace Musashi.Player
         Vector3 groundNormal;
         Vector3 characterVelocity;
         CharacterController controller;
-        InputProvider inputProvider;
+        PlayerInputProvider inputProvider;
         AudioSource audioSource;
         StateMachine<PlayerCharacterStateMchine> stateMachine;
         #endregion
@@ -107,7 +107,7 @@ namespace Musashi.Player
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
         public float CameraRotaionMuliplier => isAiming ? GameManager.Instance.Configure.AimingRotaionMultipiler : 1f;
-        public float CameraSensitivity => InputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
+        public float CameraSensitivity => PlayerInputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
         #endregion
 
         #region State properties
@@ -125,7 +125,7 @@ namespace Musashi.Player
                 playerCamera = Camera.main;
             }
             //inputProvider = GetComponentInParent<InputProvider>();
-            inputProvider = GetComponent<InputProvider>();
+            inputProvider = GetComponent<PlayerInputProvider>();
             controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
 

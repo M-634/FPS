@@ -12,12 +12,12 @@ namespace Musashi
         [SerializeField] LayerMask interactiveLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
-        InputProvider inputProvider;
+        PlayerInputProvider inputProvider;
         RaycastHit hit;
 
         private void Start()
         {
-            inputProvider = GetComponentInParent<InputProvider>();
+            inputProvider = GetComponentInParent<PlayerInputProvider>();
         }
 
         private void Update()//コルーチンに変える

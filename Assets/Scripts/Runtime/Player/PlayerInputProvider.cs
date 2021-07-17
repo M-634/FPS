@@ -9,7 +9,7 @@ namespace Musashi
     /// プレイヤーの入力を管理するクラス
     /// プレイヤーオブジェット全ての親オブジェットにアタッチすること
     /// </summary>
-    public class InputProvider : MonoBehaviour
+    public class PlayerInputProvider : MonoBehaviour
     {
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
