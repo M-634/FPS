@@ -31,9 +31,7 @@ namespace Musashi.Weapon
         public string weaponName;
         [HideInInspector]
         public WeaponType weaponType;
-        //Main settins
-        private float shotDamage;
-        private float shotPower;
+
         private float fireRate;
         // private Vector2 recoill;
         private int ammmoAndMuzzleFlashPoolsize;
@@ -41,8 +39,10 @@ namespace Musashi.Weapon
         private ParticleSystem muzzleFalsh;
         private AudioClip shotSFX, reloadSFX, emptySFX;
         private AudioClip shotgunLoadingSFX;
-        //ammo settings
-        private BulletControl bullet;
+        //Projectile settings
+        [SerializeField, HideInInspector]
+        ObjectPoolingProjectileInfo projectileInfo;
+        private ProjectileControl projectilePrefab;
         private int maxAmmo;
         //Properties
         public float AimCameraFOV { get; private set; }
@@ -139,16 +139,19 @@ namespace Musashi.Weapon
             {
                 shotgunLoadingSFX = weaponSetting.shotgunLoadingSFX;
             }
-            //set weapon statas
-            shotDamage = weaponSetting.shotDamage;
-            shotPower = weaponSetting.shotPower;
+            //set projectile statas
+            projectileInfo.damage = weaponSetting.shotDamage;
+            projectileInfo.power = weaponSetting.shotPower;
+            projectileInfo.lifeTime = weaponSetting.projectileLifeTime;
+            projectileInfo.muzzle = this.muzzle;
+            //weapon statas
             fireRate = weaponSetting.fireRate;
             //recoill = weaponSetting.recoil;
             //set aim settings
             AimCameraFOV = weaponSetting.aimCameraFOV;
             AimSpeed = weaponSetting.aimSpeed;
             //set ammo settings;
-            bullet = weaponSetting.bullet;
+            projectilePrefab = weaponSetting.projectilePrefab;
             maxAmmo = weaponSetting.maxAmmo;
             //set pool size
             ammmoAndMuzzleFlashPoolsize = weaponSetting.ammoAndMuzzleFlashPoolSize;
@@ -167,13 +170,14 @@ namespace Musashi.Weapon
         {
             var poolObj = poolObjectManager.InstantiatePoolObj();
 
-            var b = Instantiate(bullet, poolObjectParent);
+            var p = Instantiate(projectilePrefab, poolObjectParent);
             var mF = Instantiate(muzzleFalsh, poolObjectParent);
 
-            poolObj.AddObj(b.gameObject);
+            p.SetProjectileInfo(projectileInfo);
+
+            poolObj.AddObj(p.gameObject);
             poolObj.AddObj(mF.gameObject);
 
-            b.SetInfo(shotPower, shotDamage, hitVFXManager);
             poolObj.SetActiveAll(false);
             return poolObj;
         }

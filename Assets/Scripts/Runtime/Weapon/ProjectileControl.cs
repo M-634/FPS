@@ -40,9 +40,9 @@ namespace Musashi.Weapon
             if (projectile != null)
             {
                 prevPos = transform.position;
-                this.transform.forward = projectile.Muzzle.forward;
-                rb.velocity = projectile.Muzzle.forward * projectile.Power;
-                gameObject.SetActive(false, projectile.LifeTime);
+                this.transform.forward = projectile.muzzle.forward;
+                rb.velocity = projectile.muzzle.forward * projectile.power;
+                gameObject.DelaySetActive(false, projectile.lifeTime);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Musashi.Weapon
                 {
                     if (hits[i].collider.TryGetComponent(out IDamageable target))
                     {
-                        target.OnDamage(projectile.Damage);
+                        target.OnDamage(projectile.damage);
                         gameObject.SetActive(false);
                         return;
                         //var type = target.GetTargetType();

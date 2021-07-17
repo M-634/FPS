@@ -34,9 +34,9 @@ namespace Musashi.Weapon
         public float aimSpeed;
 
         [Header("Ammo Settings")]
-        public BulletControl bullet;
+        public ProjectileControl projectilePrefab;
+        public float projectileLifeTime;
         public int maxAmmo;
-
 
         [Header("Setting Pool Size")]
         [Range(1,100)]
