@@ -34,8 +34,6 @@ namespace Musashi.Weapon
         private float shotPower;
         private float fireRate;
         private Vector2 recoill;
-        private float aimCameraFOV;
-        private float aimSpeed;
         private int ammmoAndMuzzleFlashPoolsize;
         //effects
         private ParticleSystem muzzleFalsh;
@@ -44,6 +42,9 @@ namespace Musashi.Weapon
         //ammo settings
         private BulletControl bullet;
         private int maxAmmo;
+        //Properties
+        public float AimCameraFOV { get; private set; }
+        public float AimSpeed { get; private set; }
         #endregion
 
         [Header("Reference pick up weapon from Id")]
@@ -63,8 +64,8 @@ namespace Musashi.Weapon
         bool isAiming = false;
 
         PoolObjectManager poolObjectManager;
-        InputProvider playerInput;
-        PlayerCharacterStateMchine playerCharacter;
+        //InputProvider playerInput;
+        //PlayerCharacterStateMchine playerCharacter;
         Animator animator;
         AudioSource audioSource;
         #endregion
@@ -94,8 +95,8 @@ namespace Musashi.Weapon
         private void Awake()
         {
             SetDataFromWeaponSettingSOData();
-            playerInput = transform.GetComponentInParent<InputProvider>();
-            playerCharacter = transform.GetComponentInParent<PlayerCharacterStateMchine>();
+            //playerInput = transform.GetComponentInParent<InputProvider>();
+            //playerCharacter = transform.GetComponentInParent<PlayerCharacterStateMchine>();
    
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
@@ -143,8 +144,8 @@ namespace Musashi.Weapon
             fireRate = weaponSetting.fireRate;
             recoill = weaponSetting.recoil;
             //set aim settings
-            aimCameraFOV = weaponSetting.aimCameraFOV;
-            aimSpeed = weaponSetting.aimSpeed;
+            AimCameraFOV = weaponSetting.aimCameraFOV;
+            AimSpeed = weaponSetting.aimSpeed;
             //set ammo settings;
             bullet = weaponSetting.bullet;
             maxAmmo = weaponSetting.maxAmmo;
@@ -280,72 +281,72 @@ namespace Musashi.Weapon
             animator.Play("Idle");
         }
 
-        void Update()
-        {
-            if (!canAction) return;
+        //void Update()
+        //{
+        //    if (!canAction) return;
 
-            if (playerInput.Reload)
-            {
-                CanReload();
-            }
+        //    if (playerInput.Reload)
+        //    {
+        //        CanReload();
+        //    }
 
-            if (playerInput.Aim)
-            {
-                isAiming = true;
-            }
-            else
-            {
-                isAiming = false;
-            }
+        //    if (playerInput.Aim)
+        //    {
+        //        isAiming = true;
+        //    }
+        //    else
+        //    {
+        //        isAiming = false;
+        //    }
 
-            SetAim();
+        //    SetAim();
 
-            switch (weaponShootType)
-            {
-                case WeaponShootType.Manual:
-                    if (playerInput.Fire)
-                    {
-                        TryShot();
-                    }
-                    break;
-                case WeaponShootType.Automatic:
-                    if (playerInput.HeldFire)
-                    {
-                        TryShot();
-                    }
-                    break;
-            }
-        }
+        //    switch (weaponShootType)
+        //    {
+        //        case WeaponShootType.Manual:
+        //            if (playerInput.Fire)
+        //            {
+        //                TryShot();
+        //            }
+        //            break;
+        //        case WeaponShootType.Automatic:
+        //            if (playerInput.HeldFire)
+        //            {
+        //                TryShot();
+        //            }
+        //            break;
+        //    }
+        //}
 
-        void SetAim()
-        {
-            if (animator)
-            {
-                animator.SetBool("Aim", isAiming);
-            }
+        //void SetAim()
+        //{
+        //    if (animator)
+        //    {
+        //        animator.SetBool("Aim", isAiming);
+        //    }
 
-            if (playerCharacter)
-            {
-                playerCharacter.SetFovOfCamera(isAiming, aimCameraFOV, aimSpeed);
-            }
+        //    if (playerCharacter)
+        //    {
+        //        playerCharacter.SetFovOfCamera(isAiming, aimCameraFOV, aimSpeed);
+        //    }
 
-            if (isAiming)
-            {
-                if (reticle)
-                {
-                    reticle.gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                if (reticle)
-                {
-                    reticle.gameObject.SetActive(true);
-                }
-            }
-        }
+        //    if (isAiming)
+        //    {
+        //        if (reticle)
+        //        {
+        //            reticle.gameObject.SetActive(false);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (reticle)
+        //        {
+        //            reticle.gameObject.SetActive(true);
+        //        }
+        //    }
+        //}
 
-        private void TryShot()
+        public void TryShot()
         {
             if (CurrentAmmo < 1)
             {

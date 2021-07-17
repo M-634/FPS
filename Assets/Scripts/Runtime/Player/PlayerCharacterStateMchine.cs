@@ -101,7 +101,8 @@ namespace Musashi.Player
         #endregion
 
         //ここプロパティである必要がない
-        #region Utility properties
+        #region Properties
+        public float DefultFieldOfView => defultFieldOfView;//これも設定できるようにする
         public bool IsSprinting => isGround && inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
@@ -248,16 +249,9 @@ namespace Musashi.Player
         /// </summary>
         public void SetFovOfCamera(bool isAiming, float targetFov, float fovSpeed)
         {
-            this.isAiming = isAiming;
-            if (isAiming)
-            {
-                this.targetFov = targetFov;
-            }
-            else
-            {
-                this.targetFov = defultFieldOfView; 
-            }
+            this.targetFov = targetFov;
             this.fovSpeed = fovSpeed;
+            this.isAiming = isAiming;
         }
 
         /// <summary>
