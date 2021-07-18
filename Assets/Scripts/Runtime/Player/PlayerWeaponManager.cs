@@ -7,10 +7,11 @@ using Musashi.Weapon;
 using Musashi.Item;
 using UnityEngine.UI;
 using TMPro;
-
+using System;
 
 namespace Musashi.Player
 {
+    //memo:このゲームでは、武器を捨てる機能は実装しません。プレイヤーはゲーム内に存在する武器の種類の数だけ武器を持てます。
     /// <summary>
     /// プレイヤーが扱う武器を制作するクラス。
     /// </summary>
@@ -53,6 +54,7 @@ namespace Musashi.Player
         [Tooltip("Layer to set FPS weapon gameObjects to")]
         [SerializeField] LayerMask FPSWeaponLayer;
 
+        bool isChangingWeapon;
         bool isAiming;
         float targetAimFov;
         Vector3 targetAimPos;
@@ -61,7 +63,8 @@ namespace Musashi.Player
         private Vector3 lastPlayerCharacterPosition;
         private Vector3 weaponBobLocalPosition;
 
-        readonly List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。同じ武器は持てない
+        //public : debug
+        public List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。同じ武器は持てない
         private WeaponControl currentEquipmentWeapon;
 
         PlayerInputProvider inputProvider;
@@ -90,6 +93,9 @@ namespace Musashi.Player
                 currentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
             }
         }
+
+        /// <summary>装備している武器の操作ができるかどうか判定する/// </summary>
+        public bool CanEquipmentWeaponAction => !isChangingWeapon && CurrentEquipmentWeapon != null;
         #endregion
 
         #region Private Methods
@@ -142,13 +148,30 @@ namespace Musashi.Player
 
         private void Update()
         {
-            if (!CurrentEquipmentWeapon) return;
+            if (!CanEquipmentWeaponAction) return; 
+            SwitchWeapon();
             InteractiveShooterTypeWeapon();
+        }
+
+        /// <summary>
+        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// </summary>
+        private void SwitchWeapon()
+        {
+            //test 
+           int i = inputProvider.SwichWeaponID;
+            if (i == -1 || i > weaponSlots.Count) return;
+         
+            var nextWeapon = weaponSlots[i];
+            if (nextWeapon != CurrentEquipmentWeapon)
+            {
+                ChangeWeapon(nextWeapon);
+            } 
         }
 
         private void LateUpdate()
         {
-            if (!CurrentEquipmentWeapon) return;
+           if (!CanEquipmentWeaponAction) return;
 
             UpdateAimingWeapon();
             //UpdateWeaponBob();
@@ -213,12 +236,12 @@ namespace Musashi.Player
             if (isAiming)
             {
                 targetAimFov = CurrentEquipmentWeapon.AimCameraFOV;
-                targetAimPos = aimmingWeaponPos.localPosition;
+                targetAimPos = aimmingWeaponPos.localPosition + CurrentEquipmentWeapon.GetAimLocalPositionOffset;
             }
             else
             {
                 targetAimFov = playerCharacter.DefultFieldOfView;
-                targetAimPos = defultWeaponPos.localPosition;
+                targetAimPos = defultWeaponPos.localPosition + CurrentEquipmentWeapon.GetDefultLocalPositionOffset;
             }
             float aimSpeed = CurrentEquipmentWeapon.AimSpeed;
 
@@ -267,6 +290,7 @@ namespace Musashi.Player
         /// </summary>
         private void ChangeWeapon(WeaponControl nextWeapon, UnityAction callBack = null)
         {
+            isChangingWeapon = true;
             if (CurrentEquipmentWeapon)
             {
                 weaponParentSocket.DOLocalMove(downWeaponPos.localPosition, weaponDownDuration)
@@ -274,10 +298,11 @@ namespace Musashi.Player
                      .OnComplete(() =>
                      {
                          CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
-                         nextWeapon.ShowWeapon(true);
                      });
 
             }
+
+            nextWeapon.ShowWeapon(true);
 
             weaponParentSocket.DOLocalMove(defultWeaponPos.localPosition, weaponUpDuration)
                 .SetEase(weaponChangeCorrectiveCurvel)
@@ -288,6 +313,7 @@ namespace Musashi.Player
                     {
                         callBack.Invoke();
                     }
+                    isChangingWeapon = false;
                 });
         }
 
@@ -327,10 +353,10 @@ namespace Musashi.Player
             {
                 if (w.SourcePrefab == weaponPrefab.gameObject)
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
             #endregion
 
         }
@@ -348,7 +374,7 @@ namespace Musashi.Player
 
             //instance weapon and set localPosition and rotation
             var weaponInstance = Instantiate(pickupWeaponPrefab, weaponParentSocket);
-            weaponInstance.transform.localPosition = Vector3.zero;
+            weaponInstance.transform.localPosition = Vector3.zero + weaponInstance.GetDefultLocalPositionOffset;
             weaponInstance.transform.rotation = weaponParentSocket.rotation;
 
             //set  sorcePrefab and don't active weapon

@@ -115,7 +115,7 @@ namespace Musashi.Player
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
         public float LimitGroundedMovemet => maxSpeedOnGround * sprintSpeedModifier;//地面におけるスピードの限界値
         public float CameraRotaionMuliplier => isAiming ? GameManager.Instance.Configure.AimingRotaionMultipiler : 1f;
-        public float CameraSensitivity => PlayerInputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
+        public float CameraSensitivity => inputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
         #endregion
 
 

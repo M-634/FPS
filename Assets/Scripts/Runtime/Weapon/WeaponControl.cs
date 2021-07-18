@@ -60,6 +60,9 @@ namespace Musashi.Weapon
         [SerializeField] Image weaponIcon;
         [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
+
+        [SerializeField] Vector3 defultLoaclPostionOffset;
+        [SerializeField] Vector3 aimLocalPostionOffset;
    
         /// <summary>If Ammo number changed, Invoke this events</summary>
         public event Action OnChangedAmmo;
@@ -98,10 +101,12 @@ namespace Musashi.Weapon
                 }
             }
         }
+        public bool IsWeaponActive { get; private set; }
         public Image GetIcon => weaponIcon;
         public WeaponShootType GetWeaponShootType => weaponShootType;
         public GameObject SourcePrefab { get; set; }
-        public bool IsWeaponActive { get; private set; }
+        public Vector3 GetDefultLocalPositionOffset => defultLoaclPostionOffset;
+        public Vector3 GetAimLocalPositionOffset => aimLocalPostionOffset;
 
         #endregion
 
