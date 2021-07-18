@@ -8,7 +8,7 @@ namespace Musashi.Player
     /// プレイヤーの動きをステートパターンで制御するクラス。
     /// リファレンス：タイタンフォール２。APEX
     /// </summary>
-    [RequireComponent(typeof(CharacterController),typeof(PlayerInputProvider))]
+    [RequireComponent(typeof(CharacterController), typeof(PlayerInputProvider))]
     public partial class PlayerCharacterStateMchine : MonoBehaviour
     {
         #region SerializeFields 
@@ -50,7 +50,7 @@ namespace Musashi.Player
         [SerializeField] float secondJumpModifier = 1.2f;
         [Tooltip("Time from the first jump to being able to make the second jump.")]
         [SerializeField] float firstJumpDuration = 0.1f;
-     
+
         [Header("Stance")]
         [Tooltip("Ratio (0-1) of the character height where the camera will be at")]
         [SerializeField] float cameraHeightRatio = 0.9f;
@@ -74,11 +74,12 @@ namespace Musashi.Player
         [SerializeField] AudioClip landSFX;
 
         [Space]
+        //memo : If you want to set properties by inspector. constructors's acess levele of custom state class should be private.
+        [Header("Custom State")]
         [SerializeField] PlayerWallRunState WallRunState;
         #endregion
 
         #region  Member variables
-        bool isGround;
         bool isAiming;
         bool isDushJump;//ダッシュ速度でジャンプしていたかどうか判断するフラグ。
         float fovSpeed;
@@ -87,12 +88,18 @@ namespace Musashi.Player
         float footstepDistanceCounter;
         float targetCharacterHeight;
         float lastTimeFirstJumped;
+
         Vector3 groundNormal;
         Vector3 characterVelocity;
         CharacterController controller;
         PlayerInputProvider inputProvider;
         AudioSource audioSource;
+
         StateMachine<PlayerCharacterStateMchine> stateMachine;
+
+        readonly IState<PlayerCharacterStateMchine> OnGroundState = new PlayerOnGroundState();
+        readonly IState<PlayerCharacterStateMchine> JumpState = new PlayerJumpState();
+        readonly IState<PlayerCharacterStateMchine> CrouchingState = new PlayerIsCrouchingState();
         #endregion
 
         #region Const memeber variables
@@ -100,22 +107,19 @@ namespace Musashi.Player
         const float k_JumpGroundingPreventionTime = 0.07f;
         #endregion
 
-        //ここプロパティである必要がない
         #region Properties
+        public bool IsGround { get; private set; }
         public float DefultFieldOfView => defultFieldOfView;//これも設定できるようにする
-        public bool IsSprinting => isGround && inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
+        public bool IsSprinting => IsGround && inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
+        public float LimitGroundedMovemet => maxSpeedOnGround * sprintSpeedModifier;//地面におけるスピードの限界値
         public float CameraRotaionMuliplier => isAiming ? GameManager.Instance.Configure.AimingRotaionMultipiler : 1f;
         public float CameraSensitivity => PlayerInputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
         #endregion
 
-        #region State properties
-        IState<PlayerCharacterStateMchine> OnGroundState => new PlayerOnGroundState();
-        IState<PlayerCharacterStateMchine> JumpState => new PlayerJumpState();
-        IState<PlayerCharacterStateMchine> CrouchingState => new PlayerIsCrouchingState();
-        // IState<PlayerMoveStateMchine> WallRunningState => new PlayerWallRunState();
-        #endregion
+
+
 
         #region Methods
         private void Start()
@@ -147,10 +151,10 @@ namespace Musashi.Player
 
         private void GroundCheck()
         {
-            float chosenGroundCheckDistance = isGround ? (controller.skinWidth + groundCheckDistance) : k_GroundCheckDistanceInAir;
+            float chosenGroundCheckDistance = IsGround ? (controller.skinWidth + groundCheckDistance) : k_GroundCheckDistanceInAir;
 
             //reset values befor the ground check
-            isGround = false;
+            IsGround = false;
             groundNormal = Vector3.up;
 
             //ジャンプしてすぐにチェックはしない
@@ -164,7 +168,7 @@ namespace Musashi.Player
                 //地面の傾きがキャラクターコントローラーで設定したSlopeLimitを超えているかどうか
                 if (Vector3.Dot(hit.normal, transform.up) > 0f && IsNormalUnderSlopeLimit(groundNormal))
                 {
-                    isGround = true;
+                    IsGround = true;
 
                     ////空中にちょっと浮いていたら、地面まで戻す
                     if (hit.distance > controller.skinWidth)

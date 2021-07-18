@@ -5,6 +5,7 @@ using Musashi.Item;
 using Musashi.Player;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
 
 namespace Musashi.Weapon
 {
@@ -19,7 +20,7 @@ namespace Musashi.Weapon
     }
 
     /// <summary>
-    /// プレイヤーの入力処理に応じて武器を制御するクラス
+    /// プレイヤーが扱う武器を制御するクラス
     /// </summary>
     public class WeaponControl : MonoBehaviour, IPoolUser<WeaponControl>
     {
@@ -53,11 +54,12 @@ namespace Musashi.Weapon
         [SerializeField] WeaponSettingSOData weaponSetting;
         [Header("Manual is single shot. Automatic is rapid fire")]
         [SerializeField] WeaponShootType weaponShootType;
+        [Header("The root object for the weapon, this is what will change acitive")]
+        [SerializeField] GameObject weaponRoot;
         [Header("Display weapon icon on UI")]
         [SerializeField] Image weaponIcon;
         [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
-        [SerializeField] Transform poolObjectParent;
    
         /// <summary>If Ammo number changed, Invoke this events</summary>
         public event Action OnChangedAmmo;
@@ -67,6 +69,8 @@ namespace Musashi.Weapon
         int currentAmmo = 0;
         float lastTimeShot = Mathf.NegativeInfinity;
 
+        Transform poolObjectParent;
+
         PoolObjectManager poolObjectManager;
         HitVFXManager hitVFXManager;
         Animator animator;
@@ -75,8 +79,6 @@ namespace Musashi.Weapon
 
         #region Property
         public bool CanInputAction { get; private set; } = true;//リロード中は、入力を受け付けない
-        public Image GetIcon => weaponIcon;
-        public WeaponShootType GetWeaponShootType => weaponShootType;
         public bool IsPlayingAnimationStateIdle => animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
@@ -96,6 +98,11 @@ namespace Musashi.Weapon
                 }
             }
         }
+        public Image GetIcon => weaponIcon;
+        public WeaponShootType GetWeaponShootType => weaponShootType;
+        public GameObject SourcePrefab { get; set; }
+        public bool IsWeaponActive { get; private set; }
+
         #endregion
 
         private void Start()
@@ -105,12 +112,15 @@ namespace Musashi.Weapon
             audioSource = GetComponent<AudioSource>();
             hitVFXManager = GetComponentInParent<HitVFXManager>();
   
+            if(!weaponRoot)
+            {
+                weaponRoot = gameObject; 
+            }
             if (!muzzle)
             {
                 muzzle = this.transform;
-            }
-
-            poolObjectParent = GameObject.FindGameObjectWithTag("ObjectPoolParent").transform;
+            }          
+            poolObjectParent = GameObject.FindGameObjectWithTag("ObjectPoolParent").transform;//リファクタリングメモ ；Nullチェック！
 
             currentAmmo = maxAmmo;
 
@@ -243,6 +253,20 @@ namespace Musashi.Weapon
                 }
             }
         }
+
+        /// <summary>
+        /// 武器の表示を制御する関数
+        /// </summary>
+        /// <param name="value"></param>
+        public void ShowWeapon(bool value,UnityAction callBack = null)
+        {
+            weaponRoot.SetActive(value);
+            IsWeaponActive = value;
+            if(callBack != null)
+            {
+                callBack.Invoke();
+            }
+        }
         #endregion
 
         #region Animation Events
@@ -324,7 +348,7 @@ namespace Musashi.Weapon
         }
 
         /// <summary>
-        /// アニメーションイベントから呼ばれる
+        /// アニメーションイベントから呼ばれる(未実装)
         /// </summary>
         public void CasingRelease()
         {

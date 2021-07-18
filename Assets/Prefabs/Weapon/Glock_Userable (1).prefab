@@ -2101,11 +2101,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Glock
   weaponType: 1
+  projectileInfo:
+    muzzle: {fileID: 0}
+    power: 0
+    damage: 0
+    lifeTime: 0
   weaponSetting: {fileID: 11400000, guid: 6b3c2cae97f737d4db15d0692d02b242, type: 2}
   weaponShootType: 0
+  weaponRoot: {fileID: 2829662099362326774}
   weaponIcon: {fileID: 0}
   muzzle: {fileID: 2829662098685297405}
-  poolObjectParent: {fileID: 0}
 --- !u!82 &2829662099362326772
 AudioSource:
   m_ObjectHideFlags: 0

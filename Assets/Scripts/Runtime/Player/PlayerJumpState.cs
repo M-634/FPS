@@ -30,7 +30,7 @@ namespace Musashi.Player
                 owner.audioSource.Play(owner.jumpSFX);
 
                 //force grounding to false
-                owner.isGround = false;
+                owner.IsGround = false;
                 owner.groundNormal = Vector3.up;
 
                 owner.lastTimeFirstJumped = Time.time;
@@ -46,7 +46,7 @@ namespace Musashi.Player
             /// </summary>
             public void OnUpdate(PlayerCharacterStateMchine owner)
             {
-                if (owner.isGround)
+                if (owner.IsGround)
                 {
                     owner.audioSource.Play(owner.landSFX);
                     owner.stateMachine.ChangeState(owner.OnGroundState);

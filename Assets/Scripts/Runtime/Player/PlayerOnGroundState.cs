@@ -24,7 +24,7 @@ namespace Musashi.Player
             /// </summary>
             public void OnUpdate(PlayerCharacterStateMchine owner)
             {
-                if (owner.isGround && owner.inputProvider.Jump)
+                if (owner.IsGround && owner.inputProvider.Jump)
                 {
                     owner.isDushJump = owner.IsSprinting;
                     owner.stateMachine.ChangeState(owner.JumpState);
@@ -37,7 +37,7 @@ namespace Musashi.Player
                     return;
                 }
 
-                if (owner.isGround)
+                if (owner.IsGround)
                 {
                     owner.HandleGroundedMovment(this);
                 }

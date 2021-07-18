@@ -18,12 +18,12 @@ TagManager:
   - UI
   - 
   - 
-  - Weapon
+  - FPSWeapon
   - Ground
   - Player
   - Enemy
-  - Level
-  - MinimapIcon
+  - 
+  - 
   - PostProcessing
   - Interactable
   - BossCoreGard

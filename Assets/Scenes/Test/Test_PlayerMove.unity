@@ -5369,11 +5369,11 @@ MonoBehaviour:
   landSFX: {fileID: 8300000, guid: 35b84cfa2f919f543af13ad39d8091f4, type: 3}
   WallRunState:
     wallMaxDistance: 1
-    wallSpeedMultiplier: 12
-    minimumHeight: 0.7
-    maxAngleRoll: 30
-    normalizedAngleThreshold: 0.3
-    wallJumpDuration: 0.2
+    wallSpeedMultiplier: 1.2
+    minimumHeight: 1.2
+    maxAngleRoll: 20
+    normalizedAngleThreshold: 0.1
+    wallJumpDuration: 1
     wallBouncing: 3
     cameraTransitionDuration: 1
     wallGravityDownForce: 20
@@ -5459,10 +5459,17 @@ MonoBehaviour:
     m_RotationOrder: 4
   weaponUpDuration: 0.4
   weaponDownDuration: 0.4
+  bobFrequency: 10
+  bobSharpness: 10
+  defaultBobAmount: 0.05
+  aimingBobAmount: 0.02
   equipmentWeaponInfoUI: {fileID: 7564349250874531232}
   equipmentWeaponIcon: {fileID: 807937219086488175}
   ammoCounterSllider: {fileID: 807937219074124266}
   ammoCounterText: {fileID: 780448476258512976}
+  FPSWeaponLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &3536569040636429400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5669,7 +5676,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 40503
+    m_Bits: 51233
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

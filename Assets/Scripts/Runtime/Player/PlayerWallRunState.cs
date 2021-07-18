@@ -62,7 +62,7 @@ namespace Musashi.Player
                 {
                     return false;
                 }
-                return !owner.isGround && VerticalCheck(owner) && CanAttachTheWall(owner) && owner.inputProvider.GetMoveInput.z > 0f;
+                return !owner.IsGround && VerticalCheck(owner) && CanAttachTheWall(owner) && owner.inputProvider.GetMoveInput.z > 0f;
             }
 
             /// <summary>
