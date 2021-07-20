@@ -8296,8 +8296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeecf546408b12140a9fe9ded12f2d45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startDefultWeapon: {fileID: 2829662099362326773, guid: fa4d955ec91991a4687fcf5777af4ee7,
-    type: 3}
+  startDefultWeapon: {fileID: 0}
   weaponCamera: {fileID: 715671403}
   defultWeaponPos: {fileID: 1551787939}
   aimmingWeaponPos: {fileID: 1731785682}
@@ -8341,7 +8340,6 @@ MonoBehaviour:
   FPSWeaponLayer:
     serializedVersion: 2
     m_Bits: 256
-  weaponSlots: []
 --- !u!114 &3536569040636429400
 MonoBehaviour:
   m_ObjectHideFlags: 0

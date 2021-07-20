@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 using Musashi.Weapon;
-using Musashi.Item;
 using UnityEngine.UI;
 using TMPro;
-using System;
+using System.Linq;
 
 namespace Musashi.Player
 {
@@ -19,6 +18,7 @@ namespace Musashi.Player
     public class PlayerWeaponManager : MonoBehaviour
     {
         #region Field
+        [Header("General settings")]
         [SerializeField] WeaponControl startDefultWeapon;
         [SerializeField] Camera weaponCamera;
 
@@ -63,8 +63,7 @@ namespace Musashi.Player
         private Vector3 lastPlayerCharacterPosition;
         private Vector3 weaponBobLocalPosition;
 
-        //public : debug
-        public List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。同じ武器は持てない
+        private readonly List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。プレハブからインスタンス化したゲームオブジェクトを格納する。同じ武器は持てない
         private WeaponControl currentEquipmentWeapon;
 
         PlayerInputProvider inputProvider;
@@ -94,11 +93,48 @@ namespace Musashi.Player
             }
         }
 
-        /// <summary>装備している武器の操作ができるかどうか判定する/// </summary>
-        public bool CanEquipmentWeaponAction => !isChangingWeapon && CurrentEquipmentWeapon != null;
+        /// <summary>
+        /// 武器を装備している時に、プレイヤーの入力を受け付けるかどうか判定するプロパティ
+        /// </summary>
+        public bool CanProcessWeapon => CurrentEquipmentWeapon && !isChangingWeapon;
         #endregion
 
         #region Private Methods
+        private void Start()
+        {
+            inputProvider = GetComponent<PlayerInputProvider>();
+            playerCharacter = GetComponent<PlayerCharacterStateMchine>();
+            inventory = GetComponent<PlayerItemInventory>();
+            InitializeWeapon();
+        }
+
+        private void Update()
+        {
+            SwitchWeapon();
+            InteractiveShooterTypeWeapon();
+        }
+
+        private void LateUpdate()
+        {
+            //UpdateWeaponBob();
+            UpdateAimingWeapon();
+            UpdateWeaponPosOffet();
+        }
+
+        /// <summary>
+        /// 武器の位置調整をする関数
+        /// </summary>
+        private void UpdateWeaponPosOffet()
+        {
+            if (CanProcessWeapon && CurrentEquipmentWeapon.IsPlayingAnimationStateIdle)
+            {
+                //銃の武器アニメーションはルートモーションで行っている。そのため、リロードやショットを打つたびに座標が若干ずれて行きます。
+                //それを防ぐために、補正をかけてweaponParentSocketのローカル座標に合わせてずれを防ぐ。
+                CurrentEquipmentWeapon.transform.localPosition = Vector3.Lerp(CurrentEquipmentWeapon.transform.localPosition, Vector3.zero, adjustPosTime * Time.deltaTime);
+                CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
+            }
+        }
+
         /// <summary>
         /// リロードが完了したらインベントリ内の段数を考慮し、 実際にリロードできる段数を返す関数。
         /// </summary>
@@ -138,54 +174,10 @@ namespace Musashi.Player
             ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
         }
 
-        private void Start()
-        {
-            inputProvider = GetComponent<PlayerInputProvider>();
-            playerCharacter = GetComponent<PlayerCharacterStateMchine>();
-            inventory = GetComponent<PlayerItemInventory>();
-            InitializeWeapon();
-        }
-
-        private void Update()
-        {
-            if (!CanEquipmentWeaponAction) return;
-            SwitchWeapon();
-            InteractiveShooterTypeWeapon();
-        }
-
-        /// <summary>
-        /// プレイヤーの入力に応じて武器を切り替える関数
-        /// </summary>
-        private void SwitchWeapon()
-        {
-            //test 
-            int i = inputProvider.SwichWeaponID;
-            if (i == -1 || i > weaponSlots.Count) return;
-
-            var nextWeapon = weaponSlots[i];
-            if (nextWeapon != CurrentEquipmentWeapon)
-            {
-                ChangeWeapon(nextWeapon);
-            }
-        }
-
-        private void LateUpdate()
-        {
-            if (!CanEquipmentWeaponAction) return;
-
-            UpdateAimingWeapon();
-            //UpdateWeaponBob();
-
-            if (CurrentEquipmentWeapon.IsPlayingAnimationStateIdle)
-            {
-                //銃の武器アニメーションはルートモーションで行っている。そのため、リロードやショットを打つたびに座標が若干ずれて行きます。
-                //それを防ぐために、補正をかけてweaponParentSocketのローカル座標に合わせてずれを防ぐ。
-                CurrentEquipmentWeapon.transform.localPosition = Vector3.Lerp(CurrentEquipmentWeapon.transform.localPosition, Vector3.zero, adjustPosTime * Time.deltaTime);
-                CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
-            }
-        }
         private void InteractiveShooterTypeWeapon()
         {
+            if (!CanProcessWeapon) return;
+
             //Aim
             isAiming = inputProvider.Aim;
 
@@ -216,14 +208,32 @@ namespace Musashi.Player
         }
 
         /// <summary>
+        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// </summary>
+        private void SwitchWeapon()
+        {
+            if (isChangingWeapon) return;
+
+            //test 
+            int i = inputProvider.SwichWeaponID;
+            if (i >= weaponSlots.Count) return;
+
+            var nextWeapon = weaponSlots[i];
+            if (nextWeapon != CurrentEquipmentWeapon)
+            {
+                ChangeWeapon(nextWeapon);
+            }
+        }
+
+        /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
         private void InitializeWeapon()
         {
             weaponParentSocket.localPosition = downWeaponPos.localPosition;
-            if (AddWeapon(startDefultWeapon))
+            if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
             {
-                ChangeWeapon(weaponSlots[0]);
+                ChangeWeapon(weaponSlots.First());
             }
         }
 
@@ -233,6 +243,8 @@ namespace Musashi.Player
         /// <param name="isAiming"></param>
         private void UpdateAimingWeapon()
         {
+            if (!CanProcessWeapon) return;
+
             if (isAiming)
             {
                 targetAimFov = CurrentEquipmentWeapon.AimCameraFOV;
@@ -373,9 +385,9 @@ namespace Musashi.Player
                 }
             }
             return false;
-            #endregion
 
         }
+        #endregion
 
         #region Public Methods
         /// <summary>

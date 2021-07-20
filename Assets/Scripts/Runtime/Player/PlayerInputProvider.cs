@@ -16,7 +16,7 @@ namespace Musashi
         MyInputActions.PlayerActions PlayerInputActions;
 
         private bool isGamepad;
-        public  bool IsGamepad
+        public bool IsGamepad
         {
             get
             {
@@ -73,44 +73,43 @@ namespace Musashi
         public bool Sprint => GameManager.Instance.CanProcessInput && sprint;
         public bool CanCrouch { get; set; }
 
-        private int swichWeaponIDByGamepad = -1;
+        private int swichWeaponIDByGamepad = int.MaxValue;
         /// <summary>
-        ///押してない時は -１。武器チェンジする時は、0か1か２を返す.
+        ///押してない時は int.MaxValue。武器チェンジする時は、0か1か２を返す.
         /// </summary>
         public int SwichWeaponID
         {
             get
             {
-                if (GameManager.Instance.CanProcessInput)
+                if (!GameManager.Instance.CanProcessInput) return int.MaxValue;
+
+                if (PlayerInputActions.SwichWeapon0.triggered) return 0;
+                if (PlayerInputActions.SwichWeapon1.triggered) return 1;
+                if (PlayerInputActions.SwichWeapon2.triggered) return 2;
+
+                if (IsGamepad)
                 {
-                    if (PlayerInputActions.SwichWeapon0.triggered) return 0;
-                    if (PlayerInputActions.SwichWeapon1.triggered) return 1;
-                    if (PlayerInputActions.SwichWeapon2.triggered) return 2;
-
-                    if (IsGamepad)
+                    if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
                     {
-                        if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
+                        swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
+                        return swichWeaponIDByGamepad;
+                    }
+
+                    if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
+                    {
+                        if (swichWeaponIDByGamepad - 1 < 0)
                         {
-                            swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
-                            return swichWeaponIDByGamepad;
+                            swichWeaponIDByGamepad = 2;
                         }
 
-                        if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
+                        else
                         {
-                            if (swichWeaponIDByGamepad - 1 < 0)
-                            {
-                                swichWeaponIDByGamepad = 2;
-                            }
-
-                            else
-                            {
-                                swichWeaponIDByGamepad -= 1;
-                            }
-                            return swichWeaponIDByGamepad;
+                            swichWeaponIDByGamepad -= 1;
                         }
+                        return swichWeaponIDByGamepad;
                     }
                 }
-                return -1;
+                return int.MaxValue;
             }
         }
 
