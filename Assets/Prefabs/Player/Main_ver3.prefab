@@ -7953,8 +7953,10 @@ MonoBehaviour:
   maxSpeedCrouchedRatio: 0.5
   maxSpeedInAir: 10
   accelerationSpeedInAir: 25
-  sprintSpeedModifier: 1.5
+  sprintSpeedModifier: 2
   jumpForce: 10
+  secondJumpModifier: 1.2
+  firstJumpDuration: 0.5
   cameraHeightRatio: 0.9
   capsuleHeightStanding: 1.8
   capsuleHeightCrouching: 0.9
@@ -7970,7 +7972,7 @@ MonoBehaviour:
     minimumHeight: 0.7
     maxAngleRoll: 30
     normalizedAngleThreshold: 0.3
-    jumpDuration: 0.1
+    wallJumpDuration: 0.2
     wallBouncing: 3
     cameraTransitionDuration: 1
     wallGravityDownForce: 20

@@ -4,7 +4,7 @@ namespace Musashi
 {
     public class StateMachine<T> where T : MonoBehaviour
     {
-        public IState<T> CurrentState { get; set; }
+        public IState<T> CurrentState { get; private set; }
         private readonly T owner;
 
         public StateMachine(T owner, IState<T> state)
@@ -24,11 +24,6 @@ namespace Musashi
             CurrentState.OnExit(owner, nextstate);
             nextstate.OnEnter(owner, CurrentState);
             CurrentState = nextstate;
-            
-            if(owner is NPC.NPCMoveControl)
-            {
-                Debug.Log(CurrentState);
-            }
         }
     }
 }

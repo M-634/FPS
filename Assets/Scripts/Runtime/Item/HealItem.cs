@@ -5,30 +5,39 @@ using Musashi.Player;
 
 namespace Musashi.Item
 {
-    public class HealItem : Item
+    [RequireComponent(typeof(PickUp))]
+    public class HealItem : BaseItem
     {
         [SerializeField] float healPoint = 30f;
         [SerializeField] float healtime = 60f;
 
-        protected override void Start()
+        PickUp pickUp;
+
+        private void Start()
         {
-            base.Start();
-            OnUseEvent += CanHealPlayer;
+            pickUp = GetComponent<PickUp>();
+            pickUp.OnPickEvent += PickUp_OnPickEvent;
         }
 
-        public bool CanHealPlayer()
+        private void PickUp_OnPickEvent(Transform player)
         {
-            var healthControl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealthControl>();
-
-            if (healthControl)
+            Ower = player;
+            if(player.TryGetComponent(out PlayerItemInventory inventory))
             {
-                if (healthControl.IsMaxHP)
+                if (inventory.AddItem(this))
                 {
-                    InteractiveMessage.WarningMessage(InteractiveMessage.HPISFull);
+                    gameObject.SetActive(false);
                 }
-                else
+            }
+        }
+
+        public override bool UseItem()
+        {
+            if(Ower.TryGetComponent(out PlayerHealthControl healthControl))
+            {
+                if(healthControl.Heal(healPoint, healtime))
                 {
-                    return healthControl.Heal(healPoint, healtime);//回復時間を実装する
+                    Destroy(gameObject);
                 }
             }
             return false;

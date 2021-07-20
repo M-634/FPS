@@ -218,6 +218,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'PBRCharacterOnDieControl '
       objectReference: {fileID: 0}
+    - target: {fileID: 6818560021216079360, guid: f5b4a58d577167945bfa88bc8b42be16,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6818560021216079361, guid: f5b4a58d577167945bfa88bc8b42be16,
         type: 3}
       propertyPath: m_RootOrder

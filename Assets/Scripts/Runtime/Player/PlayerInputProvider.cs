@@ -8,14 +8,15 @@ namespace Musashi
     /// <summary>
     /// プレイヤーの入力を管理するクラス
     /// プレイヤーオブジェット全ての親オブジェットにアタッチすること
+    /// リファクタリングメモ：アクションで登録できるようにする
     /// </summary>
-    public class InputProvider : MonoBehaviour
+    public class PlayerInputProvider : MonoBehaviour
     {
         MyInputActions inputActions;
         MyInputActions.PlayerActions PlayerInputActions;
 
-        private static bool isGamepad;
-        public static bool IsGamepad
+        private bool isGamepad;
+        public  bool IsGamepad
         {
             get
             {
@@ -25,7 +26,6 @@ namespace Musashi
                 return isGamepad;
             }
         }
-
 
         public Vector3 GetMoveInput
         {

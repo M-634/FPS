@@ -34,7 +34,7 @@ namespace Musashi
         private void EndTimer()
         {
             onTime = false;
-            timerPanel.SetActive(false, 2);
+            timerPanel.DelaySetActive(false, 2f);
         }
 
         IEnumerator TimerCorutine()

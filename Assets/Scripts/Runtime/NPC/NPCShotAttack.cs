@@ -45,7 +45,7 @@ namespace Musashi.NPC
         /// </summary>
         public void Shot()
         {
-            poolObjectManager.UsePoolObject(projectileInfo.Muzzle.position, Quaternion.identity, SetPoolObj);
+            poolObjectManager.UsePoolObject(projectileInfo.muzzle.position, Quaternion.identity, SetPoolObj);
         }
 
         public void InitializePoolObject(int poolSize = 1)

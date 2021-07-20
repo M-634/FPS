@@ -8,6 +8,7 @@ TagManager:
   - Fire
   - GameManager
   - Ground
+  - ObjectPoolParent
   layers:
   - Default
   - TransparentFX
@@ -17,12 +18,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - FPSWeapon
   - Ground
   - Player
   - Enemy
-  - Level
-  - MinimapIcon
+  - 
+  - 
   - PostProcessing
   - Interactable
   - BossCoreGard

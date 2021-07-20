@@ -14,27 +14,26 @@ namespace Musashi.Player
         [Serializable]
         public class PlayerWallRunState : IState<PlayerCharacterStateMchine>
         {
-            [SerializeField] float wallMaxDistance = 1;
+            [SerializeField] float wallMaxDistance = 1f;
             [SerializeField] float wallSpeedMultiplier = 1.2f;
             [SerializeField] float minimumHeight = 1.2f;
-            [SerializeField] float maxAngleRoll = 20;
+            [SerializeField] float maxAngleRoll = 20f;
 
             [SerializeField, Range(0.0f, 1.0f)] float normalizedAngleThreshold = 0.1f;
 
-            [SerializeField] float jumpDuration = 1;
-            [SerializeField] float wallBouncing = 3;
-            [SerializeField] float cameraTransitionDuration = 1;
+            [SerializeField] float wallJumpDuration = 1f;
+            [SerializeField] float wallBouncing = 3f;
+            [SerializeField] float cameraTransitionDuration = 1f;
 
             [SerializeField] float wallGravityDownForce = 20f;
 
             bool isWallRunning;
             float elapsedTimeSinceWallAttach;
             float elapsedTimeSinceWallDettach;
-            float lastTimeJump = 0f;
+            float lastTimeWallJumped = 0f;
             Vector3[] directions;
             RaycastHit[] hits;
             Vector3 lastWallNormal;
-
 
             public Vector3 GetWallJumpDirection => lastWallNormal * wallBouncing + Vector3.up;
 
@@ -59,11 +58,11 @@ namespace Musashi.Player
             public bool CanWallRun(PlayerCharacterStateMchine owner)
             {
                 //壁ジャンプしてから(jumpDuration)秒は、壁走りは出来ない。
-                if (Time.time < lastTimeJump + jumpDuration)
+                if (Time.time < lastTimeWallJumped + wallJumpDuration)
                 {
                     return false;
                 }
-                return !owner.isGround && VerticalCheck(owner) && CanAttachTheWall(owner) && owner.inputProvider.GetMoveInput.z > 0f;
+                return !owner.IsGround && VerticalCheck(owner) && CanAttachTheWall(owner) && owner.inputProvider.GetMoveInput.z > 0f;
             }
 
             /// <summary>
@@ -92,7 +91,7 @@ namespace Musashi.Player
             {
                 if (owner.inputProvider.Jump)
                 {
-                    lastTimeJump = Time.time;
+                    lastTimeWallJumped = Time.time;
                     owner.stateMachine.ChangeState(owner.JumpState);
                     return;
                 }

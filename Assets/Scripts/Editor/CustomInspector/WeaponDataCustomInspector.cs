@@ -80,8 +80,10 @@ namespace Musashi.Weapon
             //Objcets
             GUILayout.Label("Ammo settings", EditorStyles.centeredGreyMiniLabel);
             GUILayout.BeginVertical("GroupBox");
-            GUILayout.Label("Bullet prefab");
-            weaponSetting.bullet = (BulletControl)EditorGUILayout.ObjectField(weaponSetting.bullet, typeof(BulletControl), false);
+            GUILayout.Label("Projectile prefab");
+            weaponSetting.projectilePrefab = (ProjectileControl)EditorGUILayout.ObjectField(weaponSetting.projectilePrefab, typeof(ProjectileControl), false);
+            GUILayout.Label("Projectile lifeTime");
+            weaponSetting.projectileLifeTime = EditorGUILayout.FloatField(weaponSetting.projectileLifeTime);
             GUILayout.Label("Max ammo number");
             weaponSetting.maxAmmo = EditorGUILayout.IntField(weaponSetting.maxAmmo);
             GUILayout.EndVertical();

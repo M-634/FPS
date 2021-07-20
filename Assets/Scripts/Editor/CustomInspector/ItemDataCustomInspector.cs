@@ -31,9 +31,9 @@ namespace Musashi.Item
 
             itemSetting.stackable = EditorGUILayout.Toggle("Stackable", itemSetting.stackable);
 
-            //EditorGUILayout.HelpBox("Weapons using stacksize as ammo capacity. Max is the total capacity, stacksize is the current", MessageType.Info);
-            //itemSetting.stackSize = EditorGUILayout.IntSlider("Item stack size", itemSetting.stackSize, 1, 100);
-            //itemSetting.maxStackSize = EditorGUILayout.IntSlider("Max stack size", itemSetting.maxStackSize, 1, 100);
+            EditorGUILayout.HelpBox("Weapons using stacksize as ammo capacity. Max is the total capacity, stacksize is the current", MessageType.Info);
+            itemSetting.stackSize = EditorGUILayout.IntSlider("Item stack size", itemSetting.stackSize, 1, 100);
+            itemSetting.maxStackSize = EditorGUILayout.IntSlider("Max stack size", itemSetting.maxStackSize, 1, 100);
 
             GUILayout.EndVertical();
         }

@@ -9,14 +9,14 @@ namespace Musashi.VFX
     /// </summary>
     public class VFXDecalControl : MonoBehaviour
     {
-        [SerializeField] int lifeTime = 1;
+        [SerializeField] float lifeTime = 1;
         bool init = true;
 
         private void OnEnable()
         {
             if (init == false)
             {
-                gameObject.SetActive(false, lifeTime);
+                gameObject.DelaySetActive(false, lifeTime);
             }
             init = false;
         }
