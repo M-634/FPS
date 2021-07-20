@@ -362,14 +362,11 @@ namespace Musashi.Player
 
         /// <summary>
         /// 引数で渡されるWeaponControlがアタッチされた武器Prefabを既に持っているかどうか判定する関数
-        /// (修正箇所あり)
         /// </summary>
         private bool HasWeapon(WeaponControl weaponPrefab)
         {
-            Debug.Log("pickup :" + weaponPrefab.gameObject);
             foreach (var w in weaponSlots)
             {
-                Debug.Log("slot :" + w.SourcePrefab);   
                 if (w.SourcePrefab == weaponPrefab.gameObject)
                 {
                     return true;
