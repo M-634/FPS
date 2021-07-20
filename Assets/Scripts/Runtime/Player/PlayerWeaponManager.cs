@@ -105,6 +105,8 @@ namespace Musashi.Player
             inputProvider = GetComponent<PlayerInputProvider>();
             playerCharacter = GetComponent<PlayerCharacterStateMchine>();
             inventory = GetComponent<PlayerItemInventory>();
+
+            inventory.ChangedAmmoInInventoryEvent += CurrentEquipmentWeapon_OnChangedAmmo;
             InitializeWeapon();
         }
 
@@ -141,23 +143,23 @@ namespace Musashi.Player
         /// </summary>
         private int CurrentEquipmentWeapon_HaveEndedReloadingAmmo()
         {
-            if(CurrentEquipmentWeapon.weaponType == WeaponType.ShotGun)
+            if (CurrentEquipmentWeapon.weaponType == WeaponType.ShotGun)
             {
                 //ˆê”­‚¸‚ÂƒŠƒ[ƒh‚·‚é
-                inventory.SumNumberOfAmmoInInventory -= 1;
+                inventory.SumAmmoInInventory -= 1;
                 return 1;
             }
 
             int diff = currentEquipmentWeapon.MaxAmmo - currentEquipmentWeapon.CurrentAmmo;
 
-            if (inventory.SumNumberOfAmmoInInventory - diff >= 0)
+            if (inventory.SumAmmoInInventory - diff >= 0)
             {
-                inventory.SumNumberOfAmmoInInventory -= diff;
+                inventory.SumAmmoInInventory -= diff;
                 return currentEquipmentWeapon.MaxAmmo;
             }
 
-            int temp = currentEquipmentWeapon.CurrentAmmo + inventory.SumNumberOfAmmoInInventory;
-            inventory.SumNumberOfAmmoInInventory = 0;
+            int temp = currentEquipmentWeapon.CurrentAmmo + inventory.SumAmmoInInventory;
+            inventory.SumAmmoInInventory = 0;
             return temp;
         }
 
@@ -166,7 +168,7 @@ namespace Musashi.Player
         /// </summary>
         private bool CurrentEquipmentWeapon_CanReloadAmmo()
         {
-            if (inventory.SumNumberOfAmmoInInventory > 0)
+            if (inventory.SumAmmoInInventory > 0)
             {
                 return true;
             }
@@ -178,8 +180,11 @@ namespace Musashi.Player
         /// </summary>
         private void CurrentEquipmentWeapon_OnChangedAmmo()
         {
-            ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumNumberOfAmmoInInventory.ToString();
-            ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
+            if (CurrentEquipmentWeapon)
+            {
+                ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumAmmoInInventory.ToString();
+                ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
+            }
         }
 
         private void InteractiveShooterTypeWeapon()

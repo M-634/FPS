@@ -16,13 +16,19 @@ namespace Musashi.Item
 
         private void PickUp_OnPickEvent(Transform player)
         {
-            Ower = player;
             if (player.TryGetComponent(out PlayerItemInventory inventory))
             {
-                if (inventory.AddItem(this))
+                if (inventory.SumAmmoInInventory == GetMaxStacSize) return;
+
+                if(inventory.SumAmmoInInventory + GetAddStacSize >= GetMaxStacSize)
                 {
-                    Destroy(gameObject);
+                    inventory.SumAmmoInInventory = GetMaxStacSize;
                 }
+                else
+                {
+                    inventory.SumAmmoInInventory += GetAddStacSize;
+                }
+                pickUp.HavePicked = true;
             }
         }
     }

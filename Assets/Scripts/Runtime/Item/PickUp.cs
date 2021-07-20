@@ -16,6 +16,8 @@ namespace Musashi.Item
         [SerializeField] float rotateDuration = 1f;
         [SerializeField] bool doRotate = true;
 
+        public bool HavePicked { get; set; }
+
         private void Start()
         {
             if (doRotate)
@@ -29,8 +31,17 @@ namespace Musashi.Item
 
         public void Excute(Transform player)
         {
-            OnPickEvent.Invoke(player);
+            if (OnPickEvent != null)
+            {
+                OnPickEvent.Invoke(player);
+            }
+
+            if (HavePicked)
+            {
+                GameManager.Instance.SoundManager.PlaySE(SoundName.PickUP);
+            }
         }
+
 
         /// <summary>
         /// コンポーネントをアタッチした時に呼ばれる。

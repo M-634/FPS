@@ -14,41 +14,53 @@ namespace Musashi.Player
     /// </summary>
     public class PlayerItemInventory : MonoBehaviour
     {
+        public event Action ChangedAmmoInInventoryEvent;
+
         [Header("item settings")]
         [SerializeField] ItemDataBase itemDataBase;
 
-        [Header("Heal item")]
-        [SerializeField] int maxHealKitNumberInInventory = 10;
-        [SerializeField] TextMeshProUGUI healItemStackNumberText;
-        readonly Queue<HealItem> stockHealItems;
-
-        private int healItemNumber;
-
         [Header("Ammo in inventory")]
         [SerializeField] bool testScene;
-        [SerializeField] int limmitAmmoNumberInInventory = 999;
 
-        PlayerWeaponManager weaponManager;
-        Dictionary<ItemSettingSOData, int> currentItemStacks = new Dictionary<ItemSettingSOData, int>();
+        Dictionary<BaseItem, int> stackingItemTable= new Dictionary<BaseItem, int>();
 
-        public int SumNumberOfAmmoInInventory { get; set; }
-      
+        public const int LIMITITEMSTACKSIZE = 999; 
+        private int sumAmmoInInventory;
+        public int SumAmmoInInventory 
+        {
+            get => sumAmmoInInventory ;
+            set 
+            {
+                sumAmmoInInventory = value;
+                if (ChangedAmmoInInventoryEvent != null)
+                {
+                    ChangedAmmoInInventoryEvent.Invoke();
+                }
+            }
+        }
+  
         private void Start()
         {
-            weaponManager = GetComponent<PlayerWeaponManager>();
             if (testScene)
             {
-                SumNumberOfAmmoInInventory = limmitAmmoNumberInInventory;
+                SumAmmoInInventory = LIMITITEMSTACKSIZE;
             }
             else
             {
-                SumNumberOfAmmoInInventory = 0;
+                SumAmmoInInventory = 0;
             }
- 
         }
 
-        public bool AddItem(BaseItem healItem)
+        public bool AddItem(BaseItem pickedItem)
         {
+            //cheack if same item is in table or not.
+            if (stackingItemTable.ContainsKey(pickedItem))
+            {
+                if (stackingItemTable[pickedItem] >= pickedItem.GetMaxStacSize) return false;
+
+
+            }
+            
             return true;      
         }
 

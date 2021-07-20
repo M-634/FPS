@@ -26,6 +26,7 @@ namespace Musashi.Item
             {
                 if (inventory.AddItem(this))
                 {
+                    pickUp.HavePicked = true;
                     gameObject.SetActive(false);
                 }
             }
@@ -35,11 +36,9 @@ namespace Musashi.Item
         {
             if(Ower.TryGetComponent(out PlayerHealthControl healthControl))
             {
-                if(healthControl.Heal(healPoint, healtime))
-                {
-                    Destroy(gameObject);
-                }
+                return healthControl.Heal(healPoint, healtime);
             }
+            Debug.LogError("PlayerHealthControlがプレイヤーにアタッチされていません。");
             return false;
         }
     }
