@@ -104,7 +104,7 @@ namespace Musashi.Weapon
         public bool IsWeaponActive { get; private set; }
         public Image GetIcon => weaponIcon;
         public WeaponShootType GetWeaponShootType => weaponShootType;
-        public GameObject SourcePrefab { get; set; }
+        public GameObject SourcePrefab { get; set; }//instanceする前のGameObject
         public Vector3 GetDefultLocalPositionOffset => defultLoaclPostionOffset;
         public Vector3 GetAimLocalPositionOffset => aimLocalPostionOffset;
 

@@ -9,6 +9,7 @@ namespace Musashi
     /// </summary>
     public class PlayerInteractive : MonoBehaviour
     {
+        [SerializeField] Camera playerCamera;
         [SerializeField] LayerMask interactiveLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
@@ -26,14 +27,14 @@ namespace Musashi
             {
                 if (hit.collider.TryGetComponent(out IInteractable obj))
                 {
-                    obj.Excute(transform.parent);
+                    obj.Excute(transform);
                 }
             }
         }
 
         private bool CheakInteractiveObj()
         {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance, interactiveLayer))
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, distance, interactiveLayer))
             {
                 InteractiveMessage.ShowInteractiveMessage(InteractiveMessage.InteractiveText);
                 return true;

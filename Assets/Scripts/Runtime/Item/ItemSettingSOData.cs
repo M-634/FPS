@@ -15,5 +15,8 @@ namespace Musashi.Item
         public ItemType itemType;
         public Sprite icon;
         public bool stackable;
+
+        public int maxStackSize = 1;
+        public int stackSize = 1;
     }
 }

@@ -148,7 +148,7 @@ namespace Musashi.Player
 
         private void Update()
         {
-            if (!CanEquipmentWeaponAction) return; 
+            if (!CanEquipmentWeaponAction) return;
             SwitchWeapon();
             InteractiveShooterTypeWeapon();
         }
@@ -159,19 +159,19 @@ namespace Musashi.Player
         private void SwitchWeapon()
         {
             //test 
-           int i = inputProvider.SwichWeaponID;
+            int i = inputProvider.SwichWeaponID;
             if (i == -1 || i > weaponSlots.Count) return;
-         
+
             var nextWeapon = weaponSlots[i];
             if (nextWeapon != CurrentEquipmentWeapon)
             {
                 ChangeWeapon(nextWeapon);
-            } 
+            }
         }
 
         private void LateUpdate()
         {
-           if (!CanEquipmentWeaponAction) return;
+            if (!CanEquipmentWeaponAction) return;
 
             UpdateAimingWeapon();
             //UpdateWeaponBob();
@@ -293,28 +293,44 @@ namespace Musashi.Player
             isChangingWeapon = true;
             if (CurrentEquipmentWeapon)
             {
-                weaponParentSocket.DOLocalMove(downWeaponPos.localPosition, weaponDownDuration)
-                     .SetEase(weaponChangeCorrectiveCurvel)
-                     .OnComplete(() =>
-                     {
-                         CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
-                     });
-
-            }
-
-            nextWeapon.ShowWeapon(true);
-
-            weaponParentSocket.DOLocalMove(defultWeaponPos.localPosition, weaponUpDuration)
-                .SetEase(weaponChangeCorrectiveCurvel)
-                .OnComplete(() =>
-                {
-                    SetEquipmentWeaponInfo(nextWeapon);
-                    if (callBack != null)
+                //武器を持っているとき
+                var sequence = DOTween.Sequence();
+                sequence.Append(MoveWeapon(downWeaponPos, weaponDownDuration, weaponChangeCorrectiveCurvel))
+                    .AppendCallback(
+                    () =>
                     {
-                        callBack.Invoke();
-                    }
-                    isChangingWeapon = false;
-                });
+                        nextWeapon.ShowWeapon(true);
+                        CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
+                    })
+                    .Append(MoveWeapon(defultWeaponPos, weaponUpDuration, weaponChangeCorrectiveCurvel))
+                    .AppendCallback(
+                    () =>
+                    {
+                        SetEquipmentWeaponInfo(nextWeapon);
+                        isChangingWeapon = false;
+                        if (callBack != null) callBack.Invoke();
+                    });
+            }
+            else
+            {
+                //武器を持っていないとき
+                nextWeapon.ShowWeapon(true);
+                MoveWeapon(defultWeaponPos, weaponUpDuration, weaponChangeCorrectiveCurvel)
+                    .OnComplete(
+                    () =>
+                    {
+                        SetEquipmentWeaponInfo(nextWeapon);
+                        isChangingWeapon = false;
+                        if (callBack != null) callBack.Invoke();
+                    });
+            }
+        }
+
+        /// <summary>
+        /// DoTweenを使用して、武器の出し入れの動きを制御する関数
+        private Tween MoveWeapon(Transform targetPos, float duration, AnimationCurve animationCurve)
+        {
+            return weaponParentSocket.DOLocalMove(targetPos.localPosition, duration).SetEase(animationCurve);
         }
 
         /// <summary>
@@ -346,11 +362,14 @@ namespace Musashi.Player
 
         /// <summary>
         /// 引数で渡されるWeaponControlがアタッチされた武器Prefabを既に持っているかどうか判定する関数
+        /// (修正箇所あり)
         /// </summary>
         private bool HasWeapon(WeaponControl weaponPrefab)
         {
+            Debug.Log("pickup :" + weaponPrefab.gameObject);
             foreach (var w in weaponSlots)
             {
+                Debug.Log("slot :" + w.SourcePrefab);   
                 if (w.SourcePrefab == weaponPrefab.gameObject)
                 {
                     return true;
@@ -378,7 +397,7 @@ namespace Musashi.Player
             weaponInstance.transform.rotation = weaponParentSocket.rotation;
 
             //set  sorcePrefab and don't active weapon
-            weaponInstance.SourcePrefab = weaponInstance.gameObject;
+            weaponInstance.SourcePrefab = pickupWeaponPrefab.gameObject;
             weaponInstance.ShowWeapon(false);
 
             // Assign the first person layer to the weapon
