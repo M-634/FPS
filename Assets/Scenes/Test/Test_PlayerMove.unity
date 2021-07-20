@@ -9315,6 +9315,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pickup_ShotGun
       objectReference: {fileID: 0}
+    - target: {fileID: 3371455664250473534, guid: ebbd439bb26944e4fa802ff60158db7f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
       propertyPath: m_RootOrder
@@ -9338,27 +9343,27 @@ PrefabInstance:
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.8947119
       objectReference: {fileID: 0}
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.4466437
       objectReference: {fileID: 0}
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -53.057
       objectReference: {fileID: 0}
     - target: {fileID: 7010522821019222618, guid: ebbd439bb26944e4fa802ff60158db7f,
         type: 3}
