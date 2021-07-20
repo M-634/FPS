@@ -27,7 +27,7 @@ namespace Musashi.Player
         [SerializeField] Transform aimmingWeaponPos;
         [SerializeField] Transform downWeaponPos;
         [SerializeField] Transform weaponParentSocket;
-        [SerializeField] float adjustPosTime = 0.2f;
+        [SerializeField] float adjustPosTime = 0.01f;
 
         [Header("Set aiming propeties")]
         [SerializeField] AnimationCurve weaponChangeCorrectiveCurvel;
@@ -128,9 +128,10 @@ namespace Musashi.Player
         {
             if (CanProcessWeapon && CurrentEquipmentWeapon.IsPlayingAnimationStateIdle)
             {
+                var offsetLoacalPosition = isAiming ? CurrentEquipmentWeapon.GetAimLocalPositionOffset : CurrentEquipmentWeapon.GetDefultLocalPositionOffset;
                 //銃の武器アニメーションはルートモーションで行っている。そのため、リロードやショットを打つたびに座標が若干ずれて行きます。
                 //それを防ぐために、補正をかけてweaponParentSocketのローカル座標に合わせてずれを防ぐ。
-                CurrentEquipmentWeapon.transform.localPosition = Vector3.Lerp(CurrentEquipmentWeapon.transform.localPosition, Vector3.zero, adjustPosTime * Time.deltaTime);
+                CurrentEquipmentWeapon.RootPosition = offsetLoacalPosition;
                 CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
             }
         }
@@ -140,6 +141,13 @@ namespace Musashi.Player
         /// </summary>
         private int CurrentEquipmentWeapon_HaveEndedReloadingAmmo()
         {
+            if(CurrentEquipmentWeapon.weaponType == WeaponType.ShotGun)
+            {
+                //一発ずつリロードする
+                inventory.SumNumberOfAmmoInInventory -= 1;
+                return 1;
+            }
+
             int diff = currentEquipmentWeapon.MaxAmmo - currentEquipmentWeapon.CurrentAmmo;
 
             if (inventory.SumNumberOfAmmoInInventory - diff >= 0)
@@ -248,12 +256,12 @@ namespace Musashi.Player
             if (isAiming)
             {
                 targetAimFov = CurrentEquipmentWeapon.AimCameraFOV;
-                targetAimPos = aimmingWeaponPos.localPosition + CurrentEquipmentWeapon.GetAimLocalPositionOffset;
+                targetAimPos = aimmingWeaponPos.localPosition;
             }
             else
             {
                 targetAimFov = playerCharacter.DefultFieldOfView;
-                targetAimPos = defultWeaponPos.localPosition + CurrentEquipmentWeapon.GetDefultLocalPositionOffset;
+                targetAimPos = defultWeaponPos.localPosition;
             }
             float aimSpeed = CurrentEquipmentWeapon.AimSpeed;
 
@@ -307,14 +315,14 @@ namespace Musashi.Player
             {
                 //武器を持っているとき
                 var sequence = DOTween.Sequence();
-                sequence.Append(MoveWeapon(downWeaponPos, weaponDownDuration, weaponChangeCorrectiveCurvel))
+                sequence.Append(MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel))
                     .AppendCallback(
                     () =>
                     {
                         nextWeapon.ShowWeapon(true);
                         CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
                     })
-                    .Append(MoveWeapon(defultWeaponPos, weaponUpDuration, weaponChangeCorrectiveCurvel))
+                    .Append(MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel))
                     .AppendCallback(
                     () =>
                     {
@@ -327,7 +335,7 @@ namespace Musashi.Player
             {
                 //武器を持っていないとき
                 nextWeapon.ShowWeapon(true);
-                MoveWeapon(defultWeaponPos, weaponUpDuration, weaponChangeCorrectiveCurvel)
+                MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel)
                     .OnComplete(
                     () =>
                     {
@@ -339,10 +347,12 @@ namespace Musashi.Player
         }
 
         /// <summary>
-        /// DoTweenを使用して、武器の出し入れの動きを制御する関数
-        private Tween MoveWeapon(Transform targetPos, float duration, AnimationCurve animationCurve)
+        /// DoTweenを使用して、武器の出し入れの動きを制御する関数.
+        /// 動かすのは、WeaponParentSocketオブジェクトであることに注意する
+        ///</summary>
+        private Tween MoveWeapon(Vector3 targetPos, float duration, AnimationCurve animationCurve)
         {
-            return weaponParentSocket.DOLocalMove(targetPos.localPosition, duration).SetEase(animationCurve);
+            return weaponParentSocket.DOLocalMove(targetPos, duration).SetEase(animationCurve);
         }
 
         /// <summary>
@@ -402,7 +412,7 @@ namespace Musashi.Player
 
             //instance weapon and set localPosition and rotation
             var weaponInstance = Instantiate(pickupWeaponPrefab, weaponParentSocket);
-            weaponInstance.transform.localPosition = Vector3.zero + weaponInstance.GetDefultLocalPositionOffset;
+            weaponInstance.RootPosition = weaponInstance.GetDefultLocalPositionOffset;
             weaponInstance.transform.rotation = weaponParentSocket.rotation;
 
             //set  sorcePrefab and don't active weapon

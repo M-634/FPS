@@ -295,8 +295,8 @@ MonoBehaviour:
   weaponRoot: {fileID: 8538686009709422404}
   weaponIcon: {fileID: 0}
   muzzle: {fileID: 8538686009684055613}
-  defultLoaclPostionOffset: {x: -0.198, y: -0.025, z: -0.253}
-  aimLocalPostionOffset: {x: -0.208, y: 0.008, z: 0}
+  defultLoaclPostionOffset: {x: -0.159, y: -0.019, z: -0.15}
+  aimLocalPostionOffset: {x: -0.21400003, y: 0.019999996, z: -0.07899999}
 --- !u!82 &8538686009709422406
 AudioSource:
   m_ObjectHideFlags: 0
