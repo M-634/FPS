@@ -6176,6 +6176,9 @@ MonoBehaviour:
     wallBouncing: 3
     cameraTransitionDuration: 1
     wallGravityDownForce: 20
+    wallRunLayerMask:
+      serializedVersion: 2
+      m_Bits: 1
 --- !u!1 &3536569040636429397
 GameObject:
   m_ObjectHideFlags: 0
