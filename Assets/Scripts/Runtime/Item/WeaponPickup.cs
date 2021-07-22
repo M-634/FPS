@@ -23,6 +23,7 @@ namespace Musashi.Item
             {
                 if (weaponManager.AddWeapon(weaponPrefab))
                 {
+                    pickUp.HavePicked = true;
                     Destroy(gameObject);
                 }
             }
