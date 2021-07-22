@@ -30,18 +30,17 @@ namespace Musashi.Player
                         stackingNumber = item.GetMaxStacSize;
                     }
 
-                    if(stackingNumber <= 0)
+                    if (stackingNumber <= 0)
                     {
                         DeleteTable();
                         return;
                     }
                     Debug.Log(item.GetItemName + " : " + stackingNumber);
-                    //ui更新
                 }
             }
             public bool LimitStacSize => stackingNumber == item.GetMaxStacSize;
             public string GetItemGUID => item.GetItemGUID;
-            public ItemInventoryTable(BaseItem item,PlayerItemInventory inventory)
+            public ItemInventoryTable(BaseItem item, PlayerItemInventory inventory)
             {
                 this.item = item;
                 this.inventory = inventory;
@@ -49,11 +48,15 @@ namespace Musashi.Player
                 Debug.Log("instance table");
                 Debug.Log("tables count :" + inventory.itemTables);
             }
-            public void Use()
+            public void Use(Slot slot = null)
             {
                 if (item.UseItem())
                 {
                     CurrentStackSize--;
+                    if (slot)
+                    {
+                        slot.UpdateStackSizeText(CurrentStackSize);
+                    }
                 }
             }
             public void DeleteTable()
@@ -69,9 +72,10 @@ namespace Musashi.Player
         public const int LIMITITEMSTACKSIZE = 999;
 
         [SerializeField] bool testScene;
+        [SerializeField] Slot currentHealItemSlot;//今のところ回復アイテムは一種類だけなので、スロットを最初からアタッチちする
 
         private readonly List<ItemInventoryTable> itemTables = new List<ItemInventoryTable>();
-    
+
         private int sumAmmoInInventory;
         public int SumAmmoInInventory
         {
@@ -105,19 +109,22 @@ namespace Musashi.Player
 
         private void UseHealItem_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            throw new NotImplementedException();
+            Debug.Log("can input");
+            if (currentHealItemSlot)
+            {
+                var item = GetItemFromTables(currentHealItemSlot.GUID);
+                item.Use(currentHealItemSlot);
+            }
         }
 
         /// <summary>
         /// 引数に与えられたアイテムが、既にインベントリ内に存在するかどうか判定する関数
         /// </summary>
-        private bool HasItem(BaseItem getItem)
+        private bool HasItem(string guid)
         {
-            Debug.Log("picked :" + getItem.gameObject);
             foreach (var item in itemTables)
             {
-                Debug.Log("table :" + item.GetItemGUID);
-                if (item.GetItemGUID == getItem.GetItemGUID)
+                if (item.GetItemGUID == guid)
                 {
                     return true;
                 }
@@ -128,11 +135,11 @@ namespace Musashi.Player
         /// <summary>
         /// 引数に与えられたアイテムから、それを含んだアイテムテーブルを返す関数
         /// </summary>
-        private ItemInventoryTable GetItemFromTables(BaseItem getItem)
+        private ItemInventoryTable GetItemFromTables(string guid)
         {
             foreach (var itemTable in itemTables)
             {
-                if (itemTable.GetItemGUID == getItem.GetItemGUID) return itemTable;
+                if (itemTable.GetItemGUID == guid) return itemTable;
             }
             return null;
         }
@@ -144,32 +151,30 @@ namespace Musashi.Player
         public bool AddItem(BaseItem pickedItem)
         {
             //cheack if same item is in table or not.
-            if (HasItem(pickedItem))
+            if (HasItem(pickedItem.GetItemGUID))
             {
-                var itemTable = GetItemFromTables(pickedItem);
+                var itemTable = GetItemFromTables(pickedItem.GetItemGUID);
                 if (itemTable.LimitStacSize)
                 {
                     Debug.Log(pickedItem.GetItemName + ": limit stack size");
                     return false;
                 }
                 itemTable.CurrentStackSize += pickedItem.GetAddStacSize;
+                currentHealItemSlot.UpdateStackSizeText(itemTable.CurrentStackSize);
                 Destroy(pickedItem.gameObject);
                 return true;
             }
 
             //create new table
-            var newTable = new ItemInventoryTable(pickedItem,this);
+            var newTable = new ItemInventoryTable(pickedItem, this);
             itemTables.Add(newTable);
+            if (pickedItem.GetItemType == ItemType.HealthKit)
+            {
+                currentHealItemSlot.SetItemInfo(pickedItem.GetItemGUID, pickedItem.GetAddStacSize);
+            }
+
             pickedItem.gameObject.SetActive(false);
             return true;
-        }
-        public void UseItem(BaseItem item)
-        {
-            if (HasItem(item))
-            {
-                var i = GetItemFromTables(item);
-                i.Use();
-            }
         }
     }
 }
