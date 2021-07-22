@@ -27,7 +27,6 @@ namespace Musashi.Item
                 if (inventory.AddItem(this))
                 {
                     pickUp.HavePicked = true;
-                    gameObject.SetActive(false);
                 }
             }
         }

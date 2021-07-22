@@ -29,6 +29,7 @@ namespace Musashi.Item
                     inventory.SumAmmoInInventory += GetAddStacSize;
                 }
                 pickUp.HavePicked = true;
+                Destroy(gameObject);
             }
         }
     }

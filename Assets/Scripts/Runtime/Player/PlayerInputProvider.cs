@@ -13,7 +13,7 @@ namespace Musashi
     public class PlayerInputProvider : MonoBehaviour
     {
         MyInputActions inputActions;
-        MyInputActions.PlayerActions PlayerInputActions;
+        public MyInputActions.PlayerActions PlayerInputActions { get; private set; }
 
         private bool isGamepad;
         public bool IsGamepad
@@ -64,7 +64,7 @@ namespace Musashi
         public bool HeldFire => GameManager.Instance.CanProcessInput && heldFire;
         public bool Reload => GameManager.Instance.CanProcessInput && PlayerInputActions.Reload.triggered;
         public bool Interactive => GameManager.Instance.CanProcessInput && PlayerInputActions.Interactive.triggered;
-        public bool UseHealItem => GameManager.Instance.CanProcessInput && PlayerInputActions.UseHealItem.triggered;
+        //public bool UseHealItem => GameManager.Instance.CanProcessInput && PlayerInputActions.UseHealItem.triggered;
 
         private bool aim;
         public bool Aim => GameManager.Instance.CanProcessInput && aim;
