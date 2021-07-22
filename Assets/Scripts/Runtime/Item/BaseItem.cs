@@ -11,12 +11,13 @@ namespace Musashi.Item
         [SerializeField] ItemSettingSOData itemSetting;
         public string GetItemName => itemSetting.itemName;
         public string GetItemDescription => itemSetting.description;
+        public string GetItemGUID => itemSetting.guid;
         public Sprite GetItemIcon => itemSetting.icon;
         public ItemType GetItemType => itemSetting.itemType;
         public bool CanStackable => itemSetting.stackable;
         public int GetMaxStacSize => itemSetting.maxStackSize;
         public int GetAddStacSize => itemSetting.stackSize;
-        
+
         public Transform Ower { get; protected set; }
 
         /// <summary>

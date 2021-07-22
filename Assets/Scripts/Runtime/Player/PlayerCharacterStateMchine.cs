@@ -16,10 +16,6 @@ namespace Musashi.Player
         [Tooltip("Reference to the main camera used for the player")]
         [SerializeField] Camera playerCamera;
         [SerializeField] float defultFieldOfView = 60f;
-        //[SerializeField] float mouseSensitivity = 2f;
-        //[SerializeField] float controllerSensitivity = 100f;
-        //[SerializeField] float aimingRotaionMultipiler = 0.4f;
-        //[SerializeField] float cameraTransitionDuration = 1;
 
         [Header("General")]
         [Tooltip("Force applied downward when in the air")]
@@ -109,7 +105,7 @@ namespace Musashi.Player
 
         #region Properties
         public bool IsGround { get; private set; }
-        public float DefultFieldOfView => defultFieldOfView;//これも設定できるようにする
+        public float DefultFieldOfView => defultFieldOfView;//memo :これも設定できるようにする
         public bool IsSprinting => IsGround && inputProvider.Sprint && inputProvider.GetMoveInput.z > 0f;
         public float SpeedModifier => IsSprinting ? sprintSpeedModifier : 1f;
         public Vector3 WorldSpaceMoveInput => transform.TransformVector(inputProvider.GetMoveInput);
@@ -118,9 +114,6 @@ namespace Musashi.Player
         public float CameraSensitivity => inputProvider.IsGamepad ? GameManager.Instance.Configure.ControllerSensitivity : GameManager.Instance.Configure.MouseSensitivity;
         #endregion
 
-
-
-
         #region Methods
         private void Start()
         {
@@ -128,7 +121,7 @@ namespace Musashi.Player
             {
                 playerCamera = Camera.main;
             }
-            //inputProvider = GetComponentInParent<InputProvider>();
+    
             inputProvider = GetComponent<PlayerInputProvider>();
             controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
@@ -139,7 +132,6 @@ namespace Musashi.Player
             UpdateCharacterHeight(true);
             playerCamera.fieldOfView = defultFieldOfView;
         }
-
 
         private void Update()
         {

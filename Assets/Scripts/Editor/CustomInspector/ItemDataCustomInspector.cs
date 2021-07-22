@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Musashi.Item
@@ -26,6 +27,11 @@ namespace Musashi.Item
             GUILayout.BeginVertical("HelpBox");
             itemSetting.itemName = EditorGUILayout.TextField("Name", itemSetting.itemName);
             itemSetting.description = EditorGUILayout.TextField("Description", itemSetting.description);
+            itemSetting.guid = EditorGUILayout.TextField("GUID", itemSetting.guid);
+            if(GUILayout.Button("Create GUID"))
+            {
+                itemSetting.guid = Guid.NewGuid().ToString("N");
+            }
             itemSetting.itemType = (ItemType)EditorGUILayout.EnumPopup("Item type", itemSetting.itemType);
             itemSetting.icon = (Sprite)EditorGUILayout.ObjectField("Item icon", itemSetting.icon, typeof(Sprite), false);
 
@@ -33,7 +39,7 @@ namespace Musashi.Item
 
             EditorGUILayout.HelpBox("Weapons using stacksize as ammo capacity. Max is the total capacity, stacksize is the current", MessageType.Info);
             itemSetting.stackSize = EditorGUILayout.IntSlider("Item stack size", itemSetting.stackSize, 1, 100);
-            itemSetting.maxStackSize = EditorGUILayout.IntSlider("Max stack size", itemSetting.maxStackSize, 1, 100);
+            itemSetting.maxStackSize = EditorGUILayout.IntSlider("Max stack size", itemSetting.maxStackSize, 1, 999);
 
             GUILayout.EndVertical();
         }

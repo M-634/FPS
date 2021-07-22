@@ -12,6 +12,7 @@ namespace Musashi.Item
     {
         public string itemName;
         public string description;
+        public string guid;//use GUID
         public ItemType itemType;
         public Sprite icon;
         public bool stackable;

@@ -26,12 +26,13 @@ namespace Musashi.Player
             [SerializeField] float cameraTransitionDuration = 1f;
 
             [SerializeField] float wallGravityDownForce = 20f;
+            [SerializeField] LayerMask wallRunLayerMask;
 
             bool isWallRunning;
             float elapsedTimeSinceWallAttach;
             float elapsedTimeSinceWallDettach;
             float lastTimeWallJumped = 0f;
-            Vector3[] directions;
+            readonly Vector3[] directions;
             RaycastHit[] hits;
             Vector3 lastWallNormal;
 
@@ -116,7 +117,7 @@ namespace Musashi.Player
                 for (int i = 0; i < directions.Length; i++)
                 {
                     Vector3 dir = owner.transform.TransformDirection(directions[i]);
-                    Physics.Raycast(owner.transform.position, dir, out hits[i], wallMaxDistance);
+                    Physics.Raycast(owner.transform.position, dir, out hits[i], wallMaxDistance,wallRunLayerMask);
                     if (hits[i].collider != null)
                     {
                         Debug.DrawRay(owner.transform.position, dir * hits[i].distance, Color.green);

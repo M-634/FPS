@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8617506981203164558}
-  m_LocalRotation: {x: -0.7191675, y: -0, z: -0, w: 0.6948368}
+  m_LocalRotation: {x: -0.71916384, y: 0, z: 0, w: 0.69484055}
   m_LocalPosition: {x: 0.993, y: 0.365, z: 4.643}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -57,6 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -81,6 +82,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &8617506981203164556
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -106,9 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 907b2ca451628314dbc47db4c62ec15f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canUseItem: 1
   itemSetting: {fileID: 11400000, guid: b8bb84dc8867a2a4b95d4ee59137e788, type: 2}
-  maxStackSize: 10
-  stackSize: 2
-  healPoint: 30
-  healtime: 60
+  healPoint: 50
+  healtime: 5

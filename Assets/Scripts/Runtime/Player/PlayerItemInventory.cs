@@ -14,43 +14,180 @@ namespace Musashi.Player
     /// </summary>
     public class PlayerItemInventory : MonoBehaviour
     {
-        [Header("item settings")]
-        [SerializeField] ItemDataBase itemDataBase;
+        /// <summary>
+        /// インベントリ内のアイテム情報を一括にまとめた内部クラス
+        /// </summary>
+        private class ItemInventoryTable
+        {
+            private readonly BaseItem item;
+            private readonly PlayerItemInventory inventory;
+            private int stackingNumber;
+            public int CurrentStackSize
+            {
+                get => stackingNumber;
+                set
+                {
+                    stackingNumber = value;
+                    if (stackingNumber > item.GetMaxStacSize)
+                    {
+                        stackingNumber = item.GetMaxStacSize;
+                    }
 
-        [Header("Heal item")]
-        [SerializeField] int maxHealKitNumberInInventory = 10;
-        [SerializeField] TextMeshProUGUI healItemStackNumberText;
-        readonly Queue<HealItem> stockHealItems;
+                    if (stackingNumber <= 0)
+                    {
+                        DeleteTable();
+                        return;
+                    }
+                    Debug.Log(item.GetItemName + " : " + stackingNumber);
+                }
+            }
+            public bool LimitStacSize => stackingNumber == item.GetMaxStacSize;
+            public string GetItemGUID => item.GetItemGUID;
+            public string GetItemNameInTabe => item.GetItemName;
+            public ItemInventoryTable(BaseItem item, PlayerItemInventory inventory)
+            {
+                this.item = item;
+                this.inventory = inventory;
+                CurrentStackSize += item.GetAddStacSize;
+                Debug.Log("instance table");
+                Debug.Log("tables count :" + inventory.itemTables);
+            }
+            public void Use(Slot slot = null)
+            {
+                if (item.UseItem())
+                {
+                    CurrentStackSize--;
+                    if (slot)
+                    {
+                        slot.UpdateStackSizeText(CurrentStackSize);
+                    }
+                    Debug.Log($"{item.GetItemName}を使用しました");
+                }
+            }
+            public void DeleteTable()
+            {
+                Destroy(item.gameObject);
+                inventory.itemTables.Remove(this);
+                Debug.Log("Destroy :" + item.GetItemName);
+                Debug.Log("tables count :" + inventory.itemTables);
+            }
+        }
 
-        private int healItemNumber;
+        [SerializeField] bool setLimitStackSizeAmmo;
+        [SerializeField] Slot currentHealItemSlot;//今のところ回復アイテムは一種類だけなので、スロットを最初からアタッチちする
 
-        [Header("Ammo in inventory")]
-        [SerializeField] bool testScene;
-        [SerializeField] int limmitAmmoNumberInInventory = 999;
+        public const int LIMITITEMSTACKSIZE = 999;
+        public event Action ChangedAmmoInInventoryEvent;
+        private readonly List<ItemInventoryTable> itemTables = new List<ItemInventoryTable>();
+        PlayerInputProvider inputProvider;
 
-        PlayerWeaponManager weaponManager;
-        Dictionary<ItemSettingSOData, int> currentItemStacks = new Dictionary<ItemSettingSOData, int>();
+        private int sumAmmoInInventory;
+        public int SumAmmoInInventory
+        {
+            get => sumAmmoInInventory;
+            set
+            {
+                sumAmmoInInventory = value;
+                if(sumAmmoInInventory < 0)
+                {
+                    sumAmmoInInventory = 0;
+                }
+                if (ChangedAmmoInInventoryEvent != null)
+                {
+                    ChangedAmmoInInventoryEvent.Invoke();
+                }
+            }
+        }
 
-        public int SumNumberOfAmmoInInventory { get; set; }
-      
         private void Start()
         {
-            weaponManager = GetComponent<PlayerWeaponManager>();
-            if (testScene)
+            inputProvider = GetComponent<PlayerInputProvider>();
+            inputProvider.PlayerInputActions.UseHealItem.performed += UseHealItem_performed;
+
+            if (setLimitStackSizeAmmo)
             {
-                SumNumberOfAmmoInInventory = limmitAmmoNumberInInventory;
+                SumAmmoInInventory = LIMITITEMSTACKSIZE;
             }
             else
             {
-                SumNumberOfAmmoInInventory = 0;
+                SumAmmoInInventory = 0;
             }
- 
         }
 
-        public bool AddItem(BaseItem healItem)
+        private void UseHealItem_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            return true;      
+            if (currentHealItemSlot)
+            {
+                var item = GetItemFromTables(currentHealItemSlot.GUID);
+                if (item != null)
+                {
+                    item.Use(currentHealItemSlot);
+                }
+                else
+                {
+                    Debug.Log($"Playerはヒールアイテムをインベントリ内に所持していません。");
+                }
+            }
         }
 
+        /// <summary>
+        /// 引数に与えられたアイテムが、既にインベントリ内に存在するかどうか判定する関数
+        /// </summary>
+        private bool HasItem(string guid)
+        {
+            foreach (var item in itemTables)
+            {
+                if (item.GetItemGUID == guid)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 引数に与えられたアイテムから、それを含んだアイテムテーブルを返す関数
+        /// </summary>
+        private ItemInventoryTable GetItemFromTables(string guid)
+        {
+            foreach (var itemTable in itemTables)
+            {
+                if (itemTable.GetItemGUID == guid) return itemTable;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// プレイヤーの任意のタイミングで使用できるアイテムを、プレイヤーインベントリ内に
+        /// 追加できるか判定する関数
+        /// </summary>
+        public bool AddItem(BaseItem pickedItem)
+        {
+            //cheack if same item is in table or not.
+            if (HasItem(pickedItem.GetItemGUID))
+            {
+                var itemTable = GetItemFromTables(pickedItem.GetItemGUID);
+                if (itemTable.LimitStacSize)
+                {
+                    Debug.Log(pickedItem.GetItemName + ": limit stack size");
+                    return false;
+                }
+                itemTable.CurrentStackSize += pickedItem.GetAddStacSize;
+                currentHealItemSlot.UpdateStackSizeText(itemTable.CurrentStackSize);
+                Destroy(pickedItem.gameObject);
+                return true;
+            }
+
+            //create new table
+            var newTable = new ItemInventoryTable(pickedItem, this);
+            itemTables.Add(newTable);
+            if (pickedItem.GetItemType == ItemType.HealthKit)
+            {
+                currentHealItemSlot.SetItemInfo(pickedItem.GetItemGUID, pickedItem.GetAddStacSize);
+            }
+
+            pickedItem.gameObject.SetActive(false);
+            return true;
+        }
     }
 }

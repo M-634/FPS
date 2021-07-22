@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 using Musashi.Weapon;
-using Musashi.Item;
 using UnityEngine.UI;
 using TMPro;
-using System;
+using System.Linq;
 
 namespace Musashi.Player
 {
@@ -19,6 +18,7 @@ namespace Musashi.Player
     public class PlayerWeaponManager : MonoBehaviour
     {
         #region Field
+        [Header("General settings")]
         [SerializeField] WeaponControl startDefultWeapon;
         [SerializeField] Camera weaponCamera;
 
@@ -27,7 +27,7 @@ namespace Musashi.Player
         [SerializeField] Transform aimmingWeaponPos;
         [SerializeField] Transform downWeaponPos;
         [SerializeField] Transform weaponParentSocket;
-        [SerializeField] float adjustPosTime = 0.2f;
+        [SerializeField] float adjustPosTime = 0.01f;
 
         [Header("Set aiming propeties")]
         [SerializeField] AnimationCurve weaponChangeCorrectiveCurvel;
@@ -63,8 +63,7 @@ namespace Musashi.Player
         private Vector3 lastPlayerCharacterPosition;
         private Vector3 weaponBobLocalPosition;
 
-        //public : debug
-        public List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。同じ武器は持てない
+        private readonly List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。プレハブからインスタンス化したゲームオブジェクトを格納する。同じ武器は持てない
         private WeaponControl currentEquipmentWeapon;
 
         PlayerInputProvider inputProvider;
@@ -94,26 +93,75 @@ namespace Musashi.Player
             }
         }
 
-        /// <summary>装備している武器の操作ができるかどうか判定する/// </summary>
-        public bool CanEquipmentWeaponAction => !isChangingWeapon && CurrentEquipmentWeapon != null;
+        /// <summary>
+        /// 武器を装備している時に、プレイヤーの入力を受け付けるかどうか判定するプロパティ
+        /// </summary>
+        public bool CanProcessWeapon => CurrentEquipmentWeapon && !isChangingWeapon;
         #endregion
 
         #region Private Methods
+        private void Start()
+        {
+            inputProvider = GetComponent<PlayerInputProvider>();
+            playerCharacter = GetComponent<PlayerCharacterStateMchine>();
+            inventory = GetComponent<PlayerItemInventory>();
+
+            inventory.ChangedAmmoInInventoryEvent += CurrentEquipmentWeapon_OnChangedAmmo;
+            InitializeWeapon();
+        }
+
+        private void Update()
+        {
+            SwitchWeapon();
+            InteractiveShooterTypeWeapon();
+        }
+
+        private void LateUpdate()
+        {
+            //UpdateWeaponBob();
+            UpdateAimingWeapon();
+            UpdateWeaponPosOffet();
+        }
+
+        /// <summary>
+        /// 武器の位置調整をする関数
+        /// </summary>
+        private void UpdateWeaponPosOffet()
+        {
+            if (CanProcessWeapon && CurrentEquipmentWeapon.IsPlayingAnimationStateIdle)
+            {
+                var offsetLoacalPosition = isAiming ? CurrentEquipmentWeapon.GetAimLocalPositionOffset : CurrentEquipmentWeapon.GetDefultLocalPositionOffset;
+                //銃の武器アニメーションはルートモーションで行っている。そのため、リロードやショットを打つたびに座標が若干ずれて行きます。
+                //それを防ぐために、補正をかけてweaponParentSocketのローカル座標に合わせてずれを防ぐ。
+                CurrentEquipmentWeapon.RootPosition = offsetLoacalPosition;
+                CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
+            }
+        }
+
         /// <summary>
         /// リロードが完了したらインベントリ内の段数を考慮し、 実際にリロードできる段数を返す関数。
         /// </summary>
         private int CurrentEquipmentWeapon_HaveEndedReloadingAmmo()
         {
+            if (CurrentEquipmentWeapon.weaponType == WeaponType.ShotGun)
+            {
+                if (inventory.SumAmmoInInventory == 0) return 0;
+                //一発ずつリロードする
+                inventory.SumAmmoInInventory -= 1;
+                return 1;
+
+            }
+
             int diff = currentEquipmentWeapon.MaxAmmo - currentEquipmentWeapon.CurrentAmmo;
 
-            if (inventory.SumNumberOfAmmoInInventory - diff >= 0)
+            if (inventory.SumAmmoInInventory - diff >= 0)
             {
-                inventory.SumNumberOfAmmoInInventory -= diff;
+                inventory.SumAmmoInInventory -= diff;
                 return currentEquipmentWeapon.MaxAmmo;
             }
 
-            int temp = currentEquipmentWeapon.CurrentAmmo + inventory.SumNumberOfAmmoInInventory;
-            inventory.SumNumberOfAmmoInInventory = 0;
+            int temp = currentEquipmentWeapon.CurrentAmmo + inventory.SumAmmoInInventory;
+            inventory.SumAmmoInInventory = 0;
             return temp;
         }
 
@@ -122,7 +170,7 @@ namespace Musashi.Player
         /// </summary>
         private bool CurrentEquipmentWeapon_CanReloadAmmo()
         {
-            if (inventory.SumNumberOfAmmoInInventory > 0)
+            if (inventory.SumAmmoInInventory > 0)
             {
                 return true;
             }
@@ -134,62 +182,23 @@ namespace Musashi.Player
         /// </summary>
         private void CurrentEquipmentWeapon_OnChangedAmmo()
         {
-            ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumNumberOfAmmoInInventory.ToString();
-            ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
-        }
-
-        private void Start()
-        {
-            inputProvider = GetComponent<PlayerInputProvider>();
-            playerCharacter = GetComponent<PlayerCharacterStateMchine>();
-            inventory = GetComponent<PlayerItemInventory>();
-            InitializeWeapon();
-        }
-
-        private void Update()
-        {
-            if (!CanEquipmentWeaponAction) return;
-            SwitchWeapon();
-            InteractiveShooterTypeWeapon();
+            if (CurrentEquipmentWeapon)
+            {
+                ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumAmmoInInventory.ToString();
+                ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
+            }
         }
 
         /// <summary>
-        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// プレイヤーの入力に応じて、装備中の武器を操作する関数
         /// </summary>
-        private void SwitchWeapon()
-        {
-            //test 
-            int i = inputProvider.SwichWeaponID;
-            if (i == -1 || i > weaponSlots.Count) return;
-
-            var nextWeapon = weaponSlots[i];
-            if (nextWeapon != CurrentEquipmentWeapon)
-            {
-                ChangeWeapon(nextWeapon);
-            }
-        }
-
-        private void LateUpdate()
-        {
-            if (!CanEquipmentWeaponAction) return;
-
-            UpdateAimingWeapon();
-            //UpdateWeaponBob();
-
-            if (CurrentEquipmentWeapon.IsPlayingAnimationStateIdle)
-            {
-                //銃の武器アニメーションはルートモーションで行っている。そのため、リロードやショットを打つたびに座標が若干ずれて行きます。
-                //それを防ぐために、補正をかけてweaponParentSocketのローカル座標に合わせてずれを防ぐ。
-                CurrentEquipmentWeapon.transform.localPosition = Vector3.Lerp(CurrentEquipmentWeapon.transform.localPosition, Vector3.zero, adjustPosTime * Time.deltaTime);
-                CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
-            }
-        }
         private void InteractiveShooterTypeWeapon()
         {
+            if (!CanProcessWeapon) return;
+
             //Aim
             isAiming = inputProvider.Aim;
 
-            if (!CurrentEquipmentWeapon.CanInputAction) return;
 
             //Shoot
             switch (CurrentEquipmentWeapon.GetWeaponShootType)
@@ -216,14 +225,32 @@ namespace Musashi.Player
         }
 
         /// <summary>
+        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// </summary>
+        private void SwitchWeapon()
+        {
+            if (isChangingWeapon || CurrentEquipmentWeapon.Reloding) return;
+
+            //test 
+            int i = inputProvider.SwichWeaponID;
+            if (i >= weaponSlots.Count) return;
+
+            var nextWeapon = weaponSlots[i];
+            if (nextWeapon != CurrentEquipmentWeapon)
+            {
+                ChangeWeapon(nextWeapon);
+            }
+        }
+
+        /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
         private void InitializeWeapon()
         {
             weaponParentSocket.localPosition = downWeaponPos.localPosition;
-            if (AddWeapon(startDefultWeapon))
+            if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
             {
-                ChangeWeapon(weaponSlots[0]);
+                ChangeWeapon(weaponSlots.First());
             }
         }
 
@@ -233,15 +260,17 @@ namespace Musashi.Player
         /// <param name="isAiming"></param>
         private void UpdateAimingWeapon()
         {
+            if (!CanProcessWeapon) return;
+
             if (isAiming)
             {
                 targetAimFov = CurrentEquipmentWeapon.AimCameraFOV;
-                targetAimPos = aimmingWeaponPos.localPosition + CurrentEquipmentWeapon.GetAimLocalPositionOffset;
+                targetAimPos = aimmingWeaponPos.localPosition;
             }
             else
             {
                 targetAimFov = playerCharacter.DefultFieldOfView;
-                targetAimPos = defultWeaponPos.localPosition + CurrentEquipmentWeapon.GetDefultLocalPositionOffset;
+                targetAimPos = defultWeaponPos.localPosition;
             }
             float aimSpeed = CurrentEquipmentWeapon.AimSpeed;
 
@@ -295,14 +324,14 @@ namespace Musashi.Player
             {
                 //武器を持っているとき
                 var sequence = DOTween.Sequence();
-                sequence.Append(MoveWeapon(downWeaponPos, weaponDownDuration, weaponChangeCorrectiveCurvel))
+                sequence.Append(MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel))
                     .AppendCallback(
                     () =>
                     {
                         nextWeapon.ShowWeapon(true);
                         CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
                     })
-                    .Append(MoveWeapon(defultWeaponPos, weaponUpDuration, weaponChangeCorrectiveCurvel))
+                    .Append(MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel))
                     .AppendCallback(
                     () =>
                     {
@@ -315,7 +344,7 @@ namespace Musashi.Player
             {
                 //武器を持っていないとき
                 nextWeapon.ShowWeapon(true);
-                MoveWeapon(defultWeaponPos, weaponUpDuration, weaponChangeCorrectiveCurvel)
+                MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel)
                     .OnComplete(
                     () =>
                     {
@@ -327,10 +356,12 @@ namespace Musashi.Player
         }
 
         /// <summary>
-        /// DoTweenを使用して、武器の出し入れの動きを制御する関数
-        private Tween MoveWeapon(Transform targetPos, float duration, AnimationCurve animationCurve)
+        /// DoTweenを使用して、武器の出し入れの動きを制御する関数.
+        /// 動かすのは、WeaponParentSocketオブジェクトであることに注意する
+        ///</summary>
+        private Tween MoveWeapon(Vector3 targetPos, float duration, AnimationCurve animationCurve)
         {
-            return weaponParentSocket.DOLocalMove(targetPos.localPosition, duration).SetEase(animationCurve);
+            return weaponParentSocket.DOLocalMove(targetPos, duration).SetEase(animationCurve);
         }
 
         /// <summary>
@@ -362,23 +393,20 @@ namespace Musashi.Player
 
         /// <summary>
         /// 引数で渡されるWeaponControlがアタッチされた武器Prefabを既に持っているかどうか判定する関数
-        /// (修正箇所あり)
         /// </summary>
         private bool HasWeapon(WeaponControl weaponPrefab)
         {
-            Debug.Log("pickup :" + weaponPrefab.gameObject);
             foreach (var w in weaponSlots)
             {
-                Debug.Log("slot :" + w.SourcePrefab);   
                 if (w.SourcePrefab == weaponPrefab.gameObject)
                 {
                     return true;
                 }
             }
             return false;
-            #endregion
 
         }
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -393,7 +421,7 @@ namespace Musashi.Player
 
             //instance weapon and set localPosition and rotation
             var weaponInstance = Instantiate(pickupWeaponPrefab, weaponParentSocket);
-            weaponInstance.transform.localPosition = Vector3.zero + weaponInstance.GetDefultLocalPositionOffset;
+            weaponInstance.RootPosition = weaponInstance.GetDefultLocalPositionOffset;
             weaponInstance.transform.rotation = weaponParentSocket.rotation;
 
             //set  sorcePrefab and don't active weapon
