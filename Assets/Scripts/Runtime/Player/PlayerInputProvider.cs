@@ -26,7 +26,6 @@ namespace Musashi
                 return isGamepad;
             }
         }
-
         public Vector3 GetMoveInput
         {
             get
@@ -64,11 +63,9 @@ namespace Musashi
         public bool HeldFire => GameManager.Instance.CanProcessInput && heldFire;
         public bool Reload => GameManager.Instance.CanProcessInput && PlayerInputActions.Reload.triggered;
         public bool Interactive => GameManager.Instance.CanProcessInput && PlayerInputActions.Interactive.triggered;
-        //public bool UseHealItem => GameManager.Instance.CanProcessInput && PlayerInputActions.UseHealItem.triggered;
 
         private bool aim;
         public bool Aim => GameManager.Instance.CanProcessInput && aim;
-
         private bool sprint;
         public bool Sprint => GameManager.Instance.CanProcessInput && sprint;
         public bool CanCrouch { get; set; }
@@ -76,6 +73,7 @@ namespace Musashi
         private int swichWeaponIDByGamepad = int.MaxValue;
         /// <summary>
         ///押してない時は int.MaxValue。武器チェンジする時は、0か1か２を返す.
+        ///memo ： 武器切り替えを変更するため、ここの処理も修正する
         /// </summary>
         public int SwichWeaponID
         {
@@ -112,7 +110,6 @@ namespace Musashi
                 return int.MaxValue;
             }
         }
-
 
         private void Awake()
         {

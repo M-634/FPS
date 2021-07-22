@@ -47,13 +47,13 @@ namespace Musashi.Player
 
             if (hpBackgroundBar)
             {
-                hpBackgroundBar.color = takeDamgeColor;
                 //hpバーの赤い部分を徐々に減らす
+                hpBackgroundBar.color = takeDamgeColor;
                 DOTween.To(() => hpBackgroundBar.fillAmount, (x) => hpBackgroundBar.fillAmount = x, healthBarFillImage.fillAmount, backBarToFillBarDuration)
                        .SetEase(Ease.Linear);
             }
 
-            HealCancel();
+            CancelHealAction();
         }
 
         protected override void AddOnDieEvent()
@@ -67,7 +67,7 @@ namespace Musashi.Player
             GameManager.Instance.GameOver();
         }
 
-        public void HealCancel()
+        public void CancelHealAction()
         {
             if (currentHealingTweener != null && IsHealing)
             {

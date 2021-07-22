@@ -14,6 +14,9 @@ namespace Musashi.Player
     /// </summary>
     public class PlayerItemInventory : MonoBehaviour
     {
+        /// <summary>
+        /// インベントリ内のアイテム情報を一括にまとめた内部クラス
+        /// </summary>
         private class ItemInventoryTable
         {
             private readonly BaseItem item;
@@ -70,13 +73,13 @@ namespace Musashi.Player
             }
         }
 
-        public event Action ChangedAmmoInInventoryEvent;
-        public const int LIMITITEMSTACKSIZE = 999;
-
-        [SerializeField] bool testScene;
+        [SerializeField] bool setLimitStackSizeAmmo;
         [SerializeField] Slot currentHealItemSlot;//今のところ回復アイテムは一種類だけなので、スロットを最初からアタッチちする
 
+        public const int LIMITITEMSTACKSIZE = 999;
+        public event Action ChangedAmmoInInventoryEvent;
         private readonly List<ItemInventoryTable> itemTables = new List<ItemInventoryTable>();
+        PlayerInputProvider inputProvider;
 
         private int sumAmmoInInventory;
         public int SumAmmoInInventory
@@ -96,14 +99,12 @@ namespace Musashi.Player
             }
         }
 
-        PlayerInputProvider inputProvider;
-
         private void Start()
         {
             inputProvider = GetComponent<PlayerInputProvider>();
             inputProvider.PlayerInputActions.UseHealItem.performed += UseHealItem_performed;
 
-            if (testScene)
+            if (setLimitStackSizeAmmo)
             {
                 SumAmmoInInventory = LIMITITEMSTACKSIZE;
             }

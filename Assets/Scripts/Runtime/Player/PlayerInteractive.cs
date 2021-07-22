@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Musashi
 {
+    /*
+     * リファクタリングをメモ： メッセージの受け取り処理を変更する
+     */
     /// <summary>
     /// プレイヤーが武器やアイテム、ステージギミックとのインタラクティブを管理するクラス
     /// </summary>
@@ -21,7 +24,7 @@ namespace Musashi
             inputProvider = GetComponentInParent<PlayerInputProvider>();
         }
 
-        private void Update()//コルーチンに変える
+        private void Update()
         {
             if (CheakInteractiveObj() && inputProvider.Interactive)
             {
@@ -31,6 +34,7 @@ namespace Musashi
                 }
             }
         }
+
 
         private bool CheakInteractiveObj()
         {

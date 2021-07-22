@@ -189,6 +189,9 @@ namespace Musashi.Player
             }
         }
 
+        /// <summary>
+        /// プレイヤーの入力に応じて、装備中の武器を操作する関数
+        /// </summary>
         private void InteractiveShooterTypeWeapon()
         {
             if (!CanProcessWeapon) return;
