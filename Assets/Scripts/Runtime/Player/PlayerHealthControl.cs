@@ -19,6 +19,8 @@ namespace Musashi.Player
         /// <summary>ダメージエフェクトのイメージカラーのアルファ値が０に戻るまでの時間</summary>
         [SerializeField] float autoHealTime = 1f;
 
+        Tweener currentHealingTweener;
+
         public bool IsHealing { get; set; } = false;
 
         protected override void Start()
@@ -50,11 +52,27 @@ namespace Musashi.Player
                 DOTween.To(() => hpBackgroundBar.fillAmount, (x) => hpBackgroundBar.fillAmount = x, healthBarFillImage.fillAmount, backBarToFillBarDuration)
                        .SetEase(Ease.Linear);
             }
+
+            HealCancel();
         }
 
         protected override void AddOnDieEvent()
         {
+
+            if (currentHealingTweener != null && IsHealing)
+            {
+                currentHealingTweener.Kill();
+            }
+            hpBackgroundBar.fillAmount = 0f;
             GameManager.Instance.GameOver();
+        }
+
+        public void HealCancel()
+        {
+            if (currentHealingTweener != null && IsHealing)
+            {
+                currentHealingTweener.Kill();
+            }
         }
 
         /// <summary>
@@ -73,13 +91,20 @@ namespace Musashi.Player
 
             if (hpBackgroundBar)
             {
+                currentHealingTweener = null;
                 hpBackgroundBar.color = healHpColor;
                 var targetHP = CurrentHp + healPoint;
                 hpBackgroundBar.fillAmount = targetHP / maxHp;
+
                 //回復時間に沿って、徐々にHPを回復させる
-                DOTween.To(() => healthBarFillImage.fillAmount, (x) => healthBarFillImage.fillAmount = x, hpBackgroundBar.fillAmount, healtime)
+                currentHealingTweener = DOTween.To(() => healthBarFillImage.fillAmount, (x) => healthBarFillImage.fillAmount = x, hpBackgroundBar.fillAmount, healtime)
                     .SetEase(Ease.Linear)
                     .OnUpdate(() => IsHealing = true)
+                    .OnKill(()=>
+                    {
+                        IsHealing = false;
+                        Debug.Log("回復を中断しました");
+                    })
                     .OnComplete(() =>
                     {
                         IsHealing = false;

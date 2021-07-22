@@ -109,6 +109,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSetting: {fileID: 11400000, guid: b8bb84dc8867a2a4b95d4ee59137e788, type: 2}
-  sourcePrefab: {fileID: 8617506981203164558}
-  healPoint: 30
-  healtime: 2
+  healPoint: 50
+  healtime: 5
