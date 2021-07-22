@@ -145,9 +145,11 @@ namespace Musashi.Player
         {
             if (CurrentEquipmentWeapon.weaponType == WeaponType.ShotGun)
             {
+                if (inventory.SumAmmoInInventory == 0) return 0;
                 //àÍî≠Ç∏Ç¬ÉäÉçÅ[ÉhÇ∑ÇÈ
                 inventory.SumAmmoInInventory -= 1;
                 return 1;
+
             }
 
             int diff = currentEquipmentWeapon.MaxAmmo - currentEquipmentWeapon.CurrentAmmo;
@@ -194,7 +196,6 @@ namespace Musashi.Player
             //Aim
             isAiming = inputProvider.Aim;
 
-            if (!CurrentEquipmentWeapon.CanInputAction) return;
 
             //Shoot
             switch (CurrentEquipmentWeapon.GetWeaponShootType)
@@ -225,7 +226,7 @@ namespace Musashi.Player
         /// </summary>
         private void SwitchWeapon()
         {
-            if (isChangingWeapon) return;
+            if (isChangingWeapon || CurrentEquipmentWeapon.Reloding) return;
 
             //test 
             int i = inputProvider.SwichWeaponID;

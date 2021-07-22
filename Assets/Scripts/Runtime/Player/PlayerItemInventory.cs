@@ -85,6 +85,10 @@ namespace Musashi.Player
             set
             {
                 sumAmmoInInventory = value;
+                if(sumAmmoInInventory < 0)
+                {
+                    sumAmmoInInventory = 0;
+                }
                 if (ChangedAmmoInInventoryEvent != null)
                 {
                     ChangedAmmoInInventoryEvent.Invoke();
