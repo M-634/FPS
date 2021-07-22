@@ -10,6 +10,7 @@ namespace Musashi
     /// </summary>
     public class EditScene : EditorWindow
     {
+        int takeDamage;
         private PlayerHealthControl playerHealth;
         public PlayerHealthControl PlayerHealth
         {
@@ -52,11 +53,19 @@ namespace Musashi
             GUILayout.Label("Base Settings", EditorStyles.boldLabel);
             GUILayout.Space(1);
             OnPostProcess = EditorGUILayout.Toggle("OnPostProcess", OnPostProcess);
-    
+
             GUILayout.Label("Test RunTime", EditorStyles.boldLabel);
-            if(GUILayout.Button("Damage Player"))
+            takeDamage = EditorGUILayout.IntSlider("Take Damage", value: takeDamage, 1, 100);
+            if (GUILayout.Button("Damage Player"))
             {
-                PlayerHealth.OnDamage(30f);
+                if (Application.isPlaying)
+                {
+                    PlayerHealth.OnDamage(takeDamage);
+                }
+            }
+            if(GUILayout.Button("Reset HP"))
+            {
+                playerHealth.ResetHP();
             }
         }
     }

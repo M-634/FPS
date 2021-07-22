@@ -40,6 +40,7 @@ namespace Musashi.Player
             }
             public bool LimitStacSize => stackingNumber == item.GetMaxStacSize;
             public string GetItemGUID => item.GetItemGUID;
+            public string GetItemNameInTabe => item.GetItemName;
             public ItemInventoryTable(BaseItem item, PlayerItemInventory inventory)
             {
                 this.item = item;
@@ -57,6 +58,7 @@ namespace Musashi.Player
                     {
                         slot.UpdateStackSizeText(CurrentStackSize);
                     }
+                    Debug.Log($"{item.GetItemName}を使用しました");
                 }
             }
             public void DeleteTable()
@@ -109,11 +111,17 @@ namespace Musashi.Player
 
         private void UseHealItem_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            Debug.Log("can input");
             if (currentHealItemSlot)
             {
                 var item = GetItemFromTables(currentHealItemSlot.GUID);
-                item.Use(currentHealItemSlot);
+                if (item != null)
+                {
+                    item.Use(currentHealItemSlot);
+                }
+                else
+                {
+                    Debug.Log($"Playerはヒールアイテムをインベントリ内に所持していません。");
+                }
             }
         }
 
