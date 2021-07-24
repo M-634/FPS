@@ -18,7 +18,8 @@ namespace Musashi
         public SceneLoader SceneLoder => sceneLoder;
         public Configure Configure => configure;
         public bool IsGameClear { get; private set; }
-        public bool CanProcessInput { get; private set; }
+        public bool CanProcessInput { get; set; }
+        public bool ShowConfig { get; private set; }
 
         protected override void Awake()
         {
@@ -101,6 +102,7 @@ namespace Musashi
         {
             UnlockCusor();
             configure.gameObject.SetActive(true);
+            ShowConfig = true;
             Time.timeScale = 0f;
         }
 
@@ -115,6 +117,7 @@ namespace Musashi
                 LockCusor();
                 Time.timeScale = 1f;
             }
+            ShowConfig = false;
             configure.gameObject.SetActive(false);
         }
     }

@@ -56,6 +56,10 @@ namespace Musashi
                 return 0;
             }
         }
+
+        public Vector2 GetMousePosition => PlayerInputActions.Point.ReadValue<Vector2>();
+
+
         public bool Jump => GameManager.Instance.CanProcessInput && PlayerInputActions.Jump.triggered;
         public bool Fire => GameManager.Instance.CanProcessInput && PlayerInputActions.Fire.triggered;
 

@@ -179,6 +179,14 @@ namespace Musashi
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""77ffccd4-d301-45e3-87be-e4570b2bb03c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -718,6 +726,17 @@ namespace Musashi
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c93ce11-ad26-4a6e-b2be-686ee5509e1a"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Point"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1315,6 +1334,7 @@ namespace Musashi
             m_Player_SwichWeaponByGamePad_Left = m_Player.FindAction("SwichWeaponByGamePad_Left", throwIfNotFound: true);
             m_Player_UseHealItem = m_Player.FindAction("UseHealItem", throwIfNotFound: true);
             m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+            m_Player_Point = m_Player.FindAction("Point", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1396,6 +1416,7 @@ namespace Musashi
         private readonly InputAction m_Player_SwichWeaponByGamePad_Left;
         private readonly InputAction m_Player_UseHealItem;
         private readonly InputAction m_Player_Crouch;
+        private readonly InputAction m_Player_Point;
         public struct PlayerActions
         {
             private @MyInputActions m_Wrapper;
@@ -1420,6 +1441,7 @@ namespace Musashi
             public InputAction @SwichWeaponByGamePad_Left => m_Wrapper.m_Player_SwichWeaponByGamePad_Left;
             public InputAction @UseHealItem => m_Wrapper.m_Player_UseHealItem;
             public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+            public InputAction @Point => m_Wrapper.m_Player_Point;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1489,6 +1511,9 @@ namespace Musashi
                     @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                     @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                     @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                    @Point.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPoint;
+                    @Point.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPoint;
+                    @Point.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPoint;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1553,6 +1578,9 @@ namespace Musashi
                     @Crouch.started += instance.OnCrouch;
                     @Crouch.performed += instance.OnCrouch;
                     @Crouch.canceled += instance.OnCrouch;
+                    @Point.started += instance.OnPoint;
+                    @Point.performed += instance.OnPoint;
+                    @Point.canceled += instance.OnPoint;
                 }
             }
         }
@@ -1729,6 +1757,7 @@ namespace Musashi
             void OnSwichWeaponByGamePad_Left(InputAction.CallbackContext context);
             void OnUseHealItem(InputAction.CallbackContext context);
             void OnCrouch(InputAction.CallbackContext context);
+            void OnPoint(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
