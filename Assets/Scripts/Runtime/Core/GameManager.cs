@@ -18,7 +18,7 @@ namespace Musashi
         public SceneLoader SceneLoder => sceneLoder;
         public Configure Configure => configure;
         public bool IsGameClear { get; private set; }
-        public bool CanProcessInput { get; set; }
+        public bool CanProcessPlayerMoveInput { get; set; }
         public bool ShowConfig { get; private set; }
 
         protected override void Awake()
@@ -75,7 +75,7 @@ namespace Musashi
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            CanProcessInput = true;
+            CanProcessPlayerMoveInput = true;
         }
 
         public void UnlockCusor()
@@ -83,7 +83,7 @@ namespace Musashi
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            CanProcessInput = false;
+            CanProcessPlayerMoveInput = false;
         }
 
         public void SwichConfiguUI()

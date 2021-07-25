@@ -228,7 +228,7 @@ namespace Musashi.Player
         private void ControlCameraAndPlayerRotation()
         {
             //horizoltal rotation
-            transform.Rotate(new Vector3(0f, inputProvider.GetLookInputsHorizontal * CameraSensitivity * CameraRotaionMuliplier, 0f), Space.Self);
+            transform.Rotate(new Vector3(0f, inputProvider.GetLookInputHorizontal * CameraSensitivity * CameraRotaionMuliplier, 0f), Space.Self);
 
             //vertical rotation
             cameraVerticalAngle += inputProvider.GetLookInputVertical * CameraSensitivity * CameraRotaionMuliplier * -1;

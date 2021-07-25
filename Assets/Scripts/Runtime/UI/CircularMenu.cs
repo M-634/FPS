@@ -16,24 +16,35 @@ namespace Musashi.UI
 
         private int currentMenuItem;
         private int oldMenuItem;
+
+        public bool IsActive { get; private set; }
         PlayerInputProvider inputProvider;
 
         private void Start()
         {
             inputProvider = FindObjectOfType<PlayerInputProvider>();//test     
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.performed +=
+                ctx =>
+                {
+                    if (GameManager.Instance.ShowConfig) return;
+                    GetActive(true);
+                };
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.canceled += ctx => GetActive(false);
 
             foreach (var button in buttons)
             {
                 button.sceneImage.color = button.normalColor;
             }
+            GetActive(false);
         }
 
         private void Update()
         {
+            if (!IsActive) return;
             if (GameManager.Instance.ShowConfig) return;
 
             GetCurrentMenuItem();
-            if (inputProvider.Fire)//test
+            if (inputProvider.OnSelect)//test
             {
                 ButtonAcion();
             }
@@ -50,21 +61,19 @@ namespace Musashi.UI
             {
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
-                GameManager.Instance.CanProcessInput = true;
             }
 
             //calculate...
-            var readVector = new Vector3(inputProvider.GetLookInputsHorizontal, inputProvider.GetLookInputVertical);
+            var readVector = inputProvider.InputReadVector;
             if (readVector.magnitude < limitMouseMove) return;
 
-            Debug.Log(readVector);
             var angle = Mathf.Atan2(readVector.y, readVector.x) * Mathf.Rad2Deg;
             if (angle < 0) angle += 360;
 
             currentMenuItem = (int)angle / (360 / buttons.Count);
             var temp = circularSelectBar.localEulerAngles;
             temp.z = angle;
-            circularSelectBar.localEulerAngles = temp; 
+            circularSelectBar.localEulerAngles = temp;
 
             if (currentMenuItem != oldMenuItem)
             {
@@ -88,7 +97,8 @@ namespace Musashi.UI
                 rootObject = this.gameObject;
             }
             rootObject.SetActive(value);
-
+            IsActive = value;
+            GameManager.Instance.CanProcessPlayerMoveInput = !value;
         }
     }
 
