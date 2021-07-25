@@ -5,9 +5,14 @@ using UnityEngine.InputSystem;
 
 namespace Musashi
 {
+    /**************************************************************************************************
+     * reference : Doom Eternal and Apex 
+     * if you want to check defult key bindngs and control settings, Please see the link below. 
+     * https://docs.google.com/spreadsheets/d/1iQjKegCrqvZT50606PKLM4dYmw4fLeF6l2jI4MOS1bM/edit#gid=0
+     **************************************************************************************************/
+     
     /// <summary>
     /// プレイヤーの入力を管理するクラス
-    /// reference : Doom Eternal and Apex
     /// </summary>
     public class PlayerInputProvider : MonoBehaviour
     {
@@ -55,14 +60,13 @@ namespace Musashi
                 return 0;
             }
         }
-        public Vector2 GetMousePosition => PlayerInputActions.Point.ReadValue<Vector2>();
         public bool Jump => GameManager.Instance.CanProcessInput && PlayerInputActions.Jump.triggered;
         public bool Fire => GameManager.Instance.CanProcessInput && PlayerInputActions.Fire.triggered;
 
         private bool heldFire;
         public bool HeldFire => GameManager.Instance.CanProcessInput && heldFire;
         public bool Reload => GameManager.Instance.CanProcessInput && PlayerInputActions.Reload.triggered;
-        public bool Interactive => GameManager.Instance.CanProcessInput && PlayerInputActions.Interactive.triggered;
+        public bool Interactive => GameManager.Instance.CanProcessInput && PlayerInputActions.InteractPickup.triggered;
 
         private bool aim;
         public bool Aim => GameManager.Instance.CanProcessInput && aim;
@@ -71,47 +75,8 @@ namespace Musashi
         public bool Sprint => GameManager.Instance.CanProcessInput && sprint;
         public bool CanCrouch { get; set; } = true;
 
-        private int swichWeaponIDByGamepad = int.MaxValue;
-
-        /// <summary>
-        ///押してない時は int.MaxValue。武器チェンジする時は、0か1か２を返す.
-        ///memo ： 武器切り替えを変更するため、ここの処理も修正する
-        /// </summary>
-        public int SwichWeaponID
-        {
-            get
-            {
-                if (!GameManager.Instance.CanProcessInput) return int.MaxValue;
-
-                if (PlayerInputActions.SwichWeapon0.triggered) return 0;
-                if (PlayerInputActions.SwichWeapon1.triggered) return 1;
-                if (PlayerInputActions.SwichWeapon2.triggered) return 2;
-
-                if (IsGamepad)
-                {
-                    if (PlayerInputActions.SwichWeaponByGamePad_Right.triggered)
-                    {
-                        swichWeaponIDByGamepad = (swichWeaponIDByGamepad + 1) % 3;
-                        return swichWeaponIDByGamepad;
-                    }
-
-                    if (PlayerInputActions.SwichWeaponByGamePad_Left.triggered)
-                    {
-                        if (swichWeaponIDByGamepad - 1 < 0)
-                        {
-                            swichWeaponIDByGamepad = 2;
-                        }
-
-                        else
-                        {
-                            swichWeaponIDByGamepad -= 1;
-                        }
-                        return swichWeaponIDByGamepad;
-                    }
-                }
-                return int.MaxValue;
-            }
-        }
+        public event Action<int> EquipWeaponAction;
+        public event Action HolsterWeaponAction;
 
         private void Awake()
         {
@@ -130,7 +95,17 @@ namespace Musashi
             PlayerInputActions.Crouch.started += ctx => CanCrouch = GameManager.Instance.CanProcessInput ? !CanCrouch : CanCrouch;
 
             PlayerInputActions.OpenOption.performed += ctx => GameManager.Instance.SwichConfiguUI();
+
+            PlayerInputActions.EquipWeapon1.performed += ctx => EquipWeaponAction.Invoke(0);
+            PlayerInputActions.EquipWeapon2.performed += ctx => EquipWeaponAction.Invoke(1);
+            PlayerInputActions.EquipWeapon3.performed += ctx => EquipWeaponAction.Invoke(2);
+            PlayerInputActions.EquipWeapon4.performed += ctx => EquipWeaponAction.Invoke(3);
+
+            PlayerInputActions.HolsterWeapon.performed += ctx => HolsterWeaponAction();
+            PlayerInputActions.NextWeapon.performed += ctx => Debug.Log("up");
+            PlayerInputActions.PreviousWeapon.performed += ctx => Debug.Log("down");
         }
+
 
         private void OnEnable()
         {

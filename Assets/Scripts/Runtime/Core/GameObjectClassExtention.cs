@@ -14,7 +14,7 @@ namespace Musashi
         /// <returns></returns>
         public static async void DelaySetActive(this GameObject gameObject, bool value,float duration)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(duration), false, PlayerLoopTiming.Update, gameObject.GetCancellationTokenOnDestroy());
+            await UniTask.Delay(TimeSpan.FromSeconds(duration), false, PlayerLoopTiming.Update, gameObject.GetCancellationTokenOnDestroy());//error : operationCancelException
             gameObject.SetActive(value);
         }
     }

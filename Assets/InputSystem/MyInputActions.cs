@@ -37,14 +37,6 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Fire"",
-                    ""type"": ""Button"",
-                    ""id"": ""9a209ea4-8c4e-4725-bb9b-b737f2eb9ccf"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""355e86f9-78a1-4399-a470-e708a2f8c523"",
@@ -53,9 +45,41 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Interactive"",
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""bac2078f-a342-4770-b450-0692d8671777"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""11123b60-14d3-4a5f-bff5-ab1363240b4a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Interact/Pickup"",
                     ""type"": ""Button"",
                     ""id"": ""69981835-6f6b-42df-a536-1d312be4c460"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""9a209ea4-8c4e-4725-bb9b-b737f2eb9ccf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""cdb49c6e-c131-40ce-9ab0-43b8c0b33df6"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -77,46 +101,6 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""UseItem"",
-                    ""type"": ""Button"",
-                    ""id"": ""5c5d42d5-ec56-48c9-b3ee-d0815a3426ed"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""DropItem"",
-                    ""type"": ""Button"",
-                    ""id"": ""a4799d2a-ad07-4520-8bbf-ff809b2df3c9"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Aim"",
-                    ""type"": ""Button"",
-                    ""id"": ""cdb49c6e-c131-40ce-9ab0-43b8c0b33df6"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""MousePosition"",
-                    ""type"": ""Value"",
-                    ""id"": ""4d478009-ac2d-4dfe-aad7-874ecdde81b2"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Sprint"",
-                    ""type"": ""Button"",
-                    ""id"": ""bac2078f-a342-4770-b450-0692d8671777"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""OpenOption"",
                     ""type"": ""Button"",
                     ""id"": ""62a7cb73-b9d2-45ea-bb53-6690155b8abb"",
@@ -125,7 +109,15 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""SwichWeapon0"",
+                    ""name"": ""Switch Cycle Weapon "",
+                    ""type"": ""Button"",
+                    ""id"": ""1711fe31-17f2-416d-b6a6-c1c09594bbba"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Equip Weapon 1"",
                     ""type"": ""Button"",
                     ""id"": ""bbda28f7-02b1-4740-9af2-c859cf51e02c"",
                     ""expectedControlType"": ""Button"",
@@ -133,7 +125,7 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""SwichWeapon1"",
+                    ""name"": ""Equip Weapon 2"",
                     ""type"": ""Button"",
                     ""id"": ""3e284158-a8f6-4e91-b343-e6efa1460dd6"",
                     ""expectedControlType"": ""Button"",
@@ -141,7 +133,7 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""SwichWeapon2"",
+                    ""name"": ""Equip Weapon 3"",
                     ""type"": ""Button"",
                     ""id"": ""65f5a77b-f25e-4f5f-9024-f407a4536276"",
                     ""expectedControlType"": ""Button"",
@@ -149,17 +141,33 @@ namespace Musashi
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""SwichWeaponByGamePad_Right"",
+                    ""name"": ""Equip Weapon 4"",
                     ""type"": ""Button"",
-                    ""id"": ""fe8fd5cf-c31b-48c1-b1a6-fb007b323730"",
+                    ""id"": ""6d795522-cf73-468c-95f4-2014761de775"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""SwichWeaponByGamePad_Left"",
+                    ""name"": ""Holster Weapon"",
                     ""type"": ""Button"",
-                    ""id"": ""5e6e4659-3bf6-419c-8e08-6dbe946d5b88"",
+                    ""id"": ""5b204398-b3aa-4df9-93bb-d82a1049f4b4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""NextWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e777b91-e960-48bf-a42e-912c596354c7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PreviousWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""8775a055-5c2a-4ae1-8cd9-19baaef87afd"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -169,22 +177,6 @@ namespace Musashi
                     ""type"": ""Button"",
                     ""id"": ""b83609db-8391-47ac-af09-00770061d939"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Crouch"",
-                    ""type"": ""Button"",
-                    ""id"": ""11123b60-14d3-4a5f-bff5-ab1363240b4a"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Point"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""77ffccd4-d301-45e3-87be-e4570b2bb03c"",
-                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -368,6 +360,171 @@ namespace Musashi
                 },
                 {
                     ""name"": """",
+                    ""id"": ""bf7be963-60b7-4010-b17c-9a9e9e47fcc6"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06732db7-4501-4bcc-8f95-b317129a9e0c"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0d729813-c37a-4fb3-a1d1-fba855f91f9e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Interact/Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""acfed610-d2a0-4390-957d-87e0d1856135"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Interact/Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f190b1e-8a41-4ba0-a844-7e138156eb85"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""19a02273-5f3f-4db0-9980-acf2d0315279"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96d5e998-a27b-4878-ac4c-5522e1b3a4c8"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50de9d03-5ef9-4057-a4fd-6c40797aedf4"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6323e740-f32e-4ad2-b97a-bf6fd04cb9e1"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenOption"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d2eab3d-e75a-4df0-92d3-99fb78a942df"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""OpenOption"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2a48b3b-cf83-4f5c-b74c-b7aeafbd474b"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Equip Weapon 1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f8d1c18-ec40-4ae9-a91c-7b61c3f5f55f"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Equip Weapon 2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""59ab20d4-c3af-4cd7-9a70-0e96cb8ae46a"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UseHealItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb5cc9a5-438b-438d-be36-6f7ce1d05245"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseHealItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c487516-2744-42f3-9fec-9f088c8e1c63"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Equip Weapon 3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""143bb1cd-cc10-4eca-a2f0-a3664166fe91"",
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
@@ -423,133 +580,23 @@ namespace Musashi
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bf7be963-60b7-4010-b17c-9a9e9e47fcc6"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""id"": ""88b80daa-3523-485e-8dbf-0b21b8f1d1ef"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Jump"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""06732db7-4501-4bcc-8f95-b317129a9e0c"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""id"": ""bfe0bace-5ba2-4dc4-af46-89e543b51717"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0d729813-c37a-4fb3-a1d1-fba855f91f9e"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Interactive"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""acfed610-d2a0-4390-957d-87e0d1856135"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Interactive"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8f190b1e-8a41-4ba0-a844-7e138156eb85"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Reload"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""19a02273-5f3f-4db0-9980-acf2d0315279"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Reload"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""96d5e998-a27b-4878-ac4c-5522e1b3a4c8"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Inventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""50de9d03-5ef9-4057-a4fd-6c40797aedf4"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Inventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ea578cc7-6142-47b6-861f-d302219a02a2"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""UseItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""44e0e4c8-bdcf-4e74-b677-efa555886afd"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""UseItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7b8a088e-2de9-4bbf-b51c-086835fb3dcc"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""DropItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a60b0e47-38f6-456f-a321-5df1ab3b8ce5"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DropItem"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -577,138 +624,6 @@ namespace Musashi
                 },
                 {
                     ""name"": """",
-                    ""id"": ""445752c4-2596-4b12-9247-9cf15baeafec"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""MousePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""88b80daa-3523-485e-8dbf-0b21b8f1d1ef"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bfe0bace-5ba2-4dc4-af46-89e543b51717"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6323e740-f32e-4ad2-b97a-bf6fd04cb9e1"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""OpenOption"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7d2eab3d-e75a-4df0-92d3-99fb78a942df"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""OpenOption"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c2a48b3b-cf83-4f5c-b74c-b7aeafbd474b"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""SwichWeapon0"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4f8d1c18-ec40-4ae9-a91c-7b61c3f5f55f"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""SwichWeapon1"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f527ba56-cea7-43c8-8966-3c4f1fb7638e"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SwichWeaponByGamePad_Right"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""59ab20d4-c3af-4cd7-9a70-0e96cb8ae46a"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""UseHealItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bb5cc9a5-438b-438d-be36-6f7ce1d05245"",
-                    ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""UseHealItem"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0c487516-2744-42f3-9fec-9f088c8e1c63"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""SwichWeapon2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""31cc066e-56c4-4d63-a04e-c67fa839ced7"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SwichWeaponByGamePad_Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ac0dbbb1-e1cd-4ab1-895b-f21496d1ce26"",
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
@@ -731,12 +646,56 @@ namespace Musashi
                 },
                 {
                     ""name"": """",
-                    ""id"": ""4c93ce11-ad26-4a6e-b2be-686ee5509e1a"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""c39eca6a-4b7c-476c-95d7-1b5a2c76b83b"",
+                    ""path"": ""<Keyboard>/4"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Point"",
+                    ""action"": ""Equip Weapon 4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11dfb457-9612-48d9-a30e-d03518b5e4a5"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Holster Weapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""577aaffc-2e95-4b90-944a-7cbd48e42586"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch Cycle Weapon "",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04a42ba9-0cf1-4f64-a212-9bb9681aaa3c"",
+                    ""path"": ""<Mouse>/backButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PreviousWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ff602e36-d67c-4ef9-ab13-b066aeb97fdd"",
+                    ""path"": ""<Mouse>/forwardButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""NextWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1316,25 +1275,24 @@ namespace Musashi
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-            m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-            m_Player_Interactive = m_Player.FindAction("Interactive", throwIfNotFound: true);
+            m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+            m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+            m_Player_InteractPickup = m_Player.FindAction("Interact/Pickup", throwIfNotFound: true);
+            m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
-            m_Player_UseItem = m_Player.FindAction("UseItem", throwIfNotFound: true);
-            m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
-            m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
-            m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
-            m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_OpenOption = m_Player.FindAction("OpenOption", throwIfNotFound: true);
-            m_Player_SwichWeapon0 = m_Player.FindAction("SwichWeapon0", throwIfNotFound: true);
-            m_Player_SwichWeapon1 = m_Player.FindAction("SwichWeapon1", throwIfNotFound: true);
-            m_Player_SwichWeapon2 = m_Player.FindAction("SwichWeapon2", throwIfNotFound: true);
-            m_Player_SwichWeaponByGamePad_Right = m_Player.FindAction("SwichWeaponByGamePad_Right", throwIfNotFound: true);
-            m_Player_SwichWeaponByGamePad_Left = m_Player.FindAction("SwichWeaponByGamePad_Left", throwIfNotFound: true);
+            m_Player_SwitchCycleWeapon = m_Player.FindAction("Switch Cycle Weapon ", throwIfNotFound: true);
+            m_Player_EquipWeapon1 = m_Player.FindAction("Equip Weapon 1", throwIfNotFound: true);
+            m_Player_EquipWeapon2 = m_Player.FindAction("Equip Weapon 2", throwIfNotFound: true);
+            m_Player_EquipWeapon3 = m_Player.FindAction("Equip Weapon 3", throwIfNotFound: true);
+            m_Player_EquipWeapon4 = m_Player.FindAction("Equip Weapon 4", throwIfNotFound: true);
+            m_Player_HolsterWeapon = m_Player.FindAction("Holster Weapon", throwIfNotFound: true);
+            m_Player_NextWeapon = m_Player.FindAction("NextWeapon", throwIfNotFound: true);
+            m_Player_PreviousWeapon = m_Player.FindAction("PreviousWeapon", throwIfNotFound: true);
             m_Player_UseHealItem = m_Player.FindAction("UseHealItem", throwIfNotFound: true);
-            m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
-            m_Player_Point = m_Player.FindAction("Point", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1398,50 +1356,48 @@ namespace Musashi
         private IPlayerActions m_PlayerActionsCallbackInterface;
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Look;
-        private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_Jump;
-        private readonly InputAction m_Player_Interactive;
+        private readonly InputAction m_Player_Sprint;
+        private readonly InputAction m_Player_Crouch;
+        private readonly InputAction m_Player_InteractPickup;
+        private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_Aim;
         private readonly InputAction m_Player_Reload;
         private readonly InputAction m_Player_Inventory;
-        private readonly InputAction m_Player_UseItem;
-        private readonly InputAction m_Player_DropItem;
-        private readonly InputAction m_Player_Aim;
-        private readonly InputAction m_Player_MousePosition;
-        private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_OpenOption;
-        private readonly InputAction m_Player_SwichWeapon0;
-        private readonly InputAction m_Player_SwichWeapon1;
-        private readonly InputAction m_Player_SwichWeapon2;
-        private readonly InputAction m_Player_SwichWeaponByGamePad_Right;
-        private readonly InputAction m_Player_SwichWeaponByGamePad_Left;
+        private readonly InputAction m_Player_SwitchCycleWeapon;
+        private readonly InputAction m_Player_EquipWeapon1;
+        private readonly InputAction m_Player_EquipWeapon2;
+        private readonly InputAction m_Player_EquipWeapon3;
+        private readonly InputAction m_Player_EquipWeapon4;
+        private readonly InputAction m_Player_HolsterWeapon;
+        private readonly InputAction m_Player_NextWeapon;
+        private readonly InputAction m_Player_PreviousWeapon;
         private readonly InputAction m_Player_UseHealItem;
-        private readonly InputAction m_Player_Crouch;
-        private readonly InputAction m_Player_Point;
         public struct PlayerActions
         {
             private @MyInputActions m_Wrapper;
             public PlayerActions(@MyInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Look => m_Wrapper.m_Player_Look;
-            public InputAction @Fire => m_Wrapper.m_Player_Fire;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
-            public InputAction @Interactive => m_Wrapper.m_Player_Interactive;
+            public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+            public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+            public InputAction @InteractPickup => m_Wrapper.m_Player_InteractPickup;
+            public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            public InputAction @Aim => m_Wrapper.m_Player_Aim;
             public InputAction @Reload => m_Wrapper.m_Player_Reload;
             public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
-            public InputAction @UseItem => m_Wrapper.m_Player_UseItem;
-            public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
-            public InputAction @Aim => m_Wrapper.m_Player_Aim;
-            public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
-            public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
             public InputAction @OpenOption => m_Wrapper.m_Player_OpenOption;
-            public InputAction @SwichWeapon0 => m_Wrapper.m_Player_SwichWeapon0;
-            public InputAction @SwichWeapon1 => m_Wrapper.m_Player_SwichWeapon1;
-            public InputAction @SwichWeapon2 => m_Wrapper.m_Player_SwichWeapon2;
-            public InputAction @SwichWeaponByGamePad_Right => m_Wrapper.m_Player_SwichWeaponByGamePad_Right;
-            public InputAction @SwichWeaponByGamePad_Left => m_Wrapper.m_Player_SwichWeaponByGamePad_Left;
+            public InputAction @SwitchCycleWeapon => m_Wrapper.m_Player_SwitchCycleWeapon;
+            public InputAction @EquipWeapon1 => m_Wrapper.m_Player_EquipWeapon1;
+            public InputAction @EquipWeapon2 => m_Wrapper.m_Player_EquipWeapon2;
+            public InputAction @EquipWeapon3 => m_Wrapper.m_Player_EquipWeapon3;
+            public InputAction @EquipWeapon4 => m_Wrapper.m_Player_EquipWeapon4;
+            public InputAction @HolsterWeapon => m_Wrapper.m_Player_HolsterWeapon;
+            public InputAction @NextWeapon => m_Wrapper.m_Player_NextWeapon;
+            public InputAction @PreviousWeapon => m_Wrapper.m_Player_PreviousWeapon;
             public InputAction @UseHealItem => m_Wrapper.m_Player_UseHealItem;
-            public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
-            public InputAction @Point => m_Wrapper.m_Player_Point;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1457,63 +1413,60 @@ namespace Musashi
                     @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                     @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                     @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
-                    @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
-                    @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
-                    @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                     @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                     @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                     @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                    @Interactive.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractive;
-                    @Interactive.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractive;
-                    @Interactive.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractive;
+                    @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                    @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                    @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                    @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                    @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                    @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                    @InteractPickup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractPickup;
+                    @InteractPickup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractPickup;
+                    @InteractPickup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractPickup;
+                    @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @Aim.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                    @Aim.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                    @Aim.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
                     @Reload.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                     @Reload.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                     @Reload.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                     @Inventory.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
                     @Inventory.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
                     @Inventory.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
-                    @UseItem.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseItem;
-                    @UseItem.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseItem;
-                    @UseItem.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseItem;
-                    @DropItem.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropItem;
-                    @DropItem.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropItem;
-                    @DropItem.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropItem;
-                    @Aim.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
-                    @Aim.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
-                    @Aim.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
-                    @MousePosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
-                    @MousePosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
-                    @MousePosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
-                    @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
-                    @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
-                    @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                     @OpenOption.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenOption;
                     @OpenOption.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenOption;
                     @OpenOption.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenOption;
-                    @SwichWeapon0.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
-                    @SwichWeapon0.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
-                    @SwichWeapon0.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon0;
-                    @SwichWeapon1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
-                    @SwichWeapon1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
-                    @SwichWeapon1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon1;
-                    @SwichWeapon2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon2;
-                    @SwichWeapon2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon2;
-                    @SwichWeapon2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeapon2;
-                    @SwichWeaponByGamePad_Right.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Right;
-                    @SwichWeaponByGamePad_Right.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Right;
-                    @SwichWeaponByGamePad_Right.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Right;
-                    @SwichWeaponByGamePad_Left.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Left;
-                    @SwichWeaponByGamePad_Left.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Left;
-                    @SwichWeaponByGamePad_Left.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichWeaponByGamePad_Left;
+                    @SwitchCycleWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchCycleWeapon;
+                    @SwitchCycleWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchCycleWeapon;
+                    @SwitchCycleWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchCycleWeapon;
+                    @EquipWeapon1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon1;
+                    @EquipWeapon1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon1;
+                    @EquipWeapon1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon1;
+                    @EquipWeapon2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon2;
+                    @EquipWeapon2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon2;
+                    @EquipWeapon2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon2;
+                    @EquipWeapon3.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon3;
+                    @EquipWeapon3.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon3;
+                    @EquipWeapon3.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon3;
+                    @EquipWeapon4.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon4;
+                    @EquipWeapon4.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon4;
+                    @EquipWeapon4.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEquipWeapon4;
+                    @HolsterWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHolsterWeapon;
+                    @HolsterWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHolsterWeapon;
+                    @HolsterWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHolsterWeapon;
+                    @NextWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeapon;
+                    @NextWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeapon;
+                    @NextWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeapon;
+                    @PreviousWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeapon;
+                    @PreviousWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeapon;
+                    @PreviousWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeapon;
                     @UseHealItem.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseHealItem;
                     @UseHealItem.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseHealItem;
                     @UseHealItem.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseHealItem;
-                    @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
-                    @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
-                    @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
-                    @Point.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPoint;
-                    @Point.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPoint;
-                    @Point.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPoint;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1524,63 +1477,60 @@ namespace Musashi
                     @Look.started += instance.OnLook;
                     @Look.performed += instance.OnLook;
                     @Look.canceled += instance.OnLook;
-                    @Fire.started += instance.OnFire;
-                    @Fire.performed += instance.OnFire;
-                    @Fire.canceled += instance.OnFire;
                     @Jump.started += instance.OnJump;
                     @Jump.performed += instance.OnJump;
                     @Jump.canceled += instance.OnJump;
-                    @Interactive.started += instance.OnInteractive;
-                    @Interactive.performed += instance.OnInteractive;
-                    @Interactive.canceled += instance.OnInteractive;
+                    @Sprint.started += instance.OnSprint;
+                    @Sprint.performed += instance.OnSprint;
+                    @Sprint.canceled += instance.OnSprint;
+                    @Crouch.started += instance.OnCrouch;
+                    @Crouch.performed += instance.OnCrouch;
+                    @Crouch.canceled += instance.OnCrouch;
+                    @InteractPickup.started += instance.OnInteractPickup;
+                    @InteractPickup.performed += instance.OnInteractPickup;
+                    @InteractPickup.canceled += instance.OnInteractPickup;
+                    @Fire.started += instance.OnFire;
+                    @Fire.performed += instance.OnFire;
+                    @Fire.canceled += instance.OnFire;
+                    @Aim.started += instance.OnAim;
+                    @Aim.performed += instance.OnAim;
+                    @Aim.canceled += instance.OnAim;
                     @Reload.started += instance.OnReload;
                     @Reload.performed += instance.OnReload;
                     @Reload.canceled += instance.OnReload;
                     @Inventory.started += instance.OnInventory;
                     @Inventory.performed += instance.OnInventory;
                     @Inventory.canceled += instance.OnInventory;
-                    @UseItem.started += instance.OnUseItem;
-                    @UseItem.performed += instance.OnUseItem;
-                    @UseItem.canceled += instance.OnUseItem;
-                    @DropItem.started += instance.OnDropItem;
-                    @DropItem.performed += instance.OnDropItem;
-                    @DropItem.canceled += instance.OnDropItem;
-                    @Aim.started += instance.OnAim;
-                    @Aim.performed += instance.OnAim;
-                    @Aim.canceled += instance.OnAim;
-                    @MousePosition.started += instance.OnMousePosition;
-                    @MousePosition.performed += instance.OnMousePosition;
-                    @MousePosition.canceled += instance.OnMousePosition;
-                    @Sprint.started += instance.OnSprint;
-                    @Sprint.performed += instance.OnSprint;
-                    @Sprint.canceled += instance.OnSprint;
                     @OpenOption.started += instance.OnOpenOption;
                     @OpenOption.performed += instance.OnOpenOption;
                     @OpenOption.canceled += instance.OnOpenOption;
-                    @SwichWeapon0.started += instance.OnSwichWeapon0;
-                    @SwichWeapon0.performed += instance.OnSwichWeapon0;
-                    @SwichWeapon0.canceled += instance.OnSwichWeapon0;
-                    @SwichWeapon1.started += instance.OnSwichWeapon1;
-                    @SwichWeapon1.performed += instance.OnSwichWeapon1;
-                    @SwichWeapon1.canceled += instance.OnSwichWeapon1;
-                    @SwichWeapon2.started += instance.OnSwichWeapon2;
-                    @SwichWeapon2.performed += instance.OnSwichWeapon2;
-                    @SwichWeapon2.canceled += instance.OnSwichWeapon2;
-                    @SwichWeaponByGamePad_Right.started += instance.OnSwichWeaponByGamePad_Right;
-                    @SwichWeaponByGamePad_Right.performed += instance.OnSwichWeaponByGamePad_Right;
-                    @SwichWeaponByGamePad_Right.canceled += instance.OnSwichWeaponByGamePad_Right;
-                    @SwichWeaponByGamePad_Left.started += instance.OnSwichWeaponByGamePad_Left;
-                    @SwichWeaponByGamePad_Left.performed += instance.OnSwichWeaponByGamePad_Left;
-                    @SwichWeaponByGamePad_Left.canceled += instance.OnSwichWeaponByGamePad_Left;
+                    @SwitchCycleWeapon.started += instance.OnSwitchCycleWeapon;
+                    @SwitchCycleWeapon.performed += instance.OnSwitchCycleWeapon;
+                    @SwitchCycleWeapon.canceled += instance.OnSwitchCycleWeapon;
+                    @EquipWeapon1.started += instance.OnEquipWeapon1;
+                    @EquipWeapon1.performed += instance.OnEquipWeapon1;
+                    @EquipWeapon1.canceled += instance.OnEquipWeapon1;
+                    @EquipWeapon2.started += instance.OnEquipWeapon2;
+                    @EquipWeapon2.performed += instance.OnEquipWeapon2;
+                    @EquipWeapon2.canceled += instance.OnEquipWeapon2;
+                    @EquipWeapon3.started += instance.OnEquipWeapon3;
+                    @EquipWeapon3.performed += instance.OnEquipWeapon3;
+                    @EquipWeapon3.canceled += instance.OnEquipWeapon3;
+                    @EquipWeapon4.started += instance.OnEquipWeapon4;
+                    @EquipWeapon4.performed += instance.OnEquipWeapon4;
+                    @EquipWeapon4.canceled += instance.OnEquipWeapon4;
+                    @HolsterWeapon.started += instance.OnHolsterWeapon;
+                    @HolsterWeapon.performed += instance.OnHolsterWeapon;
+                    @HolsterWeapon.canceled += instance.OnHolsterWeapon;
+                    @NextWeapon.started += instance.OnNextWeapon;
+                    @NextWeapon.performed += instance.OnNextWeapon;
+                    @NextWeapon.canceled += instance.OnNextWeapon;
+                    @PreviousWeapon.started += instance.OnPreviousWeapon;
+                    @PreviousWeapon.performed += instance.OnPreviousWeapon;
+                    @PreviousWeapon.canceled += instance.OnPreviousWeapon;
                     @UseHealItem.started += instance.OnUseHealItem;
                     @UseHealItem.performed += instance.OnUseHealItem;
                     @UseHealItem.canceled += instance.OnUseHealItem;
-                    @Crouch.started += instance.OnCrouch;
-                    @Crouch.performed += instance.OnCrouch;
-                    @Crouch.canceled += instance.OnCrouch;
-                    @Point.started += instance.OnPoint;
-                    @Point.performed += instance.OnPoint;
-                    @Point.canceled += instance.OnPoint;
                 }
             }
         }
@@ -1739,25 +1689,24 @@ namespace Musashi
         {
             void OnMove(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
-            void OnFire(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
-            void OnInteractive(InputAction.CallbackContext context);
+            void OnSprint(InputAction.CallbackContext context);
+            void OnCrouch(InputAction.CallbackContext context);
+            void OnInteractPickup(InputAction.CallbackContext context);
+            void OnFire(InputAction.CallbackContext context);
+            void OnAim(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
             void OnInventory(InputAction.CallbackContext context);
-            void OnUseItem(InputAction.CallbackContext context);
-            void OnDropItem(InputAction.CallbackContext context);
-            void OnAim(InputAction.CallbackContext context);
-            void OnMousePosition(InputAction.CallbackContext context);
-            void OnSprint(InputAction.CallbackContext context);
             void OnOpenOption(InputAction.CallbackContext context);
-            void OnSwichWeapon0(InputAction.CallbackContext context);
-            void OnSwichWeapon1(InputAction.CallbackContext context);
-            void OnSwichWeapon2(InputAction.CallbackContext context);
-            void OnSwichWeaponByGamePad_Right(InputAction.CallbackContext context);
-            void OnSwichWeaponByGamePad_Left(InputAction.CallbackContext context);
+            void OnSwitchCycleWeapon(InputAction.CallbackContext context);
+            void OnEquipWeapon1(InputAction.CallbackContext context);
+            void OnEquipWeapon2(InputAction.CallbackContext context);
+            void OnEquipWeapon3(InputAction.CallbackContext context);
+            void OnEquipWeapon4(InputAction.CallbackContext context);
+            void OnHolsterWeapon(InputAction.CallbackContext context);
+            void OnNextWeapon(InputAction.CallbackContext context);
+            void OnPreviousWeapon(InputAction.CallbackContext context);
             void OnUseHealItem(InputAction.CallbackContext context);
-            void OnCrouch(InputAction.CallbackContext context);
-            void OnPoint(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

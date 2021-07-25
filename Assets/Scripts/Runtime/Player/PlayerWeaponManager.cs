@@ -54,6 +54,7 @@ namespace Musashi.Player
         [Tooltip("Layer to set FPS weapon gameObjects to")]
         [SerializeField] LayerMask FPSWeaponLayer;
 
+        int currentWeaponIndex = 0;//when not having weapon, index = -1;
         bool isChangingWeapon;
         bool isAiming;
         float targetAimFov;
@@ -106,13 +107,39 @@ namespace Musashi.Player
             playerCharacter = GetComponent<PlayerCharacterStateMchine>();
             inventory = GetComponent<PlayerItemInventory>();
 
+            inputProvider.EquipWeaponAction += SwitchWeapon;
+            inputProvider.HolsterWeaponAction += HolsterWeaponAction;
             inventory.ChangedAmmoInInventoryEvent += CurrentEquipmentWeapon_OnChangedAmmo;
             InitializeWeapon();
         }
 
+        private void HolsterWeaponAction()
+        {
+            if (isChangingWeapon) return;
+            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
+            isChangingWeapon = true;
+            MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
+                .OnComplete(() =>
+                {
+                    isChangingWeapon = false;
+                    currentWeaponIndex = -1;
+                    CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
+                });
+        }
+
+        /// <summary>
+        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// </summary>
+        private void SwitchWeapon(int index)
+        {
+            if (index == currentWeaponIndex || isChangingWeapon || index >= weaponSlots.Count) return;
+            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
+             ChangeWeapon(weaponSlots[index],()=> currentWeaponIndex = index);
+        }
+
+     
         private void Update()
         {
-            SwitchWeapon();
             InteractiveShooterTypeWeapon();
         }
 
@@ -224,24 +251,7 @@ namespace Musashi.Player
             }
         }
 
-        /// <summary>
-        /// プレイヤーの入力に応じて武器を切り替える関数
-        /// </summary>
-        private void SwitchWeapon()
-        {
-            if (isChangingWeapon || CurrentEquipmentWeapon.Reloding) return;
-
-            //test 
-            int i = inputProvider.SwichWeaponID;
-            if (i >= weaponSlots.Count) return;
-
-            var nextWeapon = weaponSlots[i];
-            if (nextWeapon != CurrentEquipmentWeapon)
-            {
-                ChangeWeapon(nextWeapon);
-            }
-        }
-
+    
         /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
@@ -394,7 +404,7 @@ namespace Musashi.Player
         /// <summary>
         /// 引数で渡されるWeaponControlがアタッチされた武器Prefabを既に持っているかどうか判定する関数
         /// </summary>
-        private bool HasWeapon(WeaponControl weaponPrefab)
+        private bool HasWeaponInInventory(WeaponControl weaponPrefab)
         {
             foreach (var w in weaponSlots)
             {
@@ -417,7 +427,7 @@ namespace Musashi.Player
         public bool AddWeapon(WeaponControl pickupWeaponPrefab)
         {
             //if cheack already hold this weapon, don't add the weapon.
-            if (HasWeapon(pickupWeaponPrefab)) return false;
+            if (HasWeaponInInventory(pickupWeaponPrefab)) return false;
 
             //instance weapon and set localPosition and rotation
             var weaponInstance = Instantiate(pickupWeaponPrefab, weaponParentSocket);
