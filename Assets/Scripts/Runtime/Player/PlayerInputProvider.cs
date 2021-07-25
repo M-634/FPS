@@ -7,8 +7,7 @@ namespace Musashi
 {
     /// <summary>
     /// プレイヤーの入力を管理するクラス
-    /// プレイヤーオブジェット全ての親オブジェットにアタッチすること
-    /// リファクタリングメモ：アクションで登録できるようにする
+    /// reference : Doom Eternal and Apex
     /// </summary>
     public class PlayerInputProvider : MonoBehaviour
     {
@@ -56,10 +55,7 @@ namespace Musashi
                 return 0;
             }
         }
-
         public Vector2 GetMousePosition => PlayerInputActions.Point.ReadValue<Vector2>();
-
-
         public bool Jump => GameManager.Instance.CanProcessInput && PlayerInputActions.Jump.triggered;
         public bool Fire => GameManager.Instance.CanProcessInput && PlayerInputActions.Fire.triggered;
 
@@ -70,11 +66,13 @@ namespace Musashi
 
         private bool aim;
         public bool Aim => GameManager.Instance.CanProcessInput && aim;
+
         private bool sprint;
         public bool Sprint => GameManager.Instance.CanProcessInput && sprint;
-        public bool CanCrouch { get; set; }
+        public bool CanCrouch { get; set; } = true;
 
         private int swichWeaponIDByGamepad = int.MaxValue;
+
         /// <summary>
         ///押してない時は int.MaxValue。武器チェンジする時は、0か1か２を返す.
         ///memo ： 武器切り替えを変更するため、ここの処理も修正する
