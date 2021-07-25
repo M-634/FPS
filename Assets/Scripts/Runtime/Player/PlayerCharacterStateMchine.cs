@@ -121,7 +121,7 @@ namespace Musashi.Player
             {
                 playerCamera = Camera.main;
             }
-    
+
             inputProvider = GetComponent<PlayerInputProvider>();
             controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
@@ -231,7 +231,7 @@ namespace Musashi.Player
             transform.Rotate(new Vector3(0f, inputProvider.GetLookInputsHorizontal * CameraSensitivity * CameraRotaionMuliplier, 0f), Space.Self);
 
             //vertical rotation
-            cameraVerticalAngle += inputProvider.GetLookInputVertical * CameraSensitivity * CameraRotaionMuliplier;
+            cameraVerticalAngle += inputProvider.GetLookInputVertical * CameraSensitivity * CameraRotaionMuliplier * -1;
             cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -89f, 89f);
 
             playerCamera.transform.localEulerAngles = new Vector3(cameraVerticalAngle, 0f, WallRunState.GetCameraAngle(this));

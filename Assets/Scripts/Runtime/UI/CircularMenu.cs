@@ -9,17 +9,13 @@ namespace Musashi.UI
 {
     public class CircularMenu : MonoBehaviour
     {
-        [SerializeField] GameObject rootObject;
-        [SerializeField] float offestAngle;
-        [SerializeField] List<MenuButton> buttons = new List<MenuButton>();
+        [SerializeField] GameObject rootObject = default;
+        [SerializeField] RectTransform circularSelectBar = default;
+        [SerializeField] float limitMouseMove = 10f;
+        [SerializeField] List<MenuButton> buttons;
 
-        private float angle;
         private int currentMenuItem;
         private int oldMenuItem;
-
-        private Vector2 beforeMousePosition;
-        private readonly Vector2 center = new Vector2(Screen.width / 2, Screen.height / 2);
-
         PlayerInputProvider inputProvider;
 
         private void Start()
@@ -30,7 +26,6 @@ namespace Musashi.UI
             {
                 button.sceneImage.color = button.normalColor;
             }
-            Debug.Log(center);
         }
 
         private void Update()
@@ -38,39 +33,38 @@ namespace Musashi.UI
             if (GameManager.Instance.ShowConfig) return;
 
             GetCurrentMenuItem();
-            //if (inputProvider.Fire)//test
-            //{
-            //    ButtonAcion();
-            //}
+            if (inputProvider.Fire)//test
+            {
+                ButtonAcion();
+            }
         }
 
+        /// <summary>
+        /// マウスポインタが移動したベクトル量から角度を計算し、選択するメニューボタンを決める関数
+        /// </summary>
         public void GetCurrentMenuItem()
         {
+            if (buttons.Count < 3) return;
+
+            //set cursor mode
             {
                 Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.lockState = CursorLockMode.Locked;
                 GameManager.Instance.CanProcessInput = true;
             }
 
-            var currentMousePosition = inputProvider.GetMousePosition;
+            //calculate...
+            var readVector = new Vector3(inputProvider.GetLookInputsHorizontal, inputProvider.GetLookInputVertical);
+            if (readVector.magnitude < limitMouseMove) return;
 
-            //時計回り : angle < 0 
-            angle = (int)(Mathf.Atan2(currentMousePosition.y - center.y, currentMousePosition.x - center.x) - Mathf.Atan2(beforeMousePosition.y - center.y, beforeMousePosition.x - center.x)) * Mathf.Rad2Deg;
+            Debug.Log(readVector);
+            var angle = Mathf.Atan2(readVector.y, readVector.x) * Mathf.Rad2Deg;
+            if (angle < 0) angle += 360;
 
-            if (Mathf.Abs(angle) < offestAngle) return;
-
-            if (angle < 0)
-            {
-                currentMenuItem = (currentMenuItem + 1) % buttons.Count;
-            }
-            else
-            {
-                currentMenuItem--;
-                if (currentMenuItem < 0)
-                {
-                    currentMenuItem = buttons.Count - 1;
-                }
-            }
+            currentMenuItem = (int)angle / (360 / buttons.Count);
+            var temp = circularSelectBar.localEulerAngles;
+            temp.z = angle;
+            circularSelectBar.localEulerAngles = temp; 
 
             if (currentMenuItem != oldMenuItem)
             {
@@ -78,15 +72,12 @@ namespace Musashi.UI
                 buttons[currentMenuItem].OnSelected();
                 oldMenuItem = currentMenuItem;
             }
-            beforeMousePosition = currentMousePosition;
         }
 
         public void ButtonAcion()
         {
             buttons[currentMenuItem].sceneImage.color = buttons[currentMenuItem].pressedColor;
             Debug.Log("you have pressed button");
-
-            //complete ..
             GetActive(false);
         }
 

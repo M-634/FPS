@@ -47,7 +47,7 @@ namespace Musashi
                 if (GameManager.Instance.CanProcessInput)
                 {
                     var Y = PlayerInputActions.Look.ReadValue<Vector2>().y;
-                    if (GameManager.Instance.Configure.DoInvert_Y == false)
+                    if (GameManager.Instance.Configure.DoInvert_Y)
                     {
                         Y *= -1;
                     }
