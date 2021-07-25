@@ -79,7 +79,7 @@ namespace Musashi
         #endregion
 
         #region Other input under situation, for example custom UI
-        public Vector2 InputReadVector => new Vector2(PlayerInputActions.Look.ReadValue<Vector2>().x, PlayerInputActions.Look.ReadValue<Vector2>().y);
+        public Vector2 InputReadVector => new Vector2(PlayerInputActions.Look.ReadValue<Vector2>().x, PlayerInputActions.Look.ReadValue<Vector2>().y) * -1;
         public bool OnSelect => PlayerInputActions.Fire.triggered;
         #endregion
 

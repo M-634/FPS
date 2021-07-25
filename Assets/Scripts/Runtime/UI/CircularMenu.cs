@@ -1,9 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using UnityEngine.InputSystem;
 
 namespace Musashi.UI
 {
@@ -14,11 +13,33 @@ namespace Musashi.UI
         [SerializeField] float limitMouseMove = 10f;
         [SerializeField] List<MenuButton> buttons;
 
+        private int nextIndex;
         private int currentMenuItem;
         private int oldMenuItem;
 
         public bool IsActive { get; private set; }
+        public List<MenuButton> ButtonList => buttons;
         PlayerInputProvider inputProvider;
+        public event Action<int> OnSelectAction;
+
+
+        public void AddInfoInButton(string itemName, int stackSize, Sprite icon = null)
+        {
+            if (nextIndex == buttons.Count) return;
+
+            buttons[nextIndex].SetInfo(itemName, nextIndex, stackSize, icon);
+            nextIndex++;
+
+            if (nextIndex >= buttons.Count)
+            {
+                nextIndex = buttons.Count;
+            }
+        }
+
+        public void UptateInfo(int index, int stackSize)
+        {
+            buttons[index].UpdateStackSize(stackSize);
+        }
 
         private void Start()
         {
@@ -29,7 +50,12 @@ namespace Musashi.UI
                     if (GameManager.Instance.ShowConfig) return;
                     GetActive(true);
                 };
-            inputProvider.PlayerInputActions.SwitchCycleWeapon.canceled += ctx => GetActive(false);
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.canceled +=
+                ctx =>
+                {
+                    GetActive(false);
+                    OnSelectAction.Invoke(currentMenuItem);
+                };
 
             foreach (var button in buttons)
             {
@@ -44,10 +70,6 @@ namespace Musashi.UI
             if (GameManager.Instance.ShowConfig) return;
 
             GetCurrentMenuItem();
-            if (inputProvider.OnSelect)//test
-            {
-                ButtonAcion();
-            }
         }
 
         /// <summary>
@@ -66,7 +88,7 @@ namespace Musashi.UI
             //calculate...
             var readVector = inputProvider.InputReadVector;
             if (readVector.magnitude < limitMouseMove) return;
-
+     
             var angle = Mathf.Atan2(readVector.y, readVector.x) * Mathf.Rad2Deg;
             if (angle < 0) angle += 360;
 
@@ -81,13 +103,6 @@ namespace Musashi.UI
                 buttons[currentMenuItem].OnSelected();
                 oldMenuItem = currentMenuItem;
             }
-        }
-
-        public void ButtonAcion()
-        {
-            buttons[currentMenuItem].sceneImage.color = buttons[currentMenuItem].pressedColor;
-            Debug.Log("you have pressed button");
-            GetActive(false);
         }
 
         public void GetActive(bool value)
@@ -105,6 +120,7 @@ namespace Musashi.UI
     [Serializable]
     public class MenuButton
     {
+        [Header("Button settings")]
         public RectTransform rectTransform;
         public float highLightedScaleMultipier;
         public Image sceneImage;
@@ -112,16 +128,37 @@ namespace Musashi.UI
         public Color highLightedColor = Color.gray;
         public Color pressedColor = Color.gray;
 
-        public void OnSelected()
+        [Header("Set item info")]
+        public string itemName;
+        public int index;
+        public Image image;
+        public TextMeshProUGUI stackSizeText;
+
+
+        public int OnSelected()
         {
             sceneImage.color = highLightedColor;
             rectTransform.localScale *= highLightedScaleMultipier;
+            return index;
         }
 
         public void UnSelected()
         {
             sceneImage.color = normalColor;
             rectTransform.localScale = Vector3.one;
+        }
+
+        public void SetInfo(string itemName, int index, int stackSize, Sprite icon = null)
+        {
+            this.itemName = itemName;
+            this.index = index;
+            image.sprite = icon;
+            UpdateStackSize(stackSize);
+        }
+
+        public void UpdateStackSize(int stackSize)
+        {
+            stackSizeText.text = stackSize.ToString();
         }
     }
 }

@@ -7,6 +7,8 @@ using Musashi.Weapon;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using Musashi.UI;
+using System;
 
 namespace Musashi.Player
 {
@@ -53,6 +55,7 @@ namespace Musashi.Player
         [Header("Misc")]
         [Tooltip("Layer to set FPS weapon gameObjects to")]
         [SerializeField] LayerMask FPSWeaponLayer;
+        [SerializeField] CircularMenu circularWeaponMenu;
 
         int currentWeaponIndex = 0;//when not having weapon, index = -1;
         bool isChangingWeapon;
@@ -110,7 +113,13 @@ namespace Musashi.Player
             inputProvider.EquipWeaponAction += SwitchWeapon;
             inputProvider.HolsterWeaponAction += HolsterWeaponAction;
             inventory.ChangedAmmoInInventoryEvent += CurrentEquipmentWeapon_OnChangedAmmo;
+
             InitializeWeapon();
+
+            if(circularWeaponMenu != null)
+            {
+                circularWeaponMenu.OnSelectAction += SwitchWeapon;
+            }
         }
 
         private void HolsterWeaponAction()
@@ -134,10 +143,10 @@ namespace Musashi.Player
         {
             if (index == currentWeaponIndex || isChangingWeapon || index >= weaponSlots.Count) return;
             if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
-             ChangeWeapon(weaponSlots[index],()=> currentWeaponIndex = index);
+            ChangeWeapon(weaponSlots[index], () => currentWeaponIndex = index);
         }
 
-     
+
         private void Update()
         {
             InteractiveShooterTypeWeapon();
@@ -213,6 +222,11 @@ namespace Musashi.Player
             {
                 ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumAmmoInInventory.ToString();
                 ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
+
+                if (circularWeaponMenu)
+                {
+                    circularWeaponMenu.UptateInfo(currentWeaponIndex, CurrentEquipmentWeapon.CurrentAmmo);
+                }
             }
         }
 
@@ -251,7 +265,7 @@ namespace Musashi.Player
             }
         }
 
-    
+
         /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
@@ -382,7 +396,7 @@ namespace Musashi.Player
             CurrentEquipmentWeapon = nextWeapon;
             if (CurrentEquipmentWeapon.GetIcon)
             {
-                equipmentWeaponIcon.sprite = CurrentEquipmentWeapon.GetIcon.sprite;
+                equipmentWeaponIcon.sprite = CurrentEquipmentWeapon.GetIcon;
             }
             equipmentWeaponInfoUI.SetActive(true);
             CurrentEquipmentWeapon_OnChangedAmmo();
@@ -446,6 +460,10 @@ namespace Musashi.Player
             }
 
             weaponSlots.Add(weaponInstance);
+            if (circularWeaponMenu)
+            {
+                circularWeaponMenu.AddInfoInButton(weaponInstance.weaponName, weaponInstance.MaxAmmo, weaponInstance.GetIcon);
+            }
             return true;
         }
         #endregion
