@@ -6,24 +6,26 @@ using TMPro;
 namespace Musashi
 {
     /// <summary>
-    ///ゲーム開始時に0:00.00 形式でタイマーを表示する
+    /// ゲーム内の時間に関係する処理をまとめたクラス
     /// </summary>
-    public class Timer : MonoBehaviour
+    public class TimeManager : MonoBehaviour
     {
+        [Header("Speed Run Game timer settings")]
         [SerializeField] TextMeshProUGUI timerText;
         [SerializeField] TextMeshProUGUI bestTimeText;
         [SerializeField] GameObject timerPanel;
 
-
+        float defultFixedTimestep;
         private IEnumerator currutine;
         bool onTime;
 
         private void Start()
         {
             timerPanel.SetActive(false);
+            defultFixedTimestep = Time.fixedDeltaTime;
         }
 
-        private void StartTimer()
+        public void StartTimer()
         {
             timerPanel.SetActive(true);
             RecordResult.Instance.DisplayBestTime(bestTimeText);
@@ -31,7 +33,7 @@ namespace Musashi
             StartCoroutine(currutine);
         }
 
-        private void EndTimer()
+        public void EndTimer()
         {
             onTime = false;
             timerPanel.DelaySetActive(false, 2f);
@@ -50,6 +52,14 @@ namespace Musashi
             }
             RecordResult.Instance.DisplayResult(timer);
         }
+
+        public void ChangeTimeScale(float value = 1f)
+        {
+            value = Mathf.Clamp01(value);
+            Time.timeScale = value;
+            Time.fixedDeltaTime = defultFixedTimestep * Time.timeScale;
+        }
+
 
         private void OnEnable()
         {

@@ -123,6 +123,9 @@ namespace Musashi.Player
             inputProvider.HolsterWeaponAction += HolsterWeaponAction;
             inventory.ChangedAmmoInInventoryEvent += CurrentEquipmentWeapon_OnChangedAmmo;
 
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.performed += SwitchCycleWeapon_performed;
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.canceled += SwitchCycleWeapon_canceled;
+
             InitializeWeapon();
 
             if (circularWeaponMenu != null)
@@ -130,6 +133,7 @@ namespace Musashi.Player
                 circularWeaponMenu.OnSelectAction += SwitchWeapon;
             }
         }
+
         private void Update()
         {
             InteractiveShooterTypeWeapon();
@@ -324,7 +328,18 @@ namespace Musashi.Player
         }
         #endregion
 
-        #region switch,holster and moving control  weapon
+        #region player input action methods
+        private void SwitchCycleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance.ShowConfig || isChangingWeapon || (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding)) return;
+            circularWeaponMenu.Show();
+        }
+
+        private void SwitchCycleWeapon_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            circularWeaponMenu.Close();
+        }
+
         private void HolsterWeaponAction()
         {
             if (isChangingWeapon) return;

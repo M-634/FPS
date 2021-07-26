@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace Musashi.UI
 {
@@ -11,17 +14,19 @@ namespace Musashi.UI
         [SerializeField] GameObject rootObject = default;
         [SerializeField] RectTransform circularSelectBar = default;
         [SerializeField] float limitMouseMove = 10f;
+        [SerializeField, Range(0f, 1f)] float slowMotinOnActive = 0.5f;
         [SerializeField] List<MenuButton> buttons;
 
         private int nextIndex;
         private int currentMenuItem;
         private int oldMenuItem;
+        PlayerInputProvider inputProvider;
 
         public bool IsActive { get; private set; }
-        public List<MenuButton> ButtonList => buttons;
-        PlayerInputProvider inputProvider;
-        public event Action<int> OnSelectAction;
+        public bool CanDisplay { get; set; } = true;
 
+        public List<MenuButton> ButtonList => buttons;
+        public event Action<int> OnSelectAction;
 
         public void AddInfoInButton(string itemName, int stackSize, Sprite icon = null)
         {
@@ -43,20 +48,7 @@ namespace Musashi.UI
 
         private void Start()
         {
-            inputProvider = FindObjectOfType<PlayerInputProvider>();//test     
-            inputProvider.PlayerInputActions.SwitchCycleWeapon.performed +=
-                ctx =>
-                {
-                    if (GameManager.Instance.ShowConfig) return;
-                    GetActive(true);
-                };
-            inputProvider.PlayerInputActions.SwitchCycleWeapon.canceled +=
-                ctx =>
-                {
-                    GetActive(false);
-                    OnSelectAction.Invoke(currentMenuItem);
-                };
-
+            inputProvider = FindObjectOfType<PlayerInputProvider>();
             foreach (var button in buttons)
             {
                 button.sceneImage.color = button.normalColor;
@@ -66,19 +58,14 @@ namespace Musashi.UI
 
         private void Update()
         {
-            if (!IsActive) return;
-            if (GameManager.Instance.ShowConfig) return;
-
-            GetCurrentMenuItem();
+            if (IsActive) GetCurrentMenuItem(); 
         }
 
         /// <summary>
         /// マウスポインタが移動したベクトル量から角度を計算し、選択するメニューボタンを決める関数
         /// </summary>
-        public void GetCurrentMenuItem()
+        private void GetCurrentMenuItem()
         {
-            if (buttons.Count < 3) return;
-
             //set cursor mode
             {
                 Cursor.visible = false;
@@ -88,7 +75,7 @@ namespace Musashi.UI
             //calculate...
             var readVector = inputProvider.InputReadVector;
             if (readVector.magnitude < limitMouseMove) return;
-     
+
             var angle = Mathf.Atan2(readVector.y, readVector.x) * Mathf.Rad2Deg;
             if (angle < 0) angle += 360;
 
@@ -105,7 +92,7 @@ namespace Musashi.UI
             }
         }
 
-        public void GetActive(bool value)
+        private void GetActive(bool value)
         {
             if (!rootObject)
             {
@@ -114,6 +101,20 @@ namespace Musashi.UI
             rootObject.SetActive(value);
             IsActive = value;
             GameManager.Instance.CanProcessPlayerMoveInput = !value;
+        }
+
+        public void Show()
+        {
+            GetActive(true);
+            //do slow motion
+            GameManager.Instance.TimeManager.ChangeTimeScale(slowMotinOnActive);
+        }
+        public void Close()
+        {
+            GetActive(false);
+            OnSelectAction.Invoke(currentMenuItem);
+            //cancel slow motion
+            GameManager.Instance.TimeManager.ChangeTimeScale();
         }
     }
 

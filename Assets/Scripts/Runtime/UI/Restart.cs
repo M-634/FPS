@@ -36,7 +36,7 @@ namespace Musashi
         {
             if (!button.interactable) return;
             GameManager.Instance.SoundManager.PlaySE(SoundName.OnClickButton);
-            GameManager.Instance.SceneLoder.LoadScene(SceneInBuildIndex.MainGame, GameManager.Instance.CloseConfigure);
+            GameManager.Instance.SceneLoder.LoadScene(SceneInBuildIndex.MainGame, GameManager.Instance.Configure.Close);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
