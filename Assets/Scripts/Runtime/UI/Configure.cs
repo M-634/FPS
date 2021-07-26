@@ -15,6 +15,9 @@ namespace Musashi
         [Header("Opitons scriptable object")]
         [SerializeField] OptionsSOData optionsData;
 
+        [Header("Set option ui root object")]
+        [SerializeField] GameObject rootObject;
+
         [Header("Camera sensitivity settings")]
         [SerializeField] Slider mouseSensitivitySlider;
         [SerializeField] Slider controllerSensitivitySlider;
@@ -24,6 +27,9 @@ namespace Musashi
         [SerializeField] Toggle invertLookYToggle;
         [SerializeField] Toggle displayFramerateCounterToggle;
 
+        public event Action ShowAction;
+        public event Action CloseAction;
+        public bool IsActive { get; private set; }
 
         // player camera settings property
         public float MouseSensitivity { get => optionsData.mouseSensitivity; set => optionsData.mouseSensitivity = value; }
@@ -34,7 +40,12 @@ namespace Musashi
         public bool DoDisplayFrameCounter { get => optionsData.displayFrameCount; set => optionsData.displayFrameCount = value; }
 
         private void Start()
-        {  
+        {
+            if (!rootObject)
+            {
+                rootObject = gameObject;
+            }
+
             InitGameplaySettings();
         }
 
@@ -79,6 +90,28 @@ namespace Musashi
         public void FullScreen()
         {
             Screen.SetResolution(Screen.width, Screen.height, true);
+        }
+
+        public void Show()
+        {
+            rootObject.SetActive(true);
+            IsActive = true;
+            Time.timeScale = 0f;
+            if (ShowAction != null)
+            {
+                ShowAction.Invoke();
+            }
+        }
+
+        public void Close()
+        {
+            rootObject.SetActive(false);
+            IsActive = false;
+            Time.timeScale = 1f;
+            if(CloseAction != null)
+            {
+                CloseAction.Invoke();
+            }
         }
     }
 

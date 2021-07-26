@@ -6,20 +6,23 @@ using UnityEngine.Events;
 namespace Musashi
 {
     /// <summary>
-    /// ゲームに常駐するクラスをまとめる。
-    /// 初期化シーンに置いておく
+    /// ゲームシステムに関わるクラスや処理をまとめるクラス
+    /// テスト時含め、常にシーンに常駐している。
     /// </summary>
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         [SerializeField] SoundManager soundManager;
         [SerializeField] SceneLoader sceneLoder;
         [SerializeField] Configure configure;
+        [SerializeField] TimeManager timeManager;
+
         public SoundManager SoundManager => soundManager;
         public SceneLoader SceneLoder => sceneLoder;
         public Configure Configure => configure;
+        public TimeManager TimeManager => timeManager;
         public bool IsGameClear { get; private set; }
-        public bool CanProcessInput { get; private set; }
-
+        public bool CanProcessPlayerMoveInput { get; set; }
+        public bool ShowConfig => configure.IsActive;
         protected override void Awake()
         {
             base.Awake();
@@ -39,7 +42,7 @@ namespace Musashi
             {
                 sceneLoder.UnLoadScene(SceneInBuildIndex.Init);//initシーンを破棄する
             }
-            configure.gameObject.SetActive(false);//設定画面を隠す
+            InitializeConfigure();
         }
 
         public void ExitGame()
@@ -66,7 +69,6 @@ namespace Musashi
             GameEventManager.Instance.Excute(GameEventType.Goal);
         }
 
-        //other setting Method
         public void LockCusor()
         {
             if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title) return;
@@ -74,7 +76,7 @@ namespace Musashi
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            CanProcessInput = true;
+            CanProcessPlayerMoveInput = true;
         }
 
         public void UnlockCusor()
@@ -82,40 +84,36 @@ namespace Musashi
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            CanProcessInput = false;
+            CanProcessPlayerMoveInput = false;
         }
 
         public void SwichConfiguUI()
         {
-            if (configure.gameObject.activeSelf)
+            if (Configure.IsActive)
             {
-                CloseConfigure();
+                Configure.Close();
             }
             else
             {
-                ShowConfigure();
+                Configure.Show();
             }
         }
 
-        public void ShowConfigure()
+        private void InitializeConfigure()
         {
-            UnlockCusor();
-            configure.gameObject.SetActive(true);
-            Time.timeScale = 0f;
-        }
-
-        public void CloseConfigure()
-        {
-            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title)
+            Configure.ShowAction += UnlockCusor;
+            Configure.CloseAction += () =>
             {
-                FindObjectOfType<Title>().SetOptionButtonSelected();//修正箇所:現在は、応急処置でFind関数を使っている。設計を検討中...
-            }
-            else
-            {
-                LockCusor();
-                Time.timeScale = 1f;
-            }
-            configure.gameObject.SetActive(false);
+                if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title)
+                {
+                    FindObjectOfType<Title>().SetOptionButtonSelected();//修正箇所:現在は、応急処置でFind関数を使っている。設計を検討中...
+                }
+                else
+                {
+                    LockCusor();
+                }
+            };
+            Configure.Close();
         }
     }
 }

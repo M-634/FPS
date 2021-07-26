@@ -16,6 +16,8 @@ namespace Musashi.Item
 
         [SerializeField] float rotateDuration = 1f;
         [SerializeField] bool doRotate = true;
+
+        private Tween currentTween = null;
         public bool HavePicked { get; set; } = false;
 
         private void Start()
@@ -23,7 +25,7 @@ namespace Musashi.Item
             if (doRotate)
             {
                 //rotate based world axix Y 
-                transform.DORotate(Vector3.up * 360, rotateDuration, RotateMode.WorldAxisAdd)
+                currentTween = transform.DORotate(Vector3.up * 360, rotateDuration, RotateMode.WorldAxisAdd)
                     .SetEase(Ease.Linear)
                     .SetLoops(-1, LoopType.Incremental);
             }
@@ -49,6 +51,14 @@ namespace Musashi.Item
         {
             this.gameObject.layer = LayerMask.NameToLayer("Interactable");
             GetComponent<Collider>().isTrigger = true;
+        }
+
+        private void OnDestroy()
+        {
+            if (DOTween.instance != null)
+            {
+                currentTween.Kill();
+            }
         }
     }
 }

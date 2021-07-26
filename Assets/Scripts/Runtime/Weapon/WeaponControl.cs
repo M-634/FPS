@@ -57,7 +57,7 @@ namespace Musashi.Weapon
         [Header("The root object for the weapon, this is what will change acitive")]
         [SerializeField] GameObject weaponRoot;
         [Header("Display weapon icon on UI")]
-        [SerializeField] Image weaponIcon;
+        [SerializeField] Sprite weaponIcon;
         [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
 
@@ -102,7 +102,7 @@ namespace Musashi.Weapon
             }
         }
         public bool IsWeaponActive { get; private set; }
-        public Image GetIcon => weaponIcon;
+        public Sprite GetIcon => weaponIcon;
         public WeaponShootType GetWeaponShootType => weaponShootType;
         public GameObject SourcePrefab { get; set; }//instanceする前のGameObject
         public Vector3 RootPosition

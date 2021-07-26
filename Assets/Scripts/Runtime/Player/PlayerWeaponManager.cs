@@ -7,6 +7,8 @@ using Musashi.Weapon;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using Musashi.UI;
+using System;
 
 namespace Musashi.Player
 {
@@ -53,11 +55,14 @@ namespace Musashi.Player
         [Header("Misc")]
         [Tooltip("Layer to set FPS weapon gameObjects to")]
         [SerializeField] LayerMask FPSWeaponLayer;
+        [SerializeField] CircularMenu circularWeaponMenu;
 
+        int currentWeaponIndex = 0;//when not having weapon, index = -1;
         bool isChangingWeapon;
         bool isAiming;
         float targetAimFov;
         Vector3 targetAimPos;
+        private Tween currentTween;
 
         private float weaponBobFactor;
         private Vector3 lastPlayerCharacterPosition;
@@ -77,19 +82,25 @@ namespace Musashi.Player
             get => currentEquipmentWeapon;
             private set
             {
-                currentEquipmentWeapon = value;
-                if (currentEquipmentWeapon == null)
+                if (value == null)
                 {
                     //remove each events
                     currentEquipmentWeapon.CanReloadAmmo -= CurrentEquipmentWeapon_CanReloadAmmo;
                     currentEquipmentWeapon.HaveEndedReloadingAmmo -= CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
                     currentEquipmentWeapon.OnChangedAmmo -= CurrentEquipmentWeapon_OnChangedAmmo;
-                    return;
+                    currentEquipmentWeapon = null;
                 }
-                //set each events;
-                currentEquipmentWeapon.CanReloadAmmo += CurrentEquipmentWeapon_CanReloadAmmo;
-                currentEquipmentWeapon.HaveEndedReloadingAmmo += CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
-                currentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
+                else
+                {
+                    if (value != currentEquipmentWeapon)
+                    {
+                        //set each events;
+                        currentEquipmentWeapon = value;
+                        currentEquipmentWeapon.CanReloadAmmo += CurrentEquipmentWeapon_CanReloadAmmo;
+                        currentEquipmentWeapon.HaveEndedReloadingAmmo += CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
+                        currentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
+                    }
+                }
             }
         }
 
@@ -100,22 +111,33 @@ namespace Musashi.Player
         #endregion
 
         #region Private Methods
+
+        #region Unity MonoBehaviour methods
         private void Start()
         {
             inputProvider = GetComponent<PlayerInputProvider>();
             playerCharacter = GetComponent<PlayerCharacterStateMchine>();
             inventory = GetComponent<PlayerItemInventory>();
 
+            inputProvider.EquipWeaponAction += SwitchWeapon;
+            inputProvider.HolsterWeaponAction += HolsterWeaponAction;
             inventory.ChangedAmmoInInventoryEvent += CurrentEquipmentWeapon_OnChangedAmmo;
+
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.performed += SwitchCycleWeapon_performed;
+            inputProvider.PlayerInputActions.SwitchCycleWeapon.canceled += SwitchCycleWeapon_canceled;
+
             InitializeWeapon();
+
+            if (circularWeaponMenu != null)
+            {
+                circularWeaponMenu.OnSelectAction += SwitchWeapon;
+            }
         }
 
         private void Update()
         {
-            SwitchWeapon();
             InteractiveShooterTypeWeapon();
         }
-
         private void LateUpdate()
         {
             //UpdateWeaponBob();
@@ -137,7 +159,16 @@ namespace Musashi.Player
                 CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
             }
         }
+        private void OnDestroy()
+        {
+            if(DOTween.instance != null)
+            {
+                currentTween.Kill();
+            }
+        }
+        #endregion
 
+        #region methods called from events
         /// <summary>
         /// リロードが完了したらインベントリ内の段数を考慮し、 実際にリロードできる段数を返す関数。
         /// </summary>
@@ -186,9 +217,16 @@ namespace Musashi.Player
             {
                 ammoCounterText.text = CurrentEquipmentWeapon.CurrentAmmo.ToString() + " | " + inventory.SumAmmoInInventory.ToString();
                 ammoCounterSllider.fillAmount = (float)CurrentEquipmentWeapon.CurrentAmmo / CurrentEquipmentWeapon.MaxAmmo;
+
+                if (circularWeaponMenu)
+                {
+                    circularWeaponMenu.UptateInfo(currentWeaponIndex, CurrentEquipmentWeapon.CurrentAmmo);
+                }
             }
         }
+        #endregion
 
+        #region methods called from Update or LaterUpdate
         /// <summary>
         /// プレイヤーの入力に応じて、装備中の武器を操作する関数
         /// </summary>
@@ -224,36 +262,11 @@ namespace Musashi.Player
             }
         }
 
-        /// <summary>
-        /// プレイヤーの入力に応じて武器を切り替える関数
-        /// </summary>
-        private void SwitchWeapon()
-        {
-            if (isChangingWeapon || CurrentEquipmentWeapon.Reloding) return;
-
-            //test 
-            int i = inputProvider.SwichWeaponID;
-            if (i >= weaponSlots.Count) return;
-
-            var nextWeapon = weaponSlots[i];
-            if (nextWeapon != CurrentEquipmentWeapon)
-            {
-                ChangeWeapon(nextWeapon);
-            }
-        }
 
         /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
-        private void InitializeWeapon()
-        {
-            weaponParentSocket.localPosition = downWeaponPos.localPosition;
-            if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
-            {
-                ChangeWeapon(weaponSlots.First());
-            }
-        }
-
+       
         /// <summary>
         /// エイム時の挙動を制御する関数
         /// </summary>
@@ -313,11 +326,50 @@ namespace Musashi.Player
             }
 
         }
+        #endregion
+
+        #region player input action methods
+        private void SwitchCycleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            if (GameManager.Instance.ShowConfig || isChangingWeapon || (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding)) return;
+            circularWeaponMenu.Show();
+        }
+
+        private void SwitchCycleWeapon_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            circularWeaponMenu.Close();
+        }
+
+        private void HolsterWeaponAction()
+        {
+            if (isChangingWeapon) return;
+            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
+            isChangingWeapon = true;
+            currentTween =  MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
+                .OnComplete(() =>
+                {
+                    isChangingWeapon = false;
+                    currentWeaponIndex = -1;
+                    CurrentEquipmentWeapon.ShowWeapon(false);
+                    ResetEquipmentWeaponInfo();
+                });
+        }
+
+        /// <summary>
+        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// </summary>
+        private void SwitchWeapon(int index)
+        {
+            if (index == currentWeaponIndex || isChangingWeapon || index >= weaponSlots.Count) return;
+            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
+            currentWeaponIndex = index;
+            ChangeWeapon(weaponSlots[index]);
+        }
 
         /// <summary>
         /// 武器切り替え時の出し入れを制御する関数
         /// </summary>
-        private void ChangeWeapon(WeaponControl nextWeapon, UnityAction callBack = null)
+        private void ChangeWeapon(WeaponControl nextWeapon)
         {
             isChangingWeapon = true;
             if (CurrentEquipmentWeapon)
@@ -337,20 +389,19 @@ namespace Musashi.Player
                     {
                         SetEquipmentWeaponInfo(nextWeapon);
                         isChangingWeapon = false;
-                        if (callBack != null) callBack.Invoke();
                     });
+                currentTween = sequence;
             }
             else
             {
                 //武器を持っていないとき
                 nextWeapon.ShowWeapon(true);
-                MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel)
+                currentTween = MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel)
                     .OnComplete(
                     () =>
                     {
                         SetEquipmentWeaponInfo(nextWeapon);
                         isChangingWeapon = false;
-                        if (callBack != null) callBack.Invoke();
                     });
             }
         }
@@ -363,7 +414,9 @@ namespace Musashi.Player
         {
             return weaponParentSocket.DOLocalMove(targetPos, duration).SetEase(animationCurve);
         }
+        #endregion
 
+        #region set/reset weapon info on ui
         /// <summary>
         /// 装備中の武器情報をUIに表示する関数
         /// </summary>
@@ -372,7 +425,7 @@ namespace Musashi.Player
             CurrentEquipmentWeapon = nextWeapon;
             if (CurrentEquipmentWeapon.GetIcon)
             {
-                equipmentWeaponIcon.sprite = CurrentEquipmentWeapon.GetIcon.sprite;
+                equipmentWeaponIcon.sprite = CurrentEquipmentWeapon.GetIcon;
             }
             equipmentWeaponInfoUI.SetActive(true);
             CurrentEquipmentWeapon_OnChangedAmmo();
@@ -390,11 +443,25 @@ namespace Musashi.Player
             equipmentWeaponInfoUI.SetActive(false);
             CurrentEquipmentWeapon = null;
         }
+        #endregion
+
+        #region Utility 
+        /// <summary>
+        /// 初期に持たせる武器をプレイヤーに装備、出現位置を設定する関数。
+        /// </summary>
+        private void InitializeWeapon()
+        {
+            weaponParentSocket.localPosition = downWeaponPos.localPosition;
+            if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
+            {
+                ChangeWeapon(weaponSlots.First());
+            }
+        }
 
         /// <summary>
         /// 引数で渡されるWeaponControlがアタッチされた武器Prefabを既に持っているかどうか判定する関数
         /// </summary>
-        private bool HasWeapon(WeaponControl weaponPrefab)
+        private bool HasWeaponInInventory(WeaponControl weaponPrefab)
         {
             foreach (var w in weaponSlots)
             {
@@ -408,6 +475,8 @@ namespace Musashi.Player
         }
         #endregion
 
+        #endregion
+
         #region Public Methods
         /// <summary>
         /// 武器を追加する際の処理を行う関数
@@ -417,7 +486,7 @@ namespace Musashi.Player
         public bool AddWeapon(WeaponControl pickupWeaponPrefab)
         {
             //if cheack already hold this weapon, don't add the weapon.
-            if (HasWeapon(pickupWeaponPrefab)) return false;
+            if (HasWeaponInInventory(pickupWeaponPrefab)) return false;
 
             //instance weapon and set localPosition and rotation
             var weaponInstance = Instantiate(pickupWeaponPrefab, weaponParentSocket);
@@ -436,6 +505,10 @@ namespace Musashi.Player
             }
 
             weaponSlots.Add(weaponInstance);
+            if (circularWeaponMenu)
+            {
+                circularWeaponMenu.AddInfoInButton(weaponInstance.weaponName, weaponInstance.MaxAmmo, weaponInstance.GetIcon);
+            }
             return true;
         }
         #endregion

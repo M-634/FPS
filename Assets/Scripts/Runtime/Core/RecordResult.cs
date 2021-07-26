@@ -6,6 +6,7 @@ namespace Musashi
 {
     /// <summary>
     /// タイムと敵の撃破数を記録し、リザルトボードに表示する。 (スコアを出す)
+    /// スピードラン専用のクラス
     /// </summary>
     public class RecordResult : SingletonMonoBehaviour<RecordResult>
     {

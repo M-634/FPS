@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace Musashi
 {
@@ -12,9 +13,9 @@ namespace Musashi
         /// <param name="value">アクティブ</param>
         /// <param name="duration">秒待つ</param>
         /// <returns></returns>
-        public static async void DelaySetActive(this GameObject gameObject, bool value,float duration)
+        public static async void DelaySetActive(this GameObject gameObject, bool value,float duration,CancellationToken token = default)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(duration), false, PlayerLoopTiming.Update, gameObject.GetCancellationTokenOnDestroy());
+            await UniTask.Delay(TimeSpan.FromSeconds(duration), false, PlayerLoopTiming.Update, token);//error : operationCancelException
             gameObject.SetActive(value);
         }
     }
