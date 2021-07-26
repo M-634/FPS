@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Musashi.VFX
         {
             if (init == false)
             {
-                gameObject.DelaySetActive(false, lifeTime);
+                gameObject.DelaySetActive(false, lifeTime, this.GetCancellationTokenOnDestroy());
             }
             init = false;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 namespace Musashi
 {
@@ -36,7 +37,7 @@ namespace Musashi
         public void EndTimer()
         {
             onTime = false;
-            timerPanel.DelaySetActive(false, 2f);
+            timerPanel.DelaySetActive(false, 2f, this.GetCancellationTokenOnDestroy());
         }
 
         IEnumerator TimerCorutine()

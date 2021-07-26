@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace Musashi.Weapon
 {
@@ -42,7 +43,7 @@ namespace Musashi.Weapon
                 prevPos = transform.position;
                 this.transform.forward = projectile.muzzle.forward;
                 rb.velocity = projectile.muzzle.forward * projectile.power;
-                gameObject.DelaySetActive(false, projectile.lifeTime);
+                gameObject.DelaySetActive(false, projectile.lifeTime, this.GetCancellationTokenOnDestroy());
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Musashi
 {
@@ -25,7 +26,7 @@ namespace Musashi
             rigidbodies.ToList().ForEach(r =>
             {
                 r.isKinematic = false;
-                r.gameObject.DelaySetActive(false, lifeTime);
+                r.gameObject.DelaySetActive(false, lifeTime, this.GetCancellationTokenOnDestroy());
                 var vect = new Vector3(Random.Range(min,max),Random.Range(0,max),Random.Range(min,max));
                 r.AddForce(vect, ForceMode.Impulse);
                 r.AddTorque(vect, ForceMode.Impulse);
