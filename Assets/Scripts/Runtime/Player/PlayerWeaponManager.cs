@@ -62,6 +62,7 @@ namespace Musashi.Player
         bool isAiming;
         float targetAimFov;
         Vector3 targetAimPos;
+        private Tween currentTween;
 
         private float weaponBobFactor;
         private Vector3 lastPlayerCharacterPosition;
@@ -81,19 +82,25 @@ namespace Musashi.Player
             get => currentEquipmentWeapon;
             private set
             {
-                currentEquipmentWeapon = value;
-                if (currentEquipmentWeapon == null)
+                if (value == null)
                 {
                     //remove each events
                     currentEquipmentWeapon.CanReloadAmmo -= CurrentEquipmentWeapon_CanReloadAmmo;
                     currentEquipmentWeapon.HaveEndedReloadingAmmo -= CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
                     currentEquipmentWeapon.OnChangedAmmo -= CurrentEquipmentWeapon_OnChangedAmmo;
-                    return;
+                    currentEquipmentWeapon = null;
                 }
-                //set each events;
-                currentEquipmentWeapon.CanReloadAmmo += CurrentEquipmentWeapon_CanReloadAmmo;
-                currentEquipmentWeapon.HaveEndedReloadingAmmo += CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
-                currentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
+                else
+                {
+                    if (value != currentEquipmentWeapon)
+                    {
+                        //set each events;
+                        currentEquipmentWeapon = value;
+                        currentEquipmentWeapon.CanReloadAmmo += CurrentEquipmentWeapon_CanReloadAmmo;
+                        currentEquipmentWeapon.HaveEndedReloadingAmmo += CurrentEquipmentWeapon_HaveEndedReloadingAmmo;
+                        currentEquipmentWeapon.OnChangedAmmo += CurrentEquipmentWeapon_OnChangedAmmo;
+                    }
+                }
             }
         }
 
@@ -104,6 +111,8 @@ namespace Musashi.Player
         #endregion
 
         #region Private Methods
+
+        #region Unity MonoBehaviour methods
         private void Start()
         {
             inputProvider = GetComponent<PlayerInputProvider>();
@@ -116,42 +125,15 @@ namespace Musashi.Player
 
             InitializeWeapon();
 
-            if(circularWeaponMenu != null)
+            if (circularWeaponMenu != null)
             {
                 circularWeaponMenu.OnSelectAction += SwitchWeapon;
             }
         }
-
-        private void HolsterWeaponAction()
-        {
-            if (isChangingWeapon) return;
-            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
-            isChangingWeapon = true;
-            MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
-                .OnComplete(() =>
-                {
-                    isChangingWeapon = false;
-                    currentWeaponIndex = -1;
-                    CurrentEquipmentWeapon.ShowWeapon(false, ResetEquipmentWeaponInfo);
-                });
-        }
-
-        /// <summary>
-        /// プレイヤーの入力に応じて武器を切り替える関数
-        /// </summary>
-        private void SwitchWeapon(int index)
-        {
-            if (index == currentWeaponIndex || isChangingWeapon || index >= weaponSlots.Count) return;
-            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
-            ChangeWeapon(weaponSlots[index], () => currentWeaponIndex = index);
-        }
-
-
         private void Update()
         {
             InteractiveShooterTypeWeapon();
         }
-
         private void LateUpdate()
         {
             //UpdateWeaponBob();
@@ -173,7 +155,16 @@ namespace Musashi.Player
                 CurrentEquipmentWeapon.transform.localRotation = weaponParentSocket.localRotation;
             }
         }
+        private void OnDestroy()
+        {
+            if(DOTween.instance != null)
+            {
+                currentTween.Kill();
+            }
+        }
+        #endregion
 
+        #region methods called from events
         /// <summary>
         /// リロードが完了したらインベントリ内の段数を考慮し、 実際にリロードできる段数を返す関数。
         /// </summary>
@@ -229,7 +220,9 @@ namespace Musashi.Player
                 }
             }
         }
+        #endregion
 
+        #region methods called from Update or LaterUpdate
         /// <summary>
         /// プレイヤーの入力に応じて、装備中の武器を操作する関数
         /// </summary>
@@ -269,15 +262,7 @@ namespace Musashi.Player
         /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
-        private void InitializeWeapon()
-        {
-            weaponParentSocket.localPosition = downWeaponPos.localPosition;
-            if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
-            {
-                ChangeWeapon(weaponSlots.First());
-            }
-        }
-
+       
         /// <summary>
         /// エイム時の挙動を制御する関数
         /// </summary>
@@ -337,11 +322,39 @@ namespace Musashi.Player
             }
 
         }
+        #endregion
+
+        #region switch,holster and moving control  weapon
+        private void HolsterWeaponAction()
+        {
+            if (isChangingWeapon) return;
+            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
+            isChangingWeapon = true;
+            currentTween =  MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
+                .OnComplete(() =>
+                {
+                    isChangingWeapon = false;
+                    currentWeaponIndex = -1;
+                    CurrentEquipmentWeapon.ShowWeapon(false);
+                    ResetEquipmentWeaponInfo();
+                });
+        }
+
+        /// <summary>
+        /// プレイヤーの入力に応じて武器を切り替える関数
+        /// </summary>
+        private void SwitchWeapon(int index)
+        {
+            if (index == currentWeaponIndex || isChangingWeapon || index >= weaponSlots.Count) return;
+            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
+            currentWeaponIndex = index;
+            ChangeWeapon(weaponSlots[index]);
+        }
 
         /// <summary>
         /// 武器切り替え時の出し入れを制御する関数
         /// </summary>
-        private void ChangeWeapon(WeaponControl nextWeapon, UnityAction callBack = null)
+        private void ChangeWeapon(WeaponControl nextWeapon)
         {
             isChangingWeapon = true;
             if (CurrentEquipmentWeapon)
@@ -361,20 +374,19 @@ namespace Musashi.Player
                     {
                         SetEquipmentWeaponInfo(nextWeapon);
                         isChangingWeapon = false;
-                        if (callBack != null) callBack.Invoke();
                     });
+                currentTween = sequence;
             }
             else
             {
                 //武器を持っていないとき
                 nextWeapon.ShowWeapon(true);
-                MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel)
+                currentTween = MoveWeapon(defultWeaponPos.localPosition, weaponUpDuration, weaponChangeCorrectiveCurvel)
                     .OnComplete(
                     () =>
                     {
                         SetEquipmentWeaponInfo(nextWeapon);
                         isChangingWeapon = false;
-                        if (callBack != null) callBack.Invoke();
                     });
             }
         }
@@ -387,7 +399,9 @@ namespace Musashi.Player
         {
             return weaponParentSocket.DOLocalMove(targetPos, duration).SetEase(animationCurve);
         }
+        #endregion
 
+        #region set/reset weapon info on ui
         /// <summary>
         /// 装備中の武器情報をUIに表示する関数
         /// </summary>
@@ -414,6 +428,20 @@ namespace Musashi.Player
             equipmentWeaponInfoUI.SetActive(false);
             CurrentEquipmentWeapon = null;
         }
+        #endregion
+
+        #region Utility 
+        /// <summary>
+        /// 初期に持たせる武器をプレイヤーに装備、出現位置を設定する関数。
+        /// </summary>
+        private void InitializeWeapon()
+        {
+            weaponParentSocket.localPosition = downWeaponPos.localPosition;
+            if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
+            {
+                ChangeWeapon(weaponSlots.First());
+            }
+        }
 
         /// <summary>
         /// 引数で渡されるWeaponControlがアタッチされた武器Prefabを既に持っているかどうか判定する関数
@@ -430,6 +458,8 @@ namespace Musashi.Player
             return false;
 
         }
+        #endregion
+
         #endregion
 
         #region Public Methods
