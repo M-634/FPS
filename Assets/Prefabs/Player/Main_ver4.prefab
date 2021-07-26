@@ -3155,11 +3155,11 @@ MonoBehaviour:
   landSFX: {fileID: 8300000, guid: 35b84cfa2f919f543af13ad39d8091f4, type: 3}
   WallRunState:
     wallMaxDistance: 1
-    wallSpeedMultiplier: 1.2
-    minimumHeight: 1.2
-    maxAngleRoll: 20
-    normalizedAngleThreshold: 0.1
-    wallJumpDuration: 1
+    wallSpeedMultiplier: 12
+    minimumHeight: 0.7
+    maxAngleRoll: 30
+    normalizedAngleThreshold: 0.3
+    wallJumpDuration: 0.2
     wallBouncing: 3
     cameraTransitionDuration: 1
     wallGravityDownForce: 20

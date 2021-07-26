@@ -75,7 +75,7 @@ namespace Musashi
 
         private bool sprint;
         public bool Sprint => GameManager.Instance.CanProcessPlayerMoveInput && sprint;
-        public bool CanCrouch { get; set; } = true;
+        public bool CanCrouch { get; set; }
         #endregion
 
         #region Other input under situation, for example custom UI
