@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Musashi.Player;
+using System;
+using Cysharp.Threading.Tasks;
 
 namespace Musashi.Level.AdventureMode
 {
@@ -16,7 +18,9 @@ namespace Musashi.Level.AdventureMode
 
         private Transform currentSavePoint;
 
-
+        public int sumOfAmmo;
+        public List<PlayerItemInventory.ItemInventoryTable> inventoryTable;
+        public List<Weapon.WeaponControl> pickUpedWeaponSourcePrefabList;
 
         void Start()
         {
@@ -39,8 +43,9 @@ namespace Musashi.Level.AdventureMode
                     }
                 }
             }
-            SpwanPlayer();
+            SpwanPlayer(true);
         }
+
 
         /// <summary>
         /// プレイヤーがSavePointのColliderと接触したら呼ばれる関数
@@ -52,12 +57,40 @@ namespace Musashi.Level.AdventureMode
             Debug.Log("save pointを更新しました。");
         }
 
+        private void SpwanPlayer(bool init = false)
+        {
+            var player = Instantiate(playerPrefab, currentSavePoint.position + new Vector3(0, spwanYOffset, 0), Quaternion.identity);
+            //if (!init)
+            //{
+            //    var inventory = player.GetComponentInChildren<PlayerItemInventory>();
+            //    inventory.SumAmmoInInventory = sumOfAmmo;
+            //    inventory.AddItemFromSpwan(inventoryTable);
+            //    player.GetComponentInChildren<PlayerWeaponManager>().AddWeaponFromSpwan(pickUpedWeaponSourcePrefabList);
+            //}
+        }
+
         /// <summary>
         /// プレイヤーが死亡した後に呼ばれる関数
+        /// charactor controller を直接テレポートさせるとバグるので、新たにプレイヤーをインスタンスさせる。
+        /// ただし；現状だと落ちたら武器とアイテム全ロスしてしまうのでどうにかしたい
         /// </summary>
-        public void SpwanPlayer()
+        public void ReSpwan(Transform player)
         {
-            Instantiate(playerPrefab, currentSavePoint.position, Quaternion.identity);
+            //var inventory = player.GetComponentInChildren<PlayerItemInventory>();
+            //sumOfAmmo = inventory.SumAmmoInInventory;
+            //inventoryTable = inventory.ItemTable;
+            //var weapons = player.GetComponent<PlayerWeaponManager>().WeaponSlots;
+            //foreach (var w in weapons)
+            //{
+            //    var instance = Instantiate(w.SourcePrefab).GetComponent<Weapon.WeaponControl>();
+            //    instance.SourcePrefab = w.SourcePrefab;
+            //    pickUpedWeaponSourcePrefabList.Add(instance);
+            //}
+
+            Destroy(player.parent.gameObject);
+            SpwanPlayer();
         }
     }
 }
+
+

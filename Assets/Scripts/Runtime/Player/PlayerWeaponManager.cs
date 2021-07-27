@@ -68,7 +68,6 @@ namespace Musashi.Player
         private Vector3 lastPlayerCharacterPosition;
         private Vector3 weaponBobLocalPosition;
 
-        private readonly List<WeaponControl> weaponSlots = new List<WeaponControl>(); //武器スロット。プレハブからインスタンス化したゲームオブジェクトを格納する。同じ武器は持てない
         private WeaponControl currentEquipmentWeapon;
 
         PlayerInputProvider inputProvider;
@@ -77,6 +76,7 @@ namespace Musashi.Player
         #endregion
 
         #region Properties
+        public List<WeaponControl> WeaponSlots { get; private set; } = new List<WeaponControl>(); //武器スロット。プレハブからインスタンス化したゲームオブジェクトを格納する。同じ武器は持てない
         public WeaponControl CurrentEquipmentWeapon
         {
             get => currentEquipmentWeapon;
@@ -342,7 +342,7 @@ namespace Musashi.Player
 
         private void HolsterWeaponAction()
         {
-            if (isChangingWeapon) return;
+            if (isChangingWeapon || !CurrentEquipmentWeapon) return;
             if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
             isChangingWeapon = true;
             currentTween =  MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
@@ -360,10 +360,11 @@ namespace Musashi.Player
         /// </summary>
         private void SwitchWeapon(int index)
         {
-            if (index == currentWeaponIndex || isChangingWeapon || index >= weaponSlots.Count) return;
+            if (index == currentWeaponIndex || isChangingWeapon || index >= WeaponSlots.Count) return;
             if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
             currentWeaponIndex = index;
-            ChangeWeapon(weaponSlots[index]);
+            ChangeWeapon(WeaponSlots[index]);
+            Debug.Log(index);
         }
 
         /// <summary>
@@ -454,7 +455,7 @@ namespace Musashi.Player
             weaponParentSocket.localPosition = downWeaponPos.localPosition;
             if (startDefultWeapon != null && AddWeapon(startDefultWeapon))
             {
-                ChangeWeapon(weaponSlots.First());
+                ChangeWeapon(WeaponSlots.First());
             }
         }
 
@@ -463,7 +464,7 @@ namespace Musashi.Player
         /// </summary>
         private bool HasWeaponInInventory(WeaponControl weaponPrefab)
         {
-            foreach (var w in weaponSlots)
+            foreach (var w in WeaponSlots)
             {
                 if (w.SourcePrefab == weaponPrefab.gameObject)
                 {
@@ -504,12 +505,39 @@ namespace Musashi.Player
                 t.gameObject.layer = layerIndex;
             }
 
-            weaponSlots.Add(weaponInstance);
+            WeaponSlots.Add(weaponInstance);
             if (circularWeaponMenu)
             {
                 circularWeaponMenu.AddInfoInButton(weaponInstance.weaponName, weaponInstance.MaxAmmo, weaponInstance.GetIcon);
             }
             return true;
+        }
+
+        public void AddWeaponFromSpwan(List<WeaponControl> pickUpedWeaponSourcePrefabList)
+        {
+            foreach (var weapon in pickUpedWeaponSourcePrefabList)
+            {
+                if (HasWeaponInInventory(weapon)) continue;
+
+                //set position  and rotation
+                weapon.transform.SetParent(weaponParentSocket);
+                weapon.RootPosition = weapon.GetDefultLocalPositionOffset;
+                weapon.transform.rotation = weaponParentSocket.rotation;
+                weapon.ShowWeapon(false);
+
+                // Assign the first person layer to the weapon
+                int layerIndex = Mathf.RoundToInt(Mathf.Log(FPSWeaponLayer.value, 2)); // This function converts a layermask to a layer index
+                foreach (Transform t in weapon.gameObject.GetComponentsInChildren<Transform>(true))
+                {
+                    t.gameObject.layer = layerIndex;
+                }
+
+                WeaponSlots.Add(weapon);
+                if (circularWeaponMenu)
+                {
+                    circularWeaponMenu.AddInfoInButton(weapon.weaponName, weapon.MaxAmmo, weapon.GetIcon);
+                }
+            }
         }
         #endregion
     }

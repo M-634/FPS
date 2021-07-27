@@ -10,6 +10,7 @@ namespace Musashi.Level.AdventureMode
     public class PlayerDeathTrigger : MonoBehaviour
     {
         [SerializeField] SavePointManager pointManager;
+
         private void Reset()
         {
             GetComponent<BoxCollider>().isTrigger = true;
@@ -20,9 +21,7 @@ namespace Musashi.Level.AdventureMode
         {
             if (other.transform.CompareTag("Player"))
             {
-                //charactor controller を直接テレポートさせるとバグるので、インスタンス化させる。
-                Destroy(other.transform.parent.gameObject);
-                pointManager.SpwanPlayer();
+                pointManager.ReSpwan(other.transform);
             }
         }
     }
