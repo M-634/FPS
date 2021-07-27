@@ -9,6 +9,7 @@ TagManager:
   - GameManager
   - Ground
   - ObjectPoolParent
+  - SavePoint
   layers:
   - Default
   - TransparentFX

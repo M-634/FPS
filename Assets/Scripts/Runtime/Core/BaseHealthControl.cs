@@ -55,7 +55,7 @@ namespace Musashi
             OnDieEvents.AddListener(AddOnDieEvent);
         }
 
-        public void ResetHP()
+        public virtual void ResetHP()
         {
             CurrentHp = maxHp;
             IsDead = false;
