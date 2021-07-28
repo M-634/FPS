@@ -13,6 +13,8 @@ namespace Musashi.Level.AdventureMode
         [SerializeField] Transform initSpwanPoint;
         [SerializeField] SavePointTrigger[] savePoints;
         [SerializeField] float spwanYOffset = 0.5f;
+        [SerializeField] bool debugMode = false;
+        [SerializeField] int debugSpwan;
 
         public const string SAVEPOINTTAG = "SavePoint";
 
@@ -24,7 +26,6 @@ namespace Musashi.Level.AdventureMode
 
         void Start()
         {
-            currentSavePoint = initSpwanPoint;
             //set save point triggers 
             var getSavePoints = GameObject.FindGameObjectsWithTag(SAVEPOINTTAG);
             savePoints = new SavePointTrigger[getSavePoints.Length];
@@ -43,6 +44,10 @@ namespace Musashi.Level.AdventureMode
                     }
                 }
             }
+            currentSavePoint = initSpwanPoint;
+
+            if (debugMode) currentSavePoint = savePoints[debugSpwan].GetSpwan;
+            else currentSavePoint = initSpwanPoint;
             SpwanPlayer(true);
         }
 
