@@ -26,8 +26,9 @@ MonoBehaviour:
   recoil: {x: 0, y: 0}
   aimCameraFOV: 50
   aimSpeed: 20
-  projectilePrefab: {fileID: 0}
-  projectileLifeTime: 0
-  maxAmmo: 20
-  ammoAndMuzzleFlashPoolSize: 8
+  projectilePrefab: {fileID: 6063719887128244807, guid: 3744e971b409ff74cacda4c9d968c48e,
+    type: 3}
+  projectileLifeTime: 2
+  maxAmmo: 30
+  ammoAndMuzzleFlashPoolSize: 10
   shotgunLoadingSFX: {fileID: 0}
