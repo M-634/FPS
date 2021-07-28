@@ -61,14 +61,13 @@ namespace Musashi.Level.AdventureMode
             }
 
             //spwan player
-            SpwanPlayer();
+             InstantiatePlayer();
 
             //set event
             if (OnInitPlayerSpawnEvent != null)
             {
                 OnInitPlayerSpawnEvent.Invoke();
             }
-
         }
 
         /// <summary>
@@ -84,19 +83,20 @@ namespace Musashi.Level.AdventureMode
             }
         }
 
-        private void SpwanPlayer()
+        private void InstantiatePlayer()
         {
             var instance = Instantiate(playerPrefab, CurrentSavePoint.position + new Vector3(0, spwanYOffset, 0), Quaternion.identity);
             playerTranslate = instance.GetComponentInChildren<PlayerTranslate>();
             playerHealth = instance.GetComponentInChildren<PlayerHealthControl>();
+            playerHealth.OnDeadPlayerAction += SpwanPlayer;
 
             if (deathTrigger)
             {
-                deathTrigger.OnSpwanPlayerAction += DeathTrigger_OnSpwanPlayerAction;
+                deathTrigger.OnSpwanPlayerAction += SpwanPlayer;
             }
         }
 
-        private void DeathTrigger_OnSpwanPlayerAction()
+        private void SpwanPlayer()
         {
             playerRemaingLives--;//écã@êîÇå∏ÇÁÇ∑
             Debug.Log(playerRemaingLives);
