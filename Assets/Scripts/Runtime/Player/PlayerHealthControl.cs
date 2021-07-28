@@ -71,7 +71,6 @@ namespace Musashi.Player
                 currentHealingTweener.Kill();
             }
             hpBackgroundBar.fillAmount = 0f;
-            GameManager.Instance.TimeManager.ChangeTimeScale(0f);
             //GameManager.Instance.GameOver();
         }
 

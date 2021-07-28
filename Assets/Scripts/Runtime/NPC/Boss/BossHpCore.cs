@@ -19,15 +19,20 @@ namespace Musashi.NPC
         {
             base.Start();
             //出現時に（fullHpDuration）秒かけて㏋ゲージを上昇させる
-            //DOTween.To(() => CurrentHp, (x) => CurrentHp = x, maxHp, fullHpDuration)
-            //       .SetEase(Ease.Linear)
-            //       .OnComplete(() => 
-            //       {
-            //           healthBarRed.fillAmount = 1f;
-            //           invincible = false;
-            //       });
+            isInvincibleMode = true;
+            DOTween.To(() => CurrentHp, (x) => CurrentHp = x, maxHp, fullHpDuration)
+                   .SetEase(Ease.Linear)
+                   .OnComplete(() =>
+                   {
+                       healthBarRed.fillAmount = 1f;
+                       isInvincibleMode = false;
+                   });
         }
 
+        public override void ResetHP()
+        {
+            IsDead = false;
+        }
 
         protected override void AddOnDamageEvent()
         {
@@ -44,11 +49,6 @@ namespace Musashi.NPC
                            }
                        });
             }
-        }
-
-        protected override void AddOnDieEvent()
-        {
-            GameManager.Instance.GameClear();
         }
     }
 }

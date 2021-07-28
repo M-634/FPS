@@ -28,7 +28,7 @@ namespace Musashi
 
         [Header("Set each flag")]
         ///<summary>無敵モードにするか判定するフラグ</summary>
-        [SerializeField] bool isInvincibleMode;
+        [SerializeField] protected bool isInvincibleMode;
 
         protected float currentHp;
         public bool IsDead { get; protected set; } = false;

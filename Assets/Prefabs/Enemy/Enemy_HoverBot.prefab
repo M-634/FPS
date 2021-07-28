@@ -257,8 +257,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  patrolSpeed: 4
-  pursueSpeed: 8
+  patrolSpeed: 6
+  pursueSpeed: 12
   eye: {fileID: 454527072156867508}
   visitDistance: 20
   viewingAngle: 60
@@ -270,7 +270,7 @@ MonoBehaviour:
   stopOffset: 0.5
   turnAroundInterpolationSpeed: 0.1
   attackRange: 10
-  attackCoolTime: 1
+  attackCoolTime: 0.2
   doKnockback: 1
   visitDistanceColor: {r: 0.38936353, g: 1, b: 0, a: 0.105882354}
   attackRangeColor: {r: 1, g: 0.04609634, b: 0, a: 0.29803923}
