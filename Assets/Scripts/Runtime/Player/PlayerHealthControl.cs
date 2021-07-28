@@ -27,17 +27,6 @@ namespace Musashi.Player
         {
             base.Start();
             hpBackgroundBar.fillAmount = CurrentHp / maxHp;
-           // GameEventManager.Instance.Subscribe(GameEventType.Goal, ResetHP);
-        }
-
-        private void OnDestroy()
-        {
-           // GameEventManager.Instance.UnSubscribe(GameEventType.Goal, ResetHP);
-        }
-
-        public override void ResetHP()
-        {
-            base.ResetHP();
         }
 
         protected override void AddOnDamageEvent()
@@ -69,15 +58,7 @@ namespace Musashi.Player
                 currentHealingTweener.Kill();
             }
             hpBackgroundBar.fillAmount = 0f;
-            //GameManager.Instance.GameOver();
-        }
-
-        /// <summary>
-        /// プレイヤーが一撃で死ぬ場合に呼ばれる関数
-        /// </summary>
-        public void Kill()
-        {
-            OnDamage(maxHp);
+            GameEventManager.Instance.Excute(GameEventType.SpwanPlayer);
         }
 
         public void CancelHealAction()

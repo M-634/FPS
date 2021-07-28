@@ -68,10 +68,14 @@ namespace Musashi
     /// </summary>
     public enum GameEventType
     {
+        //Speed Run
         EnemyDie,//敵の撃破数をカウントする
         EnemySpwan,//敵、出現時に敵の総数をカウントする
         StartGame,//タイマー表示、タイマースタート、敵を生成
-        Goal//タイマーストップ、残った敵を削除、タイマーがベストタイムなら記録,プレイヤーの体力を満タンにする
+        Goal,//タイマーストップ、残った敵を削除、タイマーがベストタイムなら記録,プレイヤーの体力を満タンにする
+    
+        //Adventure mode
+        SpwanPlayer//ステージから落ちるか、体力がなくなったら呼ばれる。 体力を全開させ,savepointへ戻る。ただし残機数が減る
     }
 
     [System.Serializable]

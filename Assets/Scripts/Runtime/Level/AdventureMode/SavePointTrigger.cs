@@ -21,7 +21,7 @@ namespace Musashi.Level.AdventureMode
         {
             GetComponent<BoxCollider>().isTrigger = true;
             GetComponent<Rigidbody>().isKinematic = true;
-            gameObject.tag = SavePointManager.SAVEPOINTTAG;
+            gameObject.tag = AdventureModeGameFlowManager.SAVEPOINTTAG;
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
 
