@@ -37196,7 +37196,7 @@ MonoBehaviour:
   stopOffset: 0.5
   turnAroundInterpolationSpeed: 0.6
   attackRange: 20
-  attackCoolTime: 0.1
+  attackCoolTime: 0.05
   doKnockback: 0
   visitDistanceColor: {r: 0.38936353, g: 1, b: 0, a: 0.105882354}
   attackRangeColor: {r: 1, g: 0.04609634, b: 0, a: 0.29803923}

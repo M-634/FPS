@@ -62,17 +62,17 @@ namespace Musashi
         }
 
 
-        private void OnEnable()
-        {
-            GameEventManager.Instance.Subscribe(GameEventType.StartGame, StartTimer);
-            GameEventManager.Instance.Subscribe(GameEventType.Goal, EndTimer);
-        }
+        //private void OnEnable()
+        //{
+        //    GameEventManager.Instance.Subscribe(GameEventType.StartGame, StartTimer);
+        //    GameEventManager.Instance.Subscribe(GameEventType.Goal, EndTimer);
+        //}
 
-        private void OnDisable()
-        {
-            GameEventManager.Instance.UnSubscribe(GameEventType.StartGame, StartTimer);
-            GameEventManager.Instance.UnSubscribe(GameEventType.Goal, EndTimer);
-            currutine = null;
-        }
+        //private void OnDisable()
+        //{
+        //    GameEventManager.Instance.UnSubscribe(GameEventType.StartGame, StartTimer);
+        //    GameEventManager.Instance.UnSubscribe(GameEventType.Goal, EndTimer);
+        //    currutine = null;
+        //}
     }
 }

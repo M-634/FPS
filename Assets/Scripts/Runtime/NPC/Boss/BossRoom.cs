@@ -25,6 +25,11 @@ namespace Musashi
         Vector3 spwanPosition;
         bool hasEntered;//プレイヤーがボス部屋に入ったら、フラグを立てる
 
+        private void Start()
+        {
+            movieCamera.SetActive(false);
+        }
+
         private void MovieStartAction(PlayableDirector playable)
         {
             bossCutSceneObj.SetActive(true);

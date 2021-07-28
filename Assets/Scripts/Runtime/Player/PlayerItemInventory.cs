@@ -17,20 +17,20 @@ namespace Musashi.Player
         /// <summary>
         /// インベントリ内のアイテム情報を一括にまとめた内部クラス
         /// </summary>
-        private class ItemInventoryTable
+        public class ItemInventoryTable
         {
-            private readonly BaseItem item;
             private readonly PlayerItemInventory inventory;
             private int stackingNumber;
+            public BaseItem GetBaseItem { get; private set; }
             public int CurrentStackSize
             {
                 get => stackingNumber;
                 set
                 {
                     stackingNumber = value;
-                    if (stackingNumber > item.GetMaxStacSize)
+                    if (stackingNumber > GetBaseItem.GetMaxStacSize)
                     {
-                        stackingNumber = item.GetMaxStacSize;
+                        stackingNumber = GetBaseItem.GetMaxStacSize;
                     }
 
                     if (stackingNumber <= 0)
@@ -38,38 +38,38 @@ namespace Musashi.Player
                         DeleteTable();
                         return;
                     }
-                    Debug.Log(item.GetItemName + " : " + stackingNumber);
+                    Debug.Log(GetBaseItem.GetItemName + " : " + stackingNumber);
                 }
             }
-            public bool LimitStacSize => stackingNumber == item.GetMaxStacSize;
-            public string GetItemGUID => item.GetItemGUID;
-            public string GetItemNameInTabe => item.GetItemName;
+            public bool LimitStacSize => stackingNumber == GetBaseItem.GetMaxStacSize;
+            public string GetItemGUID => GetBaseItem.GetItemGUID;
+            public string GetItemNameInTabe => GetBaseItem.GetItemName;
             public ItemInventoryTable(BaseItem item, PlayerItemInventory inventory)
             {
-                this.item = item;
+                this.GetBaseItem = item;
                 this.inventory = inventory;
                 CurrentStackSize += item.GetAddStacSize;
                 Debug.Log("instance table");
-                Debug.Log("tables count :" + inventory.itemTables);
+                Debug.Log("tables count :" + inventory.ItemTable);
             }
             public void Use(Slot slot = null)
             {
-                if (item.UseItem())
+                if (GetBaseItem.UseItem())
                 {
                     CurrentStackSize--;
                     if (slot)
                     {
                         slot.UpdateStackSizeText(CurrentStackSize);
                     }
-                    Debug.Log($"{item.GetItemName}を使用しました");
+                    Debug.Log($"{GetBaseItem.GetItemName}を使用しました");
                 }
             }
             public void DeleteTable()
             {
-                Destroy(item.gameObject);
-                inventory.itemTables.Remove(this);
-                Debug.Log("Destroy :" + item.GetItemName);
-                Debug.Log("tables count :" + inventory.itemTables);
+                Destroy(GetBaseItem.gameObject);
+                inventory.ItemTable.Remove(this);
+                Debug.Log("Destroy :" + GetBaseItem.GetItemName);
+                Debug.Log("tables count :" + inventory.ItemTable);
             }
         }
 
@@ -78,8 +78,8 @@ namespace Musashi.Player
 
         public const int LIMITITEMSTACKSIZE = 999;
         public event Action ChangedAmmoInInventoryEvent;
-        private readonly List<ItemInventoryTable> itemTables = new List<ItemInventoryTable>();
         PlayerInputProvider inputProvider;
+        public List<ItemInventoryTable> ItemTable { get; private set; }= new List<ItemInventoryTable>();
 
         private int sumAmmoInInventory;
         public int SumAmmoInInventory
@@ -135,7 +135,7 @@ namespace Musashi.Player
         /// </summary>
         private bool HasItem(string guid)
         {
-            foreach (var item in itemTables)
+            foreach (var item in ItemTable)
             {
                 if (item.GetItemGUID == guid)
                 {
@@ -150,7 +150,7 @@ namespace Musashi.Player
         /// </summary>
         private ItemInventoryTable GetItemFromTables(string guid)
         {
-            foreach (var itemTable in itemTables)
+            foreach (var itemTable in ItemTable)
             {
                 if (itemTable.GetItemGUID == guid) return itemTable;
             }
@@ -161,7 +161,7 @@ namespace Musashi.Player
         /// プレイヤーの任意のタイミングで使用できるアイテムを、プレイヤーインベントリ内に
         /// 追加できるか判定する関数
         /// </summary>
-        public bool AddItem(BaseItem pickedItem)
+        public bool AddItem(BaseItem pickedItem,int offset = 0)
         {
             //cheack if same item is in table or not.
             if (HasItem(pickedItem.GetItemGUID))
@@ -172,7 +172,7 @@ namespace Musashi.Player
                     Debug.Log(pickedItem.GetItemName + ": limit stack size");
                     return false;
                 }
-                itemTable.CurrentStackSize += pickedItem.GetAddStacSize;
+                itemTable.CurrentStackSize += pickedItem.GetAddStacSize + offset;
                 currentHealItemSlot.UpdateStackSizeText(itemTable.CurrentStackSize);
                 Destroy(pickedItem.gameObject);
                 return true;
@@ -180,7 +180,7 @@ namespace Musashi.Player
 
             //create new table
             var newTable = new ItemInventoryTable(pickedItem, this);
-            itemTables.Add(newTable);
+            ItemTable.Add(newTable);
             if (pickedItem.GetItemType == ItemType.HealthKit)
             {
                 currentHealItemSlot.SetItemInfo(pickedItem.GetItemGUID, pickedItem.GetAddStacSize);
@@ -189,5 +189,12 @@ namespace Musashi.Player
             pickedItem.gameObject.SetActive(false);
             return true;
         }
+        //public void AddItemFromSpwan(List<ItemInventoryTable> inventoryTable)
+        //{
+        //    foreach (var item in inventoryTable)
+        //    {
+        //        AddItem(item.GetBaseItem, item.CurrentStackSize - item.GetBaseItem.GetAddStacSize);
+        //    }
+        //}
     }
 }

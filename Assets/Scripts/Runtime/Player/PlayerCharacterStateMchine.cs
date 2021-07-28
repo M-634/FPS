@@ -92,7 +92,7 @@ namespace Musashi.Player
         AudioSource audioSource;
 
         StateMachine<PlayerCharacterStateMchine> stateMachine;
-
+   
         readonly IState<PlayerCharacterStateMchine> OnGroundState = new PlayerOnGroundState();
         readonly IState<PlayerCharacterStateMchine> JumpState = new PlayerJumpState();
         readonly IState<PlayerCharacterStateMchine> CrouchingState = new PlayerIsCrouchingState();
@@ -140,7 +140,7 @@ namespace Musashi.Player
             stateMachine.CurrentState.OnUpdate(this);
             controller.Move(characterVelocity * Time.deltaTime);
         }
-
+     
         private void GroundCheck()
         {
             float chosenGroundCheckDistance = IsGround ? (controller.skinWidth + groundCheckDistance) : k_GroundCheckDistanceInAir;
