@@ -20,21 +20,19 @@ namespace Musashi.Player
         [SerializeField] float autoHealTime = 1f;
 
         Tweener currentHealingTweener;
-        PlayerCharacterStateMchine stateMchine;
 
         public bool IsHealing { get; set; } = false;
 
         protected override void Start()
         {
-            stateMchine = GetComponent<PlayerCharacterStateMchine>();
             base.Start();
             hpBackgroundBar.fillAmount = CurrentHp / maxHp;
-            GameEventManager.Instance.Subscribe(GameEventType.Goal, ResetHP);
+           // GameEventManager.Instance.Subscribe(GameEventType.Goal, ResetHP);
         }
 
         private void OnDestroy()
         {
-            GameEventManager.Instance.UnSubscribe(GameEventType.Goal, ResetHP);
+           // GameEventManager.Instance.UnSubscribe(GameEventType.Goal, ResetHP);
         }
 
         public override void ResetHP()

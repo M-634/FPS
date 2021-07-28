@@ -8,12 +8,14 @@ namespace Musashi.Level.AdventureMode
     {
         [SerializeField] Transform spwan;
         [SerializeField] int spwanIndex;
+        [SerializeField] UnityEventWrapper OnStageGimmicEvent;
 
+        bool isTriggered;
+        
         public Transform GetSpwan => spwan;
-
         public int GetSpwanIndex => spwanIndex;
 
-        public event Action<int> OnSavePoint;
+        public event Action<int> OnUpdateSavePoint;
 
         private void Reset()
         {
@@ -35,10 +37,18 @@ namespace Musashi.Level.AdventureMode
         {
             if (other.transform.CompareTag("Player"))
             {
-                if (OnSavePoint != null)
+                if (isTriggered) return;
+
+                if (OnUpdateSavePoint != null)
                 {
-                    OnSavePoint.Invoke(spwanIndex);
+                    OnUpdateSavePoint.Invoke(spwanIndex);
                 }
+
+                if(OnStageGimmicEvent != null)
+                {
+                    OnStageGimmicEvent.Invoke();
+                }
+                isTriggered = true;
             }
         }
     }

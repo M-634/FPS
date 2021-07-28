@@ -10,7 +10,7 @@ namespace Musashi.Level
         public enum RotateAxis { X, Y, Z }
 
         [SerializeField] Transform rootObject;
-        [SerializeField] bool doRotate = false;
+        [SerializeField] bool doInitRotate = false;
         [SerializeField] float rotateDuration = 1f;
         [SerializeField] RotateAxis rotateAxis;
 
@@ -21,31 +21,34 @@ namespace Musashi.Level
         {
             if (!rootObject) rootObject = transform;
 
-            if (doRotate)
-            {
-                Vector3 endValue = transform.rotation.eulerAngles;
-                switch (rotateAxis)
-                {
-                    case RotateAxis.X:
-                        endValue += Vector3.right * 360;
-                        break;
-                    case RotateAxis.Y:
-                        endValue += Vector3.up * 360;
-                        break;
-                    case RotateAxis.Z:
-                        endValue += Vector3.forward * 360;
-                        break;
-                }
+            if (doInitRotate) DoRatate();
+        }
 
-                currentTweener = rootObject.DORotate(endValue, rotateDuration, RotateMode.FastBeyond360)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(-1);
+        public void DoRatate()
+        {
+            Vector3 endValue = transform.rotation.eulerAngles;
+            switch (rotateAxis)
+            {
+                case RotateAxis.X:
+                    endValue += Vector3.right * 360;
+                    break;
+                case RotateAxis.Y:
+                    endValue += Vector3.up * 360;
+                    break;
+                case RotateAxis.Z:
+                    endValue += Vector3.forward * 360;
+                    break;
             }
+
+            currentTweener = rootObject.DORotate(endValue, rotateDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1);
+
         }
 
         private void OnDestroy()
         {
-            if(currentTweener != null)
+            if (currentTweener != null)
             {
                 currentTweener.Kill();
             }

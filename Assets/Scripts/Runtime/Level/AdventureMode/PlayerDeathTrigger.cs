@@ -19,9 +19,9 @@ namespace Musashi.Level.AdventureMode
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform.CompareTag("Player"))
+            if (other.transform.TryGetComponent(out Player.PlayerTranslate player))
             {
-                pointManager.ReSpwan(other.transform);
+                player.Translate(pointManager.CurrentSavePoint);
             }
         }
     }
