@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 namespace Musashi.Level.AdventureMode
 {
@@ -9,7 +10,7 @@ namespace Musashi.Level.AdventureMode
     [RequireComponent(typeof(BoxCollider), typeof(Rigidbody))]
     public class PlayerDeathTrigger : MonoBehaviour
     {
-        [SerializeField] AdventureModeGameFlowManager pointManager;
+        public event Action OnSpwanPlayerAction;
 
         private void Reset()
         {
@@ -21,8 +22,10 @@ namespace Musashi.Level.AdventureMode
         {
             if (other.transform.TryGetComponent(out Player.PlayerTranslate player))
             {
-                //player.Translate(pointManager.CurrentSavePoint);
-                GameEventManager.Instance.Excute(GameEventType.SpwanPlayer);
+                if(OnSpwanPlayerAction != null)
+                {
+                    OnSpwanPlayerAction.Invoke();
+                }
             }
         }
     }
