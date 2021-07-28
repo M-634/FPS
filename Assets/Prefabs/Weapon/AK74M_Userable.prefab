@@ -1320,7 +1320,7 @@ MonoBehaviour:
   weaponSetting: {fileID: 11400000, guid: ad6c1a48dacc79a4fb86081693e1bc85, type: 2}
   weaponShootType: 1
   weaponRoot: {fileID: 4948530070960313530}
-  weaponIcon: {fileID: 0}
+  weaponIcon: {fileID: 21300016, guid: 6674e8c43c63e4f4184cbd009379498d, type: 3}
   muzzle: {fileID: 7951447865455440791}
   defultLoaclPostionOffset: {x: -0.206, y: 0.011, z: -0.412}
   aimLocalPostionOffset: {x: -0.229, y: 0.025, z: -0.305}

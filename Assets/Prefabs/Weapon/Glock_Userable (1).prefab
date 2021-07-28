@@ -2108,8 +2108,10 @@ MonoBehaviour:
   weaponSetting: {fileID: 11400000, guid: 6b3c2cae97f737d4db15d0692d02b242, type: 2}
   weaponShootType: 0
   weaponRoot: {fileID: 2829662099362326774}
-  weaponIcon: {fileID: 0}
+  weaponIcon: {fileID: 21300022, guid: 6674e8c43c63e4f4184cbd009379498d, type: 3}
   muzzle: {fileID: 2829662098685297405}
+  defultLoaclPostionOffset: {x: 0, y: 0, z: 0}
+  aimLocalPostionOffset: {x: 0, y: 0, z: 0}
 --- !u!82 &2829662099362326772
 AudioSource:
   m_ObjectHideFlags: 0

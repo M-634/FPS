@@ -12,6 +12,7 @@ namespace Musashi.Level.AdventureMode
         [SerializeField, Range(1, 10)] int playerRemaingLives = 5;
         [SerializeField] Transform initSpwanPoint;
         [SerializeField] SavePointTrigger[] savePoints;
+        [SerializeField] Animator updateSavePointInfo;
         [SerializeField] float spwanYOffset = 0.5f;
         [SerializeField] bool debugMode = false;
         [SerializeField] int debugSpwan;
@@ -85,7 +86,10 @@ namespace Musashi.Level.AdventureMode
         public void UpdateSavepoint(int index)
         {
             CurrentSavePoint = savePoints[index].GetSpwan;
-            Debug.Log("save pointÇçXêVÇµÇ‹ÇµÇΩÅB");
+            if (updateSavePointInfo)
+            {
+                updateSavePointInfo.Play("TextAnimation");
+            }
         }
 
         private void SpwanPlayer()

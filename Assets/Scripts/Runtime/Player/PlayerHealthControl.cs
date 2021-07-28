@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using TMPro;
 
 namespace Musashi.Player
 {
@@ -9,6 +9,7 @@ namespace Musashi.Player
     {
         [Header("Set player's back ground hp bar image and Color")]
         [SerializeField] Image hpBackgroundBar = default;
+        [SerializeField] TextMeshProUGUI healPointText;
         [SerializeField] Color takeDamgeColor = Color.red;
         [SerializeField] Color healHpColor = Color.green;
         [SerializeField] float backBarToFillBarDuration = 0.5f;
@@ -22,6 +23,19 @@ namespace Musashi.Player
         Tweener currentHealingTweener;
 
         public bool IsHealing { get; set; } = false;
+
+        protected override float CurrentHp
+        {
+            get => base.CurrentHp;
+            set
+            {
+                base.CurrentHp = value;
+                if (healPointText)
+                {
+                    healPointText.text = CurrentHp.ToString();
+                }
+            }
+        }
 
         protected override void Start()
         {
@@ -94,7 +108,7 @@ namespace Musashi.Player
                 currentHealingTweener = DOTween.To(() => healthBarFillImage.fillAmount, (x) => healthBarFillImage.fillAmount = x, hpBackgroundBar.fillAmount, healtime)
                     .SetEase(Ease.Linear)
                     .OnUpdate(() => IsHealing = true)
-                    .OnKill(()=>
+                    .OnKill(() =>
                     {
                         IsHealing = false;
                         Debug.Log("回復を中断しました");

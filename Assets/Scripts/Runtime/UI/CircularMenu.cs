@@ -15,6 +15,7 @@ namespace Musashi.UI
         [SerializeField] RectTransform circularSelectBar = default;
         [SerializeField] float limitMouseMove = 10f;
         [SerializeField, Range(0f, 1f)] float slowMotinOnActive = 0.5f;
+        [SerializeField] TextMeshProUGUI currentSelectedWeaponName;
         [SerializeField] List<MenuButton> buttons;
 
         private int nextIndex;
@@ -88,6 +89,7 @@ namespace Musashi.UI
             {
                 buttons[oldMenuItem].UnSelected();
                 buttons[currentMenuItem].OnSelected();
+                currentSelectedWeaponName.text = buttons[currentMenuItem].itemName;
                 oldMenuItem = currentMenuItem;
             }
         }
