@@ -79212,8 +79212,8 @@ MonoBehaviour:
   initSpwanPoint: {fileID: 935199307603561397}
   savePoints: []
   spwanYOffset: 0
-  debugMode: 1
-  debugSpwan: 2
+  debugMode: 0
+  debugSpwan: 0
   sumOfAmmo: 0
   pickUpedWeaponSourcePrefabList: []
 --- !u!4 &1600251133
