@@ -130,6 +130,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 320075105, guid: b26eebe75fdcbc84a8f80d3de06bcb6a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 876412260, guid: b26eebe75fdcbc84a8f80d3de06bcb6a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1026945147, guid: b26eebe75fdcbc84a8f80d3de06bcb6a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743417220, guid: b26eebe75fdcbc84a8f80d3de06bcb6a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1929948968, guid: b26eebe75fdcbc84a8f80d3de06bcb6a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2082326257, guid: b26eebe75fdcbc84a8f80d3de06bcb6a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7197702161134707756, guid: b26eebe75fdcbc84a8f80d3de06bcb6a,
         type: 3}
       propertyPath: m_Name

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using System;
 
 namespace Musashi.Player
 {
@@ -21,6 +22,8 @@ namespace Musashi.Player
         [SerializeField] float autoHealTime = 1f;
 
         Tweener currentHealingTweener;
+
+        public event Action OnDeadPlayerAction;
 
         public bool IsHealing { get; set; } = false;
 
@@ -72,7 +75,7 @@ namespace Musashi.Player
                 currentHealingTweener.Kill();
             }
             hpBackgroundBar.fillAmount = 0f;
-            GameEventManager.Instance.Excute(GameEventType.SpwanPlayer);
+            OnDeadPlayerAction.Invoke();
         }
 
         public void CancelHealAction()

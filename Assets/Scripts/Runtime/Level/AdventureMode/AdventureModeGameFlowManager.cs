@@ -9,7 +9,6 @@ namespace Musashi.Level.AdventureMode
     public class AdventureModeGameFlowManager : MonoBehaviour
     {
         [SerializeField] GameObject playerPrefab;
-        [SerializeField, Range(1, 10)] int playerRemaingLives = 5;
         [SerializeField] Transform initSpwanPoint;
         [SerializeField] SavePointTrigger[] savePoints;
         [SerializeField] Animator updateSavePointInfo;
@@ -18,27 +17,20 @@ namespace Musashi.Level.AdventureMode
         [SerializeField] int debugSpwan;
         [SerializeField] GameObject[] playerRemaingLivesIcons;
         [SerializeField] UnityEventWrapper OnInitPlayerSpawnEvent;
+        [SerializeField] PlayerDeathTrigger deathTrigger;
 
+        int playerRemaingLives;
         PlayerTranslate playerTranslate;
         PlayerHealthControl playerHealth;
 
         public const string SAVEPOINTTAG = "SavePoint";
         public Transform CurrentSavePoint { get; private set; }
-        public int CurrentPlayerRemaingLives
-        {
-            get => playerRemaingLives;
-            set
-            {
-                playerRemaingLives = value;
-                if (playerRemaingLives == 0)
-                {
-                    GameManager.Instance.GameOver();
-                }
-            }
-        }
+        public int CurrentPlayerRemaingLives => playerRemaingLives;
 
         void Start()
         {
+            playerRemaingLives = playerRemaingLivesIcons.Length;
+            Debug.Log(playerRemaingLives);
             //set save point triggers 
             var getSavePoints = GameObject.FindGameObjectsWithTag(SAVEPOINTTAG);
             savePoints = new SavePointTrigger[getSavePoints.Length];
@@ -69,7 +61,7 @@ namespace Musashi.Level.AdventureMode
             }
 
             //spwan player
-            SpwanPlayer();
+             InstantiatePlayer();
 
             //set event
             if (OnInitPlayerSpawnEvent != null)
@@ -77,6 +69,7 @@ namespace Musashi.Level.AdventureMode
                 OnInitPlayerSpawnEvent.Invoke();
             }
 
+            Debug.developerConsoleVisible = false;
         }
 
         /// <summary>
@@ -92,33 +85,31 @@ namespace Musashi.Level.AdventureMode
             }
         }
 
-        private void SpwanPlayer()
+        private void InstantiatePlayer()
         {
             var instance = Instantiate(playerPrefab, CurrentSavePoint.position + new Vector3(0, spwanYOffset, 0), Quaternion.identity);
             playerTranslate = instance.GetComponentInChildren<PlayerTranslate>();
             playerHealth = instance.GetComponentInChildren<PlayerHealthControl>();
-            GameEventManager.Instance.Subscribe(GameEventType.SpwanPlayer,
-            () =>
+            playerHealth.OnDeadPlayerAction += SpwanPlayer;
+
+            if (deathTrigger)
             {
-                CurrentPlayerRemaingLives--;//残機数を減らす
-                playerRemaingLivesIcons[CurrentPlayerRemaingLives].SetActive(false);
-                if (CurrentPlayerRemaingLives == 0) return;
-                playerHealth.ResetHP();//体力を元に戻す
-                playerTranslate.Translate(CurrentSavePoint);//リスポーン地へ移動する
-            });
+                deathTrigger.OnSpwanPlayerAction += SpwanPlayer;
+            }
         }
 
-        private void OnDestroy()
+        private void SpwanPlayer()
         {
-            GameEventManager.Instance.UnSubscribe(GameEventType.SpwanPlayer,
-            () =>
+            playerRemaingLives--;//残機数を減らす
+            Debug.Log(playerRemaingLives);
+            playerRemaingLivesIcons[playerRemaingLives].SetActive(false);
+            if (playerRemaingLives == 0)
             {
-                CurrentPlayerRemaingLives--;//残機数を減らす
-                playerRemaingLivesIcons[CurrentPlayerRemaingLives].SetActive(false);
-                if (CurrentPlayerRemaingLives == 0) return;
-                playerHealth.ResetHP();//体力を元に戻す
-                playerTranslate.Translate(CurrentSavePoint);//リスポーン地へ移動する
-            });
+                GameManager.Instance.GameOver();
+                return;
+            }
+            playerHealth.ResetHP();//体力を元に戻す
+            playerTranslate.Translate(CurrentSavePoint);//リスポーン地へ移動する
         }
     }
 }
