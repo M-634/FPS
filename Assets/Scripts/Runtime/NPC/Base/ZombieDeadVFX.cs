@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Musashi
 {
@@ -13,7 +14,7 @@ namespace Musashi
         [SerializeField] ParticleSystem particle;
         [SerializeField, Range(0, -10)] int min;
         [SerializeField, Range(0, 10)] int max;
-        [SerializeField] int lifeTime = 2;
+        [SerializeField] float lifeTime = 2f;
 
         Rigidbody[] rigidbodies;
 
@@ -25,7 +26,7 @@ namespace Musashi
             rigidbodies.ToList().ForEach(r =>
             {
                 r.isKinematic = false;
-                r.gameObject.SetActive(false, lifeTime);
+                r.gameObject.DelaySetActive(false, lifeTime, this.GetCancellationTokenOnDestroy());
                 var vect = new Vector3(Random.Range(min,max),Random.Range(0,max),Random.Range(min,max));
                 r.AddForce(vect, ForceMode.Impulse);
                 r.AddTorque(vect, ForceMode.Impulse);

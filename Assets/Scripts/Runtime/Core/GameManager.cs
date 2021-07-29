@@ -6,30 +6,29 @@ using UnityEngine.Events;
 namespace Musashi
 {
     /// <summary>
-    /// ゲームに常駐するクラスをまとめる。
-    /// 初期化シーンに置いておく
+    /// ゲームシステムに関わるクラスや処理をまとめるクラス
+    /// テスト時含め、常にシーンに常駐している。
     /// </summary>
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         [SerializeField] SoundManager soundManager;
         [SerializeField] SceneLoader sceneLoder;
         [SerializeField] Configure configure;
+        [SerializeField] TimeManager timeManager;
+
         public SoundManager SoundManager => soundManager;
         public SceneLoader SceneLoder => sceneLoder;
-        public bool HaveShowConfigure => configure.gameObject.activeSelf;
+        public Configure Configure => configure;
+        public TimeManager TimeManager => timeManager;
         public bool IsGameClear { get; private set; }
-
-        public bool CanProcessInput { get; private set; }
-
-        public int DefeatNumberOfEnemySpwaner { get; set; }//記録
-        public int SumOfEnemySpwaner { get; set; } //記録
-
+        public bool CanProcessPlayerMoveInput { get; set; }
+        public bool ShowConfig => configure.IsActive;
         protected override void Awake()
         {
             base.Awake();
             DontDestroyOnLoad(this.gameObject);
-            QualitySettings.vSyncCount = 0; // VSyncをOFFにする
-            Application.targetFrameRate = 60;//60フレームに固定する
+            //QualitySettings.vSyncCount = 0; // VSyncをOFFにする
+            //Application.targetFrameRate = 60;//60フレームに固定する
         }
 
         // Start is called before the first frame update
@@ -43,12 +42,11 @@ namespace Musashi
             {
                 sceneLoder.UnLoadScene(SceneInBuildIndex.Init);//initシーンを破棄する
             }
-            configure.gameObject.SetActive(false);//設定画面を隠す
+            InitializeConfigure();
         }
 
         public void ExitGame()
         {
-            Debug.Log("a");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -61,7 +59,6 @@ namespace Musashi
             Debug.Log("GameOver");
             IsGameClear = false;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
-            GameEventManager.Instance.Excute(GameEventType.EndGame);
         }
 
         public void GameClear()
@@ -69,10 +66,9 @@ namespace Musashi
             Debug.Log("GameClear");
             IsGameClear = true;
             SceneLoder.LoadScene(SceneInBuildIndex.Result, UnlockCusor);
-            GameEventManager.Instance.Excute(GameEventType.EndGame);
+            GameEventManager.Instance.Excute(GameEventType.Goal);
         }
 
-        //other setting Method
         public void LockCusor()
         {
             if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title) return;
@@ -80,7 +76,7 @@ namespace Musashi
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            CanProcessInput = true;
+            CanProcessPlayerMoveInput = true;
         }
 
         public void UnlockCusor()
@@ -88,34 +84,36 @@ namespace Musashi
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            CanProcessInput = false;
+            CanProcessPlayerMoveInput = false;
         }
 
         public void SwichConfiguUI()
         {
-            if (configure.gameObject.activeSelf)
+            if (Configure.IsActive)
             {
-                CloseConfigure();
+                Configure.Close();
             }
             else
             {
-                ShowConfigure();
+                Configure.Show();
             }
         }
 
-        public void ShowConfigure()
+        private void InitializeConfigure()
         {
-            UnlockCusor();
-            configure.gameObject.SetActive(true);
-        }
-
-        public void CloseConfigure()
-        {
-            if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.MainGame)
+            Configure.ShowAction += UnlockCusor;
+            Configure.CloseAction += () =>
             {
-                LockCusor();
-            }
-            configure.gameObject.SetActive(false);
+                if (sceneLoder.GetActiveSceneBuildIndex == (int)SceneInBuildIndex.Title)
+                {
+                    FindObjectOfType<Title>().SetOptionButtonSelected();//修正箇所:現在は、応急処置でFind関数を使っている。設計を検討中...
+                }
+                else
+                {
+                    LockCusor();
+                }
+            };
+            Configure.Close();
         }
     }
 }

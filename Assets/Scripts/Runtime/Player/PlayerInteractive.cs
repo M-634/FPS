@@ -4,36 +4,41 @@ using System.Collections.Generic;
 
 namespace Musashi
 {
+    /*
+     * リファクタリングをメモ： メッセージの受け取り処理を変更する
+     */
     /// <summary>
     /// プレイヤーが武器やアイテム、ステージギミックとのインタラクティブを管理するクラス
     /// </summary>
     public class PlayerInteractive : MonoBehaviour
     {
+        [SerializeField] Camera playerCamera;
         [SerializeField] LayerMask interactiveLayer;
         [SerializeField] GameObject interactiveMessage;
         [SerializeField] float distance = 10f;
-        InputProvider inputProvider;
+        PlayerInputProvider inputProvider;
         RaycastHit hit;
 
         private void Start()
         {
-            inputProvider = GetComponentInParent<InputProvider>();
+            inputProvider = GetComponentInParent<PlayerInputProvider>();
         }
 
-        private void Update()//コルーチンに変える
+        private void Update()
         {
             if (CheakInteractiveObj() && inputProvider.Interactive)
             {
                 if (hit.collider.TryGetComponent(out IInteractable obj))
                 {
-                    obj.Excute(transform.parent);
+                    obj.Excute(transform);
                 }
             }
         }
 
+
         private bool CheakInteractiveObj()
         {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance, interactiveLayer))
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, distance, interactiveLayer))
             {
                 InteractiveMessage.ShowInteractiveMessage(InteractiveMessage.InteractiveText);
                 return true;

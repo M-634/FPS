@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,14 +10,14 @@ namespace Musashi.VFX
     /// </summary>
     public class VFXDecalControl : MonoBehaviour
     {
-        [SerializeField] int lifeTime = 1;
+        [SerializeField] float lifeTime = 1;
         bool init = true;
 
         private void OnEnable()
         {
             if (init == false)
             {
-                gameObject.SetActive(false, lifeTime);
+                gameObject.DelaySetActive(false, lifeTime, this.GetCancellationTokenOnDestroy());
             }
             init = false;
         }

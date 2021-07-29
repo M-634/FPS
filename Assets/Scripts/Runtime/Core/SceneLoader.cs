@@ -35,13 +35,13 @@ namespace Musashi
 
             if (buildIndex == SceneInBuildIndex.ShowConfigure)
             {
-                GameManager.Instance.ShowConfigure();
+                GameManager.Instance.Configure.Show();
                 return;
             }
 
             if (buildIndex == SceneInBuildIndex.CloseConfigure)
             {
-                GameManager.Instance.CloseConfigure();
+                GameManager.Instance.Configure.Close();
                 return;
             }
             LoadSceneAsync((int)buildIndex, callback);

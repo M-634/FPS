@@ -54,6 +54,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 454527071223349166}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetPatrolPoints
         m_Mode: 0
         m_Arguments:
@@ -147,6 +148,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
 --- !u!114 &454527071024843935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,7 +216,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: a3bc4783740c78347a572dc7cdd2ce96, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -255,11 +257,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  patrolSpeed: 2
-  pursueSpeed: 4
+  patrolSpeed: 6
+  pursueSpeed: 12
   eye: {fileID: 454527072156867508}
   visitDistance: 20
-  viewingAngle: 30
+  viewingAngle: 60
   patrolPoints:
   - {fileID: 454527072130117075}
   - {fileID: 454527072835856278}
@@ -267,8 +269,9 @@ MonoBehaviour:
   breakTime: 2
   stopOffset: 0.5
   turnAroundInterpolationSpeed: 0.1
-  attackRange: 7
-  attackCoolTime: 1
+  attackRange: 10
+  attackCoolTime: 0.2
+  doKnockback: 1
   visitDistanceColor: {r: 0.38936353, g: 1, b: 0, a: 0.105882354}
   attackRangeColor: {r: 1, g: 0.04609634, b: 0, a: 0.29803923}
 --- !u!114 &454527071223349161
@@ -287,6 +290,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 454527071223349161}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Shot
         m_Mode: 1
         m_Arguments:
@@ -308,6 +312,9 @@ MonoBehaviour:
     type: 3}
   poolParent: {fileID: 454527072248773756}
   poolSize: 5
+  useIK: 0
+  targetRightHand: {fileID: 0}
+  targetLeftHand: {fileID: 0}
 --- !u!1 &454527071471306112
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,6 +735,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -816,6 +824,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1061,6 +1070,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1225,6 +1235,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.7075472, g: 0, b: 0, a: 0.53333336}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1296,6 +1307,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1320,6 +1332,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!135 &454527072062120813
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1354,7 +1367,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 454527071223349166}
-        m_MethodName: OnDamage
+        m_TargetAssemblyTypeName: Musashi.NPC.NPCMoveControl, Assembly-CSharp
+        m_MethodName: ChangeOnDamageState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1368,6 +1382,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 454527071223349164}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -1379,6 +1394,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 454527071024843933}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -1389,6 +1405,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isInvincibleMode: 0
   deathVFX: {fileID: 5907163255180750918}
   spwanVFXPoint: {fileID: 454527072062120812}
 --- !u!1 &454527072130117074
@@ -1560,7 +1577,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 454527072591482750}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.163, z: 0.1740372}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1571,7 +1588,7 @@ Transform:
   - {fileID: 454527072248773756}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &454527072835856277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,6 +1692,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 1, b: 0.027679443, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

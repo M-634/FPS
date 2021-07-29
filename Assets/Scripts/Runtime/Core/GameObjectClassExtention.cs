@@ -1,27 +1,22 @@
 ﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace Musashi
 {
     public static class GameObjectClassExtention
     {
         /// <summary>
-        /// GameObjectClassのSetActiveを非同期処理にした拡張クラス。
-        /// lifeTime秒後にアクティブが切り替わる
+        /// アクティブの切り替えを遅延させる拡張メソッド
         /// </summary>
-        public static async void SetActive(this GameObject gameObject, bool value, int lifeTime = 0)
+        /// <param name="value">アクティブ</param>
+        /// <param name="duration">秒待つ</param>
+        /// <returns></returns>
+        public static async void DelaySetActive(this GameObject gameObject, bool value,float duration,CancellationToken token = default)
         {
-            if (!gameObject.activeSelf) return;
-
-            await UniTask.Delay(TimeSpan.FromSeconds(lifeTime),ignoreTimeScale: false);//lifeTime秒待つ
-
-            if (Application.isPlaying == false) return;
-
-            if (gameObject)
-            {
-                gameObject.SetActive(value);
-            }
+            await UniTask.Delay(TimeSpan.FromSeconds(duration), false, PlayerLoopTiming.Update, token);//error : operationCancelException
+            gameObject.SetActive(value);
         }
     }
 }

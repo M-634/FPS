@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Musashi.Item;
 using Musashi.Player;
+using UnityEngine.UI;
+using System;
+using UnityEngine.Events;
 
 namespace Musashi.Weapon
 {
@@ -11,16 +14,16 @@ namespace Musashi.Weapon
         ShotGun, HandGun, AssaultRifle,
     }
 
+    public enum WeaponShootType
+    {
+        Manual, Automatic,
+    }
+
     /// <summary>
-    /// プレイヤーの入力処理に応じて武器を制御するクラス
+    /// プレイヤーが扱う武器を制御するクラス
     /// </summary>
     public class WeaponControl : MonoBehaviour, IPoolUser<WeaponControl>
     {
-        private enum WeaponShootType
-        {
-            Manual, Automatic,
-        }
-
         #region Field
 
         #region Gun settings from WeaponSettingSOData 
@@ -29,47 +32,57 @@ namespace Musashi.Weapon
         public string weaponName;
         [HideInInspector]
         public WeaponType weaponType;
-        //Main settins
-        private float shotDamage;
-        private float shotPower;
+
         private float fireRate;
-        private Vector2 recoill;
-        private float aimCameraFOV;
-        private float aimSpeed;
+        // private Vector2 recoill;
         private int ammmoAndMuzzleFlashPoolsize;
         //effects
         private ParticleSystem muzzleFalsh;
         private AudioClip shotSFX, reloadSFX, emptySFX;
         private AudioClip shotgunLoadingSFX;
-        //ammo settings
-        private BulletControl bullet;
+        //Projectile settings
+        [SerializeField, HideInInspector]
+        ObjectPoolingProjectileInfo projectileInfo;
+        private ProjectileControl projectilePrefab;
         private int maxAmmo;
+        //Properties
+        public float AimCameraFOV { get; private set; }
+        public float AimSpeed { get; private set; }
         #endregion
 
         [Header("Reference pick up weapon from Id")]
         [SerializeField] WeaponSettingSOData weaponSetting;
         [Header("Manual is single shot. Automatic is rapid fire")]
         [SerializeField] WeaponShootType weaponShootType;
+        [Header("The root object for the weapon, this is what will change acitive")]
+        [SerializeField] GameObject weaponRoot;
+        [Header("Display weapon icon on UI")]
+        [SerializeField] Sprite weaponIcon;
         [Header("Set each Transform")]
         [SerializeField] Transform muzzle;
-        [SerializeField] Transform poolObjectParent;
-        [Header("Require Component")]
-        [SerializeField] ReticleAnimation reticle;
-        [SerializeField] HitVFXManager hitVFXManager;
 
-        int currentAmmo;
+        [SerializeField] Vector3 defultLoaclPostionOffset;
+        [SerializeField] Vector3 aimLocalPostionOffset;
+
+        /// <summary>If Ammo number changed, Invoke this events</summary>
+        public event Action OnChangedAmmo;
+        public event Func<bool> CanReloadAmmo;
+        public event Func<int> HaveEndedReloadingAmmo;
+
+        int currentAmmo = 0;
         float lastTimeShot = Mathf.NegativeInfinity;
-        bool canAction = true;//「銃を撃つ」、「リロードする」といったアクションができるかどうか判定する変数（例:インベントリを開いた状態では撃てないし、リロードできない）
-        bool isAiming = false;
+
+        Transform poolObjectParent;
 
         PoolObjectManager poolObjectManager;
-        InputProvider playerInput;
-        PlayerCharacterStateMchine playerCharacter;
+        HitVFXManager hitVFXManager;
         Animator animator;
         AudioSource audioSource;
         #endregion
 
         #region Property
+        public bool Reloding { get; private set; }
+        public bool IsPlayingAnimationStateIdle => animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
         {
@@ -82,33 +95,55 @@ namespace Musashi.Weapon
                     currentAmmo = maxAmmo;
                 }
 
-                if (ItemInventory.Instance)
+                if (OnChangedAmmo != null)
                 {
-                    ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
+                    OnChangedAmmo.Invoke();
                 }
             }
         }
+        public bool IsWeaponActive { get; private set; }
+        public Sprite GetIcon => weaponIcon;
+        public WeaponShootType GetWeaponShootType => weaponShootType;
+        public GameObject SourcePrefab { get; set; }//instanceする前のGameObject
+        public Vector3 RootPosition
+        {
+            get
+            {
+                return weaponRoot ? weaponRoot.transform.localPosition : transform.localPosition;
+            }
+            set
+            {
+                if (weaponRoot)
+                {
+                    weaponRoot.transform.localPosition = value;
+                }
+                else
+                {
+                    transform.localPosition = value;
+                }
+            }
+        }
+        public Vector3 GetDefultLocalPositionOffset => defultLoaclPostionOffset;
+        public Vector3 GetAimLocalPositionOffset => aimLocalPostionOffset;
+
         #endregion
 
-        #region Method
-        private void Awake()
+        private void Start()
         {
             SetDataFromWeaponSettingSOData();
-            playerInput = transform.GetComponentInParent<InputProvider>();
-            playerCharacter = transform.GetComponentInParent<PlayerCharacterStateMchine>();
-   
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
+            hitVFXManager = GetComponentInParent<HitVFXManager>();
 
+            if (!weaponRoot)
+            {
+                weaponRoot = gameObject;
+            }
             if (!muzzle)
             {
                 muzzle = this.transform;
             }
-
-            if (!poolObjectParent)
-            {
-                poolObjectParent = this.transform;
-            }
+            poolObjectParent = GameObject.FindGameObjectWithTag("ObjectPoolParent").transform;//リファクタリングメモ ；Nullチェック！
 
             currentAmmo = maxAmmo;
 
@@ -137,16 +172,19 @@ namespace Musashi.Weapon
             {
                 shotgunLoadingSFX = weaponSetting.shotgunLoadingSFX;
             }
-            //set weapon statas
-            shotDamage = weaponSetting.shotDamage;
-            shotPower = weaponSetting.shotPower;
+            //set projectile statas
+            projectileInfo.damage = weaponSetting.shotDamage;
+            projectileInfo.power = weaponSetting.shotPower;
+            projectileInfo.lifeTime = weaponSetting.projectileLifeTime;
+            projectileInfo.muzzle = this.muzzle;
+            //weapon statas
             fireRate = weaponSetting.fireRate;
-            recoill = weaponSetting.recoil;
+            //recoill = weaponSetting.recoil;
             //set aim settings
-            aimCameraFOV = weaponSetting.aimCameraFOV;
-            aimSpeed = weaponSetting.aimSpeed;
+            AimCameraFOV = weaponSetting.aimCameraFOV;
+            AimSpeed = weaponSetting.aimSpeed;
             //set ammo settings;
-            bullet = weaponSetting.bullet;
+            projectilePrefab = weaponSetting.projectilePrefab;
             maxAmmo = weaponSetting.maxAmmo;
             //set pool size
             ammmoAndMuzzleFlashPoolsize = weaponSetting.ammoAndMuzzleFlashPoolSize;
@@ -165,33 +203,50 @@ namespace Musashi.Weapon
         {
             var poolObj = poolObjectManager.InstantiatePoolObj();
 
-            var b = Instantiate(bullet, poolObjectParent);
+            var p = Instantiate(projectilePrefab, poolObjectParent);
             var mF = Instantiate(muzzleFalsh, poolObjectParent);
 
-            poolObj.AddObj(b.gameObject);
+            p.SetProjectileInfo(projectileInfo);
+
+            poolObj.AddObj(p.gameObject);
             poolObj.AddObj(mF.gameObject);
 
-            b.SetInfo(shotPower, shotDamage, hitVFXManager);
             poolObj.SetActiveAll(false);
             return poolObj;
         }
 
+        #region public Methods
         /// <summary>
-        /// リロードできるかどうか判定する関数
+        /// リロードを始める関数
         /// </summary>
-        private void CanReload()
+        public void StartReload()
         {
-            bool canReload = ItemInventory.Instance ? ItemInventory.Instance.CanReloadAmmo(maxAmmo, currentAmmo) : true;
+            if (Reloding) return;
+
+            if (CurrentAmmo == MaxAmmo)
+            {
+                //audioSource.Play(emptySFX);AmmoMaxSFXを探す
+                return;
+            }
+
+            var canReload = CanReloadAmmo.Invoke();
             if (canReload)
             {
                 if (animator)
+                {
+                    Reloding = true;
                     animator.Play("Reload");
+                }
                 else
-                    CurrentAmmo = maxAmmo;
+                {
+                    CurrentAmmo = HaveEndedReloadingAmmo.Invoke();
+                }
 
 
                 if (audioSource && weaponType != WeaponType.ShotGun)
+                {
                     audioSource.Play(reloadSFX, audioSource.volume);
+                }
             }
             else
             {
@@ -201,156 +256,16 @@ namespace Musashi.Weapon
         }
 
         /// <summary>
-        /// リロードアニメーションイベントから呼ばれる関数
+        /// 弾を発射できるか試す関数    
         /// </summary>
-        public void EndReload()
+        public void TryShot()
         {
-            if (ItemInventory.Instance)
-            {
-                CurrentAmmo = ItemInventory.Instance.ReloadAmmoNumber(maxAmmo, currentAmmo);
-            }
-            else
-            {
-                CurrentAmmo = maxAmmo;
-            }
-        }
+            if (Reloding) return;
 
-        /// <summary>
-        /// ショットガンのリロードアニメーションイベントから呼ばれる関数
-        /// </summary>
-        public void ShutGunCycleReload()
-        {
-            bool canReload = ItemInventory.Instance ? ItemInventory.Instance.CanReloadAmmo(maxAmmo, currentAmmo) : true;
-
-            if (canReload)
-            {
-                if (ItemInventory.Instance)
-                {
-                    CurrentAmmo += ItemInventory.Instance.ReloadAmmNumber();
-                }
-                else
-                {
-                    CurrentAmmo++;
-                }
-
-                if (audioSource)
-                {
-                    audioSource.Play(reloadSFX, audioSource.volume);
-                }
-
-                if (CurrentAmmo == maxAmmo)
-                {
-                    animator.SetBool("ReloadCycleEnd", true);
-                }
-            }
-            else
-            {
-                animator.SetBool("ReloadCycleEnd", true);
-            }
-        }
-
-
-        /// <summary>
-        /// ショットガンのPullアニメーションイベントから呼ばれる関数
-        /// </summary>
-        public void ShutGunPullStart()
-        {
-            canAction = false;
-        }
-
-
-        /// <summary>
-        /// ショットガンのPullアニメーションイベントから呼ばれる関数
-        /// </summary>
-        public void ShutGunPullEnd()
-        {
-            canAction = true;
-            if (weaponType == WeaponType.ShotGun)
-            {
-                audioSource.Play(shotgunLoadingSFX);
-                animator.SetBool("ReloadCycleEnd", false);
-            }
-        }
-
-        /// <summary>
-        /// 再生中のアニメーションを中断させる関数
-        /// </summary>
-        public void CancelAnimation()
-        {
-            animator.Play("Idle");
-        }
-
-        void Update()
-        {
-            if (!canAction) return;
-
-            if (playerInput.Reload)
-            {
-                CanReload();
-            }
-
-            if (playerInput.Aim)
-            {
-                isAiming = true;
-            }
-            else
-            {
-                isAiming = false;
-            }
-
-            SetAim();
-
-            switch (weaponShootType)
-            {
-                case WeaponShootType.Manual:
-                    if (playerInput.Fire)
-                    {
-                        TryShot();
-                    }
-                    break;
-                case WeaponShootType.Automatic:
-                    if (playerInput.HeldFire)
-                    {
-                        TryShot();
-                    }
-                    break;
-            }
-        }
-
-        void SetAim()
-        {
-            if (animator)
-            {
-                animator.SetBool("Aim", isAiming);
-            }
-
-            if (playerCharacter)
-            {
-                playerCharacter.SetFovOfCamera(isAiming, aimCameraFOV, aimSpeed);
-            }
-
-            if (isAiming)
-            {
-                if (reticle)
-                {
-                    reticle.gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                if (reticle)
-                {
-                    reticle.gameObject.SetActive(true);
-                }
-            }
-        }
-
-        private void TryShot()
-        {
             if (CurrentAmmo < 1)
             {
                 CurrentAmmo = 0;
-                CanReload();
+                StartReload();
                 return;
             }
 
@@ -368,6 +283,71 @@ namespace Musashi.Weapon
         }
 
         /// <summary>
+        /// 武器の表示を制御する関数
+        /// </summary>
+        /// <param name="value"></param>
+        public void ShowWeapon(bool value, UnityAction callBack = null)
+        {
+            weaponRoot.SetActive(value);
+            IsWeaponActive = value;
+            if (callBack != null)
+            {
+                callBack.Invoke();
+            }
+        }
+        #endregion
+
+        #region Animation Events: アニメーションイベントから呼ばれる関数
+        /// <summary>
+        /// 弾の装填が完了したタイミングで呼ばれるアニメーションイベント関数
+        /// </summary>
+        public void EndReloadCharge()
+        {
+            if (weaponType == WeaponType.ShotGun)
+            {
+                var addAmmo = HaveEndedReloadingAmmo.Invoke();//1 or 0;
+
+                if (CurrentAmmo == maxAmmo || addAmmo == 0)
+                {
+                    animator.SetBool("ReloadCycleEnd", true);
+                    return;
+                }
+
+                CurrentAmmo += addAmmo;
+                if (audioSource)
+                {
+                    audioSource.Play(reloadSFX, audioSource.volume);
+                }
+            }
+            else
+            {
+                CurrentAmmo = HaveEndedReloadingAmmo.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// リロードアニメーション中にどこから入力を受け付けないかを決めるアニメーションイベント関数
+        /// </summary>
+        public void ReloadActionStartTrigger()
+        {
+            Reloding = true;
+        }
+
+        /// <summary>
+        /// リロードアニメーション終了時に設定するアニメーションイベント関数。
+        /// </summary>
+        public void ReloadActionEndTrigger()
+        {
+            Reloding = false;
+            if (weaponType == WeaponType.ShotGun)
+            {
+                audioSource.Play(shotgunLoadingSFX);
+                animator.SetBool("ReloadCycleEnd", false);
+            }
+        }
+
+
+        /// <summary>
         /// アニメーションイベントから呼ばれる
         /// </summary>
         public void Shot()
@@ -381,42 +361,20 @@ namespace Musashi.Weapon
 
             CurrentAmmo--;
 
-            if (reticle)
-            {
-                reticle.IsShot = true;
-            }
+            //if (reticle)
+            //{
+            //    reticle.IsShot = true;
+            //}
 
             lastTimeShot = Time.time;
         }
 
         /// <summary>
-        /// アニメーションイベントから呼ばれる
+        /// アニメーションイベントから呼ばれる(未実装)
         /// </summary>
         public void CasingRelease()
         {
 
-        }
-
-        public void OnEnable()
-        {
-            if (ItemInventory.Instance)
-            {
-                ItemInventory.Instance.DisplayEquipmentWeaponInfo(currentAmmo, maxAmmo);
-            }
-
-            if (reticle)
-            {
-                reticle.IsDefult = false;
-            }
-        }
-
-        public void OnDisable()
-        {
-
-            if (reticle)
-            {
-                reticle.IsDefult = true;
-            }
         }
         #endregion
     }

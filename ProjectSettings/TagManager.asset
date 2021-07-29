@@ -8,6 +8,8 @@ TagManager:
   - Fire
   - GameManager
   - Ground
+  - ObjectPoolParent
+  - SavePoint
   layers:
   - Default
   - TransparentFX
@@ -17,12 +19,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - FPSWeapon
   - Ground
   - Player
   - Enemy
-  - Level
-  - MinimapIcon
+  - 
+  - 
   - PostProcessing
   - Interactable
   - BossCoreGard

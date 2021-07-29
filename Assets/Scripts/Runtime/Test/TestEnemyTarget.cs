@@ -10,7 +10,7 @@ namespace Musashi.Test
         {
             gameObject.SetActive(false);//初期時はアクティブをきる。
             GameEventManager.Instance.Subscribe(GameEventType.StartGame, Spwan);
-            GameEventManager.Instance.Subscribe(GameEventType.EndGame, InitState);
+            GameEventManager.Instance.Subscribe(GameEventType.Goal, InitState);
         }
 
         private void InitState()
@@ -41,7 +41,7 @@ namespace Musashi.Test
         private void OnDestroy()
         {
             GameEventManager.Instance.UnSubscribe(GameEventType.StartGame, Spwan);
-            GameEventManager.Instance.UnSubscribe(GameEventType.EndGame, InitState);
+            GameEventManager.Instance.UnSubscribe(GameEventType.Goal, InitState);
         }
     }
 }

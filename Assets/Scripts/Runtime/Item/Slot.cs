@@ -5,37 +5,35 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-namespace Musashi
+namespace Musashi.Item
 {
-
     public class Slot : MonoBehaviour
     {
-        [SerializeField] Image icon;
-        [SerializeField] Image Outline;
-        [SerializeField] TextMeshProUGUI keyCode;
-        [SerializeField] TextMeshProUGUI stackSize;
-        [SerializeField] Color highLightColor;
-        [SerializeField] Color defultColor;
+        [SerializeField] TextMeshProUGUI stackSizeText;
+        [SerializeField] Image imageIcon;
+        public string GUID { get; private set; }
 
-        public Image Icon => icon;
-        public TextMeshProUGUI StackSize => stackSize;
-
-        private void Awake()
+        public void SetItemInfo(string guid, int stackSize, Sprite icon = null)
         {
-            Outline.enabled = false;
-            Outline.color = highLightColor;
+            GUID = guid;
+            if (imageIcon)
+            {
+                imageIcon.sprite = icon;
+            }
+            UpdateStackSizeText(stackSize);
         }
 
-        public void OnSelected()
+        public void UpdateStackSizeText(int value)
         {
-            Outline.enabled = true;
-            Outline.color = highLightColor;
+
+            stackSizeText.text = value.ToString();
         }
 
-        public void MissingSelection()
+        public void ClearSlot()
         {
-            Outline.enabled = false;
-            Outline.color = defultColor;
+            GUID = "";
+            imageIcon.sprite = null;
+            stackSizeText.text = "";
         }
     }
 }

@@ -12,16 +12,29 @@ namespace Musashi
         List<AudioClip> seAudioClipsList = new List<AudioClip>();
         private AudioSource seAudioSouce;
 
+        public AudioSource SeAudioSouce
+        {
+            get
+            {
+                if (!seAudioSouce)
+                {
+                    seAudioSouce = InitializeAudioSource(this.gameObject, false, seAMG);
+                }
+                return seAudioSouce;
+            }
+        }
+
+
         [SerializeField, Header("Audio Mixer")]
         AudioMixer audioMixer;
 
         [SerializeField] AudioMixerGroup seAMG;
 
 
-        private void Start()
-        {
-            seAudioSouce = InitializeAudioSource(this.gameObject, false, seAMG);    
-        }
+        //private void Start()
+        //{
+        //    seAudioSouce = InitializeAudioSource(this.gameObject, false, seAMG);
+        //}
 
         private AudioSource InitializeAudioSource(GameObject parentGameObject, bool isLoop = false, AudioMixerGroup amg = null)
         {
@@ -48,7 +61,7 @@ namespace Musashi
                 return;
             }
 
-            seAudioSouce.Play(audioClip);
+            SeAudioSouce.Play(audioClip);
         }
     }
 

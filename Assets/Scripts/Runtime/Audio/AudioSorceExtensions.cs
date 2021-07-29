@@ -14,6 +14,10 @@ namespace Musashi
         {
             if (audioClip)
             {
+                if (audioSource == null)
+                {
+                    Debug.LogError("NUllなんだが");
+                }
                 audioSource.clip = audioClip;
                 audioSource.pitch = 1f;
                 //ボリュームが適切になるように調整する
@@ -24,7 +28,7 @@ namespace Musashi
         }
 
         /// <param name="range">0 ~ 1</param>
-        public static void PlayRandomPitch(this AudioSource audioSource, AudioClip audioClip = null, float volume = 1f,float range = 0.5f)
+        public static void PlayRandomPitch(this AudioSource audioSource, AudioClip audioClip = null, float volume = 1f, float range = 0.5f)
         {
             if (!audioClip) return;
 

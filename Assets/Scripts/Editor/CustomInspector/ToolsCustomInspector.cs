@@ -19,7 +19,7 @@ namespace Musashi
         }
 
         [MenuItem("Tools/MeshCombine")]
-        static void CreatMeshCombine()
+        static void CreateEmptyObject()
         {
             var obj = new GameObject("MeshCombine");
             obj.AddComponent<MeshCombine>();
@@ -39,6 +39,13 @@ namespace Musashi
             {
                 t.Excute();
             }
+        }
+
+        [MenuItem("Tools/SkinMeshRendererToMeshRenderer")]
+        static void CreateEmptyObject()
+        {
+            var obj = new GameObject("SkinMeshRendererToMeshRenderer");
+            obj.AddComponent<SkinMeshRendererToMeshRenderer>();
         }
     }
 

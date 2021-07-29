@@ -8,9 +8,6 @@ using UnityEngine.AI;
 
 namespace Musashi.NPC
 {
-    /// <summary>
-    /// リファクタリングメモ ⇒ ユーティリティークラスとしてまとめる
-    /// </summary>
     public static class AnimatorName
     {
         public const string Idle = "Idle";
@@ -50,46 +47,34 @@ namespace Musashi.NPC
         [SerializeField] float attackRange = 7.0f;
         [SerializeField] float attackCoolTime = 1.0f;
 
+        [Header("ダメージ状態の各種設定")]
+        /// <summary>ノックバックするか（ノックバックアニメーションさせるか）判定するフラグ</summary>
+        [SerializeField] bool doKnockback = true;
+
         [Header("Gizoms表示色")]
         [SerializeField] Color visitDistanceColor;
         [SerializeField] Color attackRangeColor;
 
+        //events
+        public event Action OnEnterAttackEvent;
+        public event Action OnExitAttackEvent;
+
+        private float targetCenterPos;
+        private float lastTimeAttacked;
+        private int patrolPointsIndex;
+
         NavMeshAgent agent;
         Animator animator;
         StateMachine<NPCMoveControl> stateMachine;
-        #endregion
-
-        //events
-        public Action OnEnterAttackEvent;
-        public Action OnExitAttackEvent;
-
-        #region Field's property
-        public float PatrolSpeed => patrolSpeed;
-        public float PursueSpeed => pursueSpeed;
-        public Transform[] PatrolPoints => patrolPoints;
-        public int PatrolPointsIndex { get; set; }
-        public float BreakTime => breakTime;
-        public float StopOffset => stopOffset;
-        public float VisitDistance => visitDistance;
-        public float ViewingAngle => viewingAngle;
-        public float AttackRange => attackRange;
-        public float AttackCoolTime => attackCoolTime;
-        public float TurnAroundInterpolationSpeed => turnAroundInterpolationSpeed;
-        public float LastTimeAttacked { get; set; }
-
-        public Transform Eye => eye;
-        public Transform Target => target;
-        public NavMeshAgent Agent => agent;
-        public Animator Anim => animator;
-        public StateMachine<NPCMoveControl> StateMacnie => stateMachine;
-        #endregion
 
         #region States
-        public IState<NPCMoveControl> IdleState { get; private set; } = new Idle();
-        public IState<NPCMoveControl> PatrolState { get; private set; } = new Patrol();
-        public IState<NPCMoveControl> PuersueState { get; private set; } = new Pursue();
-        public IState<NPCMoveControl> AttackState { get; private set; } = new Attack();
-        public IState<NPCMoveControl> OnDamageState { get; private set; } = new OnDamage();
+        private readonly IState<NPCMoveControl> IdleState = new Idle();
+        private readonly IState<NPCMoveControl> PatrolState = new Patrol();
+        private readonly IState<NPCMoveControl> PuersueState = new Pursue();
+        private readonly IState<NPCMoveControl> AttackState = new Attack();
+        private readonly IState<NPCMoveControl> OnDamageState = new OnDamage();
+        #endregion
+
         #endregion
 
         #region Method
@@ -102,6 +87,10 @@ namespace Musashi.NPC
             if (!target)
             {
                 target = GameObject.FindGameObjectWithTag("Player").transform;
+                if (target.TryGetComponent(out CharacterController controller))
+                {
+                    targetCenterPos = controller.height / 2;//playerの真ん中までの高さを取得
+                }
             }
 
             if (!eye)
@@ -131,10 +120,11 @@ namespace Musashi.NPC
         /// NPCHealthControlのOnDamageEventから呼ばれる関数
         /// ステートを被ダメージ状態に切り替える
         /// </summary>
-        public void OnDamage()
+        public void ChangeOnDamageState()
         {
             stateMachine.ChangeState(OnDamageState);
         }
+
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -155,221 +145,279 @@ namespace Musashi.NPC
         }
 #endif
         #endregion
-    }
 
-    #region State Classes
-    public class Idle : IState<NPCMoveControl>
-    {
-        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
+        #region UtilityMethod
+        private bool CanSeeTarget()
         {
-            owner.Agent.isStopped = true;
-            owner.Anim.Play(AnimatorName.Idle);
-        }
+            var dir = target.position - transform.position;
+            var angle = Vector3.Angle(dir, transform.forward);
 
-        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
-        {
-
-        }
-
-        public void OnUpdate(NPCMoveControl owner)
-        {
-            owner.StateMacnie.ChangeState(owner.PatrolState);
-        }
-    }
-
-    public class Patrol : IState<NPCMoveControl>
-    {
-        float waitTime = 0f;
-        bool isStopping = false;
-        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
-        {
-            GoToNextPoint(owner);
-        }
-
-        private void GoToNextPoint(NPCMoveControl owner)
-        {
-            waitTime = 0;
-            isStopping = false;
-            if (owner.PatrolPoints.Length == 0) return;
-
-            owner.PatrolPointsIndex = (owner.PatrolPointsIndex + 1) % owner.PatrolPoints.Length;
-            owner.Agent.destination = owner.PatrolPoints[owner.PatrolPointsIndex].position;
-            owner.Agent.speed = owner.PatrolSpeed;
-            owner.Agent.isStopped = false;
-            owner.Anim.Play(AnimatorName.Walk);
-        }
-
-        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
-        {
-
-        }
-
-        public void OnUpdate(NPCMoveControl owner)
-        {
-            if (!owner.Agent.pathPending && owner.Agent.remainingDistance < owner.StopOffset)
+            if (dir.magnitude < visitDistance && angle < viewingAngle)
             {
-                isStopping = true;
+                //ここの処理を上手くやらないと、思うようにいかない。が、重要度が高いわけでもないため後回し！
+
+                ////plyarの真ん中目掛けてLineCastを飛ばす(target.positionのY座標が0のため、目線が低いNPCだと地面)
+                //var lineCastEndPos = target.position + new Vector3(0, targetCenterPos, 0);
+
+                ////Playerと敵の間に障害物があるかどうかRayを飛ばして確かめる
+                //if (Physics.Linecast(eye.position, lineCastEndPos, out RaycastHit hit))
+                //{
+                //    if (hit.transform.CompareTag("Player"))
+                //    {
+                //        Debug.DrawLine(eye.position, hit.point, Color.blue);
+                //        return true;
+                //    }
+                //}
+                //Debug.DrawLine(eye.position, hit.point, Color.white);
+                //return false;
+                return true;
+            }
+            return false;
+        }
+        private bool CanAttackTarget()
+        {
+            Vector3 dir = target.position - transform.position;
+            if (dir.magnitude < attackRange)
+            {
+                return true;
+            }
+            return false;
+        }
+        private void LookAtTarget()
+        {
+            var aim = target.position - transform.position;
+            aim.y = 0;
+            var look = Quaternion.LookRotation(aim);
+            transform.rotation = Quaternion.Slerp(transform.rotation, look, turnAroundInterpolationSpeed);
+        }
+        #endregion
+
+        #region State Classes
+        public class Idle : IState<NPCMoveControl>
+        {
+            public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
+            {
+                owner.agent.isStopped = true;
+                owner.animator.Play(AnimatorName.Idle);
             }
 
-            if (isStopping)
+            public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
             {
-                StopPoint(owner);
+
             }
 
-            if (NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            public void OnUpdate(NPCMoveControl owner)
             {
-                owner.StateMacnie.ChangeState(owner.PuersueState);
+                owner.stateMachine.ChangeState(owner.PatrolState);
+                return;
             }
         }
 
-        private void StopPoint(NPCMoveControl owner)
+        public class Patrol : IState<NPCMoveControl>
         {
-            owner.Agent.isStopped = true;
-            owner.Anim.Play(AnimatorName.Idle);
-            waitTime += Time.deltaTime;
-
-            if (waitTime > owner.BreakTime)
+            float waitTime = 0f;
+            bool isStopping = false;
+            public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
             {
                 GoToNextPoint(owner);
             }
-        }
-    }
 
-    public class Pursue : IState<NPCMoveControl>
-    {
-        bool isAngryState = false;//ダメージ受けた後は、プレイヤーを攻撃できる距離まで追い詰める
-        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
-        {
-            if (prevState is OnDamage)
+            private void GoToNextPoint(NPCMoveControl owner)
             {
-                isAngryState = true;
-            }
-            owner.Agent.speed = owner.PursueSpeed;
-            owner.Agent.isStopped = false;
-            owner.Anim.Play(AnimatorName.Run);
-        }
+                waitTime = 0;
+                isStopping = false;
+                if (owner.patrolPoints.Length == 0) return;
 
-        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
-        {
-            isAngryState = false;
-        }
-
-        public void OnUpdate(NPCMoveControl owner)
-        {
-            NPCAIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
-            owner.Agent.SetDestination(owner.Target.position);
-
-            if (NPCAIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
-            {
-                owner.StateMacnie.ChangeState(owner.AttackState);
+                owner.patrolPointsIndex = (owner.patrolPointsIndex + 1) % owner.patrolPoints.Length;
+                owner.agent.destination = owner.patrolPoints[owner.patrolPointsIndex].position;
+                owner.agent.speed = owner.patrolSpeed;
+                owner.agent.isStopped = false;
+                owner.animator.Play(AnimatorName.Walk);
             }
 
-            if (isAngryState) return;
-
-            if (!NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
+            public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
             {
-                owner.StateMacnie.ChangeState(owner.IdleState);
-            }
-        }
-    }
 
-    /// <summary>
-    /// 攻撃はアニメーションイベントからメソッドを呼ぶようにすること
-    /// </summary>
-    public class Attack : IState<NPCMoveControl>
-    {
-        bool canAttack = true;
-        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
-        {
-            if (owner.OnEnterAttackEvent != null)
-            {
-                owner.OnEnterAttackEvent.Invoke();
             }
 
-            owner.Agent.isStopped = true;
-            owner.Anim.Play(AnimatorName.Attack);
-        }
-
-        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
-        {
-            if(owner.OnExitAttackEvent != null)
+            public void OnUpdate(NPCMoveControl owner)
             {
-                owner.OnExitAttackEvent.Invoke();
-            }
-        }
-
-        public void OnUpdate(NPCMoveControl owner)
-        {
-            NPCAIHelper.LookAtPlayer(owner.Target, owner.transform, owner.TurnAroundInterpolationSpeed);
-
-            //if (!NPCAIHelper.CanSeePlayer(owner.Target, owner.transform, owner.VisitDistance, owner.ViewingAngle, owner.Eye))
-            //{
-            //    owner.StateMacnie.ChangeState(owner.IdleState);
-            //}
-
-            if (!NPCAIHelper.CanAttackPlayer(owner.Target, owner.transform, owner.AttackRange))
-            {
-                owner.StateMacnie.ChangeState(owner.PuersueState);
-            }
-
-            //if (!canAttack) return;
-
-            if (owner.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
-            {
-                //攻撃アニメーションが終了時の処理
-                if (owner.Anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                if (!owner.agent.pathPending && owner.agent.remainingDistance < owner.stopOffset)
                 {
-                    //canAttack = false;
-                    owner.Anim.Play(AnimatorName.Idle);
-                    //WaitAttackCoolTime(owner);
-                    owner.LastTimeAttacked = Time.time;
+                    isStopping = true;
+                }
+
+                if (isStopping)
+                {
+                    StopPoint(owner);
+                }
+
+                if (owner.CanSeeTarget())
+                {
+                    owner.stateMachine.ChangeState(owner.PuersueState);
+                    return;
                 }
             }
 
-            if (Time.time >= owner.LastTimeAttacked + owner.AttackCoolTime)
+            private void StopPoint(NPCMoveControl owner)
             {
-                owner.Anim.Play(AnimatorName.Attack);
+                owner.agent.isStopped = true;
+                owner.animator.Play(AnimatorName.Idle);
+                waitTime += Time.deltaTime;
+
+                if (waitTime > owner.breakTime)
+                {
+                    GoToNextPoint(owner);
+                }
             }
         }
 
-        private async void WaitAttackCoolTime(NPCMoveControl owner)
+        public class Pursue : IState<NPCMoveControl>
         {
-            owner.Anim.Play(AnimatorName.Idle);
-            await UniTask.Delay(TimeSpan.FromSeconds(owner.AttackCoolTime), ignoreTimeScale: false);
-            owner.Anim.Play(AnimatorName.Attack);
-            canAttack = true;
-        }
-    }
+            bool isAngryState = false;//ダメージ受けた後は、プレイヤーを攻撃できる距離まで追い詰める
 
-    public class OnDamage : IState<NPCMoveControl>
-    {
-        IState<NPCMoveControl> prevState;
-        public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
-        {
-            this.prevState = prevState;
-            owner.Agent.isStopped = true;
-            owner.Anim.Play(AnimatorName.OnDamage);
-        }
-
-        public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
-        {
-            prevState = null;
-        }
-
-        public void OnUpdate(NPCMoveControl owner)
-        {
-            if (owner.Anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+            public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
             {
-                if (prevState is Attack)
+                if (prevState is OnDamage)
                 {
-                    owner.StateMacnie.ChangeState(owner.AttackState);
+                    isAngryState = true;
+                }
+                owner.agent.speed = owner.pursueSpeed;
+                owner.agent.isStopped = false;
+                owner.agent.ResetPath();//メモ:NavmeshクラスのResetPath関数を呼んでPathを初期化してあげないと、SetDestinationが上手く機能しない時がある。
+                owner.animator.Play(AnimatorName.Run);
+            }
+
+            public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
+            {
+                isAngryState = false;
+            }
+
+            public void OnUpdate(NPCMoveControl owner)
+            {
+                owner.LookAtTarget();
+                owner.agent.SetDestination(owner.target.position);
+
+                if (owner.CanAttackTarget())
+                {
+                    owner.stateMachine.ChangeState(owner.AttackState);
+                    return;
+                }
+
+                if (!isAngryState)
+                {
+                    if (!owner.CanSeeTarget())
+                    {
+                        owner.stateMachine.ChangeState(owner.IdleState);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public class Attack : IState<NPCMoveControl>
+        {
+            bool canAttack;
+            public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
+            {
+                if (owner.OnEnterAttackEvent != null)
+                {
+                    owner.OnEnterAttackEvent.Invoke();
+                }
+                canAttack = false;
+                owner.agent.isStopped = true;
+                owner.animator.Play(AnimatorName.Attack);
+            }
+
+            public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
+            {
+                if (owner.OnExitAttackEvent != null)
+                {
+                    owner.OnExitAttackEvent.Invoke();
+                }
+            }
+
+            public void OnUpdate(NPCMoveControl owner)
+            {
+                owner.LookAtTarget();
+
+                if (owner.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+                {
+                    //攻撃アニメーションが終了時の処理
+                    if (owner.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                    {
+                        owner.animator.Play(AnimatorName.Idle);
+                        owner.lastTimeAttacked = Time.time;
+                        canAttack = true;
+                    }
+                }
+
+                if (canAttack && Time.time >= owner.lastTimeAttacked + owner.attackCoolTime)
+                {
+                    owner.animator.Play(AnimatorName.Attack);
+                    canAttack = false;
+                }
+
+                if (!owner.CanAttackTarget())
+                {
+                    owner.stateMachine.ChangeState(owner.PuersueState);
+                    return;
+                }
+
+                if (!owner.CanSeeTarget())
+                {
+                    owner.stateMachine.ChangeState(owner.PatrolState);
+                    return;
+                }
+            }
+        }
+
+        public class OnDamage : IState<NPCMoveControl>
+        {
+            IState<NPCMoveControl> prevState;
+            public void OnEnter(NPCMoveControl owner, IState<NPCMoveControl> prevState = null)
+            {
+                this.prevState = prevState;
+                if (owner.doKnockback)
+                {
+                    owner.agent.isStopped = true;
+                    owner.animator.Play(AnimatorName.OnDamage);
+                }
+            }
+
+            public void OnExit(NPCMoveControl owner, IState<NPCMoveControl> nextState = null)
+            {
+                prevState = null;
+            }
+
+            public void OnUpdate(NPCMoveControl owner)
+            {
+                if (owner.doKnockback)
+                {
+                    if (owner.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+                    {
+                        ChangeStateFromDamage(owner);
+                    }
                 }
                 else
                 {
-                    owner.StateMacnie.ChangeState(owner.PuersueState);
+                    ChangeStateFromDamage(owner);
+                }
+            }
+
+            private void ChangeStateFromDamage(NPCMoveControl owner)
+            {
+                if (prevState is Attack)
+                {
+                    owner.stateMachine.ChangeState(owner.AttackState);
+                }
+                else
+                {
+                    owner.stateMachine.ChangeState(owner.PuersueState);
                 }
             }
         }
+        #endregion
     }
-    #endregion
+
 }

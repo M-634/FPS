@@ -6,6 +6,7 @@ using DG.Tweening;
 
 /// <summary>
 /// ゲームシーンで、プレイヤーへのメッセージ表示を管理するクラス
+/// (staticを修正して、イベントでできるようにすること)
 /// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class InteractiveMessage : MonoBehaviour

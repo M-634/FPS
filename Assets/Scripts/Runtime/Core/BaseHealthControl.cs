@@ -6,18 +6,6 @@ using UnityEngine.Events;
 namespace Musashi
 {
     /// <summary>
-    /// ダメージ時のイベントラッパー関数
-    /// </summary>
-    [System.Serializable]
-    public class OnDamageEnvents : UnityEvent { }
-
-    /// <summary>
-    /// 死亡時のイベントラッパー関数
-    /// </summary>
-    [System.Serializable]
-    public class OnDieEvents : UnityEvent { }
-
-    /// <summary>
     /// 体力があるオブジェクトにアタッチするベースクラス。
     /// ダメージ時のイベントと、体力がなくなった時（死亡時）のイベントを
     /// 継承先、もしくはインスペクター上で設定できる。
@@ -27,15 +15,20 @@ namespace Musashi
     public abstract class BaseHealthControl : MonoBehaviour, IDamageable
     {
         [SerializeField] TargetType targetType;
+
+        [Header("Set HP properties")]
         [SerializeField] bool useBillBord;
         [SerializeField] float healthBarHightOffset;
         [SerializeField] protected float maxHp;
         [SerializeField] protected Image healthBarFillImage;
 
-        [SerializeField] protected OnDamageEnvents OnDamageEnvents = default;
-        [SerializeField] protected OnDieEvents OnDieEvents = default;
+        [Header("Events")]
+        [SerializeField] protected UnityEventWrapper OnDamageEnvents = default;
+        [SerializeField] protected UnityEventWrapper OnDieEvents = default;
 
-        [SerializeField] bool isDebugMode;//ダメージを受け付けないフラグ
+        [Header("Set each flag")]
+        ///<summary>無敵モードにするか判定するフラグ</summary>
+        [SerializeField] protected bool isInvincibleMode;
 
         protected float currentHp;
         public bool IsDead { get; protected set; } = false;
@@ -56,17 +49,26 @@ namespace Musashi
 
         protected virtual void Start()
         {
-            CurrentHp = maxHp;
-
-            if (healthBarFillImage && useBillBord)
-            {
-                StartCoroutine(BillBoard());
-            }
+            ResetHP();
 
             OnDamageEnvents.AddListener(AddOnDamageEvent);
             OnDieEvents.AddListener(AddOnDieEvent);
         }
 
+        public virtual void ResetHP()
+        {
+            CurrentHp = maxHp;
+            IsDead = false;
+        }
+
+
+        private void OnEnable()
+        {
+            if (healthBarFillImage && useBillBord)
+            {
+                StartCoroutine(BillBoard());
+            }
+        }
 
         protected virtual void AddOnDamageEvent() { }
 
@@ -84,7 +86,7 @@ namespace Musashi
 
         public virtual void OnDamage(float damage)
         {
-            if (IsDead || isDebugMode) return;
+            if (IsDead || isInvincibleMode) return;
 
             CurrentHp -= damage;
 

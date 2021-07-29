@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 
-namespace Musashi
+namespace Musashi.NPC
 {
     public sealed class BossHpCore : BaseHealthControl
     {
@@ -15,54 +15,39 @@ namespace Musashi
         [SerializeField] float fullHpDuration = 1f;
         [SerializeField] float backBarToFillBarDuration;
 
-        public bool invincible = true;//無敵モードフラグ(ダメージ受けない)
-
-        [SerializeField] UnityEvent bossDeadEvent;
- 
         protected override void Start()
         {
-            //（fullHpDuration）秒かけて㏋ゲージを上昇させる
+            base.Start();
+            //出現時に（fullHpDuration）秒かけて㏋ゲージを上昇させる
+            isInvincibleMode = true;
             DOTween.To(() => CurrentHp, (x) => CurrentHp = x, maxHp, fullHpDuration)
-                   .SetEase(Ease.Linear)
-                   .OnComplete(() => 
-                   {
-                       healthBarRed.fillAmount = 1f;
-                       invincible = false;
-                   });
-        }
-
-
-        public override void OnDamage(float damage)
-        {
-            if (IsDead || invincible) return;
-
-            CurrentHp -= damage;
-
-            if (CurrentHp <= 0)
-            {
-                IsDead = true;
-            }
-
-            //hpバーの赤い部分を徐々に減らす
-            DOTween.To(() => healthBarRed.fillAmount, (x) => healthBarRed.fillAmount = x, healthBarFillImage.fillAmount, backBarToFillBarDuration)
                    .SetEase(Ease.Linear)
                    .OnComplete(() =>
                    {
-                       if (IsDead)
-                       {
-                           OnDie();
-                       }
+                       healthBarRed.fillAmount = 1f;
+                       isInvincibleMode = false;
                    });
         }
 
-
-        protected override void OnDie()
+        public override void ResetHP()
         {
-            IsDead = true;
+            IsDead = false;
+        }
 
-            if (bossDeadEvent != null)
+        protected override void AddOnDamageEvent()
+        {
+            if (healthBarFillImage && healthBarRed)
             {
-                bossDeadEvent.Invoke();
+                //hpバーの赤い部分を徐々に減らす
+                DOTween.To(() => healthBarRed.fillAmount, (x) => healthBarRed.fillAmount = x, healthBarFillImage.fillAmount, backBarToFillBarDuration)
+                       .SetEase(Ease.Linear)
+                       .OnComplete(() =>
+                       {
+                           if (IsDead)
+                           {
+                               OnDie();
+                           }
+                       });
             }
         }
     }
