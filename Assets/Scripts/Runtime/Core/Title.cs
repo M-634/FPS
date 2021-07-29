@@ -15,6 +15,7 @@ namespace Musashi
 
         private void Start()
         {
+            GameManager.Instance.UnlockCusor();
             if (initButton)
             {
                 initButton.Select();

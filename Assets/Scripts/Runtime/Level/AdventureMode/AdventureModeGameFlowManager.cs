@@ -68,6 +68,8 @@ namespace Musashi.Level.AdventureMode
             {
                 OnInitPlayerSpawnEvent.Invoke();
             }
+
+            Debug.developerConsoleVisible = false;
         }
 
         /// <summary>
