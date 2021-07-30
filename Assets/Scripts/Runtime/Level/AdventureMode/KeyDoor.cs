@@ -6,22 +6,37 @@ using DG.Tweening;
 
 namespace Musashi.Level.AdventureMode
 {
-    public class KeyDoor : MonoBehaviour
+    public class KeyDoor : Event.CommandHandler
     {
-        [SerializeField,Range(1,10)] int lockKeyCount = 1;
+        [SerializeField] Camera switchCamera;
+        [SerializeField, Range(1, 10)] int lockKeyCount = 1;
         [SerializeField] float offsetY;
         [SerializeField] float duration;
-  
+        [SerializeField] AnimationCurve curve;
+        [SerializeField] AudioSource openDoorSe;
+        [SerializeField] UnityEventWrapper OnOpened;
+
         int unlockKeyCount;
         bool unlock = false;
+        Tweener currentTweener;
 
-        public void UnLock()
+        private void Start()
+        {
+            reciver.Register(UnLock);
+        }
+
+        private void OnDestroy()
+        {
+            reciver.Remove(UnLock);
+        }
+
+        private void UnLock()
         {
             if (unlock) return;
 
             unlockKeyCount++;
 
-            if(unlockKeyCount == lockKeyCount)
+            if (unlockKeyCount == lockKeyCount)
             {
                 OpenDoor();
             }
@@ -30,7 +45,37 @@ namespace Musashi.Level.AdventureMode
         private void OpenDoor()
         {
             unlock = true;
-            transform.DOMoveY(transform.position.y + offsetY, duration).SetEase(Ease.Linear);
+            GameManager.Instance.CanProcessPlayerMoveInput = false;
+            switchCamera.gameObject.SetActive(true);
+
+            if (openDoorSe)
+            {
+                openDoorSe.Play();
+            }
+
+            currentTweener = transform.DOMoveY(transform.position.y + offsetY, duration).SetEase(curve)
+                 .OnComplete(() =>
+                 {
+                     switchCamera.gameObject.SetActive(false);
+                     GameManager.Instance.CanProcessPlayerMoveInput = true;
+                     if (openDoorSe)
+                     {
+                         openDoorSe.Stop();
+                     }
+                     if (OnOpened != null)
+                     {
+                         OnOpened.Invoke();
+                     }
+                 });
         }
+
+        private void OnDisable()
+        {
+            if (currentTweener != null)
+            {
+                currentTweener.Kill();
+            }
+        }
+
     }
 }
