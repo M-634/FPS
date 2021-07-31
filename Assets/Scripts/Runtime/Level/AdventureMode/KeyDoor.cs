@@ -9,19 +9,31 @@ namespace Musashi.Level.AdventureMode
     public class KeyDoor : Event.CommandHandler
     {
         [SerializeField] Camera switchCamera;
+        [SerializeField] Transform doorObject;
+
         [SerializeField, Range(1, 10)] int lockKeyCount = 1;
+        [SerializeField] KeyDoorTrigger[] keyDoorTriggers;
+
         [SerializeField] float offsetY;
         [SerializeField] float duration;
+
         [SerializeField] AnimationCurve curve;
         [SerializeField] AudioSource openDoorSe;
-        [SerializeField] UnityEventWrapper OnOpened;
 
         int unlockKeyCount;
-        bool unlock = false;
+        bool unlockedDoor = false;
         Tweener currentTweener;
 
         private void Start()
         {
+            if (switchCamera)
+            {
+                switchCamera.gameObject.SetActive(false);
+            }
+            if (!doorObject)
+            {
+                doorObject = this.transform;
+            }
             reciver.Register(UnLock);
         }
 
@@ -32,7 +44,7 @@ namespace Musashi.Level.AdventureMode
 
         private void UnLock()
         {
-            if (unlock) return;
+            if (unlockedDoor) return;
 
             unlockKeyCount++;
 
@@ -40,33 +52,49 @@ namespace Musashi.Level.AdventureMode
             {
                 OpenDoor();
             }
+            else
+            {
+                OnUnlockKey();
+            }
         }
 
         private void OpenDoor()
         {
-            unlock = true;
+            unlockedDoor = true;
             GameManager.Instance.CanProcessPlayerMoveInput = false;
-            switchCamera.gameObject.SetActive(true);
+            if (switchCamera)
+            {
+                switchCamera.gameObject.SetActive(true);
+            }
 
             if (openDoorSe)
             {
                 openDoorSe.Play();
             }
 
-            currentTweener = transform.DOMoveY(transform.position.y + offsetY, duration).SetEase(curve)
+            currentTweener = doorObject.DOMoveY(doorObject.position.y + offsetY, duration).SetEase(curve)
                  .OnComplete(() =>
                  {
-                     switchCamera.gameObject.SetActive(false);
+                     if (switchCamera)
+                     {
+                         switchCamera.gameObject.SetActive(false);
+                     }
                      GameManager.Instance.CanProcessPlayerMoveInput = true;
                      if (openDoorSe)
                      {
                          openDoorSe.Stop();
                      }
-                     if (OnOpened != null)
-                     {
-                         OnOpened.Invoke();
-                     }
+                     OnUnlockKey();
                  });
+        }
+
+        private void OnUnlockKey()
+        {
+            foreach (var trigger in keyDoorTriggers)
+            {
+                if (trigger.HasDone) continue;
+                trigger.InvokeUnLockEvent(unlockedDoor);
+            }
         }
 
         private void OnDisable()

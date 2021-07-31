@@ -10,14 +10,14 @@ namespace Musashi.Event
     {
         [SerializeField] UnityEventWrapper OnCommandRecive;
 
-        public void Register(UnityAction callback)
+        public void Register(UnityAction action)
         {
-            OnCommandRecive.AddListener(callback);
+            OnCommandRecive.AddListener(action);
         }
 
-        public void Remove(UnityAction callback)
+        public void Remove(UnityAction action)
         {
-            OnCommandRecive.RemoveListener(callback);
+            OnCommandRecive.RemoveListener(action);
         }
 
         public void Receive()
@@ -25,7 +25,7 @@ namespace Musashi.Event
             if(OnCommandRecive != null)
             {
                 OnCommandRecive.Invoke();
-            }     
+            }
         }
 
         private void OnDestroy()
