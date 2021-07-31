@@ -6,6 +6,7 @@ using DG.Tweening;
 
 namespace Musashi.Level.AdventureMode
 {
+    [RequireComponent(typeof(AudioSource))]
     public class KeyDoor : Event.CommandHandler
     {
         [SerializeField] Camera switchCamera;
@@ -18,14 +19,19 @@ namespace Musashi.Level.AdventureMode
         [SerializeField] float duration;
 
         [SerializeField] AnimationCurve curve;
-        [SerializeField] AudioSource openDoorSe;
+        [SerializeField] AudioClip openSE;
 
         int unlockKeyCount;
         bool unlockedDoor = false;
+
         Tweener currentTweener;
+        AudioSource audioSource;
 
         private void Start()
         {
+            audioSource = GetComponent<AudioSource>();
+            audioSource.spatialBlend = 0f;//—§‘Ì‰¹‹¿Œø‰Ê‚ð‰Á‚¦‚é‚ÆA‰¹‚ª•·‚±‚¦‚È‚­‚È‚é‚½‚ß
+
             if (switchCamera)
             {
                 switchCamera.gameObject.SetActive(false);
@@ -67,10 +73,7 @@ namespace Musashi.Level.AdventureMode
                 switchCamera.gameObject.SetActive(true);
             }
 
-            if (openDoorSe)
-            {
-                openDoorSe.Play();
-            }
+            audioSource.Play(openSE); 
 
             currentTweener = doorObject.DOMoveY(doorObject.position.y + offsetY, duration).SetEase(curve)
                  .OnComplete(() =>
@@ -80,10 +83,7 @@ namespace Musashi.Level.AdventureMode
                          switchCamera.gameObject.SetActive(false);
                      }
                      GameManager.Instance.CanProcessPlayerMoveInput = true;
-                     if (openDoorSe)
-                     {
-                         openDoorSe.Stop();
-                     }
+                     audioSource.Stop();
                      OnUnlockKey();
                  });
         }
