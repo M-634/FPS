@@ -40,12 +40,12 @@ namespace Musashi.Level.AdventureMode
             {
                 doorObject = this.transform;
             }
-            reciver.Register(UnLock);
+            reciver.Register(Event.CommandType.OpenDoor, UnLock);
         }
 
         private void OnDestroy()
         {
-            reciver.Remove(UnLock);
+            reciver.Remove(Event.CommandType.OpenDoor);
         }
 
         private void UnLock()

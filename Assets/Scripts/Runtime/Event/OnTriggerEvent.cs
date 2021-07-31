@@ -4,7 +4,7 @@
 namespace Musashi.Event
 {
     /// <summary>
-    /// プレイヤーがトリガーに接したらイベントを発火させ
+    /// トリガーに接したらイベントを発火させ
     /// コマンドを送るクラス
     /// </summary>
     [RequireComponent(typeof(Collider))]
@@ -16,12 +16,14 @@ namespace Musashi.Event
 
         private void Reset()
         {
-            layers = LayerMask.NameToLayer("Everything");
             GetComponent<Collider>().isTrigger = true;
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            if (IsTriggered) return;
+
             if(0 != (layers.value & 1 << other.gameObject.layer))
             {
                 Send();

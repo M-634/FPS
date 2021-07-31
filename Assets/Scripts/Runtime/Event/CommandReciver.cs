@@ -6,31 +6,43 @@ using UnityEngine.Events;
 
 namespace Musashi.Event
 {
+    public enum CommandType
+    {
+        None,
+        OpenDoor,
+        SpwanPlayer,
+        UpdateSavePoint,
+    }
+
     public class CommandReciver : MonoBehaviour
     {
-        [SerializeField] UnityEventWrapper OnCommandRecive;
+        readonly Dictionary<CommandType, Action> commandTable = new Dictionary<CommandType, Action>();
 
-        public void Register(UnityAction action)
+        public void Register(CommandType type, Action action)
         {
-            OnCommandRecive.AddListener(action);
-        }
 
-        public void Remove(UnityAction action)
-        {
-            OnCommandRecive.RemoveListener(action);
-        }
-
-        public void Receive()
-        {
-            if(OnCommandRecive != null)
+            if (commandTable.ContainsKey(type))
             {
-                OnCommandRecive.Invoke();
+                commandTable[type] += action;
             }
+            else
+            {
+                commandTable.Add(type, action);
+            }
+         
         }
 
-        private void OnDestroy()
+        public void Remove(CommandType type)
         {
-            OnCommandRecive.RemoveAllListeners();
+            commandTable.Remove(type);  
+        }
+
+        public void Receive(CommandType type)
+        {
+            if (commandTable.ContainsKey(type))
+            {
+                commandTable[type].Invoke();
+            }
         }
     }
 }

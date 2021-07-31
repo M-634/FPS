@@ -78,9 +78,9 @@ namespace Musashi
         /// <param name="fadetype"></param>
         /// <param name="duration"></param>
         /// <param name="callback"></param>
-        public void FadeScreen(FadeType fadetype, float duration, UnityAction callback = null)
+        public void FadeScreen(FadeType fadetype, float duration,bool endImageEnabled = false , UnityAction callback = null)
         {
-            fadeImage.FadeImage(fadetype, duration, callback);
+            fadeImage.Fade(fadetype, duration,endImageEnabled ,callback);
         }
         
     }

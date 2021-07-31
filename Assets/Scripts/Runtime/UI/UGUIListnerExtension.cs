@@ -41,7 +41,7 @@ namespace Musashi
             canvasGroup.blocksRaycasts = false;
         }
 
-        public static void FadeImage(this Image image, FadeType type, float duration, UnityAction callback = null)
+        public static void Fade(this Image image, FadeType type, float duration,bool endImageEnabled = false, UnityAction callback = null)
         {
             image.enabled = true;
 
@@ -60,8 +60,8 @@ namespace Musashi
             DOTween.To(() => image.color, (x) => image.color = x, endValue, duration)
                   .OnComplete(() =>
                   {
+                      image.enabled = endImageEnabled;
                       callback?.Invoke();
-                      image.enabled = false;
                   });
         }
 

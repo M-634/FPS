@@ -64,12 +64,12 @@ namespace Musashi
             {
                 player = other.transform.parent.gameObject;
              
-                GameManager.Instance.SceneLoder.FadeScreen(FadeType.Out, 2f,
+                GameManager.Instance.SceneLoder.FadeScreen(FadeType.Out, 2f,false,
                     () =>
                     {
                         if (director)
                         {
-                            player.gameObject.SetActive(false);
+                            player.SetActive(false);
                             director.Play();
                         }
                         hasEntered = true;
