@@ -51,7 +51,7 @@ namespace Musashi.Level.AdventureMode
 
             //register each events
             reciver.Register(Event.CommandType.SpwanPlayer, SpwanPlayer);
-            reciver.Register(Event.CommandType.UpdateSavePoint, () => currentSavePointIndex++);
+            reciver.Register(Event.CommandType.UpdateSavePoint,UpdateSpwanPoint);
 
             //set event
             if (OnInitPlayerSpawnEvent != null)
@@ -60,6 +60,15 @@ namespace Musashi.Level.AdventureMode
             }
 
             //Debug.developerConsoleVisible = false;
+        }
+
+        private void UpdateSpwanPoint()
+        {
+            currentSavePointIndex++;
+            if(currentSavePointIndex == spwanPoints.Length)
+            {
+                currentSavePointIndex = spwanPoints.Length - 1;
+            }
         }
 
         private void InstantiatePlayer()
