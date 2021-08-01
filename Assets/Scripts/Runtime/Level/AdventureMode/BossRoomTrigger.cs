@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace Musashi
+namespace Musashi.Level.AdventureMode
 {
     /// <summary>
     /// プレイヤーがボス部屋に入ってから、ボスと戦闘するまでの流れを管理するクラス
