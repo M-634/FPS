@@ -18,6 +18,7 @@ namespace Musashi.Player
             [SerializeField] float wallSpeedMultiplier = 1.2f;
             [SerializeField] float minimumHeight = 1.2f;
             [SerializeField] float maxAngleRoll = 20f;
+            [SerializeField] float limitWallAttachTime = 5f; 
 
             [SerializeField, Range(0.0f, 1.0f)] float normalizedAngleThreshold = 0.1f;
 
@@ -28,7 +29,6 @@ namespace Musashi.Player
             [SerializeField] float wallGravityDownForce = 20f;
             [SerializeField] LayerMask wallRunLayerMask;
 
-            bool isWallRunning;
             float elapsedTimeSinceWallAttach;
             float elapsedTimeSinceWallDettach;
             float lastTimeWallJumped = 0f;
@@ -37,6 +37,7 @@ namespace Musashi.Player
             Vector3 lastWallNormal;
 
             public Vector3 GetWallJumpDirection => lastWallNormal * wallBouncing + Vector3.up;
+            public bool IsWallRunning { get; private set; }
 
             private PlayerWallRunState()
             {
@@ -78,13 +79,13 @@ namespace Musashi.Player
 
             public void OnEnter(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> prevState = null)
             {
-                isWallRunning = true;
+                IsWallRunning = true;
                 elapsedTimeSinceWallDettach = 0f;
             }
 
             public void OnExit(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> nextState = null)
             {
-                isWallRunning = false;
+                IsWallRunning = false;
                 elapsedTimeSinceWallAttach = 0f;
             }
 
@@ -162,6 +163,8 @@ namespace Musashi.Player
                 Vector3 alongWall = owner.transform.TransformDirection(Vector3.forward);
                 owner.characterVelocity = alongWall * vertical * wallSpeedMultiplier;
                 owner.characterVelocity += Vector3.down * wallGravityDownForce * Time.deltaTime;
+                Debug.Log(elapsedTimeSinceWallAttach);
+                Debug.Log(elapsedTimeSinceWallAttach > limitWallAttachTime);
             }
 
 
@@ -174,7 +177,7 @@ namespace Musashi.Player
             {
                 float cameraAngle = owner.playerCamera.transform.eulerAngles.z;
                 float targetAngle = 0f;
-                if (isWallRunning)
+                if (IsWallRunning)
                 {
                     Vector3 cross = Vector3.Cross(lastWallNormal, owner.transform.forward);
                     float dot = Vector3.Dot(cross, owner.transform.up);//dot > 0 左回転, dot < 0  右回転 
