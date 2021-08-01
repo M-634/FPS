@@ -15,12 +15,11 @@ namespace Musashi.Event
     }
 
     public class CommandReciver : MonoBehaviour
-    {
+    {      
         readonly Dictionary<CommandType, Action> commandTable = new Dictionary<CommandType, Action>();
-
+        
         public void Register(CommandType type, Action action)
         {
-
             if (commandTable.ContainsKey(type))
             {
                 commandTable[type] += action;
