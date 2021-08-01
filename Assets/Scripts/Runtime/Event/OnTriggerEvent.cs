@@ -14,8 +14,11 @@ namespace Musashi.Event
         [SerializeField] UnityEventWrapper OnExit;
         [SerializeField] LayerMask layers;
 
-        public virtual void AddEnterEvent() { }
-        public virtual void AddExitEvent() { }
+        /// <summary> トリガーに接触したオブジェクト</summary>
+        protected GameObject CollisionObject { get; private set; }
+
+        protected virtual void AddEnterEvent() { }
+        protected virtual void AddExitEvent() { }
 
         private void Reset()
         {
@@ -35,6 +38,7 @@ namespace Musashi.Event
 
             if(0 != (layers.value & 1 << other.gameObject.layer))
             {
+                CollisionObject = other.gameObject;
                 Send();
                 OnEnter.Invoke();
             }

@@ -7,7 +7,6 @@ using System;
 
 namespace Musashi.Level.AdventureMode
 {
-
     /// <summary>
     /// アドベンチャーモード時専用クラス
     /// プレイヤーのリスポーン地点と残機数を管理する。

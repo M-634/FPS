@@ -21,7 +21,7 @@ namespace Musashi.Level.AdventureMode
             }
         }
 
-        public override void AddEnterEvent()
+        protected override void AddEnterEvent()
         {
             manager.UpdateSpwanPoint(this);
         }

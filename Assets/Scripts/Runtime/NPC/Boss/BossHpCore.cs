@@ -24,7 +24,10 @@ namespace Musashi.NPC
                    .SetEase(Ease.Linear)
                    .OnComplete(() =>
                    {
-                       healthBarRed.fillAmount = 1f;
+                       if (healthBarRed)
+                       {
+                           healthBarRed.fillAmount = 1f;
+                       }
                        isInvincibleMode = false;
                    });
         }
