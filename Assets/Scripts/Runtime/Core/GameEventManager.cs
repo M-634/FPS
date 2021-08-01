@@ -6,6 +6,10 @@ using UnityEngine.Events;
 
 namespace Musashi
 {
+    /*
+       シングルトンでイベントを実装すると、いろいバグが起きるので 
+       このクラスを削除する予定です。
+     */
     /// <summary>
     /// ゲーム全体に関わるイベントを通知するクラス
     /// </summary>
