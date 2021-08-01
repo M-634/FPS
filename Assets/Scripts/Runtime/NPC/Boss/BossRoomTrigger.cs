@@ -46,7 +46,6 @@ namespace Musashi
             MainObjectOfPlayer.gameObject.SetActive(false);
             bossCutSceneObj.SetActive(true);
             movieCamera.SetActive(true);
-            Debug.Log("movie start");
         }
 
         private void EndMovieAction(PlayableDirector playable)
@@ -60,13 +59,8 @@ namespace Musashi
 
             if (playerStartPos)
             {
-                if(MainObjectOfPlayer.TryGetComponent(out Player.PlayerTranslate playerTranslate))
-                {
-                    playerTranslate.Translate(playerStartPos);
-                }
+                MainObjectOfPlayer.GetComponentInChildren<Player.PlayerTranslate>().Translate(playerStartPos);
             }
-
-            Debug.Log("movie end");
         }
 
 
