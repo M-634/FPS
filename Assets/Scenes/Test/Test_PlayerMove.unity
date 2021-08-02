@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-133532
+  m_Name: pb_Mesh513506
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -293,7 +293,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-132112
+  m_Name: pb_Mesh513520
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -839,7 +839,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-135118
+  m_Name: pb_Mesh513490
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1886,8 +1886,88 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
         type: 3}
+      propertyPath: WallRunState.wallRunSe
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f7552bb19ee9c148b36ca6c5faa420e, type: 3}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
       propertyPath: WallRunState.limitWallAttachTime
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[2].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[0].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[2].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].inWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[2].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].outWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[0].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090384140356015288, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
+        type: 3}
+      propertyPath: WallRunState.attenuationWallRunSeCurve.m_Curve.Array.data[1].tangentMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5090384140356015291, guid: 6d1af88bfaff81f41a2b6836404a4f7f,
         type: 3}
