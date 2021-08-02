@@ -81,7 +81,7 @@ namespace Musashi.Weapon
         #endregion
 
         #region Property
-        public bool Reloding { get; private set; }
+        public bool IsReloading { get; private set; }
         public bool IsPlayingAnimationStateIdle => animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
@@ -221,7 +221,7 @@ namespace Musashi.Weapon
         /// </summary>
         public void StartReload()
         {
-            if (Reloding) return;
+            if (IsReloading) return;
 
             if (CurrentAmmo == MaxAmmo)
             {
@@ -234,7 +234,7 @@ namespace Musashi.Weapon
             {
                 if (animator)
                 {
-                    Reloding = true;
+                    IsReloading = true;
                     animator.Play("Reload");
                 }
                 else
@@ -260,42 +260,38 @@ namespace Musashi.Weapon
         /// </summary>
         public void TryShot()
         {
-            //前のアニメーションがリロード中かどうか判定する
+            if (CurrentAmmo < 1)
+            {
+                CurrentAmmo = 0;
+                StartReload();
+                return;
+            }
+
+            if (Time.time > lastTimeShot + fireRate)
+            {
+                if (animator)
+                {
+                    CancelAnimation();
+                    animator.Play("Shot");
+                }
+                else
+                {
+                    Shot();
+                }
+            }
+        }
+
+        public void CancelAnimation()
+        {
+            if (!animator) return;
+
+            //前のアニメーションがリロードかどうか判定する
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
             {
                 //リロードキャンセル
-                Reloding = false;
-
-                //animator.SetTrigger("ReloadCancelShot");
+                IsReloading = false;
             }
-            //else
-            {
-                //いつも通りに弾を放つ
-
-                //if (Reloding)
-                //{
-                //    return;
-                //}
-
-                if (CurrentAmmo < 1)
-                {
-                    CurrentAmmo = 0;
-                    StartReload();
-                    return;
-                }
-
-                if (Time.time > lastTimeShot + fireRate)
-                {
-                    if (animator)
-                    {
-                        animator.Play("Shot");
-                    }
-                    else
-                    {
-                        Shot();
-                    }
-                }
-            }
+            animator.Play("Idle");
         }
 
         /// <summary>
@@ -346,7 +342,7 @@ namespace Musashi.Weapon
         /// </summary>
         public void ReloadActionStartTrigger()
         {
-            Reloding = true;
+            IsReloading = true;
         }
 
         /// <summary>
@@ -354,7 +350,7 @@ namespace Musashi.Weapon
         /// </summary>
         public void ReloadActionEndTrigger()
         {
-            Reloding = false;
+            IsReloading = false;
             if (weaponType == WeaponType.ShotGun)
             {
                 audioSource.Play(shotgunLoadingSFX);

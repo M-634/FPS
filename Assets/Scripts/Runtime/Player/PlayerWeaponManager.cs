@@ -161,7 +161,7 @@ namespace Musashi.Player
         }
         private void OnDestroy()
         {
-            if(DOTween.instance != null)
+            if (DOTween.instance != null)
             {
                 currentTween.Kill();
             }
@@ -235,8 +235,10 @@ namespace Musashi.Player
             if (!CanProcessWeapon) return;
 
             //Aim
-            isAiming = inputProvider.Aim;
-
+            if (!CurrentEquipmentWeapon.IsReloading)
+            {
+                isAiming = inputProvider.Aim;
+            }
 
             //Shoot
             switch (CurrentEquipmentWeapon.GetWeaponShootType)
@@ -266,7 +268,7 @@ namespace Musashi.Player
         /// <summary>
         /// プレイヤーがゲームスタート時に持つ武器を装備させる（初期処理）関数
         /// </summary>
-       
+
         /// <summary>
         /// エイム時の挙動を制御する関数
         /// </summary>
@@ -331,7 +333,11 @@ namespace Musashi.Player
         #region player input action methods
         private void SwitchCycleWeapon_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
         {
-            if (GameManager.Instance.ShowConfig || isChangingWeapon || (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding)) return;
+            if (GameManager.Instance.ShowConfig || isChangingWeapon) return;
+            if (CurrentEquipmentWeapon)
+            {
+                CurrentEquipmentWeapon.CancelAnimation();
+            }
             circularWeaponMenu.Show();
         }
 
@@ -343,9 +349,9 @@ namespace Musashi.Player
         private void HolsterWeaponAction()
         {
             if (isChangingWeapon || !CurrentEquipmentWeapon) return;
-            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
             isChangingWeapon = true;
-            currentTween =  MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
+            CurrentEquipmentWeapon.CancelAnimation();
+            currentTween = MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel)
                 .OnComplete(() =>
                 {
                     isChangingWeapon = false;
@@ -361,7 +367,6 @@ namespace Musashi.Player
         private void SwitchWeapon(int index)
         {
             if (index == currentWeaponIndex || isChangingWeapon || index >= WeaponSlots.Count) return;
-            if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
             currentWeaponIndex = index;
             ChangeWeapon(WeaponSlots[index]);
         }
@@ -375,6 +380,7 @@ namespace Musashi.Player
             if (CurrentEquipmentWeapon)
             {
                 //武器を持っているとき
+                CurrentEquipmentWeapon.CancelAnimation();
                 var sequence = DOTween.Sequence();
                 sequence.Append(MoveWeapon(downWeaponPos.localPosition, weaponDownDuration, weaponChangeCorrectiveCurvel))
                     .AppendCallback(
