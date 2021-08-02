@@ -260,24 +260,40 @@ namespace Musashi.Weapon
         /// </summary>
         public void TryShot()
         {
-            if (Reloding) return;
-
-            if (CurrentAmmo < 1)
+            //前のアニメーションがリロード中かどうか判定する
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
             {
-                CurrentAmmo = 0;
-                StartReload();
-                return;
+                //リロードキャンセル
+                Reloding = false;
+
+                //animator.SetTrigger("ReloadCancelShot");
             }
-
-            if (Time.time > lastTimeShot + fireRate)
+            //else
             {
-                if (animator)
+                //いつも通りに弾を放つ
+
+                //if (Reloding)
+                //{
+                //    return;
+                //}
+
+                if (CurrentAmmo < 1)
                 {
-                    animator.Play("Shot");
+                    CurrentAmmo = 0;
+                    StartReload();
+                    return;
                 }
-                else
+
+                if (Time.time > lastTimeShot + fireRate)
                 {
-                    Shot();
+                    if (animator)
+                    {
+                        animator.Play("Shot");
+                    }
+                    else
+                    {
+                        Shot();
+                    }
                 }
             }
         }

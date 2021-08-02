@@ -2080,7 +2080,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 98752be17451b034cb66b59bb31a12a3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -2110,8 +2110,8 @@ MonoBehaviour:
   weaponRoot: {fileID: 2829662099362326774}
   weaponIcon: {fileID: 21300022, guid: 6674e8c43c63e4f4184cbd009379498d, type: 3}
   muzzle: {fileID: 2829662098685297405}
-  defultLoaclPostionOffset: {x: 0, y: 0, z: 0}
-  aimLocalPostionOffset: {x: 0, y: 0, z: 0}
+  defultLoaclPostionOffset: {x: -0.06405029, y: 0.006, z: 0.059}
+  aimLocalPostionOffset: {x: 0, y: 0.021, z: 0.183}
 --- !u!82 &2829662099362326772
 AudioSource:
   m_ObjectHideFlags: 0

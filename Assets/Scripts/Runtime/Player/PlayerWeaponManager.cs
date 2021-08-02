@@ -364,7 +364,6 @@ namespace Musashi.Player
             if (CurrentEquipmentWeapon && CurrentEquipmentWeapon.Reloding) return;
             currentWeaponIndex = index;
             ChangeWeapon(WeaponSlots[index]);
-            Debug.Log(index);
         }
 
         /// <summary>
