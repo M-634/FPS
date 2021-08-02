@@ -221,13 +221,7 @@ namespace Musashi.Weapon
         /// </summary>
         public void StartReload()
         {
-            if (IsReloading) return;
-
-            if (CurrentAmmo == MaxAmmo)
-            {
-                //audioSource.Play(emptySFX);AmmoMaxSFXを探す
-                return;
-            }
+            if (IsReloading || CurrentAmmo == MaxAmmo) return;
 
             var canReload = CanReloadAmmo.Invoke();
             if (canReload)
@@ -285,12 +279,8 @@ namespace Musashi.Weapon
         {
             if (!animator) return;
 
-            //前のアニメーションがリロードかどうか判定する
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
-            {
-                //リロードキャンセル
-                IsReloading = false;
-            }
+            IsReloading = false;
+            audioSource.Stop();
             animator.Play("Idle");
         }
 
@@ -318,17 +308,17 @@ namespace Musashi.Weapon
             if (weaponType == WeaponType.ShotGun)
             {
                 var addAmmo = HaveEndedReloadingAmmo.Invoke();//1 or 0;
-
-                if (CurrentAmmo == maxAmmo || addAmmo == 0)
-                {
-                    animator.SetBool("ReloadCycleEnd", true);
-                    return;
-                }
-
                 CurrentAmmo += addAmmo;
+
                 if (audioSource)
                 {
                     audioSource.Play(reloadSFX, audioSource.volume);
+                }
+
+                if (addAmmo == 0 || CurrentAmmo == maxAmmo)
+                {
+                    animator.SetBool("ReloadCycleEnd", true);
+                    return;
                 }
             }
             else
