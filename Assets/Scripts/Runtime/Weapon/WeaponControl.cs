@@ -75,13 +75,12 @@ namespace Musashi.Weapon
         Transform poolObjectParent;
 
         PoolObjectManager poolObjectManager;
-        HitVFXManager hitVFXManager;
         Animator animator;
         AudioSource audioSource;
         #endregion
 
         #region Property
-        public bool Reloding { get; private set; }
+        public bool IsReloading { get; private set; }
         public bool IsPlayingAnimationStateIdle => animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
         public int MaxAmmo => maxAmmo;
         public int CurrentAmmo
@@ -133,7 +132,6 @@ namespace Musashi.Weapon
             SetDataFromWeaponSettingSOData();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
-            hitVFXManager = GetComponentInParent<HitVFXManager>();
 
             if (!weaponRoot)
             {
@@ -177,6 +175,8 @@ namespace Musashi.Weapon
             projectileInfo.power = weaponSetting.shotPower;
             projectileInfo.lifeTime = weaponSetting.projectileLifeTime;
             projectileInfo.muzzle = this.muzzle;
+            projectileInfo.owner = ProjectileOwner.Player;
+            projectileInfo.effect = null;
             //weapon statas
             fireRate = weaponSetting.fireRate;
             //recoill = weaponSetting.recoil;
@@ -221,20 +221,14 @@ namespace Musashi.Weapon
         /// </summary>
         public void StartReload()
         {
-            if (Reloding) return;
-
-            if (CurrentAmmo == MaxAmmo)
-            {
-                //audioSource.Play(emptySFX);AmmoMaxSFXを探す
-                return;
-            }
+            if (IsReloading || CurrentAmmo == MaxAmmo) return;
 
             var canReload = CanReloadAmmo.Invoke();
             if (canReload)
             {
                 if (animator)
                 {
-                    Reloding = true;
+                    IsReloading = true;
                     animator.Play("Reload");
                 }
                 else
@@ -260,8 +254,6 @@ namespace Musashi.Weapon
         /// </summary>
         public void TryShot()
         {
-            if (Reloding) return;
-
             if (CurrentAmmo < 1)
             {
                 CurrentAmmo = 0;
@@ -273,6 +265,7 @@ namespace Musashi.Weapon
             {
                 if (animator)
                 {
+                    CancelAnimation();
                     animator.Play("Shot");
                 }
                 else
@@ -280,6 +273,15 @@ namespace Musashi.Weapon
                     Shot();
                 }
             }
+        }
+
+        public void CancelAnimation()
+        {
+            if (!animator) return;
+
+            IsReloading = false;
+            audioSource.Stop();
+            animator.Play("Idle");
         }
 
         /// <summary>
@@ -306,17 +308,17 @@ namespace Musashi.Weapon
             if (weaponType == WeaponType.ShotGun)
             {
                 var addAmmo = HaveEndedReloadingAmmo.Invoke();//1 or 0;
-
-                if (CurrentAmmo == maxAmmo || addAmmo == 0)
-                {
-                    animator.SetBool("ReloadCycleEnd", true);
-                    return;
-                }
-
                 CurrentAmmo += addAmmo;
+
                 if (audioSource)
                 {
                     audioSource.Play(reloadSFX, audioSource.volume);
+                }
+
+                if (addAmmo == 0 || CurrentAmmo == maxAmmo)
+                {
+                    animator.SetBool("ReloadCycleEnd", true);
+                    return;
                 }
             }
             else
@@ -330,7 +332,7 @@ namespace Musashi.Weapon
         /// </summary>
         public void ReloadActionStartTrigger()
         {
-            Reloding = true;
+            IsReloading = true;
         }
 
         /// <summary>
@@ -338,14 +340,13 @@ namespace Musashi.Weapon
         /// </summary>
         public void ReloadActionEndTrigger()
         {
-            Reloding = false;
+            IsReloading = false;
             if (weaponType == WeaponType.ShotGun)
             {
                 audioSource.Play(shotgunLoadingSFX);
                 animator.SetBool("ReloadCycleEnd", false);
             }
         }
-
 
         /// <summary>
         /// アニメーションイベントから呼ばれる

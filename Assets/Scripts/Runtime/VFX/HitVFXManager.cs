@@ -4,38 +4,29 @@ using UnityEngine;
 namespace Musashi
 {
     /// <summary>
-    /// 武器の攻撃が当たった時の出すエフェクトを関数するクラス
+    /// ゲームオ中、武器の攻撃が当たった時に出すエフェクトをまとめて制御する関数するクラス
     /// </summary>
-    public class HitVFXManager : MonoBehaviour, IPoolUser<HitVFXManager>
+    public class HitVFXManager : SingletonMonoBehaviour<HitVFXManager>, IPoolUser<HitVFXManager>
     {
         #region field
-        [Header("Set VFX")]
+        [Header("set player shot vfx")]
         [SerializeField] GameObject decalVFX;//デフォルトのエフェクト
-        [SerializeField] GameObject bloodVFX;
- 
-        [Header("Set pool Parent Object")]
+
+
+        [Header("set pool parent object")]
         [SerializeField] Transform poolObjcetParent;
-        [Header("Set pool size")]
+        [Header("set pool size")]
         [SerializeField, Range(1, 100)] int poolSize = 1;
 
-        [Header("Set SFX")]
+        [Header("set player shot hit sfX")]
         [SerializeField] AudioClip hitSFX;
 
         PoolObjectManager poolObjectManager;
-        AudioSource audioSource;
         #endregion
 
-        #region Property
-        public GameObject DecalVFX => decalVFX;
-        public GameObject BloodVFX => bloodVFX;
-        public AudioClip HitSFX => hitSFX;
-        public AudioSource AudioSource => audioSource;
-        public PoolObjectManager PoolObjectManager => poolObjectManager;
-        #endregion
-
-        private void Awake()
+        protected override void Awake()
         {
-            audioSource = GetComponent<AudioSource>();
+            base.Awake();
             if (!poolObjcetParent)
                 poolObjcetParent = this.transform;
 
@@ -54,24 +45,29 @@ namespace Musashi
         public PoolObjectManager.PoolObject SetPoolObj()
         {
             var poolObject = poolObjectManager.InstantiatePoolObj();
-
             var decalInstance = Instantiate(decalVFX, poolObjcetParent);
-            var bloodInstance = Instantiate(bloodVFX, poolObjcetParent);
-
             poolObject.AddObj(decalInstance);
-            poolObject.AddObj(bloodInstance);
-
             poolObject.SetActiveAll(false);
             return poolObject;
         }
 
-        public GameObject SelectVFX(TargetType targetType)
+        /// <summary>
+        /// ヒットしたオブジェクトのlayerに応じて,エフェクトを変える
+        /// (今のところは、decalVFXで統一している)
+        /// </summary>
+        public void ProductEffectByPlayer(int layer, Vector3 hitPosition, Vector3 normal)
         {
-            if(targetType == TargetType.Humanoid)
+            Quaternion quaternion = Quaternion.LookRotation(normal * -1f);
+            poolObjectManager.UsePoolObject(decalVFX, hitPosition, quaternion,SetPoolObj);
+        }
+
+        public void ProductEffectByNPC(GameObject effect,Vector3 hitPosition,Vector3 normal)
+        {
+            if(effect != null)
             {
-                return bloodVFX;
+                Quaternion quaternion = Quaternion.LookRotation(normal * -1f);
+                poolObjectManager.UsePoolObject(effect, hitPosition, quaternion,SetPoolObj);
             }
-            return decalVFX;//とりあえず、当たったらこのエフェクトが出るようにする。後々、当たったオブジェット後にエフェクトを分ける予定
         }
     }
 }

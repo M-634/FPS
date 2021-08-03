@@ -26,7 +26,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
         }
     }
 
-    virtual protected void Awake()
+    protected virtual void Awake()
     {
         //他のGameObjectにアタッチされているか調べる
         //アタッチされている場合は破棄する

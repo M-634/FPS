@@ -2,114 +2,140 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Musashi.Player;
-using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
+using System;
 
 namespace Musashi.Level.AdventureMode
 {
-    public class AdventureModeGameFlowManager : MonoBehaviour
+    /// <summary>
+    /// アドベンチャーモード時専用クラス
+    /// プレイヤーのリスポーン地点と残機数を管理する。
+    /// </summary>
+    public class AdventureModeGameFlowManager : Event.CommandHandler
     {
+        [Header("player settings in adventure mode")]
+        /// <summary>プレイヤープレハブ</summary>
         [SerializeField] GameObject playerPrefab;
-        [SerializeField] Transform initSpwanPoint;
-        [SerializeField] SavePointTrigger[] savePoints;
-        [SerializeField] Animator updateSavePointInfo;
+        /// <summary> 初期リスポーン地点</summary>
+        [SerializeField] SpwanPointTrigger initSpwanPosition;
+        /// <summary>スポーン時のY軸の高さを調整する</summary>
         [SerializeField] float spwanYOffset = 0.5f;
-        [SerializeField] bool debugMode = false;
-        [SerializeField] int debugSpwan;
+        /// <summary>リスポーンまでにかかる時間</summary>
+        [SerializeField] float respwanTimeDuration = 2f;
+        /// <summary>アドベンチャーモード専用のプレイヤー残機数</summary>
         [SerializeField] GameObject[] playerRemaingLivesIcons;
-        [SerializeField] UnityEventWrapper OnInitPlayerSpawnEvent;
-        [SerializeField] PlayerDeathTrigger deathTrigger;
+        /// <summary>リスポーン地点を更新した時のイベント</summary>
+        [SerializeField] UnityEventWrapper OnSaveSpwanPosition;
+
+        [Header("when debug mode")]
+        /// <summary>デバックモードOn/Off</summary>
+        [SerializeField] bool debugMode = false;
+        /// <summary>デバック時にプレイヤーをスポーンさせる場所(spwanPoints)のidを指定する</summary>
+        [SerializeField, Range(1, 10)] int debugSpwanID;
+        /// <summary>デバック時にプレイヤーをスポーンさせるTransformをアサインする</summary>
+        [SerializeField] SpwanPointTrigger[] debugSpwanPoints;
 
         int playerRemaingLives;
+        SpwanPointTrigger currentSpwanPointTrigger;
+
         PlayerTranslate playerTranslate;
         PlayerHealthControl playerHealth;
 
-        public const string SAVEPOINTTAG = "SavePoint";
-        public Transform CurrentSavePoint { get; private set; }
-        public int CurrentPlayerRemaingLives => playerRemaingLives;
+        /// <summary>
+        /// スポーン地点のトリガーにプレイヤーが接触したら呼ばれる関数
+        /// </summary>
+        /// <param name="spwanPointTrigger"></param>
+        public void UpdateSpwanPoint(SpwanPointTrigger spwanPointTrigger)
+        {
+            if (spwanPointTrigger.GetSpwanID == 0) return;//初期リスポーン 
+
+            if (currentSpwanPointTrigger && spwanPointTrigger.GetSpwanID > currentSpwanPointTrigger.GetSpwanID)
+            {
+                currentSpwanPointTrigger = spwanPointTrigger;
+
+                if (OnSaveSpwanPosition != null)
+                {
+                    OnSaveSpwanPosition.Invoke();
+                }
+            }
+        }
 
         void Start()
         {
             playerRemaingLives = playerRemaingLivesIcons.Length;
-            Debug.Log(playerRemaingLives);
-            //set save point triggers 
-            var getSavePoints = GameObject.FindGameObjectsWithTag(SAVEPOINTTAG);
-            savePoints = new SavePointTrigger[getSavePoints.Length];
-            foreach (var point in getSavePoints)
+
+            //set savepoint
+            if (debugMode)
             {
-                if (point.TryGetComponent(out SavePointTrigger trigger))
+                foreach (var p in debugSpwanPoints)
                 {
-                    if (!savePoints[trigger.GetSpwanIndex])
+                    if (p.GetSpwanID == debugSpwanID)
                     {
-                        savePoints[trigger.GetSpwanIndex] = trigger;
-                        trigger.OnUpdateSavePoint += UpdateSavepoint;
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"{savePoints[trigger.GetSpwanIndex].name}と{trigger.name}が同じインデックスを指定しています。");
+                        currentSpwanPointTrigger = p;
+                        break;
                     }
                 }
             }
-
-            //set spwan point
-            if (debugMode)
-            {
-                CurrentSavePoint = savePoints[debugSpwan].GetSpwan;
-            }
             else
             {
-                CurrentSavePoint = initSpwanPoint;
+                currentSpwanPointTrigger = initSpwanPosition;
             }
 
             //spwan player
-             InstantiatePlayer();
+            InstantiatePlayer();
 
-            //set event
-            if (OnInitPlayerSpawnEvent != null)
-            {
-                OnInitPlayerSpawnEvent.Invoke();
-            }
-
-            Debug.developerConsoleVisible = false;
+            //register each events
+            reciver.Register(Event.CommandType.SpwanPlayer, SpwanPlayer);
+            //reciver.Register(Event.CommandType.UpdateSavePoint, () => { });
+         
+            //Debug.developerConsoleVisible = false;
         }
 
         /// <summary>
-        /// プレイヤーがSavePointのColliderと接触したら呼ばれる関数
+        /// ゲーム開始時にプレイヤーをインスタンス化して、必要なコンポーネントをキャッシュしておく関数
         /// </summary>
-        /// <param name="index"></param>
-        public void UpdateSavepoint(int index)
-        {
-            CurrentSavePoint = savePoints[index].GetSpwan;
-            if (updateSavePointInfo)
-            {
-                updateSavePointInfo.Play("TextAnimation");
-            }
-        }
-
         private void InstantiatePlayer()
         {
-            var instance = Instantiate(playerPrefab, CurrentSavePoint.position + new Vector3(0, spwanYOffset, 0), Quaternion.identity);
-            playerTranslate = instance.GetComponentInChildren<PlayerTranslate>();
-            playerHealth = instance.GetComponentInChildren<PlayerHealthControl>();
+            var player = Instantiate(playerPrefab, currentSpwanPointTrigger.GetSpwanPoint.position + new Vector3(0, spwanYOffset, 0), currentSpwanPointTrigger.GetSpwanPoint.rotation);
+            playerTranslate = player.GetComponentInChildren<PlayerTranslate>();
+            playerHealth = player.GetComponentInChildren<PlayerHealthControl>();
             playerHealth.OnDeadPlayerAction += SpwanPlayer;
-
-            if (deathTrigger)
-            {
-                deathTrigger.OnSpwanPlayerAction += SpwanPlayer;
-            }
         }
 
         private void SpwanPlayer()
         {
             playerRemaingLives--;//残機数を減らす
-            Debug.Log(playerRemaingLives);
-            playerRemaingLivesIcons[playerRemaingLives].SetActive(false);
-            if (playerRemaingLives == 0)
+            if (playerRemaingLives < 0)
             {
                 GameManager.Instance.GameOver();
                 return;
             }
+            //スクリーンをいった暗くする
+            GameManager.Instance.SceneLoder.FadeScreen(FadeType.Out, 1f, true,
+                async () =>
+                {
+                    StartSpwan();
+                    await UniTask.Delay(TimeSpan.FromSeconds(respwanTimeDuration), false, PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy());
+                    EndSpwan();
+                });
+        }
+
+        private void StartSpwan()
+        {
+            GameManager.Instance.CanProcessPlayerMoveInput = false;//プレイヤーの入力を受け付けをオフにする
             playerHealth.ResetHP();//体力を元に戻す
-            playerTranslate.Translate(CurrentSavePoint);//リスポーン地へ移動する
+            playerTranslate.Translate(currentSpwanPointTrigger.GetSpwanPoint);//リスポーン地へ移動する
+        }
+
+        private void EndSpwan()
+        {
+            //スクリーンをFadeOutさせ、終わったら入力を受け付ける
+            GameManager.Instance.SceneLoder.FadeScreen(FadeType.In, 0.1f, false,
+                () =>
+                {
+                    GameManager.Instance.CanProcessPlayerMoveInput = true;
+                    playerRemaingLivesIcons[playerRemaingLives].SetActive(false);
+                });
         }
     }
 }

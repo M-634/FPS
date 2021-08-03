@@ -12,5 +12,14 @@ namespace Musashi.Weapon
         public float power;
         public float damage;
         public float lifeTime;
+        [HideInInspector]
+        public ProjectileOwner owner;
+        [Tooltip("If owner is player, effect = null")]
+        public GameObject effect;
+    }
+
+    public enum ProjectileOwner 
+    {
+        Player,NPC
     }
 }

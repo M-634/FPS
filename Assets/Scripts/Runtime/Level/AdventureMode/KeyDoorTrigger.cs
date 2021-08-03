@@ -5,15 +5,27 @@ using System;
 
 namespace Musashi.Level.AdventureMode
 {
-    public class KeyDoorTrigger : MonoBehaviour,IInteractable
+    public sealed class KeyDoorTrigger :Event.OnTriggerEvent
     {
-        [SerializeField] UnityEventWrapper OnUnlockEvent;
+       [SerializeField] UnityEventWrapper OnUnlockEvent;
+       [SerializeField] AudioSource onTriggerSe;
 
-        public void Excute(Transform player)
+        public bool HasDone { get; set; } = false;
+       
+        /// <summary>
+        /// KeyDoorクラスから呼ばれる。
+        /// key解除か、ドアが開いたタイミングで呼ぶこと。
+        /// </summary>
+        public void InvokeUnLockEvent(bool unlockeDoor = false)
         {
-            if(OnUnlockEvent != null)
+            if(!HasDone && IsTriggered && OnUnlockEvent != null)
             {
+                if (!unlockeDoor)
+                {
+                    onTriggerSe.Play();
+                }
                 OnUnlockEvent.Invoke();
+                HasDone = true;
             }
         }
     }

@@ -32,6 +32,7 @@ namespace Musashi.NPC
             isIkActive = false;
             control = GetComponent<NPCMoveControl>();
             animator = GetComponent<Animator>();
+            projectileInfo.owner = ProjectileOwner.NPC;
             if (useIK)
             {
                 control.OnEnterAttackEvent += () => isIkActive = true;

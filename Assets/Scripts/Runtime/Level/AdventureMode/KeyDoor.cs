@@ -6,31 +6,104 @@ using DG.Tweening;
 
 namespace Musashi.Level.AdventureMode
 {
-    public class KeyDoor : MonoBehaviour
+    [RequireComponent(typeof(AudioSource))]
+    public class KeyDoor : Event.CommandHandler
     {
-        [SerializeField,Range(1,10)] int lockKeyCount = 1;
+        [SerializeField] Camera switchCamera;
+        [SerializeField] Transform doorObject;
+
+        [SerializeField, Range(1, 10)] int lockKeyCount = 1;
+        [SerializeField] KeyDoorTrigger[] keyDoorTriggers;
+
         [SerializeField] float offsetY;
         [SerializeField] float duration;
-  
-        int unlockKeyCount;
-        bool unlock = false;
 
-        public void UnLock()
+        [SerializeField] AnimationCurve curve;
+        [SerializeField] AudioClip openSE;
+
+        int unlockKeyCount;
+        bool unlockedDoor = false;
+
+        Tweener currentTweener;
+        AudioSource audioSource;
+
+        private void Start()
         {
-            if (unlock) return;
+            audioSource = GetComponent<AudioSource>();
+            audioSource.spatialBlend = 0f;//—§‘Ì‰¹‹¿Œø‰Ê‚ð‰Á‚¦‚é‚ÆA‰¹‚ª•·‚±‚¦‚È‚­‚È‚é‚½‚ß
+
+            if (switchCamera)
+            {
+                switchCamera.gameObject.SetActive(false);
+            }
+            if (!doorObject)
+            {
+                doorObject = this.transform;
+            }
+            reciver.Register(Event.CommandType.OpenDoor, UnLock);
+        }
+
+        private void OnDestroy()
+        {
+            reciver.Remove(Event.CommandType.OpenDoor);
+        }
+
+        private void UnLock()
+        {
+            if (unlockedDoor) return;
 
             unlockKeyCount++;
 
-            if(unlockKeyCount == lockKeyCount)
+            if (unlockKeyCount == lockKeyCount)
             {
                 OpenDoor();
+            }
+            else
+            {
+                OnUnlockKey();
             }
         }
 
         private void OpenDoor()
         {
-            unlock = true;
-            transform.DOMoveY(transform.position.y + offsetY, duration).SetEase(Ease.Linear);
+            unlockedDoor = true;
+            GameManager.Instance.CanProcessPlayerMoveInput = false;
+            if (switchCamera)
+            {
+                switchCamera.gameObject.SetActive(true);
+            }
+
+            audioSource.Play(openSE); 
+
+            currentTweener = doorObject.DOMoveY(doorObject.position.y + offsetY, duration).SetEase(curve)
+                 .OnComplete(() =>
+                 {
+                     if (switchCamera)
+                     {
+                         switchCamera.gameObject.SetActive(false);
+                     }
+                     GameManager.Instance.CanProcessPlayerMoveInput = true;
+                     audioSource.Stop();
+                     OnUnlockKey();
+                 });
         }
+
+        private void OnUnlockKey()
+        {
+            foreach (var trigger in keyDoorTriggers)
+            {
+                if (trigger.HasDone) continue;
+                trigger.InvokeUnLockEvent(unlockedDoor);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (currentTweener != null)
+            {
+                currentTweener.Kill();
+            }
+        }
+
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace Musashi
+namespace Musashi.Level.AdventureMode
 {
     /// <summary>
     /// プレイヤーがボス部屋に入ってから、ボスと戦闘するまでの流れを管理するクラス
     /// </summary>
-    public class BossRoom : MonoBehaviour
+    public sealed class BossRoomTrigger : Event.OnTriggerEvent
     {
         /// <summary>カットシーンに使用するカメラ </summary>
         [SerializeField] GameObject movieCamera;
@@ -21,61 +21,48 @@ namespace Musashi
         /// <summary>戦闘時のプレイヤーの初期位置</summary>
         [SerializeField] Transform playerStartPos;
 
-        GameObject player;
-        Vector3 spwanPosition;
-        bool hasEntered;//プレイヤーがボス部屋に入ったら、フラグを立てる
-
-        private void Start()
+        Transform MainObjectOfPlayer => CollisionObject.transform.parent;
+     
+        protected override void Start()
         {
+            base.Start();
             movieCamera.SetActive(false);
         }
 
+        protected override void AddEnterEvent()
+        {
+            GameManager.Instance.SceneLoder.FadeScreen(FadeType.Out, 2f, false,
+                () =>
+                {
+                    if (director)
+                    {
+                        director.Play();
+                    }
+                });
+        }
+   
         private void MovieStartAction(PlayableDirector playable)
         {
+            MainObjectOfPlayer.gameObject.SetActive(false);
             bossCutSceneObj.SetActive(true);
-            player.gameObject.SetActive(false);
             movieCamera.SetActive(true);
-            Debug.Log("movie start");
         }
 
         private void EndMovieAction(PlayableDirector playable)
         {
-            spwanPosition = bossCutSceneObj.transform.position;
-            Destroy(bossCutSceneObj);
 
-            Instantiate(bossAIPrefab, spwanPosition, Quaternion.identity);
-
+            bossCutSceneObj.SetActive(false);
             movieCamera.SetActive(false);
 
-            player.gameObject.SetActive(true);
+            bossAIPrefab.SetActive(true);
+            MainObjectOfPlayer.gameObject.SetActive(true);
+
             if (playerStartPos)
             {
-                player.transform.position = playerStartPos.position;
-            }
-
-            Debug.Log("movie end");
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (hasEntered) return;
-
-            if (other.CompareTag("Player"))
-            {
-                player = other.transform.parent.gameObject;
-             
-                GameManager.Instance.SceneLoder.FadeScreen(FadeType.Out, 2f,
-                    () =>
-                    {
-                        if (director)
-                        {
-                            player.gameObject.SetActive(false);
-                            director.Play();
-                        }
-                        hasEntered = true;
-                    });
+                MainObjectOfPlayer.GetComponentInChildren<Player.PlayerTranslate>().Translate(playerStartPos);
             }
         }
+
 
         private void OnEnable()
         {
