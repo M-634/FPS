@@ -14,10 +14,16 @@ namespace Musashi.Player
         [Serializable]
         public class PlayerWallRunState : IState<PlayerCharacterStateMchine>
         {
+            #region field members
             [SerializeField] float wallMaxDistance = 1f;
             [SerializeField] float wallSpeedMultiplier = 1.2f;
             [SerializeField] float minimumHeight = 1.2f;
             [SerializeField] float maxAngleRoll = 20f;
+
+            [SerializeField] float limitWallAttachTime = 5f;
+            [SerializeField] AudioClip wallRunSe;
+            [SerializeField] AnimationCurve attenuationWallRunSeCurve;
+            [SerializeField] float delayPlayingWallRunSe = 0.1f;
 
             [SerializeField, Range(0.0f, 1.0f)] float normalizedAngleThreshold = 0.1f;
 
@@ -28,16 +34,24 @@ namespace Musashi.Player
             [SerializeField] float wallGravityDownForce = 20f;
             [SerializeField] LayerMask wallRunLayerMask;
 
-            bool isWallRunning;
+            bool isPlayingWallRunSe;
             float elapsedTimeSinceWallAttach;
             float elapsedTimeSinceWallDettach;
             float lastTimeWallJumped = 0f;
             readonly Vector3[] directions;
             RaycastHit[] hits;
             Vector3 lastWallNormal;
+            #endregion
 
+            #region properties
             public Vector3 GetWallJumpDirection => lastWallNormal * wallBouncing + Vector3.up;
+            public bool IsWallRunning { get; private set; }
+            #endregion
 
+            #region constructor and interface methods
+            /// <summary>
+            /// construtor : create vector to raycast wall 
+            /// </summary>
             private PlayerWallRunState()
             {
                 directions = new Vector3[]
@@ -50,42 +64,19 @@ namespace Musashi.Player
                 };
             }
 
-            /// <summary>
-            /// 最終的にプレイヤーが壁走りできるかどうか決める関数。
-            /// Update()で呼ぶこと
-            /// </summary>
-            /// <param name="owner"></param>
-            /// <returns></returns>
-            public bool CanWallRun(PlayerCharacterStateMchine owner)
-            {
-                //壁ジャンプしてから(jumpDuration)秒は、壁走りは出来ない。
-                if (Time.time < lastTimeWallJumped + wallJumpDuration)
-                {
-                    return false;
-                }
-                return !owner.IsGround && VerticalCheck(owner) && CanAttachTheWall(owner) && owner.inputProvider.GetMoveInput.z > 0f;
-            }
-
-            /// <summary>
-            /// 壁走りできる最低限の高さかどうか判定する関数
-            /// </summary>
-            /// <param name="owner"></param>
-            /// <returns></returns>
-            bool VerticalCheck(PlayerCharacterStateMchine owner)
-            {
-                return !Physics.Raycast(owner.transform.position, Vector3.down, minimumHeight);
-            }
-
             public void OnEnter(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> prevState = null)
             {
-                isWallRunning = true;
+                IsWallRunning = true;
                 elapsedTimeSinceWallDettach = 0f;
             }
 
             public void OnExit(PlayerCharacterStateMchine owner, IState<PlayerCharacterStateMchine> nextState = null)
             {
-                isWallRunning = false;
+                IsWallRunning = false;
+                isPlayingWallRunSe = false;
                 elapsedTimeSinceWallAttach = 0f;
+                owner.audioSource.volume = 1f;
+                owner.audioSource.Stop();
             }
 
             public void OnUpdate(PlayerCharacterStateMchine owner)
@@ -106,6 +97,62 @@ namespace Musashi.Player
                     owner.stateMachine.ChangeState(owner.OnGroundState);
                 }
             }
+            #endregion
+
+            #region utility methods
+            /// <summary>
+            /// 最終的にプレイヤーが壁走りできるかどうか決める関数。
+            /// Update()で呼ぶこと
+            /// </summary>
+            /// <param name="owner"></param>
+            /// <returns></returns>
+            public bool CanWallRun(PlayerCharacterStateMchine owner)
+            {
+                //壁ジャンプしてから(jumpDuration)秒は、壁走りは出来ない。
+                if (Time.time < lastTimeWallJumped + wallJumpDuration)
+                {
+                    return false;
+                }
+                return !owner.IsGround && VerticalCheck(owner) && CanAttachTheWall(owner) && owner.inputProvider.GetMoveInput.z > 0f;
+            }
+
+            /// <summary>
+            /// 壁走りできる最低限の高さかどうか判定する関数
+            /// </summary>
+            private bool VerticalCheck(PlayerCharacterStateMchine owner)
+            {
+                return !Physics.Raycast(owner.transform.position, Vector3.down, minimumHeight);
+            }
+
+            /// <summary>
+            /// 壁走り中のサウンド処理を制御する関数。
+            /// 壁走りできる最大時間まで徐々に音を小さくし、プレイヤーが
+            /// いつまでも壁走りができるかわかりやすくする。
+            /// </summary>
+            /// <param name="owner"></param>
+            private void ControlSFX(PlayerCharacterStateMchine owner)
+            {
+                if (elapsedTimeSinceWallAttach > delayPlayingWallRunSe)
+                {
+                    if (isPlayingWallRunSe)
+                    {
+                        float ratio = attenuationWallRunSeCurve.Evaluate(elapsedTimeSinceWallAttach / limitWallAttachTime);
+                        if (ratio < .99f)
+                        {
+                            owner.audioSource.volume = Mathf.Clamp01(1 - ratio);
+                        }
+                        else
+                        {
+                            owner.stateMachine.ChangeState(owner.OnGroundState);
+                        }
+                    }
+                    else
+                    {
+                        owner.audioSource.Play(wallRunSe);
+                        isPlayingWallRunSe = true;
+                    }
+                }
+            }
 
             /// <summary>
             /// rayを飛ばして、壁に当たったか確認する関数
@@ -117,7 +164,7 @@ namespace Musashi.Player
                 for (int i = 0; i < directions.Length; i++)
                 {
                     Vector3 dir = owner.transform.TransformDirection(directions[i]);
-                    Physics.Raycast(owner.transform.position, dir, out hits[i], wallMaxDistance,wallRunLayerMask);
+                    Physics.Raycast(owner.transform.position, dir, out hits[i], wallMaxDistance, wallRunLayerMask);
                     if (hits[i].collider != null)
                     {
                         Debug.DrawRay(owner.transform.position, dir * hits[i].distance, Color.green);
@@ -162,8 +209,9 @@ namespace Musashi.Player
                 Vector3 alongWall = owner.transform.TransformDirection(Vector3.forward);
                 owner.characterVelocity = alongWall * vertical * wallSpeedMultiplier;
                 owner.characterVelocity += Vector3.down * wallGravityDownForce * Time.deltaTime;
-            }
 
+                ControlSFX(owner);
+            }
 
             /// <summary>
             /// 壁の法線とプレイヤーの進行方向から、カメラをプレイヤーの進行方向軸を基準にカメラの傾ける角度を計算する関数。
@@ -174,7 +222,7 @@ namespace Musashi.Player
             {
                 float cameraAngle = owner.playerCamera.transform.eulerAngles.z;
                 float targetAngle = 0f;
-                if (isWallRunning)
+                if (IsWallRunning)
                 {
                     Vector3 cross = Vector3.Cross(lastWallNormal, owner.transform.forward);
                     float dot = Vector3.Dot(cross, owner.transform.up);//dot > 0 左回転, dot < 0  右回転 
@@ -191,6 +239,7 @@ namespace Musashi.Player
                 }
                 return Mathf.LerpAngle(cameraAngle, targetAngle, Mathf.Max(elapsedTimeSinceWallAttach, elapsedTimeSinceWallDettach) / cameraTransitionDuration);
             }
+            #endregion
         }
     }
 }

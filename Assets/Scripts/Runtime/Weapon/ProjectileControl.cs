@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Musashi.Weapon
 {
+
     /// <summary>
     /// 弾丸を制御するクラス
     /// </summary>
@@ -12,12 +13,6 @@ namespace Musashi.Weapon
         ObjectPoolingProjectileInfo projectile = default;
         Rigidbody rb;
         Vector3 prevPos;
- 
-        private void Reset()
-        {
-            rb = GetComponent<Rigidbody>();
-            rb.useGravity = false;
-        }
 
         /// <summary>
         /// オブジェットプールの初期化時、弾丸をインスタンス化したタイミングで
@@ -26,6 +21,8 @@ namespace Musashi.Weapon
         public void SetProjectileInfo(ObjectPoolingProjectileInfo projectile)
         {
             this.projectile = projectile;
+            rb = GetComponent<Rigidbody>();
+            rb.useGravity = false;
         }
 
         /// <summary>
@@ -33,11 +30,6 @@ namespace Musashi.Weapon
         /// </summary>
         private void OnEnable()
         {
-            if (rb == null)
-            {
-                rb = GetComponent<Rigidbody>();
-            }
-
             if (projectile != null)
             {
                 prevPos = transform.position;
@@ -61,22 +53,22 @@ namespace Musashi.Weapon
                     if (hits[i].collider.TryGetComponent(out IDamageable target))
                     {
                         target.OnDamage(projectile.damage);
-                        gameObject.SetActive(false);
-                        return;
-                        //var type = target.GetTargetType();
-                        //if (type != TargetType.Defult)
-                        //{
-                        //    hitVFXManager.PoolObjectManager.UsePoolObject(hitVFXManager.SelectVFX(type), hits[i].point, Quaternion.LookRotation(hits[i].normal), hitVFXManager.SetPoolObj);
-                        //}
-                        //target.OnDamage(shotDamage);
+                    }
+
+                    //product hit effect
+                    if (HitVFXManager.Instance)
+                    {
+                        if (projectile.owner == ProjectileOwner.Player)
+                        {
+                            HitVFXManager.Instance.ProductEffectByPlayer(hits[i].collider.gameObject.layer, hits[i].point + hits[i].normal * 0.01f, hits[i].normal);
+                        }
+                        else
+                        {
+                            HitVFXManager.Instance.ProductEffectByNPC(projectile.effect, hits[i].point + hits[i].normal * 0.01f, hits[i].normal);
+                        }
                     }
                     gameObject.SetActive(false);
                     return;
-                    //else
-                    //{
-                    //hitVFXManager.PoolObjectManager.UsePoolObject(hitVFXManager.DecalVFX, hits[i].point + hits[i].normal * 0.01f, Quaternion.LookRotation(hits[i].normal * -1f), hitVFXManager.SetPoolObj);
-                    //hitVFXManager.AudioSource.Play(hitVFXManager.HitSFX);
-                    //}
                 }
             }
             prevPos = transform.position;

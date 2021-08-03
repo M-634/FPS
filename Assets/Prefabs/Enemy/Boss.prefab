@@ -612,7 +612,7 @@ MonoBehaviour:
   targetType: 0
   useBillBord: 0
   healthBarHightOffset: 0
-  maxHp: 200
+  maxHp: 500
   healthBarFillImage: {fileID: 8612697288695253058}
   OnDamageEnvents:
     m_PersistentCalls:

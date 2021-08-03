@@ -2399,6 +2399,33 @@ MonoBehaviour:
     wallSpeedMultiplier: 12
     minimumHeight: 0.7
     maxAngleRoll: 30
+    limitWallAttachTime: 1.5
+    wallRunSe: {fileID: 8300000, guid: 6f7552bb19ee9c148b36ca6c5faa420e, type: 3}
+    attenuationWallRunSeCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    delayPlayingWallRunSe: 0.1
     normalizedAngleThreshold: 0.3
     wallJumpDuration: 0.2
     wallBouncing: 3
@@ -2433,26 +2460,26 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  weaponUpDuration: 0.4
-  weaponDownDuration: 0.4
+  weaponUpDuration: 0.1
+  weaponDownDuration: 0.1
   bobFrequency: 10
   bobSharpness: 10
   defaultBobAmount: 0.05
@@ -5120,8 +5147,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9125901592883549727}
-  - component: {fileID: 9125901592142146522}
-  - component: {fileID: 9125901592142146523}
   m_Layer: 14
   m_Name: EquipmentWeaponHolder
   m_TagString: Untagged
@@ -5147,119 +5172,6 @@ Transform:
   m_Father: {fileID: 8624612819311843205}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &9125901592142146522
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9125901592883549726}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &9125901592142146523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9125901592883549726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 336092617ed93ca4dbd41047635c6a31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  decalVFX: {fileID: 1479812948273588, guid: 75d25fbf0af4c2d4f9e4d34675a304ff, type: 3}
-  bloodVFX: {fileID: 987344610385491406, guid: bc87df58283efe54ca5ee5e6b8718f88, type: 3}
-  poolObjcetParent: {fileID: 9125901592535106230}
-  poolSize: 6
-  hitSFX: {fileID: 8300000, guid: fceb333e433c97e4497267e3c3a508c3, type: 3}
 --- !u!1 &9125901593590831518
 GameObject:
   m_ObjectHideFlags: 0
@@ -5788,18 +5700,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 055a53fa5a358fa448f7800bc0b640ab, type: 3}
---- !u!114 &5072591195306200896 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3590971412520586929, guid: 055a53fa5a358fa448f7800bc0b640ab,
-    type: 3}
-  m_PrefabInstance: {fileID: 8624612818011767281}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b1263c369149e343915706f58700ea3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4123066340018565300 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5659007490305716549, guid: 055a53fa5a358fa448f7800bc0b640ab,
@@ -5812,3 +5712,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 8624612818011767281}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5072591195306200896 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3590971412520586929, guid: 055a53fa5a358fa448f7800bc0b640ab,
+    type: 3}
+  m_PrefabInstance: {fileID: 8624612818011767281}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b1263c369149e343915706f58700ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
