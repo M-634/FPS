@@ -75,7 +75,6 @@ namespace Musashi.Weapon
         Transform poolObjectParent;
 
         PoolObjectManager poolObjectManager;
-        HitVFXManager hitVFXManager;
         Animator animator;
         AudioSource audioSource;
         #endregion
@@ -133,7 +132,6 @@ namespace Musashi.Weapon
             SetDataFromWeaponSettingSOData();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
-            hitVFXManager = GetComponentInParent<HitVFXManager>();
 
             if (!weaponRoot)
             {
@@ -177,6 +175,8 @@ namespace Musashi.Weapon
             projectileInfo.power = weaponSetting.shotPower;
             projectileInfo.lifeTime = weaponSetting.projectileLifeTime;
             projectileInfo.muzzle = this.muzzle;
+            projectileInfo.owner = ProjectileOwner.Player;
+            projectileInfo.effect = null;
             //weapon statas
             fireRate = weaponSetting.fireRate;
             //recoill = weaponSetting.recoil;
@@ -347,7 +347,6 @@ namespace Musashi.Weapon
                 animator.SetBool("ReloadCycleEnd", false);
             }
         }
-
 
         /// <summary>
         /// アニメーションイベントから呼ばれる

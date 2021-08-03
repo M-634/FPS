@@ -6041,6 +6041,7 @@ GameObject:
   - component: {fileID: 4622465044581817636}
   - component: {fileID: 5413337574673744148}
   - component: {fileID: 192918669}
+  - component: {fileID: 489030088914145028}
   m_Layer: 0
   m_Name: '[SystemManager]'
   m_TagString: GameManager
@@ -6159,6 +6160,22 @@ MonoBehaviour:
   timerText: {fileID: 4847739556160087792}
   bestTimeText: {fileID: 7457481558063766220}
   timerPanel: {fileID: 3815374870524471273}
+--- !u!114 &489030088914145028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7197702161134707756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336092617ed93ca4dbd41047635c6a31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  decalVFX: {fileID: 1479812948273588, guid: 75d25fbf0af4c2d4f9e4d34675a304ff, type: 3}
+  poolObjcetParent: {fileID: 0}
+  poolSize: 10
+  hitSFX: {fileID: 0}
 --- !u!1 &7197702161479146469
 GameObject:
   m_ObjectHideFlags: 0
