@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7861389097515417774}
   - component: {fileID: 4934909455368709478}
   - component: {fileID: 3014990934109305502}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: trigger_mesh8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 3489062697355147708}
   - component: {fileID: 733199668}
   - component: {fileID: 733199664}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PressurePad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,6 +272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea7dfbe80fdd88c4bb503462cdb9478b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  commandType: 0
+  sendType: 0
   reciver: {fileID: 0}
   delaySendTime: 0
   OnEnter:
@@ -335,7 +337,7 @@ GameObject:
   - component: {fileID: 3576086212374176615}
   - component: {fileID: 2054636204194913493}
   - component: {fileID: 8625003190407404639}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: outer_mesh1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,6 +432,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Particle System
+      objectReference: {fileID: 0}
+    - target: {fileID: 6924596281906224300, guid: 1f19c51bf16d9b34e8d02b13b8382018,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6924596281906224300, guid: 1f19c51bf16d9b34e8d02b13b8382018,
         type: 3}
