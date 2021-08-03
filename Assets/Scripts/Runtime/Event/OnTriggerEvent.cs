@@ -30,6 +30,7 @@ namespace Musashi.Event
         {
             OnEnter.AddListener(AddEnterEvent);
             OnExit.AddListener(AddExitEvent);
+            GetComponent<Collider>().enabled = true;
         }
 
         private void OnTriggerEnter(Collider other)
